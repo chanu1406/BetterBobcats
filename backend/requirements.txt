@@ -1,0 +1,18 @@
+# BetterBobcats Backend Dependencies
+
+# FastAPI Framework
+fastapi==0.115.0
+uvicorn[standard]==0.32.0
+
+# Pydantic for data validation
+pydantic==2.10.0
+pydantic-settings==2.6.0
+
+# Supabase client
+supabase==2.10.0
+
+# Python environment
+python-dotenv==1.0.1
+
+# Code quality
+ruff==0.8.0
