@@ -4,30 +4,30 @@
 
 @layer base {
   :root {
-    /* UC Merced Brand Colors - Lightened */
+    /* UC Merced Brand Colors - Brighter */
     --background: 0 0% 100%;
-    --foreground: 210 60% 25%;
+    --foreground: 210 60% 30%;
     --card: 0 0% 100%;
-    --card-foreground: 210 60% 25%;
+    --card-foreground: 210 60% 30%;
     --popover: 0 0% 100%;
-    --popover-foreground: 210 60% 25%;
-    /* Primary: UC Merced Blue - Lightened */
-    --primary: 210 70% 35%;
+    --popover-foreground: 210 60% 30%;
+    /* Primary: UC Merced Blue - Brighter */
+    --primary: 210 70% 42%;
     --primary-foreground: 0 0% 100%;
     /* Secondary: Light blue-gray */
     --secondary: 210 20% 96%;
-    --secondary-foreground: 210 70% 35%;
+    --secondary-foreground: 210 70% 42%;
     /* Muted: Light gray-blue */
     --muted: 210 15% 96%;
-    --muted-foreground: 210 30% 50%;
-    /* Accent: UC Merced Gold - Lightened */
-    --accent: 45 90% 55%;
-    --accent-foreground: 210 60% 25%;
+    --muted-foreground: 210 30% 55%;
+    /* Accent: UC Merced Gold - Brighter */
+    --accent: 45 90% 62%;
+    --accent-foreground: 210 60% 30%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
     --border: 210 20% 90%;
     --input: 210 20% 90%;
-    --ring: 210 70% 35%;
+    --ring: 210 70% 42%;
     --radius: 0.5rem;
   }
 
