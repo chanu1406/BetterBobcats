@@ -24,7 +24,7 @@ export default function FeaturesSection() {
   return (
     <section className="py-20 px-4 bg-background">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-primary">
           Everything You Need to Succeed
         </h2>
         <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
@@ -34,10 +34,10 @@ export default function FeaturesSection() {
           {features.map((feature, index) => (
             <div
               key={index}
-              className="p-6 border rounded-lg hover:shadow-lg transition-shadow bg-card"
+              className="p-6 border-2 border-primary/20 rounded-lg hover:border-primary/40 hover:shadow-lg transition-all bg-card hover:bg-primary/5"
             >
               <div className="text-4xl mb-4">{feature.icon}</div>
-              <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+              <h3 className="text-xl font-semibold mb-2 text-primary">{feature.title}</h3>
               <p className="text-muted-foreground">{feature.description}</p>
             </div>
           ))}
