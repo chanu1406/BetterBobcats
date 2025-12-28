@@ -26,9 +26,6 @@ export default function HeroSection() {
           <button className="px-8 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors shadow-lg hover:shadow-xl">
             Explore Degrees
           </button>
-          <button className="px-8 py-3 border-2 border-primary rounded-lg font-semibold text-primary hover:bg-primary hover:text-primary-foreground transition-colors">
-            Learn More
-          </button>
         </div>
       </div>
     </section>

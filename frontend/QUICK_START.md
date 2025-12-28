@@ -157,3 +157,4 @@ The structure is set up. You can now:
 - ✅ Follow the same pattern for other pages
 - ✅ Use shared components from `src/components/ui/` when needed
 
+
