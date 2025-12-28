@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 /**
  * Navigation Component
  * Header navigation bar for the homepage
@@ -12,12 +14,12 @@ export default function Navigation() {
             <span className="text-xs text-muted-foreground">UC Merced</span>
           </div>
           <div className="flex gap-6 items-center">
-            <a
-              href="#"
+            <Link
+              href="/degrees"
               className="text-sm font-medium hover:text-primary transition-colors"
             >
               Degrees
-            </a>
+            </Link>
             <a
               href="#"
               className="text-sm font-medium hover:text-primary transition-colors"

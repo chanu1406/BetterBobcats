@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 /**
  * HeroSection Component
  * The main banner/hero section at the top of the homepage
@@ -23,9 +25,12 @@ export default function HeroSection() {
           Explore UC Merced degree programs, discover career paths, and create your personalized academic roadmap
         </p>
         <div className="flex gap-4 justify-center flex-wrap">
-          <button className="px-8 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors shadow-lg hover:shadow-xl">
+          <Link 
+            href="/degrees"
+            className="px-8 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors shadow-lg hover:shadow-xl inline-block"
+          >
             Explore Degrees
-          </button>
+          </Link>
         </div>
       </div>
     </section>

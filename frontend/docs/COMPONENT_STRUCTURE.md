@@ -25,8 +25,12 @@ src/
 │   │
 │   ├── degrees/
 │   │   ├── page.tsx                  # All degrees page (/degrees)
-│   │   └── components/               # Degrees listing components
-│   │       └── DegreeGrid.tsx
+│   │   ├── components/               # Degrees listing components
+│   │   │   ├── DegreesHeader.tsx    # Header with logo and title
+│   │   │   ├── DegreesSidebar.tsx   # Left sidebar with degree list
+│   │   │   └── DegreesContent.tsx    # Main content area
+│   │   └── docs/                     # Page-specific documentation
+│   │       └── DEGREES_PAGE.md      # Degrees page documentation
 │   │
 │   └── degrees/[major]/              # Dynamic route for each major
 │       ├── page.tsx                  # Individual major page
@@ -219,6 +223,7 @@ Ask yourself:
 | Component | Used On | Location |
 |-----------|---------|----------|
 | `HeroSection` | Homepage only | `src/app/components/` |
+| `DegreesSidebar` | Degrees page only | `src/app/degrees/components/` |
 | `MajorHeader` | Major pages only | `src/app/degrees/[major]/components/` |
 | `Button` | Everywhere | `src/components/ui/` |
 | `Footer` | Every page | `src/components/shared/` |
@@ -302,6 +307,31 @@ Ask yourself:
 - **Shared components = `src/components/`**
 - **Keep it organized = easy collaboration**
 - **Simple rule: If only one page uses it, keep it with that page!**
+
+---
+
+## 📄 Real Example: Degrees Page
+
+The degrees page (`/degrees`) demonstrates this structure:
+
+```
+src/app/degrees/
+├── page.tsx                    # Main page (manages state)
+├── components/
+│   ├── DegreesHeader.tsx      # Header section
+│   ├── DegreesSidebar.tsx     # Navigation sidebar
+│   └── DegreesContent.tsx      # Main content area
+└── docs/
+    └── DEGREES_PAGE.md         # Page documentation
+```
+
+**How it works:**
+- `page.tsx` is a client component that manages selected degree state
+- Each component has a single responsibility
+- Components are organized in the page's own `components/` folder
+- Page-specific documentation lives in `docs/` folder
+
+See `src/app/degrees/docs/DEGREES_PAGE.md` for detailed documentation.
 
 ---
 
