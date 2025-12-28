@@ -164,3 +164,6 @@ Before submitting code, check:
 - [ ] One component per file
 - [ ] page.tsx is simple (just imports & layout)
 
+
+
+

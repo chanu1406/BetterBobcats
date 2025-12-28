@@ -201,3 +201,6 @@ export default function PageName({
 - Use TypeScript interfaces for props (better error checking)
 - Keep components focused on one thing
 
+
+
+
