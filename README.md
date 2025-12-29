@@ -26,6 +26,7 @@ better-bobcats/
 - **Styling:** Tailwind CSS + Shadcn/UI
 - **State Management:** React Query
 - **Icons:** Lucide React
+- **Graph Visualization:** React Flow (interactive prerequisite graphs)
 
 ### Backend
 - **Framework:** FastAPI (Python 3.11+)

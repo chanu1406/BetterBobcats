@@ -58,14 +58,76 @@ The page consists of three main sections:
 - **Type:** Server component
 - **Props:**
   - `selectedDegree: string | null` - Currently selected degree
+  - `selectedCareerPath: string | null` - Currently selected career path
 - **Responsibility:**
   - Shows welcome message when no degree is selected
-  - Displays degree-specific content when a degree is selected
-  - Currently shows placeholder "TBD" content
+  - Displays prerequisite graph for CS/CSE when selected (no career path)
+  - Shows career path content when a career path is selected
+  - Shows placeholder for other degrees
 - **Styling:**
   - Welcome title uses gradient text (`text-3xl md:text-4xl`) matching homepage style
   - Description text uses `text-xl md:text-2xl` with muted foreground color
   - Content is centered with max-width container
+
+### PrerequisiteGraph Component
+- **File:** `src/app/degrees/cs-cse/components/PrerequisiteGraph.tsx`
+- **Type:** Client component (uses `'use client'`)
+- **Dependencies:** React Flow (`reactflow`), Course data from `cseCourses.ts`
+- **Responsibility:**
+  - Displays interactive prerequisite graph for CS/CSE degree
+  - Shows hierarchical tree structure with root node, category nodes, and course nodes
+  - Provides clickable category nodes that toggle expanded state to show courses
+  - Visualizes course prerequisites and relationships with color-coded nodes by year
+  - Supports layout formatting to prevent overlapping when all branches are expanded
+- **Structure:**
+  - **Level 0 (Root):** Circular "CS/CSE" node at the top center (24x24px)
+  - **Level 1 (Categories):** Six circular category nodes (20x20px) arranged horizontally:
+    - Math, Writing, Physics, Spark, Engineering, CSE
+  - **Level 2+ (Courses):** Rectangular course nodes displayed when categories are expanded
+    - Math branch: MATH 021 → MATH 022 → (MATH 023, MATH 024, MATH 032/ENGR 080)
+    - Writing branch: WRI 010 → WRI Upper Div
+    - Physics branch: PHYS 008 + 008L → PHYS 009 + 009L
+    - Spark branch: SPRK 010 or SPRK 001
+    - Engineering branch: ENGR 091 → ENGR 065
+    - CSE branch: CSE 022 → (CSE 015, CSE 024) → CSE 030 → (CSE 031, CSE 100) → CSE 120
+- **Features:**
+  - Interactive pan and zoom controls (React Flow built-in)
+  - Clickable category nodes with toggle functionality (expand/collapse courses)
+  - Visual feedback for expanded categories (solid border, darker background)
+  - Hover effects on category nodes
+  - Format layout button: Toggles between compact (180px category spacing) and formatted (350px spacing) layouts
+  - Year-based color coding for course nodes:
+    - Year 1: Blue (`bg-blue-100`, `border-blue-300`)
+    - Year 2: Green (`bg-green-100`, `border-green-300`)
+    - Year 3: Amber (`bg-amber-100`, `border-amber-300`)
+    - Year 4: Purple (`bg-purple-100`, `border-purple-300`)
+- **Styling:**
+  - Root node: `w-24 h-24`, solid border, primary color
+  - Category nodes: `w-20 h-20`, dashed border (collapsed) or solid border (expanded)
+  - Course nodes: `min-w-[140px] max-w-[180px]`, compact padding (`px-2 py-1.5`), `text-xs`
+  - Container height: 800px (fits all branches on one page)
+  - Background grid pattern with React Flow Background component
+  - Format layout button: Positioned top-right, primary color styling
+- **Layout Configuration:**
+  - Compact layout: 180px category spacing, 220px horizontal branch spacing
+  - Formatted layout: 350px category spacing, 200px horizontal branch spacing (prevents overlap)
+  - Vertical spacing: 140px between course levels
+  - All branches start at y: 280px (below category nodes at y: 160px)
+
+### GraphLegend Component
+- **File:** `src/app/degrees/cs-cse/components/GraphLegend.tsx`
+- **Type:** Server component
+- **Responsibility:**
+  - Displays color legend for academic years
+  - Shows year labels: First Year, Second Year, Third Year, Fourth Year
+  - Provides color reference for course nodes by year
+  - Helps users understand the color coding system used in the prerequisite graph
+- **Styling:**
+  - Light color scheme matching node colors
+  - Card background with border (`bg-card border border-border`)
+  - Compact layout with color swatches (4x4px squares)
+  - Flexbox layout with gap spacing
+  - Responsive text sizing (`text-sm`)
 
 ## State Management
 
@@ -93,9 +155,38 @@ const degrees = [
 ];
 ```
 
-3. The degree will automatically appear in the sidebar as a new block with the same styling
+3. Create a new directory structure for the degree:
+   ```
+   degrees/
+   └── new-degree/        # Use kebab-case for directory name
+       ├── data/
+       │   └── courses.ts # Degree course data
+       └── components/    # Degree-specific components (optional)
+   ```
 
-**Note:** Currently only CS/CSE is implemented. Additional degrees can be added following the same pattern.
+4. The degree will automatically appear in the sidebar as a new block with the same styling
+
+**Note:** Currently only CS/CSE is fully implemented. Additional degrees should follow the same folder structure pattern.
+
+## Adding Career Path Data
+
+To add data for a career path:
+
+1. Navigate to `src/app/degrees/careers/[career-id]/data/`
+2. Create or update data files (e.g., `courses.ts`, `skills.ts`)
+3. Export the data from an `index.ts` file for easy imports
+4. Use the data in career-specific components or pages
+
+Example structure for a career path:
+```
+careers/
+└── swe/
+    ├── data/
+    │   ├── courses.ts    # Recommended courses
+    │   ├── skills.ts     # Required/recommended skills
+    │   └── index.ts      # Exports all data
+    └── components/       # Optional career-specific components
+```
 
 ## Styling Guidelines
 
@@ -134,14 +225,118 @@ const degrees = [
 - Header remains sticky across all screen sizes
 - Text sizes are responsive (`md:` breakpoints)
 
+## Prerequisite Graph Feature
+
+### Overview
+The CS/CSE degree page includes an interactive prerequisite graph visualization that shows the course structure in a hierarchical tree format.
+
+### Graph Structure
+1. **Root Node:** "CS/CSE" - Circular node at the top center
+2. **Category Nodes:** Six subject categories arranged horizontally below the root:
+   - Math
+   - Writing
+   - Physics
+   - Spark
+   - Engineering
+   - CSE
+
+### Interactive Features
+- **Clickable Categories:** Category nodes can be clicked to toggle their expanded state
+- **Visual Feedback:** Expanded categories show solid borders and darker backgrounds
+- **Pan & Zoom:** Users can pan and zoom the graph using controls
+- **Arrows:** Arrows connect the root node to each category node
+
+### Data Structure
+- Course data is stored in `src/app/degrees/cs-cse/data/courses.ts`
+- Course types are defined in `src/types/course.ts`
+- Graph uses React Flow for rendering and layout
+- Each course includes: id, code, name, fullName, year, semester, prerequisites array
+
+### Folder Structure
+The degrees page uses an organized folder structure for scalability:
+
+```
+degrees/
+├── components/          # Shared components (DegreesHeader, DegreesSidebar, DegreesContent)
+├── cs-cse/             # CS/CSE degree-specific content
+│   ├── data/
+│   │   └── courses.ts  # All CS/CSE course data
+│   └── components/
+│       ├── PrerequisiteGraph.tsx
+│       └── GraphLegend.tsx
+├── careers/            # Career path-specific content
+│   ├── swe/           # Software Engineering
+│   ├── cybersecurity/ # Cybersecurity
+│   ├── ml-ai/         # Machine Learning / AI
+│   ├── data-science/  # Data Science / Analytics
+│   ├── systems/       # Systems / Infrastructure Engineering
+│   └── embedded/      # Embedded Systems Engineering
+└── docs/              # Documentation
+```
+
+Each career path directory can contain:
+- `data/` - Career-specific courses, skills, and information
+- `components/` - Career-specific React components (optional)
+
+### Branch Structure Details
+
+#### Math Branch
+- **Level 2:** MATH 021 (Calculus I) - Year 1
+- **Level 3:** MATH 022 (Calculus II) - Year 1, requires MATH 021
+- **Level 4:** Three parallel courses - Year 2, all require MATH 022:
+  - MATH 023 (Vector Calculus)
+  - MATH 024 (Linear Algebra and Differential Equations)
+  - MATH 032 or ENGR 080 (Probability and Statistics / Statistical Modeling)
+
+#### Writing Branch
+- **Level 2:** WRI 010 (College Reading and Composition) - Year 1
+- **Level 3:** General Education: Writing in the Discipline - Year 3, requires WRI 010
+
+#### Physics Branch
+- **Level 2:** PHYS 008 + PHYS 008L (Introductory Physics I) - Year 3
+- **Level 3:** PHYS 009 + PHYS 009L (Introductory Physics II) - Year 3, requires PHYS 008
+
+#### Spark Branch
+- **Level 2:** SPRK 010 or SPRK 001 (Spark Seminar) - Year 1
+
+#### Engineering Branch
+- **Level 2:** ENGR 091 (Professional Development) - Year 1
+- **Level 3:** ENGR 065 (Circuit Theory) - Year 4, requires ENGR 091
+
+#### CSE Branch
+- **Level 1:** CSE 022 (Introduction to Programming) - Year 1
+- **Level 2:** Two parallel courses - Year 1, both require CSE 022:
+  - CSE 015 (Discrete Mathematics)
+  - CSE 024 (Advanced Programming)
+- **Level 3:** CSE 030 (Data Structures) - Year 2, requires both CSE 015 and CSE 024
+- **Level 4:** Two parallel courses - Year 2, both require CSE 030:
+  - CSE 031 (Computer Organization and Assembly Language)
+  - CSE 100 (Algorithm Design and Analysis)
+- **Level 5:** CSE 120 (Software Engineering) - Year 4, requires both CSE 031 and CSE 100
+
+### Implementation Status
+- ✅ Root node (CS/CSE)
+- ✅ Category nodes (6 categories)
+- ✅ Edge connections with arrows
+- ✅ Toggle functionality for categories
+- ✅ Course nodes for all branches (Math, Writing, Physics, Spark, Engineering, CSE)
+- ✅ Year-based color coding for course nodes
+- ✅ Prerequisite relationship visualization
+- ✅ Format layout button for preventing overlaps
+- ✅ Compact node sizes optimized for single-page display
+
 ## Future Enhancements
 
 1. **Dynamic Routes:** Convert to `/degrees/[major]` route structure
-2. **Career Fields:** Display actual career fields for selected degree
-3. **Tree Diagrams:** Add visual tree diagrams for career paths
-4. **Resources:** Add resources section for each degree
-5. **Search/Filter:** Add search functionality for degrees
-6. **Mobile Menu:** Collapsible sidebar for mobile devices
+2. **Course Details:** Add tooltips or popovers with course information (credits, description, schedule)
+3. **Resources:** Add resources section for each degree (textbooks, study guides, tutoring)
+4. **Search/Filter:** Add search functionality for degrees and courses
+5. **Mobile Menu:** Collapsible sidebar for mobile devices
+6. **Export/Print:** Allow users to export or print the prerequisite graph
+7. **Course Filtering:** Filter courses by year, semester, or requirements
+8. **Interactive Course Selection:** Highlight prerequisite chains when hovering over courses
+9. **Performance Optimization:** Virtualize large graphs for better performance with many courses
+10. **Accessibility:** Improve keyboard navigation and screen reader support
 
 ## Related Documentation
 

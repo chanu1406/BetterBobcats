@@ -3,6 +3,9 @@
  * Main content area showing welcome message or selected degree content
  * Used on: Degrees page
  */
+import PrerequisiteGraph from "../cs-cse/components/PrerequisiteGraph";
+import GraphLegend from "../cs-cse/components/GraphLegend";
+
 interface DegreesContentProps {
   selectedDegree: string | null;
   selectedCareerPath: string | null;
@@ -78,6 +81,27 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
   }
 
   // Show degree overview if degree selected but no career path
+  // Show prerequisite graph for CS/CSE
+  if (selectedDegree === "CS/CSE") {
+    return (
+      <div className="flex-1 p-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-8">
+            <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-2">
+              {selectedDegree}
+            </h2>
+            <p className="text-muted-foreground">
+              Prerequisite graph showing course requirements and progression
+            </p>
+          </div>
+          <GraphLegend />
+          <PrerequisiteGraph />
+        </div>
+      </div>
+    );
+  }
+
+  // Default view for other degrees
   return (
     <div className="flex-1 p-8">
       <div className="max-w-4xl mx-auto">
