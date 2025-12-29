@@ -13,6 +13,16 @@ import DegreesContent from "./components/DegreesContent";
  */
 export default function DegreesPage() {
   const [selectedDegree, setSelectedDegree] = useState<string | null>(null);
+  const [selectedCareerPath, setSelectedCareerPath] = useState<string | null>(null);
+
+  const handleDegreeSelect = (degree: string) => {
+    setSelectedDegree(degree);
+    setSelectedCareerPath(null); // Reset career path when selecting a new degree
+  };
+
+  const handleCareerPathSelect = (careerPath: string) => {
+    setSelectedCareerPath(careerPath);
+  };
 
   return (
     <main className="min-h-screen flex flex-col">
@@ -20,9 +30,14 @@ export default function DegreesPage() {
       <div className="flex flex-1">
         <DegreesSidebar 
           selectedDegree={selectedDegree}
-          onDegreeSelect={setSelectedDegree}
+          selectedCareerPath={selectedCareerPath}
+          onDegreeSelect={handleDegreeSelect}
+          onCareerPathSelect={handleCareerPathSelect}
         />
-        <DegreesContent selectedDegree={selectedDegree} />
+        <DegreesContent 
+          selectedDegree={selectedDegree}
+          selectedCareerPath={selectedCareerPath}
+        />
       </div>
     </main>
   );
