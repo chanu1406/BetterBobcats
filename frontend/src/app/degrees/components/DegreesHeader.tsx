@@ -10,7 +10,7 @@ export default function DegreesHeader() {
         <div className="flex items-center gap-4">
           {/* Left: Degrees label + Logo */}
           <div className="flex items-center gap-3">
-            <span className="text-sm font-medium text-muted-foreground">Degrees</span>
+            <span className="text-sm font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight">Degrees</span>
             <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
               <img 
                 src="/BetterBobcatsLogo.svg" 
@@ -22,7 +22,7 @@ export default function DegreesHeader() {
           
           {/* Center: Degrees @ UCM title */}
           <div className="flex-1 text-center">
-            <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent">Degrees @ UCM</h1>
+            <h1 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight">Degrees @ UCM</h1>
           </div>
         </div>
       </div>
