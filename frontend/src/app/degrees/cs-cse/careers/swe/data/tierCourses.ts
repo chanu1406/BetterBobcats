@@ -5,13 +5,17 @@
 
 import { TierCourse } from "@/types/careerPath";
 
+/**
+ * 🟢 TIER 1: CORE SWE (Non-Negotiable)
+ * Essential courses for all Software Engineering roles
+ */
 export const tier1Courses: TierCourse[] = [
   {
     id: "cse-120",
     code: "CSE 120",
     name: "Software Engineering",
     fullName: "CSE 120: Software Engineering",
-    description: "Team-based dev, SDLC, Git, real projects — *non-negotiable*",
+    description: "Team-based dev, SDLC, Git, real projects — non-negotiable",
     tier: 1,
   },
   {
@@ -56,6 +60,10 @@ export const tier1Courses: TierCourse[] = [
   },
 ];
 
+/**
+ * 🟡 TIER 2: SWE ENHANCERS
+ * Strongly recommended depending on interests and career direction
+ */
 export const tier2Courses: TierCourse[] = [
   {
     id: "cse-126",
@@ -107,8 +115,57 @@ export const tier2Courses: TierCourse[] = [
   },
 ];
 
+/**
+ * 🟠 TIER 3: SWE-ADJACENT (Optional / Interest-Based)
+ * Good if aligned with interests, not required for SWE
+ */
 export const tier3Courses: TierCourse[] = [
-  // Add Tier 3 courses here
+  {
+    id: "cse-175",
+    code: "CSE 175",
+    name: "Introduction to Artificial Intelligence",
+    fullName: "CSE 175: Introduction to Artificial Intelligence",
+    description: "SWE + AI curiosity; broad exposure to AI concepts",
+    tier: 3,
+  },
+  {
+    id: "cse-176",
+    code: "CSE 176",
+    name: "Machine Learning",
+    fullName: "CSE 176: Machine Learning",
+    description: "For SWE aiming at ML-adjacent or data-heavy roles",
+    tier: 3,
+  },
+  {
+    id: "cse-130",
+    code: "CSE 130",
+    name: "Cryptography",
+    fullName: "CSE 130: Cryptography",
+    description: "Security-minded SWE; encryption, hashing, protocols",
+    tier: 3,
+  },
+  {
+    id: "cse-178",
+    code: "CSE 178",
+    name: "Computers & Network Security",
+    fullName: "CSE 178: Computers & Network Security",
+    description: "SWE + cybersecurity interest; systems and network defense",
+    tier: 3,
+  },
+  {
+    id: "cse-165",
+    code: "CSE 165",
+    name: "Introduction to Object-Oriented Programming",
+    fullName: "CSE 165: Introduction to Object-Oriented Programming",
+    description: "Only recommended if core OOP fundamentals are weak",
+    tier: 3,
+  },
+  {
+    id: "cse-107",
+    code: "CSE 107",
+    name: "Image Processing",
+    fullName: "CSE 107: Image Processing",
+    description: "Specialized SWE applications; graphics and vision basics",
+    tier: 3,
+  },
 ];
-
-

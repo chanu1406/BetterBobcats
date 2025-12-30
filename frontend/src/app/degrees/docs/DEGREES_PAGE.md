@@ -117,30 +117,35 @@ The page consists of three main sections:
   - Vertical spacing: 140px between course levels
   - All branches start at y: 280px (below category nodes at y: 160px)
 
-### GraphLegend Component
-- **File:** `src/app/degrees/cs-cse/components/GraphLegend.tsx`
-- **Type:** Server component
+### Career Path Graph Component
+- **File:** `src/app/degrees/cs-cse/careers/swe/components/CareerPathGraph.tsx`
+- **Type:** Client component (uses `'use client'`)
 - **Props:**
-  - `onFormatLayoutClick?: () => void` - Callback to toggle layout format
-  - `useFormattedLayout?: boolean` - Current layout format state
-  - `onResetClick?: () => void` - Callback to reset node positions
-  - `onFullResetClick?: () => void` - Callback to fully reset the graph
+  - `onResetReady?: (resetFn: () => void) => void` - Callback to receive reset function
+  - `onFormatReady?: (formatFn: () => void) => void` - Callback to receive format function
 - **Responsibility:**
-  - Displays color legend for academic years
-  - Shows year labels: First Year, Second Year, Third Year, Fourth Year
-  - Provides color reference for course nodes by year
-  - Provides graph control buttons:
-    - **Format Layout / Toggle Compact View**: Toggles between compact and formatted layouts
-    - **Reset Graph**: Fully resets the graph (positions, expanded nodes, layout)
-    - **Reset Positions**: Restores nodes to default positions (keeps expanded state)
-  - Helps users understand the color coding system used in the prerequisite graph
+  - Displays interactive career path graph visualization
+  - Shows root node (career name), tier nodes, and course nodes
+  - Supports tier expansion/collapse by clicking tier nodes
+  - All nodes are draggable - positions are saved automatically
+  - Provides format and reset functionality via callbacks
+- **Features:**
+  - **Format Graph Button**: Repositions all nodes with increased spacing to prevent overlap
+    - Increases tier spacing from 400px to 600px
+    - Reduces courses per row from 3 to 2
+    - Increases course spacing from 220px to 300px
+    - Increases row spacing from 100px to 120px
+  - **Reset Graph Button**: Fully resets graph to initial state
+    - Collapses all expanded tiers
+    - Clears all saved node positions
+    - Returns to default layout
+  - **Config-Driven**: Uses `careerPathConfig` for all content (reusable for all career paths)
 - **Styling:**
-  - Light color scheme matching node colors
-  - Card background with border (`bg-card border border-border`)
-  - Compact layout with color swatches (4x4px squares)
-  - Flexbox layout with gap spacing
-  - Responsive text sizing (`text-sm`)
-  - Control buttons positioned top-right with appropriate styling
+  - Root node: Large circular node (`w-32 h-32`) with primary color
+  - Tier nodes: Medium circular nodes (`w-24 h-24`) with dashed borders (collapsed) or solid borders (expanded)
+  - Course nodes: Rectangular cards (`min-w-[180px] max-w-[200px]`) with course code and name
+  - Container height: 800px
+  - Background grid pattern with React Flow Background component
 
 ## State Management
 
@@ -185,21 +190,25 @@ const degrees = [
 
 To add data for a career path:
 
-1. Navigate to `src/app/degrees/careers/[career-id]/data/`
-2. Create or update data files (e.g., `courses.ts`, `skills.ts`)
+1. Navigate to `src/app/degrees/cs-cse/careers/[career-id]/data/`
+2. Create or update data files (e.g., `tierCourses.ts`, `careerPathConfig.ts`)
 3. Export the data from an `index.ts` file for easy imports
 4. Use the data in career-specific components or pages
 
-Example structure for a career path:
+Example structure for a CS/CSE career path:
 ```
-careers/
-└── swe/
-    ├── data/
-    │   ├── courses.ts    # Recommended courses
-    │   ├── skills.ts     # Required/recommended skills
-    │   └── index.ts      # Exports all data
-    └── components/       # Optional career-specific components
+cs-cse/
+└── careers/
+    └── swe/
+        ├── data/
+        │   ├── tierCourses.ts      # Course data organized by tiers
+        │   ├── careerPathConfig.ts # Graph configuration
+        │   └── index.ts            # Exports all data
+        └── components/             # Optional career-specific components
+            └── CareerPathGraph.tsx
 ```
+
+**Note:** Career paths are organized under their respective degree folders. For example, CS/CSE careers are in `cs-cse/careers/`, and future degrees (like Biology) would have their own `biology/careers/` folder.
 
 ## Styling Guidelines
 
@@ -282,19 +291,21 @@ degrees/
 ├── cs-cse/             # CS/CSE degree-specific content
 │   ├── data/
 │   │   └── courses.ts  # All CS/CSE course data
-│   └── components/
-│       ├── PrerequisiteGraph.tsx
-│       └── GraphLegend.tsx
-├── careers/            # Career path-specific content
-│   ├── swe/           # Software Engineering
-│   │   └── data/
-│   │       ├── tierCourses.ts        # SWE course data
-│   │       └── careerPathConfig.ts    # SWE graph configuration
-│   ├── cybersecurity/ # Cybersecurity
-│   ├── ml-ai/         # Machine Learning / AI
-│   ├── data-science/  # Data Science / Analytics
-│   ├── systems/       # Systems / Infrastructure Engineering
-│   └── embedded/      # Embedded Systems Engineering
+│   ├── components/
+│   │   ├── PrerequisiteGraph.tsx
+│   │   └── GraphLegend.tsx
+│   └── careers/        # CS/CSE career path-specific content
+│       ├── swe/       # Software Engineering
+│       │   ├── components/
+│       │   │   └── CareerPathGraph.tsx
+│       │   └── data/
+│       │       ├── tierCourses.ts        # SWE course data
+│       │       └── careerPathConfig.ts  # SWE graph configuration
+│       ├── cybersecurity/ # Cybersecurity
+│       ├── ml-ai/      # Machine Learning / AI
+│       ├── data-science/  # Data Science / Analytics
+│       ├── systems/   # Systems / Infrastructure Engineering
+│       └── embedded/  # Embedded Systems Engineering
 └── docs/              # Documentation
 ```
 
@@ -378,14 +389,14 @@ Career path pages use the reusable `CareerPathGraph` component with a config-dri
 - **Course Data**: Each career path provides a `tierCourses.ts` file with course descriptions
 
 ### Key Features:
-- **Expandable Course Nodes**: Click courses to see descriptions
-- **Tier-Based Organization**: Courses organized into tiers (e.g., Tier 1, Tier 2, Tier 3)
-- **Draggable Nodes**: All nodes can be repositioned by dragging
-- **Reset Functionality**: Two reset options:
-  - **Reset Positions**: Restores nodes to default layout positions
-  - **Reset Graph**: Fully resets graph (positions, expanded nodes, layout)
-- **Reusable**: Same component works for all career paths
+- **Tier Expansion**: Click tier nodes to expand/collapse and show their courses
+- **Tier-Based Organization**: Courses organized into tiers (e.g., Tier 1, Tier 2, Tier 3) with emoji indicators
+- **Draggable Nodes**: All nodes can be repositioned by dragging - positions are saved automatically
+- **Format Graph**: Button that automatically repositions all nodes with wider spacing to prevent overlap
+- **Reset Graph**: Button that fully resets graph to initial state (collapses all tiers, clears positions)
+- **Reusable**: Same component works for all career paths via config-driven architecture
 - **Type-Safe**: Uses shared types from `src/types/careerPath.ts`
+- **Automatic Layout**: Nodes are positioned automatically based on tier structure and expansion state
 
 For detailed instructions on creating career path graphs, see **`CAREER_PATH_GRAPH_GUIDE.md`**.
 

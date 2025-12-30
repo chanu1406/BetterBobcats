@@ -8,8 +8,7 @@
 import { useState, useRef, useEffect } from "react";
 import PrerequisiteGraph from "../cs-cse/components/PrerequisiteGraph";
 import GraphLegend from "../cs-cse/components/GraphLegend";
-import CareerPathGraph from "./CareerPathGraph";
-import { sweCareerPathConfig } from "../careers/swe/data/careerPathConfig";
+import CareerPathGraph from "../cs-cse/careers/swe/components/CareerPathGraph";
 
 interface DegreesContentProps {
   selectedDegree: string | null;
@@ -18,23 +17,68 @@ interface DegreesContentProps {
 
 export default function DegreesContent({ selectedDegree, selectedCareerPath }: DegreesContentProps) {
   const [useFormattedLayout, setUseFormattedLayout] = useState(false);
-  const [resetPrerequisiteGraph, setResetPrerequisiteGraph] = useState<(() => void) | null>(null);
-  const [resetCareerPathGraph, setResetCareerPathGraph] = useState<(() => void) | null>(null);
-  const [fullResetPrerequisiteGraph, setFullResetPrerequisiteGraph] = useState<(() => void) | null>(null);
-  const [fullResetCareerPathGraph, setFullResetCareerPathGraph] = useState<(() => void) | null>(null);
   
-  // Wrapper functions to set handlers asynchronously to avoid render-time updates
+  // Use refs to store reset handlers - no state updates during render
+  const resetPrerequisiteGraphRef = useRef<(() => void) | null>(null);
+  const fullResetPrerequisiteGraphRef = useRef<(() => void) | null>(null);
+  
+  // Separate reset handler for career path graphs (SWE, etc.)
+  const resetCareerPathGraphRef = useRef<(() => void) | null>(null);
+  const formatCareerPathGraphRef = useRef<(() => void) | null>(null);
+  
+  // State to track when handlers are ready (updated in useEffect to avoid render-time updates)
+  const [resetPrerequisiteReady, setResetPrerequisiteReady] = useState(false);
+  const [fullResetPrerequisiteReady, setFullResetPrerequisiteReady] = useState(false);
+  const [resetCareerPathReady, setResetCareerPathReady] = useState(false);
+  const [formatCareerPathReady, setFormatCareerPathReady] = useState(false);
+  
+  // Callbacks to register reset handlers from child components
+  const handleResetPrerequisiteReady = useRef((handler: () => void) => {
+    resetPrerequisiteGraphRef.current = handler;
+    // Update state after render completes to avoid render-time update
+    requestAnimationFrame(() => {
+      setResetPrerequisiteReady(true);
+    });
+  });
+  
   const handleFullResetPrerequisiteReady = useRef((handler: () => void) => {
+    fullResetPrerequisiteGraphRef.current = handler;
+    // Update state after render completes to avoid render-time update
     requestAnimationFrame(() => {
-      setFullResetPrerequisiteGraph(() => handler);
+      setFullResetPrerequisiteReady(true);
     });
   });
-  
-  const handleFullResetCareerPathReady = useRef((handler: () => void) => {
+
+  const handleResetCareerPathReady = useRef((handler: () => void) => {
+    resetCareerPathGraphRef.current = handler;
+    // Update state after render completes to avoid render-time update
     requestAnimationFrame(() => {
-      setFullResetCareerPathGraph(() => handler);
+      setResetCareerPathReady(true);
     });
   });
+
+  const handleFormatCareerPathReady = useRef((handler: () => void) => {
+    formatCareerPathGraphRef.current = handler;
+    // Update state after render completes to avoid render-time update
+    requestAnimationFrame(() => {
+      setFormatCareerPathReady(true);
+    });
+  });
+
+  // Reset readiness flags when switching between pages
+  useEffect(() => {
+    if (!selectedCareerPath && !selectedDegree) {
+      setResetPrerequisiteReady(false);
+      setFullResetPrerequisiteReady(false);
+      setResetCareerPathReady(false);
+      setFormatCareerPathReady(false);
+      resetPrerequisiteGraphRef.current = null;
+      fullResetPrerequisiteGraphRef.current = null;
+      resetCareerPathGraphRef.current = null;
+      formatCareerPathGraphRef.current = null;
+    }
+  }, [selectedCareerPath, selectedDegree]);
+
   if (!selectedDegree) {
     return (
       <div className="flex-1 p-8">
@@ -133,6 +177,71 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
       );
     }
 
+    // Show SWE career path with graph
+    if (selectedCareerPath === "swe") {
+      return (
+        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-10 text-center">
+              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+                {careerPathNames[selectedCareerPath]} - {selectedDegree}
+              </h2>
+              <p className="text-black mb-5">
+                Career pathway information and recommended courses
+              </p>
+              {careerDescriptions[selectedCareerPath] && (
+                <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+                  {careerDescriptions[selectedCareerPath]}
+                </p>
+              )}
+            </div>
+            
+            {/* Reset and Format buttons for career path graph - separate from CS/CSE reset */}
+            <div className="mb-6 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  if (formatCareerPathReady && formatCareerPathGraphRef.current) {
+                    formatCareerPathGraphRef.current();
+                  }
+                }}
+                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                  formatCareerPathReady && formatCareerPathGraphRef.current
+                    ? "text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+                }`}
+                title={formatCareerPathReady && formatCareerPathGraphRef.current ? "Format graph to prevent overlap" : "Waiting for format handler..."}
+              >
+                Format Graph
+              </button>
+              <button
+                onClick={() => {
+                  if (resetCareerPathReady && resetCareerPathGraphRef.current) {
+                    resetCareerPathGraphRef.current();
+                  }
+                }}
+                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                  resetCareerPathReady && resetCareerPathGraphRef.current
+                    ? "text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+                }`}
+                title={resetCareerPathReady && resetCareerPathGraphRef.current ? "Reset career path graph view" : "Waiting for reset handler..."}
+              >
+                Reset Graph
+              </button>
+            </div>
+            
+            <div className="mb-10">
+              <CareerPathGraph 
+                onResetReady={handleResetCareerPathReady.current}
+                onFormatReady={handleFormatCareerPathReady.current}
+              />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Default career path view (for other careers)
     return (
       <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
         <div className="max-w-5xl mx-auto">
@@ -150,34 +259,11 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
             )}
           </div>
 
-          {selectedCareerPath === "swe" ? (
-            <div className="mb-8">
-              <GraphLegend 
-                onFormatLayoutClick={() => setUseFormattedLayout(!useFormattedLayout)}
-                useFormattedLayout={useFormattedLayout}
-                onResetClick={resetCareerPathGraph || undefined}
-                onFullResetClick={fullResetCareerPathGraph || undefined}
-              />
-            </div>
-          ) : null}
-          
-          {selectedCareerPath === "swe" ? (
-            <div className="mb-10">
-              <CareerPathGraph 
-                config={sweCareerPathConfig}
-                useFormattedLayoutExternal={useFormattedLayout}
-                onLayoutChange={setUseFormattedLayout}
-                onResetReady={setResetCareerPathGraph}
-                onFullResetReady={handleFullResetCareerPathReady.current}
-              />
-            </div>
-          ) : (
-            <div className="bg-card border-2 border-primary/20 rounded-xl p-8 shadow-lg">
-              <p className="text-lg text-muted-foreground text-center py-8">
-                Career path content for <span className="font-semibold text-primary">{careerPathNames[selectedCareerPath]}</span> coming soon...
-              </p>
-            </div>
-          )}
+          <div className="bg-card border-2 border-primary/20 rounded-xl p-8 shadow-lg">
+            <p className="text-lg text-muted-foreground text-center py-8">
+              Career path content for <span className="font-semibold text-primary">{careerPathNames[selectedCareerPath]}</span> coming soon...
+            </p>
+          </div>
         </div>
       </div>
     );
@@ -207,15 +293,15 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
             <GraphLegend 
               onFormatLayoutClick={() => setUseFormattedLayout(!useFormattedLayout)}
               useFormattedLayout={useFormattedLayout}
-              onResetClick={resetPrerequisiteGraph || undefined}
-              onFullResetClick={fullResetPrerequisiteGraph || undefined}
+              onResetClick={resetPrerequisiteReady ? resetPrerequisiteGraphRef.current || undefined : undefined}
+              onFullResetClick={fullResetPrerequisiteReady ? fullResetPrerequisiteGraphRef.current || undefined : undefined}
             />
           </div>
           <div className="mb-10">
             <PrerequisiteGraph 
               useFormattedLayoutExternal={useFormattedLayout}
               onLayoutChange={setUseFormattedLayout}
-              onResetReady={setResetPrerequisiteGraph}
+              onResetReady={handleResetPrerequisiteReady.current}
               onFullResetReady={handleFullResetPrerequisiteReady.current}
             />
           </div>

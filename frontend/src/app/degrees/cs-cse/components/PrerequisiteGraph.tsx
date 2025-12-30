@@ -635,53 +635,28 @@ export default function PrerequisiteGraph({ onLayoutChange, useFormattedLayoutEx
     fullResetFnRef.current = handleFullReset;
   }, [handleFullReset]);
 
-  // Expose reset handler to parent component (only on mount or when onResetReady changes)
+  // Expose reset handler to parent component
+  // Use useEffect to register handler after render completes
   useEffect(() => {
-    if (onResetReady) {
-      // Use setTimeout to ensure this runs after render
-      const timeoutId = setTimeout(() => {
-        onResetReady(() => resetFnRef.current());
-      }, 0);
-      return () => clearTimeout(timeoutId);
-    }
+    if (!onResetReady) return;
+    // Use requestAnimationFrame to ensure this runs after render phase
+    const rafId = requestAnimationFrame(() => {
+      onResetReady(() => resetFnRef.current());
+    });
+    return () => cancelAnimationFrame(rafId);
   }, [onResetReady]);
 
   // Expose full reset handler to parent component
-  // Use requestAnimationFrame to ensure this runs after all renders complete
+  // Use useEffect to register handler after render completes
   useEffect(() => {
     if (!onFullResetReady) return;
-    
-    let cancelled = false;
+    // Use requestAnimationFrame to ensure this runs after render phase
     const rafId = requestAnimationFrame(() => {
-      if (!cancelled) {
-        const handler = () => fullResetFnRef.current();
-        onFullResetReady(handler);
-      }
+      const handler = () => fullResetFnRef.current();
+      onFullResetReady(handler);
     });
-    
-    return () => {
-      cancelled = true;
-      cancelAnimationFrame(rafId);
-    };
-  }, [onFullResetReady]);
-  
-  // Re-expose handler when handleFullReset changes
-  useEffect(() => {
-    if (!onFullResetReady) return;
-    
-    let cancelled = false;
-    const rafId = requestAnimationFrame(() => {
-      if (!cancelled) {
-        const handler = () => fullResetFnRef.current();
-        onFullResetReady(handler);
-      }
-    });
-    
-    return () => {
-      cancelled = true;
-      cancelAnimationFrame(rafId);
-    };
-  }, [handleFullReset, onFullResetReady]);
+    return () => cancelAnimationFrame(rafId);
+  }, [onFullResetReady, handleFullReset]);
 
   const toggleCategory = (categoryId: string) => {
     setExpandedCategories((prev) => {

@@ -26,11 +26,12 @@ This means **one component works for all career paths** - you just provide diffe
 degrees/
 ├── components/
 │   └── CareerPathGraph.tsx  # Shared, reusable component (generic)
-├── careers/
-│   └── [career-id]/
-│       └── data/
-│           ├── tierCourses.ts        # Course data with descriptions
-│           └── careerPathConfig.ts  # Configuration object
+├── cs-cse/
+│   └── careers/
+│       └── [career-id]/
+│           └── data/
+│               ├── tierCourses.ts        # Course data with descriptions
+│               └── careerPathConfig.ts  # Configuration object
 └── types/
     └── careerPath.ts  # Shared types (TierCourse, CareerPathConfig, etc.)
 ```
@@ -44,7 +45,7 @@ The types are already defined in `src/types/careerPath.ts`. You'll use:
 
 ## Step 2: Define Course Data
 
-### File: `careers/[career-id]/data/tierCourses.ts`
+### File: `cs-cse/careers/[career-id]/data/tierCourses.ts`
 
 Create course data organized by tiers:
 
@@ -89,7 +90,7 @@ interface TierCourse {
 
 ## Step 3: Create Configuration File
 
-### File: `careers/[career-id]/data/careerPathConfig.ts`
+### File: `cs-cse/careers/[career-id]/data/careerPathConfig.ts`
 
 This is the **key file** that tells the component what to display:
 
@@ -141,32 +142,63 @@ export const [careerId]CareerPathConfig: CareerPathConfig = {
 
 ### File: `components/DegreesContent.tsx`
 
+The `CareerPathGraph` component is used directly in the `DegreesContent` component. It requires callbacks for reset and format functionality:
+
 ```typescript
-import CareerPathGraph from "./CareerPathGraph";
-import GraphLegend from "../cs-cse/components/GraphLegend";
-import { sweCareerPathConfig } from "../careers/swe/data/careerPathConfig";
+import CareerPathGraph from "../cs-cse/careers/swe/components/CareerPathGraph";
 
 // In your component:
-const [useFormattedLayout, setUseFormattedLayout] = useState(false);
-const [resetCareerPathGraph, setResetCareerPathGraph] = useState<(() => void) | null>(null);
-const [fullResetCareerPathGraph, setFullResetCareerPathGraph] = useState<(() => void) | null>(null);
+const resetCareerPathGraphRef = useRef<(() => void) | null>(null);
+const formatCareerPathGraphRef = useRef<(() => void) | null>(null);
+const [resetCareerPathReady, setResetCareerPathReady] = useState(false);
+const [formatCareerPathReady, setFormatCareerPathReady] = useState(false);
+
+const handleResetCareerPathReady = useRef((handler: () => void) => {
+  resetCareerPathGraphRef.current = handler;
+  requestAnimationFrame(() => {
+    setResetCareerPathReady(true);
+  });
+});
+
+const handleFormatCareerPathReady = useRef((handler: () => void) => {
+  formatCareerPathGraphRef.current = handler;
+  requestAnimationFrame(() => {
+    setFormatCareerPathReady(true);
+  });
+});
 
 if (selectedCareerPath === "swe") {
   return (
     <div>
       {/* ... header content ... */}
-      <GraphLegend 
-        onFormatLayoutClick={() => setUseFormattedLayout(!useFormattedLayout)}
-        useFormattedLayout={useFormattedLayout}
-        onResetClick={resetCareerPathGraph || undefined}
-        onFullResetClick={fullResetCareerPathGraph || undefined}
-      />
+      
+      {/* Format and Reset buttons */}
+      <div className="mb-6 flex justify-end gap-3">
+        <button
+          onClick={() => {
+            if (formatCareerPathReady && formatCareerPathGraphRef.current) {
+              formatCareerPathGraphRef.current();
+            }
+          }}
+          className="..."
+        >
+          Format Graph
+        </button>
+        <button
+          onClick={() => {
+            if (resetCareerPathReady && resetCareerPathGraphRef.current) {
+              resetCareerPathGraphRef.current();
+            }
+          }}
+          className="..."
+        >
+          Reset Graph
+        </button>
+      </div>
+      
       <CareerPathGraph 
-        config={sweCareerPathConfig}
-        useFormattedLayoutExternal={useFormattedLayout}
-        onLayoutChange={setUseFormattedLayout}
-        onResetReady={setResetCareerPathGraph}
-        onFullResetReady={setFullResetCareerPathGraph}
+        onResetReady={handleResetCareerPathReady.current}
+        onFormatReady={handleFormatCareerPathReady.current}
       />
     </div>
   );
@@ -177,43 +209,50 @@ if (selectedCareerPath === "swe") {
 
 ### Component Behavior:
 
-1. **Root Node**: Displays `config.rootLabel`
-2. **Category Nodes**: Creates nodes from `config.categories`
-3. **Course Expansion**: When a category is clicked, shows courses with matching `tier`
-4. **Course Details**: When a course is clicked, expands to show `description` and optional `resources`
-5. **Draggable Nodes**: All nodes can be dragged to reposition them on the graph
-6. **Reset Functionality**: Two reset buttons available:
-   - **Reset Positions**: Restores nodes to their default layout positions (keeps expanded state)
-   - **Reset Graph**: Fully resets the graph (positions, expanded categories, expanded courses, layout format)
+1. **Root Node**: Displays the career path name (e.g., "SWE") - configured via `careerPathConfig.rootLabel`
+2. **Tier/Category Nodes**: Creates nodes from `config.categories` - circular nodes with emoji indicators
+3. **Course Expansion**: When a tier node is clicked, shows courses with matching `tier` number below it
+4. **Draggable Nodes**: All nodes can be dragged to reposition them on the graph
+5. **Format Graph Button**: Repositions all nodes with increased spacing to prevent overlap:
+   - Increases tier spacing from 400px to 600px
+   - Reduces courses per row from 3 to 2
+   - Increases course spacing from 220px to 300px
+   - Increases row spacing from 100px to 120px
+6. **Reset Graph Button**: Fully resets the graph:
+   - Collapses all expanded tiers
+   - Clears all saved node positions
+   - Returns to initial unopened state
 
-### Course Node States:
+### Node Structure:
 
-- **Collapsed**: Shows only course name (compact)
-- **Expanded**: Shows course name + description + resources (if any)
+- **Root Node**: Large circular node with primary color styling
+- **Tier Nodes**: Medium circular nodes with dashed borders (collapsed) or solid borders (expanded)
+- **Course Nodes**: Rectangular cards displaying course code and name
 
 ### Interactive Features:
 
+- **Tier Expansion**: Click tier nodes to expand/collapse and show their courses
 - **Node Dragging**: Click and drag any node to reposition it. Positions are saved automatically.
-- **Format Layout**: Toggle between compact and formatted layouts to prevent node overlaps
-- **Reset Positions**: Click to restore all nodes to their default calculated positions
-- **Reset Graph**: Click to fully reset the graph to its original state (all nodes collapsed, default positions, default layout)
+- **Format Graph**: Click to automatically reposition all nodes with wider spacing to prevent overlap
+- **Reset Graph**: Click to fully reset the graph to its initial state (all tiers collapsed, default positions)
 
 ## Example: Adding a New Career Path
 
 ### 1. Create Directory Structure
 
 ```
-careers/
-└── cybersecurity/
-    └── data/
-        ├── tierCourses.ts
-        └── careerPathConfig.ts
+cs-cse/
+└── careers/
+    └── cybersecurity/
+        └── data/
+            ├── tierCourses.ts
+            └── careerPathConfig.ts
 ```
 
 ### 2. Define Courses
 
 ```typescript
-// careers/cybersecurity/data/tierCourses.ts
+// cs-cse/careers/cybersecurity/data/tierCourses.ts
 export const tier1Courses: TierCourse[] = [
   {
     id: "cse-140",
@@ -230,7 +269,7 @@ export const tier1Courses: TierCourse[] = [
 ### 3. Create Config
 
 ```typescript
-// careers/cybersecurity/data/careerPathConfig.ts
+// cs-cse/careers/cybersecurity/data/careerPathConfig.ts
 export const cybersecurityCareerPathConfig: CareerPathConfig = {
   rootLabel: "Cybersecurity",
   categories: [
@@ -241,32 +280,41 @@ export const cybersecurityCareerPathConfig: CareerPathConfig = {
 };
 ```
 
-### 4. Use in DegreesContent
+### 4. Create Component File
+
+The `CareerPathGraph` component is shared and reused across all career paths. Each career path should have its own component file that imports the shared component, but currently all career paths use the same component directly.
+
+**File**: `cs-cse/careers/[career-id]/components/CareerPathGraph.tsx`
+
+For new career paths, you can either:
+- Reuse the existing SWE component (it's config-driven, so it works for all)
+- Copy the component and customize if needed
+
+### 5. Use in DegreesContent
 
 ```typescript
-import { cybersecurityCareerPathConfig } from "../careers/cybersecurity/data/careerPathConfig";
-import CareerPathGraph from "./CareerPathGraph";
-import GraphLegend from "../cs-cse/components/GraphLegend";
+import CareerPathGraph from "../cs-cse/careers/cybersecurity/components/CareerPathGraph";
 
-const [useFormattedLayout, setUseFormattedLayout] = useState(false);
-const [resetCareerPathGraph, setResetCareerPathGraph] = useState<(() => void) | null>(null);
-const [fullResetCareerPathGraph, setFullResetCareerPathGraph] = useState<(() => void) | null>(null);
+// Set up refs and handlers (same pattern as SWE)
+const resetCareerPathGraphRef = useRef<(() => void) | null>(null);
+const formatCareerPathGraphRef = useRef<(() => void) | null>(null);
 
 if (selectedCareerPath === "cybersecurity") {
   return (
     <div>
-      <GraphLegend 
-        onFormatLayoutClick={() => setUseFormattedLayout(!useFormattedLayout)}
-        useFormattedLayout={useFormattedLayout}
-        onResetClick={resetCareerPathGraph || undefined}
-        onFullResetClick={fullResetCareerPathGraph || undefined}
-      />
+      {/* Format and Reset buttons */}
+      <div className="mb-6 flex justify-end gap-3">
+        <button onClick={() => formatCareerPathGraphRef.current?.()}>
+          Format Graph
+        </button>
+        <button onClick={() => resetCareerPathGraphRef.current?.()}>
+          Reset Graph
+        </button>
+      </div>
+      
       <CareerPathGraph 
-        config={cybersecurityCareerPathConfig}
-        useFormattedLayoutExternal={useFormattedLayout}
-        onLayoutChange={setUseFormattedLayout}
-        onResetReady={setResetCareerPathGraph}
-        onFullResetReady={setFullResetCareerPathGraph}
+        onResetReady={handleResetCareerPathReady.current}
+        onFormatReady={handleFormatCareerPathReady.current}
       />
     </div>
   );
@@ -333,15 +381,15 @@ courses: [
 - Check that courses are filtered correctly in the component
 
 ### Layout Issues
-- Use "Format Layout (No Overlap)" button to prevent node overlaps
-- Use "Reset Positions" button to restore nodes to default layout positions
-- Use "Reset Graph" button to fully reset the graph (positions, expanded nodes, layout)
-- Adjust spacing in `getLayoutedElements` if needed
+- Use "Format Graph" button to automatically reposition nodes with wider spacing to prevent overlap
+- Use "Reset Graph" button to fully reset the graph (collapses all tiers, clears positions, returns to initial state)
+- Nodes are automatically positioned - if overlap occurs after expanding tiers, click "Format Graph" again
+- Spacing values are defined in the `useMemo` calculation: `tierSpacing`, `courseSpacing`, `rowSpacing`, `coursesPerRow`
 
 ## Related Documentation
 
 - See `GRAPH_STRUCTURE_GUIDE.md` for prerequisite graph structure
 - See `DEGREES_PAGE.md` for overall page structure
-- See `careers/README.md` for career path organization
+- See `cs-cse/careers/README.md` for career path organization
 
 

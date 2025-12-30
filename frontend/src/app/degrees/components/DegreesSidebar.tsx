@@ -68,7 +68,7 @@ export default function DegreesSidebar({
   const hasCareerPaths = (degree: string) => careerPaths[degree] && careerPaths[degree].length > 0;
 
   return (
-    <aside className="w-72 border-r bg-background/50 sticky top-[73px] h-[calc(100vh-73px)] overflow-y-auto">
+    <aside className="w-72 border-r border-border bg-background sticky top-[73px] h-[calc(100vh-73px)] overflow-y-auto z-10">
       <div className="p-2">
         <nav className="space-y-1">
           {degrees.map((degree) => {
