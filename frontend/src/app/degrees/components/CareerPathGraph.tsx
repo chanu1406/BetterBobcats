@@ -9,7 +9,7 @@
  * that defines the structure, categories, and courses for any career path.
  */
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useCallback, useEffect, useLayoutEffect, useRef, memo } from "react";
 import ReactFlow, {
   Node,
   Edge,
@@ -18,6 +18,9 @@ import ReactFlow, {
   ReactFlowProvider,
   Handle,
   Position,
+  NodeChange,
+  applyNodeChanges,
+  useReactFlow,
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { CareerPathConfig, TierCourse } from "@/types/careerPath";
@@ -124,14 +127,81 @@ function ExpandableCourseNode({
   );
 }
 
+// Define nodeTypes outside component to avoid React Flow warning
 const nodeTypes = {
   root: RootNode,
   category: CategoryNode,
   course: ExpandableCourseNode,
 };
 
+// Helper function to check if two nodes overlap
+function nodesOverlap(
+  node1: Node, 
+  node2: Node, 
+  minSpacing: number = 200
+): boolean {
+  const dx = Math.abs(node1.position.x - node2.position.x);
+  const dy = Math.abs(node1.position.y - node2.position.y);
+  // Approximate node sizes: root/category nodes ~96px, course nodes ~180-400px wide, 60-200px tall
+  const node1Width = node1.type === "root" || node1.type === "category" ? 96 : (node1.data?.isExpanded ? 400 : 180);
+  const node1Height = node1.type === "root" || node1.type === "category" ? 96 : (node1.data?.isExpanded ? 200 : 60);
+  const node2Width = node2.type === "root" || node2.type === "category" ? 96 : (node2.data?.isExpanded ? 400 : 180);
+  const node2Height = node2.type === "root" || node2.type === "category" ? 96 : (node2.data?.isExpanded ? 200 : 60);
+  
+  const minDistanceX = (node1Width + node2Width) / 2 + minSpacing;
+  const minDistanceY = (node1Height + node2Height) / 2 + minSpacing;
+  
+  return dx < minDistanceX && dy < minDistanceY;
+}
+
+// Helper function to adjust position to avoid overlaps
+function adjustPositionToAvoidOverlap(
+  node: Node,
+  otherNodes: Node[],
+  defaultPosition: { x: number; y: number },
+  minSpacing: number = 200
+): { x: number; y: number } {
+  let position = { ...defaultPosition };
+  let attempts = 0;
+  const maxAttempts = 50;
+  
+  while (attempts < maxAttempts) {
+    let hasOverlap = false;
+    for (const otherNode of otherNodes) {
+      if (otherNode.id !== node.id && nodesOverlap({ ...node, position }, otherNode, minSpacing)) {
+        hasOverlap = true;
+        // Try moving slightly away
+        const dx = otherNode.position.x - position.x;
+        const dy = otherNode.position.y - position.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        if (distance > 0) {
+          const moveDistance = minSpacing + 50;
+          position.x = otherNode.position.x - (dx / distance) * moveDistance;
+          position.y = otherNode.position.y - (dy / distance) * moveDistance;
+        } else {
+          // If nodes are at same position, move randomly
+          position.x += (Math.random() - 0.5) * minSpacing * 2;
+          position.y += (Math.random() - 0.5) * minSpacing * 2;
+        }
+        break;
+      }
+    }
+    if (!hasOverlap) {
+      break;
+    }
+    attempts++;
+  }
+  
+  return position;
+}
+
 // Layout function - position root at top, categories below, courses in hierarchy
-function getLayoutedElements(nodes: Node[], edges: Edge[], useFormattedLayout: boolean = false) {
+function getLayoutedElements(
+  nodes: Node[], 
+  edges: Edge[], 
+  useFormattedLayout: boolean = false,
+  savedPositions: Record<string, { x: number; y: number }> = {}
+) {
   const rootNode = nodes.find((n) => n.id === "career-path-root");
   const categoryNodes = nodes.filter((n) => n.id.startsWith("category-"));
   const courseNodes = nodes.filter((n) => !n.id.startsWith("category-") && n.id !== "career-path-root");
@@ -139,7 +209,8 @@ function getLayoutedElements(nodes: Node[], edges: Edge[], useFormattedLayout: b
   if (rootNode) {
     rootNode.targetPosition = "top" as any;
     rootNode.sourcePosition = "bottom" as any;
-    rootNode.position = { x: 0, y: 40 };
+    // Use saved position if available, otherwise use default
+    rootNode.position = savedPositions[rootNode.id] || { x: 0, y: 40 };
   }
 
   // Position category nodes in a row below root
@@ -148,10 +219,19 @@ function getLayoutedElements(nodes: Node[], edges: Edge[], useFormattedLayout: b
   categoryNodes.forEach((node, index) => {
     node.targetPosition = "top" as any;
     node.sourcePosition = "bottom" as any;
-    node.position = {
+    // Use saved position if available, otherwise use calculated position
+    const defaultPosition = {
       x: categoryStartX + index * categorySpacing,
       y: 160,
     };
+    if (!savedPositions[node.id]) {
+      node.position = defaultPosition;
+    } else {
+      // Check for overlaps and adjust if needed
+      const savedPos = savedPositions[node.id];
+      const allOtherNodes = [...categoryNodes.filter(n => n.id !== node.id), rootNode].filter(Boolean) as Node[];
+      node.position = adjustPositionToAvoidOverlap(node, allOtherNodes, savedPos, categorySpacing * 0.8);
+    }
   });
 
   // Position course nodes below their category
@@ -185,13 +265,32 @@ function getLayoutedElements(nodes: Node[], edges: Edge[], useFormattedLayout: b
       
       courseNode.targetPosition = "top" as any;
       courseNode.sourcePosition = "bottom" as any;
-      courseNode.position = {
+      // Use saved position if available, otherwise use calculated position
+      const defaultPosition = {
         x: startX + index * nodeSpacing,
         y: currentY,
       };
+      if (!savedPositions[courseNode.id]) {
+        courseNode.position = defaultPosition;
+      } else {
+        // Check for overlaps and adjust if needed
+        const allOtherNodes = [...categoryNodes, rootNode, ...courseNodes.filter(n => n.id !== courseNode.id)].filter(Boolean) as Node[];
+        courseNode.position = adjustPositionToAvoidOverlap(courseNode, allOtherNodes, savedPositions[courseNode.id], horizontalSpacing);
+      }
     });
 
     currentY += verticalSpacing;
+  });
+  
+  // Final pass: ensure no overlaps for all nodes with saved positions
+  nodes.forEach((node) => {
+    if (savedPositions[node.id]) {
+      const allOtherNodes = nodes.filter(n => n.id !== node.id);
+      const currentPos = node.position;
+      const minSpacing = node.type === "category" ? categorySpacing * 0.8 : horizontalSpacing;
+      const adjustedPos = adjustPositionToAvoidOverlap(node, allOtherNodes, currentPos, minSpacing);
+      node.position = adjustedPos;
+    }
   });
   
   return { nodes, edges };
@@ -201,16 +300,24 @@ interface CareerPathGraphProps {
   config: CareerPathConfig;
   onLayoutChange?: (useFormatted: boolean) => void;
   useFormattedLayoutExternal?: boolean;
+  onResetReady?: (resetFn: () => void) => void;
+  onFullResetReady?: (resetFn: () => void) => void;
 }
 
 export default function CareerPathGraph({ 
   config, 
   onLayoutChange, 
-  useFormattedLayoutExternal 
+  useFormattedLayoutExternal,
+  onResetReady,
+  onFullResetReady
 }: CareerPathGraphProps) {
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
   const [expandedCourses, setExpandedCourses] = useState<Set<string>>(new Set());
   const [useFormattedLayoutInternal, setUseFormattedLayoutInternal] = useState(false);
+  const [nodePositions, setNodePositions] = useState<Record<string, { x: number; y: number }>>({});
+  const [isDragging, setIsDragging] = useState(false);
+  const [nodesState, setNodesState] = useState<Node[]>([]);
+  const [edgesState, setEdgesState] = useState<Edge[]>([]);
   
   // Use external state if provided, otherwise use internal state
   const useFormattedLayout = useFormattedLayoutExternal !== undefined ? useFormattedLayoutExternal : useFormattedLayoutInternal;
@@ -222,6 +329,131 @@ export default function CareerPathGraph({
       setUseFormattedLayoutInternal(value);
     }
   };
+
+  // Handle node drag start
+  const onNodeDragStart = useCallback(() => {
+    setIsDragging(true);
+  }, []);
+
+  // Handle node drag stop - save final position
+  const onNodeDragStop = useCallback((_event: React.MouseEvent, node: Node) => {
+    setIsDragging(false);
+    setNodePositions((prev) => ({
+      ...prev,
+      [node.id]: node.position,
+    }));
+  }, []);
+
+  // Handle node changes - let React Flow handle drag updates internally
+  const onNodesChange = useCallback((changes: NodeChange[]) => {
+    // Apply changes to nodes state so React Flow can handle dragging smoothly
+    setNodesState((nds) => applyNodeChanges(changes, nds));
+    
+    // Save positions when drag ends (not during drag to avoid conflicts)
+    changes.forEach((change) => {
+      if (change.type === "position" && !change.dragging && change.position && change.id) {
+        setNodePositions((prev) => ({
+          ...prev,
+          [change.id]: { x: change.position!.x, y: change.position!.y },
+        }));
+      }
+    });
+  }, []);
+
+  // Reset node positions to default layout
+  const handleResetPositions = useCallback(() => {
+    setNodePositions({});
+  }, []);
+
+  // Full reset: positions, expanded categories, expanded courses, layout, and view
+  const handleFullReset = useCallback(() => {
+    // Reset all state to original values
+    setNodePositions({});
+    setExpandedCategories(new Set());
+    setExpandedCourses(new Set());
+    setIsDragging(false);
+    
+    // Clear nodesState and edgesState so they get recalculated from fresh layout
+    setNodesState([]);
+    setEdgesState([]);
+    
+    // Reset layout format
+    if (onLayoutChange) {
+      onLayoutChange(false);
+    } else {
+      setUseFormattedLayoutInternal(false);
+    }
+    
+    // Trigger fitView after a brief delay to ensure layout is recalculated
+    setTimeout(() => {
+      // The fitView prop will handle this automatically when isDragging is false
+      // and nodesState is empty (which triggers recalculation from nodes)
+    }, 100);
+  }, [onLayoutChange]);
+
+  // Use refs to store the latest reset functions
+  const resetFnRef = useRef(handleResetPositions);
+  resetFnRef.current = handleResetPositions;
+
+  const fullResetFnRef = useRef(handleFullReset);
+  fullResetFnRef.current = handleFullReset;
+
+  // Update refs when functions change
+  useEffect(() => {
+    resetFnRef.current = handleResetPositions;
+  }, [handleResetPositions]);
+  
+  useEffect(() => {
+    fullResetFnRef.current = handleFullReset;
+  }, [handleFullReset]);
+
+  // Expose reset handler to parent component (only on mount or when onResetReady changes)
+  useEffect(() => {
+    if (onResetReady) {
+      // Use setTimeout to ensure this runs after render
+      const timeoutId = setTimeout(() => {
+        onResetReady(() => resetFnRef.current());
+      }, 0);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [onResetReady]);
+
+  // Expose full reset handler to parent component
+  // Use requestAnimationFrame to ensure this runs after all renders complete
+  useEffect(() => {
+    if (!onFullResetReady) return;
+    
+    let cancelled = false;
+    const rafId = requestAnimationFrame(() => {
+      if (!cancelled) {
+        const handler = () => fullResetFnRef.current();
+        onFullResetReady(handler);
+      }
+    });
+    
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(rafId);
+    };
+  }, [onFullResetReady]);
+  
+  // Re-expose handler when handleFullReset changes
+  useEffect(() => {
+    if (!onFullResetReady) return;
+    
+    let cancelled = false;
+    const rafId = requestAnimationFrame(() => {
+      if (!cancelled) {
+        const handler = () => fullResetFnRef.current();
+        onFullResetReady(handler);
+      }
+    });
+    
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(rafId);
+    };
+  }, [handleFullReset, onFullResetReady]);
 
   const toggleCategory = (categoryId: string) => {
     setExpandedCategories((prev) => {
@@ -330,24 +562,79 @@ export default function CareerPathGraph({
     const allNodes = [rootNode, ...categoryNodes, ...courseNodes];
     const allEdges = [...categoryEdges, ...courseEdges];
 
-    // Apply layout
-    return getLayoutedElements(allNodes, allEdges, useFormattedLayout);
-  }, [config, expandedCategories, expandedCourses, useFormattedLayout]);
+    // Apply layout (preserving saved positions)
+    // Don't recalculate layout during drag to prevent nodes from disappearing
+    return getLayoutedElements(allNodes, allEdges, useFormattedLayout, nodePositions);
+  }, [config, expandedCategories, expandedCourses, useFormattedLayout, nodePositions]);
+
+  // Always use controlled nodes/edges - sync from layout when not dragging
+  useEffect(() => {
+    if (!isDragging) {
+      // Update from layout when not dragging, preserving any dragged positions
+      setNodesState((currentNodes) => {
+        // Create a map of current node positions (including dragged ones)
+        const positionMap = new Map(currentNodes.map(n => [n.id, n.position]));
+        
+        // Update nodes from layout, but preserve positions from current state
+        return nodes.map(node => ({
+          ...node,
+          position: positionMap.get(node.id) || node.position,
+        }));
+      });
+      setEdgesState(edges);
+    }
+  }, [nodes, edges, isDragging]);
+
+  // Initialize nodesState on first render
+  useEffect(() => {
+    if (nodesState.length === 0 && nodes.length > 0) {
+      setNodesState(nodes);
+      setEdgesState(edges);
+    }
+  }, [nodes, edges, nodesState.length]);
+
+  // Memoize nodeTypes to prevent React Flow warning
+  const memoizedNodeTypes = useMemo(() => nodeTypes, []);
+
+  // Inner component that can use useReactFlow hook
+  const FlowContent = () => {
+    const { fitView } = useReactFlow();
+    
+    // Trigger fitView when reset happens (when nodesState is cleared)
+    useEffect(() => {
+      if (nodesState.length === 0 && nodes.length > 0) {
+        // Small delay to ensure layout is recalculated
+        const timeoutId = setTimeout(() => {
+          fitView({ padding: 0.1, maxZoom: 1.5 });
+        }, 150);
+        return () => clearTimeout(timeoutId);
+      }
+    }, [nodesState.length, nodes.length, fitView]);
+
+    return (
+      <ReactFlow
+        nodes={nodesState.length > 0 ? nodesState : nodes}
+        edges={edgesState.length > 0 ? edgesState : edges}
+        nodeTypes={memoizedNodeTypes}
+        onNodesChange={onNodesChange}
+        onNodeDragStart={onNodeDragStart}
+        onNodeDragStop={onNodeDragStop}
+        nodesDraggable={true}
+        fitView={!isDragging}
+        fitViewOptions={{ padding: 0.1, maxZoom: 1.5 }}
+        attributionPosition="bottom-left"
+      >
+        <Background color="#e2e8f0" gap={16} />
+        <Controls />
+      </ReactFlow>
+    );
+  };
 
   return (
     <div className="w-full border border-border/40 rounded-lg overflow-hidden relative pt-6">
       <div className="w-full h-[800px] relative [&_.react-flow__background]:opacity-30">
         <ReactFlowProvider>
-          <ReactFlow
-            nodes={nodes}
-            edges={edges}
-            nodeTypes={nodeTypes}
-            fitView
-            attributionPosition="bottom-left"
-          >
-            <Background color="#e2e8f0" gap={16} />
-            <Controls />
-          </ReactFlow>
+          <FlowContent />
         </ReactFlowProvider>
       </div>
       <div className="w-full px-4 py-2 bg-muted/20 border-t border-border/40">

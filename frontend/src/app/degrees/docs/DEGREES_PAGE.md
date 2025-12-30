@@ -95,7 +95,10 @@ The page consists of three main sections:
   - Clickable category nodes with toggle functionality (expand/collapse courses)
   - Visual feedback for expanded categories (solid border, darker background)
   - Hover effects on category nodes
-  - Format layout button: Toggles between compact (180px category spacing) and formatted (350px spacing) layouts
+  - **Draggable nodes**: All nodes can be dragged to reposition them on the graph
+  - **Format layout button**: Toggles between compact (180px category spacing) and formatted (350px spacing) layouts
+  - **Reset Positions button**: Restores nodes to their default layout positions (keeps expanded state)
+  - **Reset Graph button**: Fully resets the graph (positions, expanded categories, layout format)
   - Year-based color coding for course nodes:
     - Year 1: Blue (`bg-blue-100`, `border-blue-300`)
     - Year 2: Green (`bg-green-100`, `border-green-300`)
@@ -117,10 +120,19 @@ The page consists of three main sections:
 ### GraphLegend Component
 - **File:** `src/app/degrees/cs-cse/components/GraphLegend.tsx`
 - **Type:** Server component
+- **Props:**
+  - `onFormatLayoutClick?: () => void` - Callback to toggle layout format
+  - `useFormattedLayout?: boolean` - Current layout format state
+  - `onResetClick?: () => void` - Callback to reset node positions
+  - `onFullResetClick?: () => void` - Callback to fully reset the graph
 - **Responsibility:**
   - Displays color legend for academic years
   - Shows year labels: First Year, Second Year, Third Year, Fourth Year
   - Provides color reference for course nodes by year
+  - Provides graph control buttons:
+    - **Format Layout / Toggle Compact View**: Toggles between compact and formatted layouts
+    - **Reset Graph**: Fully resets the graph (positions, expanded nodes, layout)
+    - **Reset Positions**: Restores nodes to default positions (keeps expanded state)
   - Helps users understand the color coding system used in the prerequisite graph
 - **Styling:**
   - Light color scheme matching node colors
@@ -128,6 +140,7 @@ The page consists of three main sections:
   - Compact layout with color swatches (4x4px squares)
   - Flexbox layout with gap spacing
   - Responsive text sizing (`text-sm`)
+  - Control buttons positioned top-right with appropriate styling
 
 ## State Management
 
@@ -243,8 +256,12 @@ The CS/CSE degree page includes an interactive prerequisite graph visualization 
 ### Interactive Features
 - **Clickable Categories:** Category nodes can be clicked to toggle their expanded state
 - **Visual Feedback:** Expanded categories show solid borders and darker backgrounds
-- **Pan & Zoom:** Users can pan and zoom the graph using controls
-- **Arrows:** Arrows connect the root node to each category node
+- **Draggable Nodes:** All nodes (root, categories, courses) can be dragged to reposition them
+- **Pan & Zoom:** Users can pan and zoom the graph using React Flow controls
+- **Arrows:** Arrows connect the root node to each category node and show prerequisite relationships
+- **Format Layout:** Toggle button to switch between compact and formatted layouts (prevents overlaps)
+- **Reset Positions:** Button to restore all nodes to their default calculated positions
+- **Reset Graph:** Button to fully reset the graph to its original state (all nodes collapsed, default positions, default layout)
 
 ### Data Structure
 - Course data is stored in `src/app/degrees/cs-cse/data/courses.ts`
@@ -334,6 +351,9 @@ Each career path directory contains:
 - ✅ Year-based color coding for course nodes
 - ✅ Prerequisite relationship visualization
 - ✅ Format layout button for preventing overlaps
+- ✅ Draggable nodes with position persistence
+- ✅ Reset Positions button
+- ✅ Reset Graph button (full reset)
 - ✅ Compact node sizes optimized for single-page display
 
 ## Future Enhancements
@@ -360,6 +380,10 @@ Career path pages use the reusable `CareerPathGraph` component with a config-dri
 ### Key Features:
 - **Expandable Course Nodes**: Click courses to see descriptions
 - **Tier-Based Organization**: Courses organized into tiers (e.g., Tier 1, Tier 2, Tier 3)
+- **Draggable Nodes**: All nodes can be repositioned by dragging
+- **Reset Functionality**: Two reset options:
+  - **Reset Positions**: Restores nodes to default layout positions
+  - **Reset Graph**: Fully resets graph (positions, expanded nodes, layout)
 - **Reusable**: Same component works for all career paths
 - **Type-Safe**: Uses shared types from `src/types/careerPath.ts`
 

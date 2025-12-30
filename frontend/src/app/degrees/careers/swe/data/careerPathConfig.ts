@@ -16,6 +16,7 @@ export const sweCareerPathConfig: CareerPathConfig = {
   courses: [...tier1Courses, ...tier2Courses, ...tier3Courses],
   categoryIntros: {
     "tier-1": "These are the **highest ROI courses** for SWE jobs and internships. If a student can only take **4-6 electives**, these should dominate.",
+    "tier-2": "These make students stand out, but aren't mandatory.",
   },
 };
 

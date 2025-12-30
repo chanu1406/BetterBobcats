@@ -5,7 +5,7 @@
  */
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import PrerequisiteGraph from "../cs-cse/components/PrerequisiteGraph";
 import GraphLegend from "../cs-cse/components/GraphLegend";
 import CareerPathGraph from "./CareerPathGraph";
@@ -18,6 +18,23 @@ interface DegreesContentProps {
 
 export default function DegreesContent({ selectedDegree, selectedCareerPath }: DegreesContentProps) {
   const [useFormattedLayout, setUseFormattedLayout] = useState(false);
+  const [resetPrerequisiteGraph, setResetPrerequisiteGraph] = useState<(() => void) | null>(null);
+  const [resetCareerPathGraph, setResetCareerPathGraph] = useState<(() => void) | null>(null);
+  const [fullResetPrerequisiteGraph, setFullResetPrerequisiteGraph] = useState<(() => void) | null>(null);
+  const [fullResetCareerPathGraph, setFullResetCareerPathGraph] = useState<(() => void) | null>(null);
+  
+  // Wrapper functions to set handlers asynchronously to avoid render-time updates
+  const handleFullResetPrerequisiteReady = useRef((handler: () => void) => {
+    requestAnimationFrame(() => {
+      setFullResetPrerequisiteGraph(() => handler);
+    });
+  });
+  
+  const handleFullResetCareerPathReady = useRef((handler: () => void) => {
+    requestAnimationFrame(() => {
+      setFullResetCareerPathGraph(() => handler);
+    });
+  });
   if (!selectedDegree) {
     return (
       <div className="flex-1 p-8">
@@ -62,12 +79,59 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
       "data-science": "Data Science / Data Analytics",
       systems: "Systems / Infrastructure Engineering Pathway",
       embedded: "Embedded Systems Engineering Pathway",
+      resumes: "Resumes",
+      alumni: "Alumni",
     };
 
     // Get description for SWE (Generalist)
     const careerDescriptions: Record<string, string> = {
       swe: "Software Engineers (Generalists) build and maintain software systems across multiple areas of the stack. This role emphasizes strong fundamentals in programming, data structures, and system design, along with hands-on experience building real applications. It's a flexible path suited for students who want broad technical exposure and strong career mobility across industries.",
     };
+
+    // Handle special sections (Resumes, Alumni)
+    if (selectedCareerPath === "resumes") {
+      return (
+        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+          <div className="max-w-5xl mx-auto">
+            <div className="mb-8 text-center">
+              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+                Resumes - {selectedDegree}
+              </h2>
+              <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+                Explore resume examples, templates, and best practices for CS/CSE students.
+              </p>
+            </div>
+            <div className="bg-card border-2 border-primary/20 rounded-xl p-8 shadow-lg">
+              <p className="text-lg text-muted-foreground text-center py-8">
+                Resume resources and examples coming soon...
+              </p>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (selectedCareerPath === "alumni") {
+      return (
+        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+          <div className="max-w-5xl mx-auto">
+            <div className="mb-8 text-center">
+              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+                Alumni - {selectedDegree}
+              </h2>
+              <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+                Connect with CS/CSE alumni and learn about their career journeys and experiences.
+              </p>
+            </div>
+            <div className="bg-card border-2 border-primary/20 rounded-xl p-8 shadow-lg">
+              <p className="text-lg text-muted-foreground text-center py-8">
+                Alumni profiles and stories coming soon...
+              </p>
+            </div>
+          </div>
+        </div>
+      );
+    }
 
     return (
       <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
@@ -91,6 +155,8 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
               <GraphLegend 
                 onFormatLayoutClick={() => setUseFormattedLayout(!useFormattedLayout)}
                 useFormattedLayout={useFormattedLayout}
+                onResetClick={resetCareerPathGraph || undefined}
+                onFullResetClick={fullResetCareerPathGraph || undefined}
               />
             </div>
           ) : null}
@@ -101,6 +167,8 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
                 config={sweCareerPathConfig}
                 useFormattedLayoutExternal={useFormattedLayout}
                 onLayoutChange={setUseFormattedLayout}
+                onResetReady={setResetCareerPathGraph}
+                onFullResetReady={handleFullResetCareerPathReady.current}
               />
             </div>
           ) : (
@@ -139,12 +207,16 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
             <GraphLegend 
               onFormatLayoutClick={() => setUseFormattedLayout(!useFormattedLayout)}
               useFormattedLayout={useFormattedLayout}
+              onResetClick={resetPrerequisiteGraph || undefined}
+              onFullResetClick={fullResetPrerequisiteGraph || undefined}
             />
           </div>
           <div className="mb-10">
             <PrerequisiteGraph 
               useFormattedLayoutExternal={useFormattedLayout}
               onLayoutChange={setUseFormattedLayout}
+              onResetReady={setResetPrerequisiteGraph}
+              onFullResetReady={handleFullResetPrerequisiteReady.current}
             />
           </div>
           

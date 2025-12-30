@@ -143,17 +143,30 @@ export const [careerId]CareerPathConfig: CareerPathConfig = {
 
 ```typescript
 import CareerPathGraph from "./CareerPathGraph";
+import GraphLegend from "../cs-cse/components/GraphLegend";
 import { sweCareerPathConfig } from "../careers/swe/data/careerPathConfig";
 
 // In your component:
+const [useFormattedLayout, setUseFormattedLayout] = useState(false);
+const [resetCareerPathGraph, setResetCareerPathGraph] = useState<(() => void) | null>(null);
+const [fullResetCareerPathGraph, setFullResetCareerPathGraph] = useState<(() => void) | null>(null);
+
 if (selectedCareerPath === "swe") {
   return (
     <div>
       {/* ... header content ... */}
+      <GraphLegend 
+        onFormatLayoutClick={() => setUseFormattedLayout(!useFormattedLayout)}
+        useFormattedLayout={useFormattedLayout}
+        onResetClick={resetCareerPathGraph || undefined}
+        onFullResetClick={fullResetCareerPathGraph || undefined}
+      />
       <CareerPathGraph 
         config={sweCareerPathConfig}
         useFormattedLayoutExternal={useFormattedLayout}
         onLayoutChange={setUseFormattedLayout}
+        onResetReady={setResetCareerPathGraph}
+        onFullResetReady={setFullResetCareerPathGraph}
       />
     </div>
   );
@@ -168,11 +181,22 @@ if (selectedCareerPath === "swe") {
 2. **Category Nodes**: Creates nodes from `config.categories`
 3. **Course Expansion**: When a category is clicked, shows courses with matching `tier`
 4. **Course Details**: When a course is clicked, expands to show `description` and optional `resources`
+5. **Draggable Nodes**: All nodes can be dragged to reposition them on the graph
+6. **Reset Functionality**: Two reset buttons available:
+   - **Reset Positions**: Restores nodes to their default layout positions (keeps expanded state)
+   - **Reset Graph**: Fully resets the graph (positions, expanded categories, expanded courses, layout format)
 
 ### Course Node States:
 
 - **Collapsed**: Shows only course name (compact)
 - **Expanded**: Shows course name + description + resources (if any)
+
+### Interactive Features:
+
+- **Node Dragging**: Click and drag any node to reposition it. Positions are saved automatically.
+- **Format Layout**: Toggle between compact and formatted layouts to prevent node overlaps
+- **Reset Positions**: Click to restore all nodes to their default calculated positions
+- **Reset Graph**: Click to fully reset the graph to its original state (all nodes collapsed, default positions, default layout)
 
 ## Example: Adding a New Career Path
 
@@ -221,10 +245,30 @@ export const cybersecurityCareerPathConfig: CareerPathConfig = {
 
 ```typescript
 import { cybersecurityCareerPathConfig } from "../careers/cybersecurity/data/careerPathConfig";
+import CareerPathGraph from "./CareerPathGraph";
+import GraphLegend from "../cs-cse/components/GraphLegend";
+
+const [useFormattedLayout, setUseFormattedLayout] = useState(false);
+const [resetCareerPathGraph, setResetCareerPathGraph] = useState<(() => void) | null>(null);
+const [fullResetCareerPathGraph, setFullResetCareerPathGraph] = useState<(() => void) | null>(null);
 
 if (selectedCareerPath === "cybersecurity") {
   return (
-    <CareerPathGraph config={cybersecurityCareerPathConfig} />
+    <div>
+      <GraphLegend 
+        onFormatLayoutClick={() => setUseFormattedLayout(!useFormattedLayout)}
+        useFormattedLayout={useFormattedLayout}
+        onResetClick={resetCareerPathGraph || undefined}
+        onFullResetClick={fullResetCareerPathGraph || undefined}
+      />
+      <CareerPathGraph 
+        config={cybersecurityCareerPathConfig}
+        useFormattedLayoutExternal={useFormattedLayout}
+        onLayoutChange={setUseFormattedLayout}
+        onResetReady={setResetCareerPathGraph}
+        onFullResetReady={setFullResetCareerPathGraph}
+      />
+    </div>
   );
 }
 ```
@@ -289,7 +333,9 @@ courses: [
 - Check that courses are filtered correctly in the component
 
 ### Layout Issues
-- Use "Format Layout (No Overlap)" button
+- Use "Format Layout (No Overlap)" button to prevent node overlaps
+- Use "Reset Positions" button to restore nodes to default layout positions
+- Use "Reset Graph" button to fully reset the graph (positions, expanded nodes, layout)
 - Adjust spacing in `getLayoutedElements` if needed
 
 ## Related Documentation

@@ -57,7 +57,54 @@ export const tier1Courses: TierCourse[] = [
 ];
 
 export const tier2Courses: TierCourse[] = [
-  // Add Tier 2 courses here
+  {
+    id: "cse-126",
+    code: "CSE 126",
+    name: "Information Systems & Service Design",
+    fullName: "CSE 126: Information Systems & Service Design",
+    description: "Product thinking, backend services",
+    tier: 2,
+  },
+  {
+    id: "cse-155",
+    code: "CSE 155",
+    name: "Human-Computer Interaction",
+    fullName: "CSE 155: Human-Computer Interaction",
+    description: "UX-aware engineers = huge hiring bonus",
+    tier: 2,
+  },
+  {
+    id: "cse-162",
+    code: "CSE 162",
+    name: "Mobile Computing",
+    fullName: "CSE 162: Mobile Computing",
+    description: "Android/iOS dev, real apps",
+    tier: 2,
+  },
+  {
+    id: "cse-177",
+    code: "CSE 177 / 177H",
+    name: "Database Systems Implementation",
+    fullName: "CSE 177 / 177H: Database Systems Implementation",
+    description: "Deep backend + systems credibility",
+    tier: 2,
+  },
+  {
+    id: "cse-179",
+    code: "CSE 179",
+    name: "Parallel Computing",
+    fullName: "CSE 179: Parallel Computing",
+    description: "Performance, concurrency (advanced SWE)",
+    tier: 2,
+  },
+  {
+    id: "cse-140",
+    code: "CSE 140",
+    name: "Computer Architecture",
+    fullName: "CSE 140: Computer Architecture",
+    description: "Low-level understanding (optional depth)",
+    tier: 2,
+  },
 ];
 
 export const tier3Courses: TierCourse[] = [

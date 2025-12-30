@@ -77,5 +77,13 @@ For detailed instructions, see:
 3. **Type-Safe**: Use TypeScript types from `@/types/careerPath`
 4. **Flexible**: Each career can have different tier structures and course organization
 
+## Interactive Features
+
+All career path graphs include:
+- **Draggable Nodes**: All nodes can be repositioned by dragging
+- **Format Layout**: Toggle between compact and formatted layouts to prevent overlaps
+- **Reset Positions**: Button to restore nodes to default layout positions
+- **Reset Graph**: Button to fully reset the graph (positions, expanded nodes, layout format)
+
 
 
