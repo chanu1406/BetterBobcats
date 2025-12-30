@@ -29,6 +29,8 @@ export default function DegreesSidebar({
 
   const careerPaths: Record<string, { id: string; name: string }[]> = {
     "CS/CSE": [
+      { id: "resumes", name: "Resumes" },
+      { id: "alumni", name: "Alumni" },
       { id: "swe", name: "SWE (Generalist)" },
       { id: "cybersecurity", name: "Cybersecurity" },
       { id: "ml-ai", name: "Machine Learning / AI" },
@@ -36,6 +38,15 @@ export default function DegreesSidebar({
       { id: "systems", name: "Systems / Infrastructure Engineering Pathway" },
       { id: "embedded", name: "Embedded Systems Engineering Pathway" },
     ],
+  };
+
+  // Separate non-career items from career paths
+  const getNonCareerItems = (degree: string) => {
+    return careerPaths[degree]?.filter(item => item.id === "resumes" || item.id === "alumni") || [];
+  };
+
+  const getCareerPathItems = (degree: string) => {
+    return careerPaths[degree]?.filter(item => item.id !== "resumes" && item.id !== "alumni") || [];
   };
 
   const toggleDegree = (degree: string) => {
@@ -57,7 +68,7 @@ export default function DegreesSidebar({
   const hasCareerPaths = (degree: string) => careerPaths[degree] && careerPaths[degree].length > 0;
 
   return (
-    <aside className="w-72 border-r bg-background/50 sticky top-[73px] h-[calc(100vh-73px)] overflow-y-auto">
+    <aside className="w-72 border-r border-border bg-background sticky top-[73px] h-[calc(100vh-73px)] overflow-y-auto z-10">
       <div className="p-2">
         <nav className="space-y-1">
           {degrees.map((degree) => {
@@ -88,10 +99,39 @@ export default function DegreesSidebar({
                   )}
                 </button>
 
-                {/* Career Paths Dropdown */}
+                {/* Dropdown Items */}
                 {hasPaths && expanded && (
                   <div className="ml-4 mt-1 space-y-1 border-l-2 border-primary/20 pl-2">
-                    {careerPaths[degree].map((careerPath) => {
+                    {/* Non-Career Items (Resumes, Alumni) */}
+                    {getNonCareerItems(degree).map((item) => {
+                      const isItemSelected = selectedCareerPath === item.id;
+                      return (
+                        <button
+                          key={item.id}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onCareerPathSelect(item.id);
+                          }}
+                          className={`w-full text-left px-4 py-2.5 transition-colors border border-border/50 rounded-md font-sans font-medium tracking-tight text-sm ${
+                            isItemSelected
+                              ? "bg-primary/20 text-primary border-primary/50 shadow-sm"
+                              : "hover:bg-primary/5 hover:border-primary/20 text-muted-foreground"
+                          }`}
+                        >
+                          <span className={isItemSelected ? "text-primary font-semibold" : ""}>
+                            {item.name}
+                          </span>
+                        </button>
+                      );
+                    })}
+                    
+                    {/* Divider between non-career items and career paths */}
+                    {getNonCareerItems(degree).length > 0 && getCareerPathItems(degree).length > 0 && (
+                      <div className="my-2 border-t border-border/30"></div>
+                    )}
+                    
+                    {/* Career Paths */}
+                    {getCareerPathItems(degree).map((careerPath) => {
                       const isCareerSelected = selectedCareerPath === careerPath.id;
                       return (
                         <button

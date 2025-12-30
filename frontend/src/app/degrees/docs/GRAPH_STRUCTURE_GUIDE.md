@@ -10,6 +10,12 @@ The prerequisite graph is an interactive visualization that shows:
 - **Course Nodes**: Individual courses with prerequisite relationships
 - **Edges**: Arrows showing prerequisite dependencies
 
+### Interactive Features:
+- **Draggable Nodes**: All nodes can be dragged to reposition them on the graph
+- **Format Layout**: Toggle between compact and formatted layouts to prevent overlaps
+- **Reset Positions**: Restore nodes to their default calculated positions
+- **Reset Graph**: Fully reset the graph to its original state (all nodes collapsed, default positions, default layout)
+
 ## File Structure
 
 ```
@@ -227,15 +233,30 @@ Add the graph to your degree page:
 ```typescript
 import PrerequisiteGraph from "../[degree-name]/components/PrerequisiteGraph";
 import GraphLegend from "../[degree-name]/components/GraphLegend";
+import { useState } from "react";
 
 // In your component:
+const [useFormattedLayout, setUseFormattedLayout] = useState(false);
+const [resetPrerequisiteGraph, setResetPrerequisiteGraph] = useState<(() => void) | null>(null);
+const [fullResetPrerequisiteGraph, setFullResetPrerequisiteGraph] = useState<(() => void) | null>(null);
+
 if (selectedDegree === "[DEGREE_NAME]") {
   return (
     <div className="flex-1 p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header content */}
-        <GraphLegend />
-        <PrerequisiteGraph />
+        <GraphLegend 
+          onFormatLayoutClick={() => setUseFormattedLayout(!useFormattedLayout)}
+          useFormattedLayout={useFormattedLayout}
+          onResetClick={resetPrerequisiteGraph || undefined}
+          onFullResetClick={fullResetPrerequisiteGraph || undefined}
+        />
+        <PrerequisiteGraph 
+          useFormattedLayoutExternal={useFormattedLayout}
+          onLayoutChange={setUseFormattedLayout}
+          onResetReady={setResetPrerequisiteGraph}
+          onFullResetReady={setFullResetPrerequisiteGraph}
+        />
       </div>
     </div>
   );
@@ -339,8 +360,12 @@ Use an empty array:
 1. **Check all course IDs are unique**
 2. **Verify prerequisite IDs exist** in your course list
 3. **Test category expansion** - click each category node
-4. **Check layout** - use "Format Layout" button if nodes overlap
-5. **Verify colors** - ensure courses show correct year colors
+4. **Test node dragging** - drag nodes to reposition them, verify positions persist
+5. **Test reset buttons**:
+   - **Reset Positions**: Should restore nodes to default positions
+   - **Reset Graph**: Should fully reset (positions, expanded state, layout)
+6. **Check layout** - use "Format Layout" button if nodes overlap
+7. **Verify colors** - ensure courses show correct year colors
 
 ## Common Patterns
 
@@ -370,8 +395,10 @@ CSE 024 ─┘
 - Ensure course IDs match prerequisite references
 
 ### Nodes Overlap
-- Use "Format Layout (No Overlap)" button
-- Adjust `categorySpacing` and `horizontalSpacing` values
+- Use "Format Layout (No Overlap)" button to automatically adjust spacing
+- Drag nodes manually to reposition them if needed
+- Use "Reset Positions" to restore default layout
+- Adjust `categorySpacing` and `horizontalSpacing` values in code if needed
 - Increase `verticalSpacing` for more room
 
 ### Edges Missing

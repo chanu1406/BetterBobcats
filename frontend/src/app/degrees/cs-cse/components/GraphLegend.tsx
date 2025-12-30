@@ -7,9 +7,11 @@
 interface GraphLegendProps {
   onFormatLayoutClick?: () => void;
   useFormattedLayout?: boolean;
+  onResetClick?: () => void;
+  onFullResetClick?: () => void;
 }
 
-export default function GraphLegend({ onFormatLayoutClick, useFormattedLayout }: GraphLegendProps) {
+export default function GraphLegend({ onFormatLayoutClick, useFormattedLayout, onResetClick, onFullResetClick }: GraphLegendProps) {
   const yearColors = [
     { year: 1, label: "First Year", bgColor: "bg-blue-100", borderColor: "border-blue-300" },
     { year: 2, label: "Second Year", bgColor: "bg-green-100", borderColor: "border-green-300" },
@@ -21,15 +23,46 @@ export default function GraphLegend({ onFormatLayoutClick, useFormattedLayout }:
     <div className="mb-6 p-3 bg-card border border-border/50 rounded-lg">
       <div className="flex items-center justify-between mb-2">
         <h3 className="text-xs font-medium text-black">Course timing (guidance only)</h3>
-        {onFormatLayoutClick && (
-          <button
-            onClick={onFormatLayoutClick}
-            className="text-xs text-primary hover:text-primary/80 transition-colors font-medium"
-            title="Reformat graph for easier viewing"
-          >
-            {useFormattedLayout ? "Toggle Compact View" : "Format Layout (No Overlap)"}
-          </button>
-        )}
+        <div className="flex flex-col items-end gap-1">
+          {onFormatLayoutClick && (
+            <button
+              onClick={onFormatLayoutClick}
+              className="text-xs text-primary hover:text-primary/80 transition-colors font-medium"
+              title="Reformat graph for easier viewing"
+            >
+              {useFormattedLayout ? "Toggle Compact View" : "Format Layout (No Overlap)"}
+            </button>
+          )}
+          {/* Always show Reset Graph button if we have graph controls */}
+          {onFormatLayoutClick && (
+            <button
+              onClick={() => {
+                if (onFullResetClick) {
+                  onFullResetClick();
+                } else {
+                  console.warn("Reset handler not ready yet");
+                }
+              }}
+              className={`text-xs transition-colors font-medium ${
+                onFullResetClick 
+                  ? "text-destructive hover:text-destructive/80 cursor-pointer" 
+                  : "text-muted-foreground/50 cursor-not-allowed opacity-50"
+              }`}
+              title={onFullResetClick ? "Reset entire graph: positions, expanded nodes, and layout" : "Waiting for reset handler..."}
+            >
+              Reset Graph
+            </button>
+          )}
+          {onResetClick && (
+            <button
+              onClick={onResetClick}
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors font-medium"
+              title="Reset node positions to default layout"
+            >
+              Reset Positions
+            </button>
+          )}
+        </div>
       </div>
       <div className="flex flex-wrap gap-4">
         {yearColors.map(({ year, label, bgColor, borderColor }) => (

@@ -6,7 +6,7 @@
  * Used on: Degrees page (CS/CSE degree overview)
  */
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import ReactFlow, {
   Node,
   Edge,
@@ -15,6 +15,8 @@ import ReactFlow, {
   ReactFlowProvider,
   Handle,
   Position,
+  NodeChange,
+  applyNodeChanges,
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { cseCourses } from "../data/courses";
@@ -86,23 +88,91 @@ function CourseNode({ data }: { data: { course: Course } }) {
       );
 }
 
+// Define nodeTypes outside component to avoid React Flow warning
 const nodeTypes = {
   root: RootNode,
   category: CategoryNode,
   course: CourseNode,
 };
 
+// Helper function to check if two nodes overlap
+function nodesOverlap(
+  node1: Node, 
+  node2: Node, 
+  minSpacing: number = 180
+): boolean {
+  const dx = Math.abs(node1.position.x - node2.position.x);
+  const dy = Math.abs(node1.position.y - node2.position.y);
+  // Approximate node sizes: category nodes ~80px, course nodes ~180px wide, 60px tall
+  const node1Width = node1.type === "category" ? 80 : 180;
+  const node1Height = node1.type === "category" ? 80 : 60;
+  const node2Width = node2.type === "category" ? 80 : 180;
+  const node2Height = node2.type === "category" ? 80 : 60;
+  
+  const minDistanceX = (node1Width + node2Width) / 2 + minSpacing;
+  const minDistanceY = (node1Height + node2Height) / 2 + minSpacing;
+  
+  return dx < minDistanceX && dy < minDistanceY;
+}
+
+// Helper function to adjust position to avoid overlaps
+function adjustPositionToAvoidOverlap(
+  node: Node,
+  otherNodes: Node[],
+  defaultPosition: { x: number; y: number },
+  minSpacing: number = 180
+): { x: number; y: number } {
+  let position = { ...defaultPosition };
+  let attempts = 0;
+  const maxAttempts = 50;
+  
+  while (attempts < maxAttempts) {
+    let hasOverlap = false;
+    for (const otherNode of otherNodes) {
+      if (otherNode.id !== node.id && nodesOverlap({ ...node, position }, otherNode, minSpacing)) {
+        hasOverlap = true;
+        // Try moving slightly away
+        const dx = otherNode.position.x - position.x;
+        const dy = otherNode.position.y - position.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        if (distance > 0) {
+          const moveDistance = minSpacing + 50;
+          position.x = otherNode.position.x - (dx / distance) * moveDistance;
+          position.y = otherNode.position.y - (dy / distance) * moveDistance;
+        } else {
+          // If nodes are at same position, move randomly
+          position.x += (Math.random() - 0.5) * minSpacing * 2;
+          position.y += (Math.random() - 0.5) * minSpacing * 2;
+        }
+        break;
+      }
+    }
+    if (!hasOverlap) {
+      break;
+    }
+    attempts++;
+  }
+  
+  return position;
+}
+
 // Layout function - position root at top, categories below, courses in hierarchy
-function getLayoutedElements(nodes: Node[], edges: Edge[], useFormattedLayout: boolean = false) {
+function getLayoutedElements(
+  nodes: Node[], 
+  edges: Edge[], 
+  useFormattedLayout: boolean = false,
+  savedPositions: Record<string, { x: number; y: number }> = {}
+) {
   const rootNode = nodes.find((n) => n.id === "cs-cse-root");
   const categoryNodes = nodes.filter((n) => n.id.startsWith("category-"));
   const courseNodes = nodes.filter((n) => !n.id.startsWith("category-") && n.id !== "cs-cse-root");
   
   // Position root node at the top center
   if (rootNode) {
-    rootNode.position = { x: 0, y: 40 };
     rootNode.targetPosition = "bottom" as any;
     rootNode.sourcePosition = "bottom" as any;
+    // Use saved position if available, otherwise use default
+    rootNode.position = savedPositions[rootNode.id] || { x: 0, y: 40 };
   }
   
   // Position category nodes at level 1 (below root)
@@ -112,10 +182,19 @@ function getLayoutedElements(nodes: Node[], edges: Edge[], useFormattedLayout: b
   categoryNodes.forEach((node, index) => {
     node.targetPosition = "top" as any;
     node.sourcePosition = "bottom" as any;
-    node.position = {
+    // Use saved position if available, otherwise use calculated position
+    const defaultPosition = {
       x: categoryStartX + index * categorySpacing,
       y: 160,
     };
+    if (!savedPositions[node.id]) {
+      node.position = defaultPosition;
+    } else {
+      // Check for overlaps and adjust if needed
+      const savedPos = savedPositions[node.id];
+      const allOtherNodes = [...categoryNodes.filter(n => n.id !== node.id), rootNode].filter(Boolean) as Node[];
+      node.position = adjustPositionToAvoidOverlap(node, allOtherNodes, savedPos, categorySpacing * 0.8);
+    }
   });
 
   // Position course nodes in hierarchical levels based on prerequisites
@@ -136,10 +215,16 @@ function getLayoutedElements(nodes: Node[], edges: Edge[], useFormattedLayout: b
     if (math021) {
       math021.targetPosition = "top" as any;
       math021.sourcePosition = "bottom" as any;
-      math021.position = {
+      const defaultPosition = {
         x: mathCategoryNode.position.x,
         y: currentY,
       };
+      if (!savedPositions[math021.id]) {
+        math021.position = defaultPosition;
+      } else {
+        const allOtherNodes = [...categoryNodes, rootNode, ...courseNodes.filter(n => n.id !== math021.id)].filter(Boolean) as Node[];
+        math021.position = adjustPositionToAvoidOverlap(math021, allOtherNodes, savedPositions[math021.id], 180);
+      }
       currentY += verticalSpacing;
     }
 
@@ -147,10 +232,14 @@ function getLayoutedElements(nodes: Node[], edges: Edge[], useFormattedLayout: b
     if (math022) {
       math022.targetPosition = "top" as any;
       math022.sourcePosition = "bottom" as any;
-      math022.position = {
-        x: mathCategoryNode.position.x,
-        y: currentY,
-      };
+      if (!savedPositions[math022.id]) {
+        math022.position = {
+          x: mathCategoryNode.position.x,
+          y: currentY,
+        };
+      } else {
+        math022.position = savedPositions[math022.id];
+      }
       currentY += verticalSpacing;
     }
 
@@ -164,10 +253,14 @@ function getLayoutedElements(nodes: Node[], edges: Edge[], useFormattedLayout: b
         if (node) {
           node.targetPosition = "top" as any;
           node.sourcePosition = "bottom" as any;
-          node.position = {
-            x: level4StartX + index * horizontalSpacing,
-            y: currentY,
-          };
+          if (!savedPositions[node.id]) {
+            node.position = {
+              x: level4StartX + index * horizontalSpacing,
+              y: currentY,
+            };
+          } else {
+            node.position = savedPositions[node.id];
+          }
         }
       });
     }
@@ -186,10 +279,14 @@ function getLayoutedElements(nodes: Node[], edges: Edge[], useFormattedLayout: b
     if (wri010) {
       wri010.targetPosition = "top" as any;
       wri010.sourcePosition = "bottom" as any;
-      wri010.position = {
-        x: writingCategoryNode.position.x,
-        y: currentY,
-      };
+      if (!savedPositions[wri010.id]) {
+        wri010.position = {
+          x: writingCategoryNode.position.x,
+          y: currentY,
+        };
+      } else {
+        wri010.position = savedPositions[wri010.id];
+      }
       currentY += verticalSpacing;
     }
 
@@ -197,10 +294,14 @@ function getLayoutedElements(nodes: Node[], edges: Edge[], useFormattedLayout: b
     if (wriUpperDiv) {
       wriUpperDiv.targetPosition = "top" as any;
       wriUpperDiv.sourcePosition = "bottom" as any;
-      wriUpperDiv.position = {
-        x: writingCategoryNode.position.x,
-        y: currentY,
-      };
+      if (!savedPositions[wriUpperDiv.id]) {
+        wriUpperDiv.position = {
+          x: writingCategoryNode.position.x,
+          y: currentY,
+        };
+      } else {
+        wriUpperDiv.position = savedPositions[wriUpperDiv.id];
+      }
     }
   }
 
@@ -217,10 +318,14 @@ function getLayoutedElements(nodes: Node[], edges: Edge[], useFormattedLayout: b
     if (phys008) {
       phys008.targetPosition = "top" as any;
       phys008.sourcePosition = "bottom" as any;
-      phys008.position = {
-        x: physicsCategoryNode.position.x,
-        y: currentY,
-      };
+      if (!savedPositions[phys008.id]) {
+        phys008.position = {
+          x: physicsCategoryNode.position.x,
+          y: currentY,
+        };
+      } else {
+        phys008.position = savedPositions[phys008.id];
+      }
       currentY += verticalSpacing;
     }
 
@@ -228,10 +333,14 @@ function getLayoutedElements(nodes: Node[], edges: Edge[], useFormattedLayout: b
     if (phys009) {
       phys009.targetPosition = "top" as any;
       phys009.sourcePosition = "bottom" as any;
-      phys009.position = {
-        x: physicsCategoryNode.position.x,
-        y: currentY,
-      };
+      if (!savedPositions[phys009.id]) {
+        phys009.position = {
+          x: physicsCategoryNode.position.x,
+          y: currentY,
+        };
+      } else {
+        phys009.position = savedPositions[phys009.id];
+      }
     }
   }
 
@@ -247,10 +356,14 @@ function getLayoutedElements(nodes: Node[], edges: Edge[], useFormattedLayout: b
     if (spark) {
       spark.targetPosition = "top" as any;
       spark.sourcePosition = "bottom" as any;
-      spark.position = {
-        x: sparkCategoryNode.position.x,
-        y: currentY,
-      };
+      if (!savedPositions[spark.id]) {
+        spark.position = {
+          x: sparkCategoryNode.position.x,
+          y: currentY,
+        };
+      } else {
+        spark.position = savedPositions[spark.id];
+      }
     }
   }
 
@@ -267,10 +380,14 @@ function getLayoutedElements(nodes: Node[], edges: Edge[], useFormattedLayout: b
     if (engr091) {
       engr091.targetPosition = "top" as any;
       engr091.sourcePosition = "bottom" as any;
-      engr091.position = {
-        x: engineeringCategoryNode.position.x,
-        y: currentY,
-      };
+      if (!savedPositions[engr091.id]) {
+        engr091.position = {
+          x: engineeringCategoryNode.position.x,
+          y: currentY,
+        };
+      } else {
+        engr091.position = savedPositions[engr091.id];
+      }
       currentY += verticalSpacing;
     }
 
@@ -278,10 +395,14 @@ function getLayoutedElements(nodes: Node[], edges: Edge[], useFormattedLayout: b
     if (engr065) {
       engr065.targetPosition = "top" as any;
       engr065.sourcePosition = "bottom" as any;
-      engr065.position = {
-        x: engineeringCategoryNode.position.x,
-        y: currentY,
-      };
+      if (!savedPositions[engr065.id]) {
+        engr065.position = {
+          x: engineeringCategoryNode.position.x,
+          y: currentY,
+        };
+      } else {
+        engr065.position = savedPositions[engr065.id];
+      }
     }
   }
 
@@ -305,10 +426,14 @@ function getLayoutedElements(nodes: Node[], edges: Edge[], useFormattedLayout: b
     if (cse022) {
       cse022.targetPosition = "top" as any;
       cse022.sourcePosition = "bottom" as any;
-      cse022.position = {
-        x: cseCategoryNode.position.x,
-        y: currentY,
-      };
+      if (!savedPositions[cse022.id]) {
+        cse022.position = {
+          x: cseCategoryNode.position.x,
+          y: currentY,
+        };
+      } else {
+        cse022.position = savedPositions[cse022.id];
+      }
       currentY += verticalSpacing;
     }
 
@@ -316,17 +441,25 @@ function getLayoutedElements(nodes: Node[], edges: Edge[], useFormattedLayout: b
     if (cse015 && cse024) {
       cse015.targetPosition = "top" as any;
       cse015.sourcePosition = "bottom" as any;
-      cse015.position = {
-        x: cseCategoryNode.position.x - horizontalSpacing / 2,
-        y: currentY,
-      };
+      if (!savedPositions[cse015.id]) {
+        cse015.position = {
+          x: cseCategoryNode.position.x - horizontalSpacing / 2,
+          y: currentY,
+        };
+      } else {
+        cse015.position = savedPositions[cse015.id];
+      }
 
       cse024.targetPosition = "top" as any;
       cse024.sourcePosition = "bottom" as any;
-      cse024.position = {
-        x: cseCategoryNode.position.x + horizontalSpacing / 2,
-        y: currentY,
-      };
+      if (!savedPositions[cse024.id]) {
+        cse024.position = {
+          x: cseCategoryNode.position.x + horizontalSpacing / 2,
+          y: currentY,
+        };
+      } else {
+        cse024.position = savedPositions[cse024.id];
+      }
       currentY += verticalSpacing;
     }
 
@@ -334,10 +467,14 @@ function getLayoutedElements(nodes: Node[], edges: Edge[], useFormattedLayout: b
     if (cse030) {
       cse030.targetPosition = "top" as any;
       cse030.sourcePosition = "bottom" as any;
-      cse030.position = {
-        x: cseCategoryNode.position.x,
-        y: currentY,
-      };
+      if (!savedPositions[cse030.id]) {
+        cse030.position = {
+          x: cseCategoryNode.position.x,
+          y: currentY,
+        };
+      } else {
+        cse030.position = savedPositions[cse030.id];
+      }
       currentY += verticalSpacing;
     }
 
@@ -345,17 +482,25 @@ function getLayoutedElements(nodes: Node[], edges: Edge[], useFormattedLayout: b
     if (cse031 && cse100) {
       cse031.targetPosition = "top" as any;
       cse031.sourcePosition = "bottom" as any;
-      cse031.position = {
-        x: cseCategoryNode.position.x - horizontalSpacing / 2,
-        y: currentY,
-      };
+      if (!savedPositions[cse031.id]) {
+        cse031.position = {
+          x: cseCategoryNode.position.x - horizontalSpacing / 2,
+          y: currentY,
+        };
+      } else {
+        cse031.position = savedPositions[cse031.id];
+      }
 
       cse100.targetPosition = "top" as any;
       cse100.sourcePosition = "bottom" as any;
-      cse100.position = {
-        x: cseCategoryNode.position.x + horizontalSpacing / 2,
-        y: currentY,
-      };
+      if (!savedPositions[cse100.id]) {
+        cse100.position = {
+          x: cseCategoryNode.position.x + horizontalSpacing / 2,
+          y: currentY,
+        };
+      } else {
+        cse100.position = savedPositions[cse100.id];
+      }
       currentY += verticalSpacing;
     }
 
@@ -363,12 +508,26 @@ function getLayoutedElements(nodes: Node[], edges: Edge[], useFormattedLayout: b
     if (cse120) {
       cse120.targetPosition = "top" as any;
       cse120.sourcePosition = "bottom" as any;
-      cse120.position = {
-        x: cseCategoryNode.position.x,
-        y: currentY,
-      };
+      if (!savedPositions[cse120.id]) {
+        cse120.position = {
+          x: cseCategoryNode.position.x,
+          y: currentY,
+        };
+      } else {
+        cse120.position = savedPositions[cse120.id];
+      }
     }
   }
+  
+  // Final pass: ensure no overlaps for all nodes with saved positions
+  nodes.forEach((node) => {
+    if (savedPositions[node.id]) {
+      const allOtherNodes = nodes.filter(n => n.id !== node.id);
+      const currentPos = node.position;
+      const adjustedPos = adjustPositionToAvoidOverlap(node, allOtherNodes, currentPos, 180);
+      node.position = adjustedPos;
+    }
+  });
   
   return { nodes, edges };
 }
@@ -376,11 +535,17 @@ function getLayoutedElements(nodes: Node[], edges: Edge[], useFormattedLayout: b
 interface PrerequisiteGraphProps {
   onLayoutChange?: (useFormatted: boolean) => void;
   useFormattedLayoutExternal?: boolean;
+  onResetReady?: (resetFn: () => void) => void;
+  onFullResetReady?: (resetFn: () => void) => void;
 }
 
-export default function PrerequisiteGraph({ onLayoutChange, useFormattedLayoutExternal }: PrerequisiteGraphProps) {
+export default function PrerequisiteGraph({ onLayoutChange, useFormattedLayoutExternal, onResetReady, onFullResetReady }: PrerequisiteGraphProps) {
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
   const [useFormattedLayoutInternal, setUseFormattedLayoutInternal] = useState(false);
+  const [nodePositions, setNodePositions] = useState<Record<string, { x: number; y: number }>>({});
+  const [isDragging, setIsDragging] = useState(false);
+  const [nodesState, setNodesState] = useState<Node[]>([]);
+  const [edgesState, setEdgesState] = useState<Edge[]>([]);
   
   // Use external state if provided, otherwise use internal state
   const useFormattedLayout = useFormattedLayoutExternal !== undefined ? useFormattedLayoutExternal : useFormattedLayoutInternal;
@@ -392,6 +557,106 @@ export default function PrerequisiteGraph({ onLayoutChange, useFormattedLayoutEx
       setUseFormattedLayoutInternal(value);
     }
   };
+
+  // Handle node drag start
+  const onNodeDragStart = useCallback(() => {
+    setIsDragging(true);
+  }, []);
+
+  // Handle node drag stop - save final position
+  const onNodeDragStop = useCallback((_event: React.MouseEvent, node: Node) => {
+    setIsDragging(false);
+    setNodePositions((prev) => ({
+      ...prev,
+      [node.id]: node.position,
+    }));
+  }, []);
+
+  // Handle node changes - let React Flow handle drag updates internally
+  const onNodesChange = useCallback((changes: NodeChange[]) => {
+    // Apply changes to nodes state so React Flow can handle dragging smoothly
+    setNodesState((nds) => applyNodeChanges(changes, nds));
+    
+    // Save positions when drag ends (not during drag to avoid conflicts)
+    changes.forEach((change) => {
+      if (change.type === "position" && !change.dragging && change.position && change.id) {
+        setNodePositions((prev) => ({
+          ...prev,
+          [change.id]: { x: change.position!.x, y: change.position!.y },
+        }));
+      }
+    });
+  }, []);
+
+  // Reset node positions to default layout
+  const handleResetPositions = useCallback(() => {
+    setNodePositions({});
+  }, []);
+
+  // Full reset: positions, expanded categories, and layout
+  // Full reset: positions, expanded categories, layout, and view
+  const handleFullReset = useCallback(() => {
+    // Reset all state to original values
+    setNodePositions({});
+    setExpandedCategories(new Set());
+    setIsDragging(false);
+    
+    // Clear nodesState and edgesState so they get recalculated from fresh layout
+    setNodesState([]);
+    setEdgesState([]);
+    
+    // Reset layout format
+    if (onLayoutChange) {
+      onLayoutChange(false);
+    } else {
+      setUseFormattedLayoutInternal(false);
+    }
+    
+    // Trigger fitView after a brief delay to ensure layout is recalculated
+    setTimeout(() => {
+      // The fitView prop will handle this automatically when isDragging is false
+      // and nodesState is empty (which triggers recalculation from nodes)
+    }, 100);
+  }, [onLayoutChange]);
+
+  // Use refs to store the latest reset functions
+  const resetFnRef = useRef(handleResetPositions);
+  resetFnRef.current = handleResetPositions;
+
+  const fullResetFnRef = useRef(handleFullReset);
+  fullResetFnRef.current = handleFullReset;
+
+  // Update refs when functions change
+  useEffect(() => {
+    resetFnRef.current = handleResetPositions;
+  }, [handleResetPositions]);
+  
+  useEffect(() => {
+    fullResetFnRef.current = handleFullReset;
+  }, [handleFullReset]);
+
+  // Expose reset handler to parent component
+  // Use useEffect to register handler after render completes
+  useEffect(() => {
+    if (!onResetReady) return;
+    // Use requestAnimationFrame to ensure this runs after render phase
+    const rafId = requestAnimationFrame(() => {
+      onResetReady(() => resetFnRef.current());
+    });
+    return () => cancelAnimationFrame(rafId);
+  }, [onResetReady]);
+
+  // Expose full reset handler to parent component
+  // Use useEffect to register handler after render completes
+  useEffect(() => {
+    if (!onFullResetReady) return;
+    // Use requestAnimationFrame to ensure this runs after render phase
+    const rafId = requestAnimationFrame(() => {
+      const handler = () => fullResetFnRef.current();
+      onFullResetReady(handler);
+    });
+    return () => cancelAnimationFrame(rafId);
+  }, [onFullResetReady, handleFullReset]);
 
   const toggleCategory = (categoryId: string) => {
     setExpandedCategories((prev) => {
@@ -767,19 +1032,58 @@ export default function PrerequisiteGraph({ onLayoutChange, useFormattedLayoutEx
     const allNodes = [rootNode, ...categoryNodes, ...mathCourseNodes, ...writingCourseNodes, ...physicsCourseNodes, ...sparkCourseNodes, ...engineeringCourseNodes, ...cseCourseNodes];
     const allEdges = [...categoryEdges, ...mathCourseEdges, ...writingCourseEdges, ...physicsCourseEdges, ...sparkCourseEdges, ...engineeringCourseEdges, ...cseCourseEdges];
 
-    // Apply layout
-    return getLayoutedElements(allNodes, allEdges, useFormattedLayout);
-  }, [expandedCategories, useFormattedLayout]);
+    // Apply layout (preserving saved positions)
+    // Don't recalculate layout during drag to prevent nodes from disappearing
+    return getLayoutedElements(allNodes, allEdges, useFormattedLayout, nodePositions);
+  }, [expandedCategories, useFormattedLayout, nodePositions]);
+
+  // Always use controlled nodes/edges - sync from layout when not dragging
+  useEffect(() => {
+    if (!isDragging) {
+      // Update from layout when not dragging, preserving any dragged positions
+      setNodesState((currentNodes) => {
+        // Create a map of current node positions (including dragged ones)
+        const positionMap = new Map(currentNodes.map(n => [n.id, n.position]));
+        
+        // Update nodes from layout, but preserve positions from current state
+        return nodes.map(node => ({
+          ...node,
+          position: positionMap.get(node.id) || node.position,
+        }));
+      });
+      setEdgesState(edges);
+    }
+  }, [nodes, edges, isDragging]);
+
+  // Initialize nodesState on first render
+  useEffect(() => {
+    if (nodesState.length === 0 && nodes.length > 0) {
+      setNodesState(nodes);
+      setEdgesState(edges);
+    }
+  }, [nodes, edges, nodesState.length]);
+
+  // Use nodesState during drag, nodes from layout otherwise
+  const displayNodes = isDragging ? nodesState : nodes;
+  const displayEdges = isDragging ? edgesState : edges;
+
+  // Memoize nodeTypes to prevent React Flow warning - ensure stable reference
+  const memoizedNodeTypes = useMemo(() => nodeTypes, []);
 
   return (
     <div className="w-full border border-border/40 rounded-lg overflow-hidden relative pt-6">
       <div className="w-full h-[800px] relative [&_.react-flow__background]:opacity-30">
         <ReactFlowProvider>
           <ReactFlow
-            nodes={nodes}
-            edges={edges}
-            nodeTypes={nodeTypes}
-            fitView
+            nodes={nodesState.length > 0 ? nodesState : nodes}
+            edges={edgesState.length > 0 ? edgesState : edges}
+            nodeTypes={memoizedNodeTypes}
+            onNodesChange={onNodesChange}
+            onNodeDragStart={onNodeDragStart}
+            onNodeDragStop={onNodeDragStop}
+            nodesDraggable={true}
+            fitView={!isDragging}
+            fitViewOptions={{ padding: 0.1, maxZoom: 1.5 }}
             attributionPosition="bottom-left"
           >
             <Background color="#e2e8f0" gap={16} />
