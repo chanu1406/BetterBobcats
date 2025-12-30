@@ -73,17 +73,17 @@ function CourseNode({ data }: { data: { course: Course } }) {
 
   const colors = yearColors[course.year] || yearColors[1];
 
-  return (
-    <div
-      className={`px-2 py-1.5 rounded-lg border-2 min-w-[140px] max-w-[180px] ${colors.bg} ${colors.border} shadow-sm relative`}
-    >
-      <Handle type="target" position={Position.Top} />
-      <Handle type="source" position={Position.Bottom} />
-      <div className="text-xs font-semibold text-foreground break-words text-center leading-tight">
-        {course.fullName}
-      </div>
-    </div>
-  );
+      return (
+        <div
+          className={`px-3 py-2 rounded-lg border-2 min-w-[150px] max-w-[190px] ${colors.bg} ${colors.border} shadow-sm relative`}
+        >
+          <Handle type="target" position={Position.Top} />
+          <Handle type="source" position={Position.Bottom} />
+          <div className="text-xs font-semibold text-foreground break-words text-center leading-tight">
+            {course.fullName}
+          </div>
+        </div>
+      );
 }
 
 const nodeTypes = {
@@ -373,9 +373,25 @@ function getLayoutedElements(nodes: Node[], edges: Edge[], useFormattedLayout: b
   return { nodes, edges };
 }
 
-export default function PrerequisiteGraph() {
+interface PrerequisiteGraphProps {
+  onLayoutChange?: (useFormatted: boolean) => void;
+  useFormattedLayoutExternal?: boolean;
+}
+
+export default function PrerequisiteGraph({ onLayoutChange, useFormattedLayoutExternal }: PrerequisiteGraphProps) {
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
-  const [useFormattedLayout, setUseFormattedLayout] = useState(false);
+  const [useFormattedLayoutInternal, setUseFormattedLayoutInternal] = useState(false);
+  
+  // Use external state if provided, otherwise use internal state
+  const useFormattedLayout = useFormattedLayoutExternal !== undefined ? useFormattedLayoutExternal : useFormattedLayoutInternal;
+  
+  const setUseFormattedLayout = (value: boolean) => {
+    if (onLayoutChange) {
+      onLayoutChange(value);
+    } else {
+      setUseFormattedLayoutInternal(value);
+    }
+  };
 
   const toggleCategory = (categoryId: string) => {
     setExpandedCategories((prev) => {
@@ -756,25 +772,26 @@ export default function PrerequisiteGraph() {
   }, [expandedCategories, useFormattedLayout]);
 
   return (
-    <div className="w-full h-[800px] border border-border rounded-lg overflow-hidden relative">
-      <button
-        onClick={() => setUseFormattedLayout(!useFormattedLayout)}
-        className="absolute top-4 right-4 z-10 px-4 py-2 bg-primary text-primary-foreground rounded-md shadow-md hover:bg-primary/90 transition-colors text-sm font-medium"
-      >
-        {useFormattedLayout ? "Use Compact Layout" : "Format Layout (No Overlap)"}
-      </button>
-      <ReactFlowProvider>
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          nodeTypes={nodeTypes}
-          fitView
-          attributionPosition="bottom-left"
-        >
-          <Background color="#e2e8f0" gap={16} />
-          <Controls />
-        </ReactFlow>
-      </ReactFlowProvider>
+    <div className="w-full border border-border/40 rounded-lg overflow-hidden relative pt-6">
+      <div className="w-full h-[800px] relative [&_.react-flow__background]:opacity-30">
+        <ReactFlowProvider>
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            nodeTypes={nodeTypes}
+            fitView
+            attributionPosition="bottom-left"
+          >
+            <Background color="#e2e8f0" gap={16} />
+            <Controls />
+          </ReactFlow>
+        </ReactFlowProvider>
+      </div>
+      <div className="w-full px-4 py-2 bg-muted/20 border-t border-border/40">
+        <p className="text-xs text-black text-center">
+          Graph reflects typical UC Merced CS/CSE progression.
+        </p>
+      </div>
     </div>
   );
 }

@@ -257,7 +257,11 @@ The degrees page uses an organized folder structure for scalability:
 
 ```
 degrees/
-├── components/          # Shared components (DegreesHeader, DegreesSidebar, DegreesContent)
+├── components/          # Shared components
+│   ├── DegreesHeader.tsx
+│   ├── DegreesSidebar.tsx
+│   ├── DegreesContent.tsx
+│   └── CareerPathGraph.tsx  # Reusable career path graph (config-driven)
 ├── cs-cse/             # CS/CSE degree-specific content
 │   ├── data/
 │   │   └── courses.ts  # All CS/CSE course data
@@ -266,6 +270,9 @@ degrees/
 │       └── GraphLegend.tsx
 ├── careers/            # Career path-specific content
 │   ├── swe/           # Software Engineering
+│   │   └── data/
+│   │       ├── tierCourses.ts        # SWE course data
+│   │       └── careerPathConfig.ts    # SWE graph configuration
 │   ├── cybersecurity/ # Cybersecurity
 │   ├── ml-ai/         # Machine Learning / AI
 │   ├── data-science/  # Data Science / Analytics
@@ -274,9 +281,13 @@ degrees/
 └── docs/              # Documentation
 ```
 
-Each career path directory can contain:
-- `data/` - Career-specific courses, skills, and information
-- `components/` - Career-specific React components (optional)
+Each career path directory contains:
+- `data/` - Career-specific data
+  - `tierCourses.ts` - Course recommendations organized by tiers with descriptions
+  - `careerPathConfig.ts` - Configuration object for the career path graph visualization
+- `components/` - Career-specific React components (optional, rarely needed)
+
+**Note**: Career path graphs use a **config-driven architecture**. The `CareerPathGraph` component is shared and reusable - each career path just provides its own configuration file. See `CAREER_PATH_GRAPH_GUIDE.md` for details.
 
 ### Branch Structure Details
 
@@ -338,8 +349,26 @@ Each career path directory can contain:
 9. **Performance Optimization:** Virtualize large graphs for better performance with many courses
 10. **Accessibility:** Improve keyboard navigation and screen reader support
 
+## Career Path Graphs
+
+Career path pages use the reusable `CareerPathGraph` component with a config-driven architecture:
+
+- **Component**: `components/CareerPathGraph.tsx` (shared, generic)
+- **Configuration**: Each career path provides a `careerPathConfig.ts` file
+- **Course Data**: Each career path provides a `tierCourses.ts` file with course descriptions
+
+### Key Features:
+- **Expandable Course Nodes**: Click courses to see descriptions
+- **Tier-Based Organization**: Courses organized into tiers (e.g., Tier 1, Tier 2, Tier 3)
+- **Reusable**: Same component works for all career paths
+- **Type-Safe**: Uses shared types from `src/types/careerPath.ts`
+
+For detailed instructions on creating career path graphs, see **`CAREER_PATH_GRAPH_GUIDE.md`**.
+
 ## Related Documentation
 
+- See `CAREER_PATH_GRAPH_GUIDE.md` for career path graph creation guide
+- See `GRAPH_STRUCTURE_GUIDE.md` for prerequisite graph structure
 - See `COMPONENT_STRUCTURE.md` for overall component organization
 - See `CODING_STANDARDS.md` for coding guidelines
 - See `FUNCTION_TEMPLATES.md` for component templates
