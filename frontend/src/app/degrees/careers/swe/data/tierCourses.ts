@@ -64,3 +64,4 @@ export const tier3Courses: TierCourse[] = [
   // Add Tier 3 courses here
 ];
 
+

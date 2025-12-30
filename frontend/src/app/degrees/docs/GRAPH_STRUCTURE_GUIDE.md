@@ -427,3 +427,4 @@ CSE 024 ─┘
 4. **Document categories**: Add comments explaining category filtering logic
 5. **Keep it simple**: Start with core courses, add electives later
 
+
