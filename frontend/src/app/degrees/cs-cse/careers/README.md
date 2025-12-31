@@ -15,7 +15,7 @@ Each career path has its own directory with:
 - `swe/` - Software Engineering (Generalist) ✅ **Complete with interactive graph**
 - `cybersecurity/` - Cybersecurity ✅ **Complete with interactive graph**
 - `ml-ai/` - Machine Learning / AI ✅ **Complete with interactive graph**
-- `data-science/` - Data Science / Data Analytics (Coming soon)
+- `datascience/` - Data Science / Data Analytics ✅ **Complete with interactive graph**
 - `systems/` - Systems / Infrastructure Engineering Pathway (Coming soon)
 - `embedded/` - Embedded Systems Engineering Pathway (Coming soon)
 
@@ -26,8 +26,8 @@ Each completed career path includes:
 - **Comprehensive README**: Career overview, course details, skills, resources
 - **Tier System**: Courses organized by importance (Tier 1: Must-Take, Tier 2: Boosters, Tier 3: Optional)
 
-**Completed**: SWE, Cybersecurity, ML/AI  
-**In Progress**: Data Science, Systems, Embedded
+**Completed**: SWE, Cybersecurity, ML/AI, Data Science  
+**In Progress**: Systems, Embedded
 
 ## Config-Driven Architecture
 
@@ -100,13 +100,16 @@ For detailed instructions, see:
 
 All career path graphs include:
 - **Tier Expansion**: Click tier nodes to expand/collapse and show their courses
+- **Course Expansion**: Click any course node to open an expanded card with detailed information
+  - Shows course name, description, and optional expanded details (credits, prerequisites, learning outcomes, topics, career relevance, additional notes)
+  - Close via X button, clicking outside, or pressing Escape key
 - **Draggable Nodes**: All nodes can be repositioned by dragging - positions are saved automatically
 - **Format Graph**: Button that automatically repositions all nodes with wider spacing to prevent overlap
   - Increases tier spacing from 400px to 600px
   - Reduces courses per row from 3 to 2
   - Increases course spacing from 220px to 300px
   - Increases row spacing from 100px to 120px
-- **Reset Graph**: Button that fully resets the graph to initial state (collapses all tiers, clears positions)
+- **Reset Graph**: Button that fully resets the graph to initial state (collapses all tiers, closes course cards, clears positions)
 
 
 

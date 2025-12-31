@@ -1,12 +1,8 @@
 "use client";
 
 /**
- * CareerPathGraph Component
- * Interactive React Flow graph visualization for career paths
- * Used on: Career path pages (SWE, Cybersecurity, etc.)
- * 
- * This is a minimal implementation with just the React Flow frame.
- * Nodes and edges will be added later.
+ * CareerPathGraph Component - Data Science
+ * Interactive React Flow graph visualization for Data Science career path
  */
 
 import { useState, useCallback, useRef, useEffect, useMemo } from "react";
@@ -23,7 +19,7 @@ import ReactFlow, {
   Position,
 } from "reactflow";
 import "reactflow/dist/style.css";
-import { cybersecurityCareerPathConfig } from "../data/careerPathConfig";
+import { dataScienceCareerPathConfig } from "../data/careerPathConfig";
 import { TierCourse } from "@/types/careerPath";
 
 interface CareerPathGraphProps {
@@ -31,12 +27,12 @@ interface CareerPathGraphProps {
   onFormatReady?: (formatFn: () => void) => void;
 }
 
-// Custom root node component for Cybersecurity career path
-function CybersecurityRootNode({ data }: { data: { label: string } }) {
+// Custom root node component for Data Science career path
+function DataScienceRootNode({ data }: { data: { label: string } }) {
   return (
     <div className="w-32 h-32 rounded-full border-2 border-primary bg-primary/10 flex items-center justify-center shadow-lg relative">
       <Handle type="source" position={Position.Bottom} />
-      <div className="text-lg font-bold text-primary text-center">
+      <div className="text-sm font-bold text-primary text-center">
         {data.label}
       </div>
     </div>
@@ -63,7 +59,7 @@ function TierNode({ data }: { data: { label: string; emoji?: string; isExpanded?
     >
       <Handle type="target" position={Position.Top} />
       <Handle type="source" position={Position.Bottom} />
-      <div className="text-[8.75px] font-semibold text-primary text-center px-2 flex flex-col items-center gap-0.5">
+      <div className="text-[10px] font-semibold text-primary text-center px-2 flex flex-col items-center gap-0.5">
         {data.emoji && <span className="text-sm">{data.emoji}</span>}
         <span className="leading-tight break-words">{data.label}</span>
       </div>
@@ -74,11 +70,8 @@ function TierNode({ data }: { data: { label: string; emoji?: string; isExpanded?
 // Custom course node component - rectangular shape with course code and name
 function CourseNode({ data }: { data: { course: TierCourse } }) {
   const { course } = data;
-
   return (
-    <div 
-      className="min-w-[180px] max-w-[200px] rounded-lg border-2 border-slate-300 bg-white shadow-sm hover:shadow-md transition-shadow px-3 py-2 relative cursor-pointer"
-    >
+    <div className="min-w-[180px] max-w-[200px] rounded-lg border-2 border-slate-300 bg-white shadow-sm hover:shadow-md transition-shadow px-3 py-2 relative cursor-pointer">
       <Handle type="target" position={Position.Top} />
       <div className="flex flex-col gap-1">
         <div className="font-bold text-sm text-slate-800">{course.code}</div>
@@ -90,7 +83,7 @@ function CourseNode({ data }: { data: { course: TierCourse } }) {
 
 // Define nodeTypes outside component to avoid React Flow warning
 const nodeTypes = {
-  root: CybersecurityRootNode,
+  root: DataScienceRootNode,
   tier: TierNode,
   course: CourseNode,
 };
@@ -101,7 +94,7 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
   const [isDragging, setIsDragging] = useState(false);
   const [nodesState, setNodesState] = useState<Node[]>([]);
   const [edgesState, setEdgesState] = useState<Edge[]>([]);
-  const [isFormatted, setIsFormatted] = useState(false); // Track if formatting has been applied
+  const [isFormatted, setIsFormatted] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState<TierCourse | null>(null); // Track selected/expanded course
   const reactFlowInstance = useRef<ReactFlowInstance | null>(null);
 
@@ -123,6 +116,11 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
     setSelectedCourse(course);
   }, []);
 
+  // Handle closing expanded course card
+  const handleCloseCourseCard = useCallback(() => {
+    setSelectedCourse(null);
+  }, []);
+
   // Handle node click from React Flow
   const onNodeClick = useCallback((_event: React.MouseEvent, node: Node) => {
     // Only handle clicks on course nodes
@@ -131,29 +129,22 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
     }
   }, [handleCourseClick]);
 
-  // Handle closing expanded course card
-  const handleCloseCourseCard = useCallback(() => {
-    setSelectedCourse(null);
-  }, []);
-
-  // Create nodes and edges using useMemo (Option 2) - now dynamic based on expanded state
+  // Create nodes and edges using useMemo
   const { nodes: graphNodes, edges: graphEdges } = useMemo(() => {
-    // Create root node: Cybersecurity
-    // Center root node horizontally, position near top
+    // Create root node: Data Science
     const rootNode: Node = {
-      id: "cybersecurity-root",
+      id: "datascience-root",
       type: "root",
-      data: { label: cybersecurityCareerPathConfig.rootLabel },
-      position: nodePositions["cybersecurity-root"] || { x: 0, y: 40 },
+      data: { label: dataScienceCareerPathConfig.rootLabel },
+      position: nodePositions["datascience-root"] || { x: 0, y: 40 },
     };
 
     // Create tier nodes from config
-    // Use formatted spacing if formatting has been applied
-    const tierSpacing = isFormatted ? 600 : 400; // Use larger spacing if formatted
-    const tierStartX = -((cybersecurityCareerPathConfig.categories.length - 1) * tierSpacing) / 2;
-    const tierY = 220; // Vertical position below root
+    const tierSpacing = isFormatted ? 600 : 400;
+    const tierStartX = -((dataScienceCareerPathConfig.categories.length - 1) * tierSpacing) / 2;
+    const tierY = 220;
 
-    const tierNodes: Node[] = cybersecurityCareerPathConfig.categories.map((category, index) => {
+    const tierNodes: Node[] = dataScienceCareerPathConfig.categories.map((category, index) => {
       const defaultPosition = {
         x: tierStartX + index * tierSpacing,
         y: tierY,
@@ -174,8 +165,8 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
 
     // Create edges from root to each tier
     const tierEdges: Edge[] = tierNodes.map((tierNode) => ({
-      id: `cybersecurity-root-${tierNode.id}`,
-      source: "cybersecurity-root",
+      id: `datascience-root-${tierNode.id}`,
+      source: "datascience-root",
       target: tierNode.id,
       type: "smoothstep",
       animated: false,
@@ -195,26 +186,22 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
     tierNodes.forEach((tierNode) => {
       if (expandedTiers.has(tierNode.id)) {
         const tierNumber = getTierNumber(tierNode.id);
-        const tierCourses = cybersecurityCareerPathConfig.courses.filter(
+        const tierCourses = dataScienceCareerPathConfig.courses.filter(
           (course) => course.tier === tierNumber
         );
 
         // Layout courses in a grid below the tier node
-        // Use formatted spacing if formatting has been applied
-        const coursesPerRow = isFormatted ? 2 : 3; // Fewer courses per row when formatted
-        const courseSpacing = isFormatted ? 300 : 220; // Wider spacing when formatted
-        const rowSpacing = isFormatted ? 120 : 100; // More vertical spacing when formatted
-        const courseStartY = tierNode.position.y + 150; // Start courses below tier node (accounting for node height and spacing)
+        const coursesPerRow = isFormatted ? 2 : 3;
+        const courseSpacing = isFormatted ? 300 : 220;
+        const rowSpacing = isFormatted ? 120 : 100;
+        const courseStartY = tierNode.position.y + 150;
         
         tierCourses.forEach((course, courseIndex) => {
           const row = Math.floor(courseIndex / coursesPerRow);
           const col = courseIndex % coursesPerRow;
           
-          // Calculate how many courses are in this row
           const coursesInRow = Math.min(coursesPerRow, tierCourses.length - row * coursesPerRow);
           
-          // Center courses horizontally relative to tier node
-          // For a row with N courses, position them from -(N-1)/2 * spacing to +(N-1)/2 * spacing
           const centerOffset = ((coursesInRow - 1) * courseSpacing) / 2;
           const courseOffsetX = (col * courseSpacing) - centerOffset;
           const courseX = tierNode.position.x + courseOffsetX;
@@ -231,7 +218,6 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
             },
           });
 
-          // Create edge from tier to course
           courseEdges.push({
             id: `${tierNode.id}-${courseNodeId}`,
             source: tierNode.id,
@@ -244,19 +230,16 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
       }
     });
 
-    // Return nodes and edges
     return {
       nodes: [rootNode, ...tierNodes, ...courseNodes],
       edges: [...tierEdges, ...courseEdges],
     };
   }, [expandedTiers, nodePositions, toggleTier, isFormatted]);
 
-  // Handle node drag start
   const onNodeDragStart = useCallback(() => {
     setIsDragging(true);
   }, []);
 
-  // Handle node drag stop - save final position
   const onNodeDragStop = useCallback((_event: React.MouseEvent, node: Node) => {
     setIsDragging(false);
     setNodePositions((prev) => ({
@@ -265,12 +248,9 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
     }));
   }, []);
 
-  // Handle node changes - let React Flow handle drag updates internally
   const onNodesChange = useCallback((changes: NodeChange[]) => {
-    // Apply changes to nodes state so React Flow can handle dragging smoothly
     setNodesState((nds) => applyNodeChanges(changes, nds));
     
-    // Save positions when drag ends (not during drag to avoid conflicts)
     changes.forEach((change) => {
       if (change.type === "position" && !change.dragging && change.position && change.id) {
         setNodePositions((prev) => ({
@@ -281,7 +261,6 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
     });
   }, []);
 
-  // Sync nodesState and edgesState from graphNodes/graphEdges when not dragging
   useEffect(() => {
     if (!isDragging) {
       setNodesState(graphNodes);
@@ -289,7 +268,6 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
     }
   }, [graphNodes, graphEdges, isDragging]);
 
-  // Initialize nodesState on first render
   useEffect(() => {
     if (nodesState.length === 0 && graphNodes.length > 0) {
       setNodesState(graphNodes);
@@ -297,29 +275,21 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
     }
   }, [graphNodes, graphEdges, nodesState.length]);
 
-  // Use nodesState during drag, graphNodes otherwise
   const displayNodes = isDragging ? nodesState : graphNodes;
   const displayEdges = isDragging ? edgesState : graphEdges;
 
-  // Handle React Flow instance initialization
   const onInit = useCallback((instance: ReactFlowInstance) => {
     reactFlowInstance.current = instance;
   }, []);
 
-  // Reset function - resets graph to initial state (all tiers collapsed, positions reset)
   const handleReset = useCallback(() => {
-    // Clear all expanded tiers
     setExpandedTiers(new Set());
-    // Clear all saved node positions
     setNodePositions({});
-    // Reset dragging state
     setIsDragging(false);
-    // Reset formatting flag
     setIsFormatted(false);
     // Close any open course card
     setSelectedCourse(null);
     
-    // Fit view after state resets
     setTimeout(() => {
       if (reactFlowInstance.current) {
         reactFlowInstance.current.fitView({ padding: 0.1, maxZoom: 1.5 });
@@ -327,39 +297,34 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
     }, 100);
   }, []);
 
-  // Format function - recalculates all node positions with increased spacing to prevent overlap
   const handleFormat = useCallback(() => {
     const newPositions: Record<string, { x: number; y: number }> = {};
     
-    // Root node position
-    newPositions["cybersecurity-root"] = { x: 0, y: 40 };
+    newPositions["datascience-root"] = { x: 0, y: 40 };
     
-    // Tier nodes positioning - INCREASED spacing to prevent overlap
-    const tierSpacing = 600; // Increased from 400 to spread tiers further apart
-    const tierStartX = -((cybersecurityCareerPathConfig.categories.length - 1) * tierSpacing) / 2;
+    const tierSpacing = 600;
+    const tierStartX = -((dataScienceCareerPathConfig.categories.length - 1) * tierSpacing) / 2;
     const tierY = 220;
     
-    // Helper function to get tier number from tier ID
     const getTierNumber = (tierId: string): number => {
       const match = tierId.match(/tier-(\d+)/);
       return match ? parseInt(match[1], 10) : 0;
     };
     
-    cybersecurityCareerPathConfig.categories.forEach((category, index) => {
+    dataScienceCareerPathConfig.categories.forEach((category, index) => {
       const tierNodeId = category.id;
       const tierX = tierStartX + index * tierSpacing;
       newPositions[tierNodeId] = { x: tierX, y: tierY };
       
-      // If tier is expanded, recalculate course positions with INCREASED spacing
       if (expandedTiers.has(tierNodeId)) {
         const tierNumber = getTierNumber(tierNodeId);
-        const tierCourses = cybersecurityCareerPathConfig.courses.filter(
+        const tierCourses = dataScienceCareerPathConfig.courses.filter(
           (course) => course.tier === tierNumber
         );
         
-        const coursesPerRow = 2; // Reduced from 3 to 2 per row to prevent overlap
-        const courseSpacing = 300; // Increased from 220 to 300 for wider horizontal spacing
-        const rowSpacing = 120; // Increased from 100 to 120 for more vertical spacing
+        const coursesPerRow = 2;
+        const courseSpacing = 300;
+        const rowSpacing = 120;
         const courseStartY = tierY + 150;
         
         tierCourses.forEach((course, courseIndex) => {
@@ -377,33 +342,24 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
       }
     });
     
-    // Update all positions at once - this will trigger useMemo to recalculate graphNodes
     setNodePositions(newPositions);
-    
-    // Mark as formatted so newly expanded tiers use formatted spacing
     setIsFormatted(true);
-    
-    // Ensure we're not in dragging state so displayNodes uses graphNodes
     setIsDragging(false);
     
-    // Wait for React to update state and recalculate nodes, then apply positions
-    // Use multiple animation frames to ensure state has fully propagated
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        // Wait one more frame to ensure useMemo has recalculated with new positions
         requestAnimationFrame(() => {
           if (reactFlowInstance.current) {
             const instance = reactFlowInstance.current;
             
-            // Calculate nodes the same way useMemo does, but with newPositions
             const rootNode: Node = {
-              id: "cybersecurity-root",
+              id: "datascience-root",
               type: "root",
-              data: { label: cybersecurityCareerPathConfig.rootLabel },
-              position: newPositions["cybersecurity-root"],
+              data: { label: dataScienceCareerPathConfig.rootLabel },
+              position: newPositions["datascience-root"],
             };
             
-            const tierNodes: Node[] = cybersecurityCareerPathConfig.categories.map((category, index) => ({
+            const tierNodes: Node[] = dataScienceCareerPathConfig.categories.map((category, index) => ({
               id: category.id,
               type: "tier",
               data: {
@@ -419,7 +375,7 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
             tierNodes.forEach((tierNode) => {
               if (expandedTiers.has(tierNode.id)) {
                 const tierNumber = getTierNumber(tierNode.id);
-                const tierCourses = cybersecurityCareerPathConfig.courses.filter(
+                const tierCourses = dataScienceCareerPathConfig.courses.filter(
                   (course) => course.tier === tierNumber
                 );
                 
@@ -437,11 +393,9 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
               }
             });
             
-            // Set all nodes with new positions
             const allNodes = [rootNode, ...tierNodes, ...courseNodes];
             instance.setNodes(allNodes);
             
-            // Fit view after nodes are updated
             setTimeout(() => {
               instance.fitView({ padding: 0.2, maxZoom: 1.5 });
             }, 50);
@@ -451,7 +405,6 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
     });
   }, [expandedTiers, toggleTier]);
 
-  // Expose reset handler to parent component
   useEffect(() => {
     if (!onResetReady) return;
     const rafId = requestAnimationFrame(() => {
@@ -460,7 +413,6 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
     return () => cancelAnimationFrame(rafId);
   }, [onResetReady, handleReset]);
 
-  // Expose format handler to parent component
   useEffect(() => {
     if (!onFormatReady) return;
     const rafId = requestAnimationFrame(() => {
@@ -540,28 +492,24 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
 
             {/* Course Card Content */}
             <div className="p-6">
-              {/* Header */}
-              <div className="pr-10 mb-4">
-                <h2 className="text-2xl font-bold text-slate-900 mb-1">
-                  {selectedCourse.code}
-                </h2>
-                <h3 className="text-xl text-slate-700 mb-2">
-                  {selectedCourse.name}
-                </h3>
-                <p className="text-sm text-slate-600">
+              {/* Class Name at Top */}
+              <div className="pr-10 mb-6 border-b border-slate-200 pb-4">
+                <h2 className="text-3xl font-bold text-slate-900">
                   {selectedCourse.fullName}
-                </p>
+                </h2>
               </div>
 
               {/* Description */}
-              <div className="mb-6">
-                <h4 className="text-sm font-semibold text-slate-800 mb-2 uppercase tracking-wide">
-                  Why This Course Matters
-                </h4>
-                <p className="text-slate-700">{selectedCourse.description}</p>
-              </div>
+              {selectedCourse.description && (
+                <div className="mb-6">
+                  <h4 className="text-sm font-semibold text-slate-800 mb-2 uppercase tracking-wide">
+                    Description
+                  </h4>
+                  <p className="text-slate-700">{selectedCourse.description}</p>
+                </div>
+              )}
 
-              {/* Expanded Information */}
+              {/* Expanded Information Section - Space for additional info */}
               {selectedCourse.expandedInfo && (
                 <div className="space-y-6 border-t border-slate-200 pt-6">
                   {/* Credits */}
@@ -642,11 +590,11 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
                 </div>
               )}
 
-              {/* If no expanded info, show a message */}
+              {/* Placeholder for additional info when expandedInfo is not yet added */}
               {!selectedCourse.expandedInfo && (
                 <div className="border-t border-slate-200 pt-6">
-                  <p className="text-slate-500 italic">
-                    Additional course information will be displayed here when available.
+                  <p className="text-slate-500 italic text-sm">
+                    Additional course information can be added here.
                   </p>
                 </div>
               )}
@@ -657,7 +605,7 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
 
       <div className="w-full px-4 py-2 bg-muted/20 border-t border-border/40">
         <p className="text-xs text-black text-center">
-          Career path graph for Cybersecurity
+          Career path graph for Data Science / Data Analytics
         </p>
       </div>
     </div>

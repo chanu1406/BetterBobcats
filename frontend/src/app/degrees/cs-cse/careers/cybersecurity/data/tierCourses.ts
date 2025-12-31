@@ -18,6 +18,27 @@ export const tier1Courses: TierCourse[] = [
     fullName: "CSE 178: Computers and Networks Security",
     description: "Direct security concepts: threats, attacks, defenses",
     tier: 1,
+    expandedInfo: {
+      credits: 4,
+      prerequisites: "CSE 160 (Computer Networks) recommended",
+      learningOutcomes: [
+        "Identify common security threats and attack vectors",
+        "Implement security defenses and countermeasures",
+        "Understand network security protocols and practices",
+        "Analyze security vulnerabilities in systems",
+        "Apply security best practices to protect systems"
+      ],
+      topics: [
+        "Security threats and attack models",
+        "Cryptography and authentication",
+        "Network security protocols",
+        "Firewalls and intrusion detection",
+        "Security policies and access control",
+        "Incident response and security management"
+      ],
+      careerRelevance: "This is the core security course for cybersecurity careers. Essential for SOC analysts, security engineers, and anyone working in defensive or offensive security roles.",
+      additionalNotes: "Considered the foundational course for all cybersecurity career paths. Strongly recommended to take early in your cybersecurity journey."
+    },
   },
   {
     id: "cybersec-cse-160",
@@ -90,6 +111,27 @@ export const tier2Courses: TierCourse[] = [
     fullName: "CSE 111: Database Systems",
     description: "SQL injection, access control, data security",
     tier: 2,
+    expandedInfo: {
+      credits: 4,
+      prerequisites: "CSE 30 or equivalent programming experience",
+      learningOutcomes: [
+        "Understand relational database design and normalization",
+        "Write complex SQL queries and understand query optimization",
+        "Implement database security measures and access controls",
+        "Identify and prevent SQL injection vulnerabilities",
+        "Design secure database schemas for applications"
+      ],
+      topics: [
+        "Relational database design",
+        "SQL and query optimization",
+        "Database security and access control",
+        "Transaction management",
+        "Database indexing and performance",
+        "SQL injection prevention"
+      ],
+      careerRelevance: "Critical for understanding how to secure data storage and prevent common web application vulnerabilities like SQL injection. Essential for security engineers working with application security.",
+      additionalNotes: "This course provides foundational knowledge for securing database-driven applications. Understanding database security is crucial for both offensive and defensive security roles."
+    },
   },
   {
     id: "cybersec-cse-177",

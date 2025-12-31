@@ -12,6 +12,20 @@ export interface TierCourse {
   resources?: string[]; // Optional: bullet points for resources
   tier: number; // Tier number (1, 2, 3, etc.)
   prerequisites?: string[]; // Optional: array of course IDs that this course requires
+  
+  /**
+   * Expanded card information (shown when course node is clicked)
+   * This information appears in a modal overlay when users click on a course node in the graph.
+   * All fields are optional - include only what's relevant for each course.
+   */
+  expandedInfo?: {
+    credits?: number; // Number of credits for the course
+    prerequisites?: string; // Human-readable prerequisites (e.g., "CSE 30 or equivalent programming experience")
+    learningOutcomes?: string[]; // Array of learning outcomes (what students will learn)
+    topics?: string[]; // Array of topics covered in the course
+    careerRelevance?: string; // How this course relates to the career path
+    additionalNotes?: string; // Any additional information about the course
+  };
 }
 
 export interface CareerPathCategory {
