@@ -5,8 +5,7 @@
  * Interactive React Flow graph visualization for career paths
  * Used on: Career path pages (SWE, Cybersecurity, etc.)
  * 
- * This is a minimal implementation with just the React Flow frame.
- * Nodes and edges will be added later.
+ * Fetches career path data from backend API
  */
 
 import { useState, useCallback, useRef, useEffect, useMemo } from "react";
@@ -23,8 +22,8 @@ import ReactFlow, {
   Position,
 } from "reactflow";
 import "reactflow/dist/style.css";
+import { TierCourse, CareerPathConfig } from "@/types/careerPath";
 import { cybersecurityCareerPathConfig } from "../data/careerPathConfig";
-import { TierCourse } from "@/types/careerPath";
 
 interface CareerPathGraphProps {
   onResetReady?: (resetFn: () => void) => void;
@@ -96,6 +95,7 @@ const nodeTypes = {
 };
 
 export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerPathGraphProps) {
+  const careerPathConfig = cybersecurityCareerPathConfig;
   const [expandedTiers, setExpandedTiers] = useState<Set<string>>(new Set());
   const [nodePositions, setNodePositions] = useState<Record<string, { x: number; y: number }>>({});
   const [isDragging, setIsDragging] = useState(false);
@@ -138,22 +138,24 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
 
   // Create nodes and edges using useMemo (Option 2) - now dynamic based on expanded state
   const { nodes: graphNodes, edges: graphEdges } = useMemo(() => {
+    // Return empty if no config loaded yet
+
     // Create root node: Cybersecurity
     // Center root node horizontally, position near top
     const rootNode: Node = {
       id: "cybersecurity-root",
       type: "root",
-      data: { label: cybersecurityCareerPathConfig.rootLabel },
+      data: { label: careerPathConfig.rootLabel },
       position: nodePositions["cybersecurity-root"] || { x: 0, y: 40 },
     };
 
     // Create tier nodes from config
     // Use formatted spacing if formatting has been applied
     const tierSpacing = isFormatted ? 600 : 400; // Use larger spacing if formatted
-    const tierStartX = -((cybersecurityCareerPathConfig.categories.length - 1) * tierSpacing) / 2;
+    const tierStartX = -((careerPathConfig.categories.length - 1) * tierSpacing) / 2;
     const tierY = 220; // Vertical position below root
 
-    const tierNodes: Node[] = cybersecurityCareerPathConfig.categories.map((category, index) => {
+    const tierNodes: Node[] = careerPathConfig.categories.map((category, index) => {
       const defaultPosition = {
         x: tierStartX + index * tierSpacing,
         y: tierY,
@@ -195,7 +197,7 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
     tierNodes.forEach((tierNode) => {
       if (expandedTiers.has(tierNode.id)) {
         const tierNumber = getTierNumber(tierNode.id);
-        const tierCourses = cybersecurityCareerPathConfig.courses.filter(
+        const tierCourses = careerPathConfig.courses.filter(
           (course) => course.tier === tierNumber
         );
 
@@ -249,7 +251,7 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
       nodes: [rootNode, ...tierNodes, ...courseNodes],
       edges: [...tierEdges, ...courseEdges],
     };
-  }, [expandedTiers, nodePositions, toggleTier, isFormatted]);
+  }, [careerPathConfig, expandedTiers, nodePositions, toggleTier, isFormatted]);
 
   // Handle node drag start
   const onNodeDragStart = useCallback(() => {
@@ -329,6 +331,7 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
 
   // Format function - recalculates all node positions with increased spacing to prevent overlap
   const handleFormat = useCallback(() => {
+
     const newPositions: Record<string, { x: number; y: number }> = {};
     
     // Root node position
@@ -336,7 +339,7 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
     
     // Tier nodes positioning - INCREASED spacing to prevent overlap
     const tierSpacing = 600; // Increased from 400 to spread tiers further apart
-    const tierStartX = -((cybersecurityCareerPathConfig.categories.length - 1) * tierSpacing) / 2;
+    const tierStartX = -((careerPathConfig.categories.length - 1) * tierSpacing) / 2;
     const tierY = 220;
     
     // Helper function to get tier number from tier ID
@@ -345,7 +348,7 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
       return match ? parseInt(match[1], 10) : 0;
     };
     
-    cybersecurityCareerPathConfig.categories.forEach((category, index) => {
+    careerPathConfig.categories.forEach((category, index) => {
       const tierNodeId = category.id;
       const tierX = tierStartX + index * tierSpacing;
       newPositions[tierNodeId] = { x: tierX, y: tierY };
@@ -353,7 +356,7 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
       // If tier is expanded, recalculate course positions with INCREASED spacing
       if (expandedTiers.has(tierNodeId)) {
         const tierNumber = getTierNumber(tierNodeId);
-        const tierCourses = cybersecurityCareerPathConfig.courses.filter(
+        const tierCourses = careerPathConfig.courses.filter(
           (course) => course.tier === tierNumber
         );
         
@@ -399,11 +402,11 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
             const rootNode: Node = {
               id: "cybersecurity-root",
               type: "root",
-              data: { label: cybersecurityCareerPathConfig.rootLabel },
+              data: { label: careerPathConfig.rootLabel },
               position: newPositions["cybersecurity-root"],
             };
             
-            const tierNodes: Node[] = cybersecurityCareerPathConfig.categories.map((category, index) => ({
+            const tierNodes: Node[] = careerPathConfig.categories.map((category, index) => ({
               id: category.id,
               type: "tier",
               data: {
@@ -419,7 +422,7 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
             tierNodes.forEach((tierNode) => {
               if (expandedTiers.has(tierNode.id)) {
                 const tierNumber = getTierNumber(tierNode.id);
-                const tierCourses = cybersecurityCareerPathConfig.courses.filter(
+                const tierCourses = careerPathConfig.courses.filter(
                   (course) => course.tier === tierNumber
                 );
                 
@@ -449,7 +452,7 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
         });
       });
     });
-  }, [expandedTiers, toggleTier]);
+  }, [careerPathConfig, expandedTiers, toggleTier]);
 
   // Expose reset handler to parent component
   useEffect(() => {
