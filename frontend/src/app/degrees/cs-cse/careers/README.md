@@ -14,7 +14,7 @@ Each career path has its own directory with:
 
 - `swe/` - Software Engineering (Generalist) ✅ **Complete with interactive graph**
 - `cybersecurity/` - Cybersecurity ✅ **Complete with interactive graph**
-- `ml-ai/` - Machine Learning / AI (Coming soon)
+- `ml-ai/` - Machine Learning / AI ✅ **Complete with interactive graph**
 - `data-science/` - Data Science / Data Analytics (Coming soon)
 - `systems/` - Systems / Infrastructure Engineering Pathway (Coming soon)
 - `embedded/` - Embedded Systems Engineering Pathway (Coming soon)
@@ -26,8 +26,8 @@ Each completed career path includes:
 - **Comprehensive README**: Career overview, course details, skills, resources
 - **Tier System**: Courses organized by importance (Tier 1: Must-Take, Tier 2: Boosters, Tier 3: Optional)
 
-**Completed**: SWE, Cybersecurity  
-**In Progress**: ML/AI, Data Science, Systems, Embedded
+**Completed**: SWE, Cybersecurity, ML/AI  
+**In Progress**: Data Science, Systems, Embedded
 
 ## Config-Driven Architecture
 
