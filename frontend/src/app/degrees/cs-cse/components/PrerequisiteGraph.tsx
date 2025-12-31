@@ -20,7 +20,7 @@ import ReactFlow, {
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { Course } from "@/types/course";
-import { fetchCourses } from "@/lib/api";
+import { cseCourses } from "../data/courses";
 
 // Custom circular node component for CS/CSE root
 function RootNode({ data }: { data: { label: string } }) {
@@ -540,9 +540,7 @@ interface PrerequisiteGraphProps {
 }
 
 export default function PrerequisiteGraph({ onLayoutChange, useFormattedLayoutExternal, onResetReady, onFullResetReady }: PrerequisiteGraphProps) {
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const courses = cseCourses;
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
   const [useFormattedLayoutInternal, setUseFormattedLayoutInternal] = useState(false);
   const [nodePositions, setNodePositions] = useState<Record<string, { x: number; y: number }>>({});
@@ -560,24 +558,6 @@ export default function PrerequisiteGraph({ onLayoutChange, useFormattedLayoutEx
       setUseFormattedLayoutInternal(value);
     }
   };
-
-  // Fetch courses from API on mount
-  useEffect(() => {
-    async function loadCourses() {
-      try {
-        setLoading(true);
-        setError(null);
-        const data = await fetchCourses();
-        setCourses(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to load courses");
-        console.error("Error loading courses:", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadCourses();
-  }, []);
 
   // Handle node drag start
   const onNodeDragStart = useCallback(() => {
@@ -1091,39 +1071,6 @@ export default function PrerequisiteGraph({ onLayoutChange, useFormattedLayoutEx
   // Memoize nodeTypes to prevent React Flow warning - ensure stable reference
   const memoizedNodeTypes = useMemo(() => nodeTypes, []);
 
-  // Show loading state
-  if (loading) {
-    return (
-      <div className="w-full border border-border/40 rounded-lg overflow-hidden relative pt-6">
-        <div className="w-full h-[800px] flex items-center justify-center">
-          <div className="text-center">
-            <div className="text-lg font-semibold text-primary mb-2">Loading courses...</div>
-            <div className="text-sm text-muted-foreground">Fetching data from backend</div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Show error state
-  if (error) {
-    return (
-      <div className="w-full border border-border/40 rounded-lg overflow-hidden relative pt-6">
-        <div className="w-full h-[800px] flex items-center justify-center">
-          <div className="text-center">
-            <div className="text-lg font-semibold text-destructive mb-2">Error loading courses</div>
-            <div className="text-sm text-muted-foreground">{error}</div>
-            <button 
-              onClick={() => window.location.reload()} 
-              className="mt-4 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90"
-            >
-              Retry
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="w-full border border-border/40 rounded-lg overflow-hidden relative pt-6">
