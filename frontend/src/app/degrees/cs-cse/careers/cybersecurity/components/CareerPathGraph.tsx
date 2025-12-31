@@ -5,7 +5,7 @@
  * Interactive React Flow graph visualization for career paths
  * Used on: Career path pages (SWE, Cybersecurity, etc.)
  * 
- * Fetches career path data from backend API
+ * Uses static career path configuration from local data files
  */
 
 import { useState, useCallback, useRef, useEffect, useMemo } from "react";
