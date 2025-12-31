@@ -63,10 +63,42 @@ export async function fetchCourseById(courseId: string): Promise<Course> {
 }
 
 /**
- * Fetch career path tier courses
- * TODO: Implement when backend endpoint is ready
+ * Fetch career path configuration with tier courses
  */
-export async function fetchCareerPathTiers(careerPath: string): Promise<TierCourse[]> {
-  // Placeholder for future implementation
-  throw new Error("Career path API not yet implemented");
+export async function fetchCareerPath(careerPath: string) {
+  const response = await fetch(`${API_BASE_URL}/api/careers/${careerPath}`);
+  
+  if (!response.ok) {
+    if (response.status === 404) {
+      throw new Error(`Career path '${careerPath}' not found`);
+    }
+    throw new Error(`Failed to fetch career path: ${response.statusText}`);
+  }
+  
+  const data = await response.json();
+  
+  // Transform snake_case from backend to camelCase for frontend
+  return {
+    rootLabel: data.root_label || data.rootLabel,
+    categories: data.categories || [],
+    courses: (data.courses || []).map((course: any) => ({
+      id: course.id,
+      code: course.code,
+      name: course.name,
+      fullName: course.full_name || course.fullName,
+      description: course.description,
+      resources: course.resources,
+      tier: course.tier,
+      prerequisites: course.prerequisites,
+      expandedInfo: course.expanded_info || course.expandedInfo ? {
+        credits: course.expanded_info?.credits || course.expandedInfo?.credits,
+        prerequisites: course.expanded_info?.prerequisites || course.expandedInfo?.prerequisites,
+        learningOutcomes: course.expanded_info?.learning_outcomes || course.expandedInfo?.learningOutcomes,
+        topics: course.expanded_info?.topics || course.expandedInfo?.topics,
+        careerRelevance: course.expanded_info?.career_relevance || course.expandedInfo?.careerRelevance,
+        additionalNotes: course.expanded_info?.additional_notes || course.expandedInfo?.additionalNotes,
+      } : undefined,
+    })),
+    categoryIntros: data.category_intros || data.categoryIntros,
+  };
 }

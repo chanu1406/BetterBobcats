@@ -23,7 +23,8 @@ import ReactFlow, {
   Position,
 } from "reactflow";
 import "reactflow/dist/style.css";
-import { mlAiCareerPathConfig } from "../data/careerPathConfig";
+import { TierCourse, CareerPathConfig } from "@/types/careerPath";
+import { fetchCareerPath } from "@/lib/api";
 import { TierCourse } from "@/types/careerPath";
 
 interface CareerPathGraphProps {
@@ -93,14 +94,35 @@ const nodeTypes = {
 };
 
 export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerPathGraphProps) {
+  const [careerPathConfig, setCareerPathConfig] = useState<CareerPathConfig | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [expandedTiers, setExpandedTiers] = useState<Set<string>>(new Set());
   const [nodePositions, setNodePositions] = useState<Record<string, { x: number; y: number }>>({});
   const [isDragging, setIsDragging] = useState(false);
   const [nodesState, setNodesState] = useState<Node[]>([]);
   const [edgesState, setEdgesState] = useState<Edge[]>([]);
-  const [isFormatted, setIsFormatted] = useState(false); // Track if formatting has been applied
-  const [selectedCourse, setSelectedCourse] = useState<TierCourse | null>(null); // Track selected/expanded course
+  const [isFormatted, setIsFormatted] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState<TierCourse | null>(null);
   const reactFlowInstance = useRef<ReactFlowInstance | null>(null);
+
+  // Fetch career path data on mount
+  useEffect(() => {
+    async function loadCareerPath() {
+      try {
+        setIsLoading(true);
+        const data = await fetchCareerPath("ml-ai");
+        setCareerPathConfig(data as CareerPathConfig);
+        setError(null);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to load career path");
+        console.error("Error loading career path:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadCareerPath();
+  }, []);
 
   // Toggle tier expansion
   const toggleTier = useCallback((tierId: string) => {
@@ -135,22 +157,26 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
 
   // Create nodes and edges using useMemo (Option 2) - now dynamic based on expanded state
   const { nodes: graphNodes, edges: graphEdges } = useMemo(() => {
+    if (!careerPathConfig) {
+      return { nodes: [], edges: [] };
+    }
+
     // Create root node: ML-AI
     // Center root node horizontally, position near top
     const rootNode: Node = {
       id: "ml-ai-root",
       type: "root",
-      data: { label: mlAiCareerPathConfig.rootLabel },
+      data: { label: careerPathConfig.rootLabel },
       position: nodePositions["ml-ai-root"] || { x: 0, y: 40 },
     };
 
     // Create tier nodes from config
     // Use formatted spacing if formatting has been applied
     const tierSpacing = isFormatted ? 600 : 400; // Use larger spacing if formatted
-    const tierStartX = -((mlAiCareerPathConfig.categories.length - 1) * tierSpacing) / 2;
+    const tierStartX = -((careerPathConfig.categories.length - 1) * tierSpacing) / 2;
     const tierY = 220; // Vertical position below root
 
-    const tierNodes: Node[] = mlAiCareerPathConfig.categories.map((category, index) => {
+    const tierNodes: Node[] = careerPathConfig.categories.map((category, index) => {
       const defaultPosition = {
         x: tierStartX + index * tierSpacing,
         y: tierY,
@@ -192,7 +218,7 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
     tierNodes.forEach((tierNode) => {
       if (expandedTiers.has(tierNode.id)) {
         const tierNumber = getTierNumber(tierNode.id);
-        const tierCourses = mlAiCareerPathConfig.courses.filter(
+        const tierCourses = careerPathConfig.courses.filter(
           (course) => course.tier === tierNumber
         );
 
@@ -246,7 +272,7 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
       nodes: [rootNode, ...tierNodes, ...courseNodes],
       edges: [...tierEdges, ...courseEdges],
     };
-  }, [expandedTiers, nodePositions, toggleTier, isFormatted]);
+  }, [careerPathConfig, expandedTiers, nodePositions, toggleTier, isFormatted]);
 
   // Handle node drag start
   const onNodeDragStart = useCallback(() => {
@@ -326,6 +352,8 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
 
   // Format function - recalculates all node positions with increased spacing to prevent overlap
   const handleFormat = useCallback(() => {
+    if (!careerPathConfig) return;
+
     const newPositions: Record<string, { x: number; y: number }> = {};
     
     // Root node position
@@ -333,7 +361,7 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
     
     // Tier nodes positioning - INCREASED spacing to prevent overlap
     const tierSpacing = 600; // Increased from 400 to spread tiers further apart
-    const tierStartX = -((mlAiCareerPathConfig.categories.length - 1) * tierSpacing) / 2;
+    const tierStartX = -((careerPathConfig.categories.length - 1) * tierSpacing) / 2;
     const tierY = 220;
     
     // Helper function to get tier number from tier ID
@@ -342,7 +370,7 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
       return match ? parseInt(match[1], 10) : 0;
     };
     
-    mlAiCareerPathConfig.categories.forEach((category, index) => {
+    careerPathConfig.categories.forEach((category, index) => {
       const tierNodeId = category.id;
       const tierX = tierStartX + index * tierSpacing;
       newPositions[tierNodeId] = { x: tierX, y: tierY };
@@ -350,7 +378,7 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
       // If tier is expanded, recalculate course positions with INCREASED spacing
       if (expandedTiers.has(tierNodeId)) {
         const tierNumber = getTierNumber(tierNodeId);
-        const tierCourses = mlAiCareerPathConfig.courses.filter(
+        const tierCourses = careerPathConfig.courses.filter(
           (course) => course.tier === tierNumber
         );
         
@@ -396,11 +424,11 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
             const rootNode: Node = {
               id: "ml-ai-root",
               type: "root",
-              data: { label: mlAiCareerPathConfig.rootLabel },
+              data: { label: careerPathConfig.rootLabel },
               position: newPositions["ml-ai-root"],
             };
             
-            const tierNodes: Node[] = mlAiCareerPathConfig.categories.map((category, index) => ({
+            const tierNodes: Node[] = careerPathConfig.categories.map((category, index) => ({
               id: category.id,
               type: "tier",
               data: {
@@ -416,7 +444,7 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
             tierNodes.forEach((tierNode) => {
               if (expandedTiers.has(tierNode.id)) {
                 const tierNumber = getTierNumber(tierNode.id);
-                const tierCourses = mlAiCareerPathConfig.courses.filter(
+                const tierCourses = careerPathConfig.courses.filter(
                   (course) => course.tier === tierNumber
                 );
                 
@@ -446,7 +474,7 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
         });
       });
     });
-  }, [expandedTiers, toggleTier]);
+  }, [careerPathConfig, expandedTiers, toggleTier]);
 
   // Expose reset handler to parent component
   useEffect(() => {
@@ -650,7 +678,7 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
 
       <div className="w-full px-4 py-2 bg-muted/20 border-t border-border/40">
         <p className="text-xs text-black text-center">
-          Career path graph for ML-AI (Machine Learning / AI)
+          {isLoading ? "Loading career path..." : error ? `Error: ${error}` : "Career path graph for ML-AI (Machine Learning / AI)"}
         </p>
       </div>
     </div>
