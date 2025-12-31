@@ -583,7 +583,7 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
               {/* Description */}
               <div className="mb-6">
                 <h4 className="text-sm font-semibold text-slate-800 mb-2 uppercase tracking-wide">
-                  Why This Course Matters
+                  Description
                 </h4>
                 <p className="text-slate-700">{selectedCourse.description}</p>
               </div>
@@ -643,14 +643,14 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
                     </div>
                   )}
 
-                  {/* Career Relevance */}
-                  {selectedCourse.expandedInfo.careerRelevance && (
+                  {/* Description */}
+                  {selectedCourse.expandedInfo.description && (
                     <div>
                       <h4 className="text-sm font-semibold text-slate-800 mb-2">
-                        Career Relevance
+                        Description
                       </h4>
                       <p className="text-slate-700">
-                        {selectedCourse.expandedInfo.careerRelevance}
+                        {selectedCourse.expandedInfo.description}
                       </p>
                     </div>
                   )}

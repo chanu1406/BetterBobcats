@@ -16,6 +16,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",  # Frontend URL
+        "http://localhost:3001",  # Frontend URL (alternate port)
+        "http://localhost:3002",  # Frontend URL (alternate port 2)
         "http://localhost:8080",  # Test server
     ],
     allow_credentials=True,

@@ -23,7 +23,7 @@ export interface TierCourse {
     prerequisites?: string; // Human-readable prerequisites (e.g., "CSE 30 or equivalent programming experience")
     learningOutcomes?: string[]; // Array of learning outcomes (what students will learn)
     topics?: string[]; // Array of topics covered in the course
-    careerRelevance?: string; // How this course relates to the career path
+    description?: string; // Natural, student-friendly description of why this course matters for the career path
     additionalNotes?: string; // Any additional information about the course
   };
 }
