@@ -14,7 +14,10 @@ app = FastAPI(
 # CORS configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Frontend URL
+    allow_origins=[
+        "http://localhost:3000",  # Frontend URL
+        "http://localhost:8080",  # Test server
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -33,7 +36,12 @@ async def health():
     return {"status": "healthy"}
 
 
-# TODO: Import and include API routers here
+# API Routers
+from app.api import courses
+
+app.include_router(courses.router, prefix="/api/courses", tags=["courses"])
+
+# TODO: Import and include remaining API routers
 # from app.api import degrees, careers, roadmaps
 # app.include_router(degrees.router, prefix="/api/degrees", tags=["degrees"])
 # app.include_router(careers.router, prefix="/api/careers", tags=["careers"])
