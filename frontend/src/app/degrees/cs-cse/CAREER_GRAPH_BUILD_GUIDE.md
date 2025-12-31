@@ -512,6 +512,7 @@ newPositions["cybersecurity-root"] = { x: 0, y: 40 };
 - Keep all other code exactly the same
 - Don't change component structure, styling, or logic
 - Only change the config import and root node ID references
+- The Background component uses `variant="lines"` for a grid-line pattern (this is standard for all career path graphs)
 
 ---
 

@@ -23,7 +23,7 @@ import ReactFlow, {
   Position,
 } from "reactflow";
 import "reactflow/dist/style.css";
-import { sweCareerPathConfig } from "../data/careerPathConfig";
+import { cybersecurityCareerPathConfig } from "../data/careerPathConfig";
 import { TierCourse } from "@/types/careerPath";
 
 interface CareerPathGraphProps {
@@ -31,8 +31,8 @@ interface CareerPathGraphProps {
   onFormatReady?: (formatFn: () => void) => void;
 }
 
-// Custom root node component for SWE career path
-function SWERootNode({ data }: { data: { label: string } }) {
+// Custom root node component for Cybersecurity career path
+function CybersecurityRootNode({ data }: { data: { label: string } }) {
   return (
     <div className="w-32 h-32 rounded-full border-2 border-primary bg-primary/10 flex items-center justify-center shadow-lg relative">
       <Handle type="source" position={Position.Bottom} />
@@ -63,7 +63,7 @@ function TierNode({ data }: { data: { label: string; emoji?: string; isExpanded?
     >
       <Handle type="target" position={Position.Top} />
       <Handle type="source" position={Position.Bottom} />
-      <div className="text-[10px] font-semibold text-primary text-center px-2 flex flex-col items-center gap-0.5">
+      <div className="text-[8.75px] font-semibold text-primary text-center px-2 flex flex-col items-center gap-0.5">
         {data.emoji && <span className="text-sm">{data.emoji}</span>}
         <span className="leading-tight break-words">{data.label}</span>
       </div>
@@ -87,7 +87,7 @@ function CourseNode({ data }: { data: { course: TierCourse } }) {
 
 // Define nodeTypes outside component to avoid React Flow warning
 const nodeTypes = {
-  root: SWERootNode,
+  root: CybersecurityRootNode,
   tier: TierNode,
   course: CourseNode,
 };
@@ -116,22 +116,22 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
 
   // Create nodes and edges using useMemo (Option 2) - now dynamic based on expanded state
   const { nodes: graphNodes, edges: graphEdges } = useMemo(() => {
-    // Create root node: SWE
+    // Create root node: Cybersecurity
     // Center root node horizontally, position near top
     const rootNode: Node = {
-      id: "swe-root",
+      id: "cybersecurity-root",
       type: "root",
-      data: { label: sweCareerPathConfig.rootLabel },
-      position: nodePositions["swe-root"] || { x: 0, y: 40 },
+      data: { label: cybersecurityCareerPathConfig.rootLabel },
+      position: nodePositions["cybersecurity-root"] || { x: 0, y: 40 },
     };
 
     // Create tier nodes from config
     // Use formatted spacing if formatting has been applied
     const tierSpacing = isFormatted ? 600 : 400; // Use larger spacing if formatted
-    const tierStartX = -((sweCareerPathConfig.categories.length - 1) * tierSpacing) / 2;
+    const tierStartX = -((cybersecurityCareerPathConfig.categories.length - 1) * tierSpacing) / 2;
     const tierY = 220; // Vertical position below root
 
-    const tierNodes: Node[] = sweCareerPathConfig.categories.map((category, index) => {
+    const tierNodes: Node[] = cybersecurityCareerPathConfig.categories.map((category, index) => {
       const defaultPosition = {
         x: tierStartX + index * tierSpacing,
         y: tierY,
@@ -152,8 +152,8 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
 
     // Create edges from root to each tier
     const tierEdges: Edge[] = tierNodes.map((tierNode) => ({
-      id: `swe-root-${tierNode.id}`,
-      source: "swe-root",
+      id: `cybersecurity-root-${tierNode.id}`,
+      source: "cybersecurity-root",
       target: tierNode.id,
       type: "smoothstep",
       animated: false,
@@ -173,7 +173,7 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
     tierNodes.forEach((tierNode) => {
       if (expandedTiers.has(tierNode.id)) {
         const tierNumber = getTierNumber(tierNode.id);
-        const tierCourses = sweCareerPathConfig.courses.filter(
+        const tierCourses = cybersecurityCareerPathConfig.courses.filter(
           (course) => course.tier === tierNumber
         );
 
@@ -308,11 +308,11 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
     const newPositions: Record<string, { x: number; y: number }> = {};
     
     // Root node position
-    newPositions["swe-root"] = { x: 0, y: 40 };
+    newPositions["cybersecurity-root"] = { x: 0, y: 40 };
     
     // Tier nodes positioning - INCREASED spacing to prevent overlap
     const tierSpacing = 600; // Increased from 400 to spread tiers further apart
-    const tierStartX = -((sweCareerPathConfig.categories.length - 1) * tierSpacing) / 2;
+    const tierStartX = -((cybersecurityCareerPathConfig.categories.length - 1) * tierSpacing) / 2;
     const tierY = 220;
     
     // Helper function to get tier number from tier ID
@@ -321,7 +321,7 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
       return match ? parseInt(match[1], 10) : 0;
     };
     
-    sweCareerPathConfig.categories.forEach((category, index) => {
+    cybersecurityCareerPathConfig.categories.forEach((category, index) => {
       const tierNodeId = category.id;
       const tierX = tierStartX + index * tierSpacing;
       newPositions[tierNodeId] = { x: tierX, y: tierY };
@@ -329,7 +329,7 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
       // If tier is expanded, recalculate course positions with INCREASED spacing
       if (expandedTiers.has(tierNodeId)) {
         const tierNumber = getTierNumber(tierNodeId);
-        const tierCourses = sweCareerPathConfig.courses.filter(
+        const tierCourses = cybersecurityCareerPathConfig.courses.filter(
           (course) => course.tier === tierNumber
         );
         
@@ -373,13 +373,13 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
             
             // Calculate nodes the same way useMemo does, but with newPositions
             const rootNode: Node = {
-              id: "swe-root",
+              id: "cybersecurity-root",
               type: "root",
-              data: { label: sweCareerPathConfig.rootLabel },
-              position: newPositions["swe-root"],
+              data: { label: cybersecurityCareerPathConfig.rootLabel },
+              position: newPositions["cybersecurity-root"],
             };
             
-            const tierNodes: Node[] = sweCareerPathConfig.categories.map((category, index) => ({
+            const tierNodes: Node[] = cybersecurityCareerPathConfig.categories.map((category, index) => ({
               id: category.id,
               type: "tier",
               data: {
@@ -395,7 +395,7 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
             tierNodes.forEach((tierNode) => {
               if (expandedTiers.has(tierNode.id)) {
                 const tierNumber = getTierNumber(tierNode.id);
-                const tierCourses = sweCareerPathConfig.courses.filter(
+                const tierCourses = cybersecurityCareerPathConfig.courses.filter(
                   (course) => course.tier === tierNumber
                 );
                 
@@ -469,10 +469,9 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
       </div>
       <div className="w-full px-4 py-2 bg-muted/20 border-t border-border/40">
         <p className="text-xs text-black text-center">
-          Career path graph for SWE (Software Engineering)
+          Career path graph for Cybersecurity
         </p>
       </div>
     </div>
   );
 }
-
