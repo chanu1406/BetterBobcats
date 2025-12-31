@@ -11,6 +11,7 @@ import GraphLegend from "../cs-cse/components/GraphLegend";
 import CareerPathGraph from "../cs-cse/careers/swe/components/CareerPathGraph";
 import CybersecurityCareerPathGraph from "../cs-cse/careers/cybersecurity/components/CareerPathGraph";
 import MLAICareerPathGraph from "../cs-cse/careers/ml-ai/components/CareerPathGraph";
+import DataScienceCareerPathGraph from "../cs-cse/careers/datascience/components/CareerPathGraph";
 
 interface DegreesContentProps {
   selectedDegree: string | null;
@@ -36,6 +37,10 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
   const resetMLAIGraphRef = useRef<(() => void) | null>(null);
   const formatMLAIGraphRef = useRef<(() => void) | null>(null);
   
+  // Data Science graph handlers
+  const resetDataScienceGraphRef = useRef<(() => void) | null>(null);
+  const formatDataScienceGraphRef = useRef<(() => void) | null>(null);
+  
   // State to track when handlers are ready (updated in useEffect to avoid render-time updates)
   const [resetPrerequisiteReady, setResetPrerequisiteReady] = useState(false);
   const [fullResetPrerequisiteReady, setFullResetPrerequisiteReady] = useState(false);
@@ -45,6 +50,8 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
   const [formatCybersecurityReady, setFormatCybersecurityReady] = useState(false);
   const [resetMLAIReady, setResetMLAIReady] = useState(false);
   const [formatMLAIReady, setFormatMLAIReady] = useState(false);
+  const [resetDataScienceReady, setResetDataScienceReady] = useState(false);
+  const [formatDataScienceReady, setFormatDataScienceReady] = useState(false);
   
   // Callbacks to register reset handlers from child components
   const handleResetPrerequisiteReady = useRef((handler: () => void) => {
@@ -107,6 +114,20 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
     });
   });
 
+  const handleResetDataScienceReady = useRef((handler: () => void) => {
+    resetDataScienceGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setResetDataScienceReady(true);
+    });
+  });
+
+  const handleFormatDataScienceReady = useRef((handler: () => void) => {
+    formatDataScienceGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setFormatDataScienceReady(true);
+    });
+  });
+
   // Reset readiness flags when switching between pages
   useEffect(() => {
     if (!selectedCareerPath && !selectedDegree) {
@@ -118,6 +139,8 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
       setFormatCybersecurityReady(false);
       setResetMLAIReady(false);
       setFormatMLAIReady(false);
+      setResetDataScienceReady(false);
+      setFormatDataScienceReady(false);
       resetPrerequisiteGraphRef.current = null;
       fullResetPrerequisiteGraphRef.current = null;
       resetCareerPathGraphRef.current = null;
@@ -126,6 +149,8 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
       formatCybersecurityGraphRef.current = null;
       resetMLAIGraphRef.current = null;
       formatMLAIGraphRef.current = null;
+      resetDataScienceGraphRef.current = null;
+      formatDataScienceGraphRef.current = null;
     }
   }, [selectedCareerPath, selectedDegree]);
 
@@ -182,6 +207,7 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
       swe: "Software Engineers (Generalists) build and maintain software systems across multiple areas of the stack. This role emphasizes strong fundamentals in programming, data structures, and system design, along with hands-on experience building real applications. It's a flexible path suited for students who want broad technical exposure and strong career mobility across industries.",
       cybersecurity: "Cybersecurity professionals protect systems, networks, and data from threats and attacks. This career path focuses on understanding security principles, cryptography, network defense, system vulnerabilities, and secure coding practices. Roles include Security Engineer, SOC Analyst, Penetration Tester, and Security Architect.",
       "ml-ai": "Machine Learning and AI professionals design systems that learn from data to make predictions, automate decisions, and solve complex problems. This career path focuses on understanding algorithms, statistical modeling, data processing, neural networks, and optimization techniques. It also emphasizes ethical AI, model evaluation, and deploying intelligent systems at scale. Roles include Machine Learning Engineer, Data Scientist, AI Researcher, and Applied AI Engineer.",
+      "data-science": "Data Scientists and Data Analysts transform raw data into actionable insights that drive business decisions. This career path combines programming (Python/R), statistics, mathematics, and domain expertise to clean, analyze, visualize, and model data. Core skills include SQL, statistical inference, machine learning, and data storytelling. Roles include Data Scientist, Data Analyst, Business Intelligence Engineer, and Analytics Engineer.",
     };
 
     // Handle special sections (Resumes, Alumni)
@@ -414,6 +440,70 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
               <MLAICareerPathGraph 
                 onResetReady={handleResetMLAIReady.current}
                 onFormatReady={handleFormatMLAIReady.current}
+              />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Show Data Science career path with graph
+    if (selectedCareerPath === "data-science") {
+      return (
+        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-10 text-center">
+              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+                {careerPathNames[selectedCareerPath]} - {selectedDegree}
+              </h2>
+              <p className="text-black mb-5">
+                Career pathway information and recommended courses
+              </p>
+              {careerDescriptions[selectedCareerPath] && (
+                <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+                  {careerDescriptions[selectedCareerPath]}
+                </p>
+              )}
+            </div>
+            
+            {/* Format and Reset buttons */}
+            <div className="mb-6 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  if (formatDataScienceReady && formatDataScienceGraphRef.current) {
+                    formatDataScienceGraphRef.current();
+                  }
+                }}
+                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                  formatDataScienceReady && formatDataScienceGraphRef.current
+                    ? "text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+                }`}
+                title={formatDataScienceReady && formatDataScienceGraphRef.current ? "Format graph to prevent overlap" : "Waiting for format handler..."}
+              >
+                Format Graph
+              </button>
+              <button
+                onClick={() => {
+                  if (resetDataScienceReady && resetDataScienceGraphRef.current) {
+                    resetDataScienceGraphRef.current();
+                  }
+                }}
+                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                  resetDataScienceReady && resetDataScienceGraphRef.current
+                    ? "text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+                }`}
+                title={resetDataScienceReady && resetDataScienceGraphRef.current ? "Reset career path graph view" : "Waiting for reset handler..."}
+              >
+                Reset Graph
+              </button>
+            </div>
+            
+            <div className="mb-10">
+              <DataScienceCareerPathGraph 
+                onResetReady={handleResetDataScienceReady.current}
+                onFormatReady={handleFormatDataScienceReady.current}
               />
             </div>
           </div>
