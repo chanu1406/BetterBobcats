@@ -1086,7 +1086,7 @@ export default function PrerequisiteGraph({ onLayoutChange, useFormattedLayoutEx
             fitViewOptions={{ padding: 0.1, maxZoom: 1.5 }}
             attributionPosition="bottom-left"
           >
-            <Background color="#e2e8f0" gap={16} />
+            <Background variant={"lines" as any} color="#e2e8f0" gap={16} />
             <Controls />
           </ReactFlow>
         </ReactFlowProvider>

@@ -145,7 +145,7 @@ The page consists of three main sections:
   - Tier nodes: Medium circular nodes (`w-24 h-24`) with dashed borders (collapsed) or solid borders (expanded)
   - Course nodes: Rectangular cards (`min-w-[180px] max-w-[200px]`) with course code and name
   - Container height: 800px
-  - Background grid pattern with React Flow Background component
+  - Background grid pattern with React Flow Background component (uses `variant="lines"` for grid lines)
 
 ## State Management
 

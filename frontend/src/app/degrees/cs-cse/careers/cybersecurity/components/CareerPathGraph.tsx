@@ -63,7 +63,7 @@ function TierNode({ data }: { data: { label: string; emoji?: string; isExpanded?
     >
       <Handle type="target" position={Position.Top} />
       <Handle type="source" position={Position.Bottom} />
-      <div className="text-[10px] font-semibold text-primary text-center px-2 flex flex-col items-center gap-0.5">
+      <div className="text-[8.75px] font-semibold text-primary text-center px-2 flex flex-col items-center gap-0.5">
         {data.emoji && <span className="text-sm">{data.emoji}</span>}
         <span className="leading-tight break-words">{data.label}</span>
       </div>
@@ -462,7 +462,7 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
             fitViewOptions={{ padding: 0.1, maxZoom: 1.5 }}
             attributionPosition="bottom-left"
           >
-            <Background color="#e2e8f0" gap={16} />
+            <Background variant={"lines" as any} color="#e2e8f0" gap={16} />
             <Controls />
           </ReactFlow>
         </ReactFlowProvider>
