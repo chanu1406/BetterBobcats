@@ -23,7 +23,7 @@ import ReactFlow, {
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { TierCourse, CareerPathConfig } from "@/types/careerPath";
-import { fetchCareerPath } from "@/lib/api";
+import { cybersecurityCareerPathConfig } from "../data/careerPathConfig";
 
 interface CareerPathGraphProps {
   onResetReady?: (resetFn: () => void) => void;
@@ -95,9 +95,7 @@ const nodeTypes = {
 };
 
 export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerPathGraphProps) {
-  const [careerPathConfig, setCareerPathConfig] = useState<CareerPathConfig | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const careerPathConfig = cybersecurityCareerPathConfig;
   const [expandedTiers, setExpandedTiers] = useState<Set<string>>(new Set());
   const [nodePositions, setNodePositions] = useState<Record<string, { x: number; y: number }>>({});
   const [isDragging, setIsDragging] = useState(false);
@@ -106,24 +104,6 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
   const [isFormatted, setIsFormatted] = useState(false); // Track if formatting has been applied
   const [selectedCourse, setSelectedCourse] = useState<TierCourse | null>(null); // Track selected/expanded course
   const reactFlowInstance = useRef<ReactFlowInstance | null>(null);
-
-  // Fetch career path data on mount
-  useEffect(() => {
-    async function loadCareerPath() {
-      try {
-        setIsLoading(true);
-        const data = await fetchCareerPath("cybersecurity");
-        setCareerPathConfig(data as CareerPathConfig);
-        setError(null);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to load career path");
-        console.error("Error loading career path:", err);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    loadCareerPath();
-  }, []);
 
   // Toggle tier expansion
   const toggleTier = useCallback((tierId: string) => {
@@ -159,9 +139,6 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
   // Create nodes and edges using useMemo (Option 2) - now dynamic based on expanded state
   const { nodes: graphNodes, edges: graphEdges } = useMemo(() => {
     // Return empty if no config loaded yet
-    if (!careerPathConfig) {
-      return { nodes: [], edges: [] };
-    }
 
     // Create root node: Cybersecurity
     // Center root node horizontally, position near top
@@ -354,7 +331,6 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
 
   // Format function - recalculates all node positions with increased spacing to prevent overlap
   const handleFormat = useCallback(() => {
-    if (!careerPathConfig) return; // Skip if config not loaded
 
     const newPositions: Record<string, { x: number; y: number }> = {};
     
@@ -684,7 +660,7 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
 
       <div className="w-full px-4 py-2 bg-muted/20 border-t border-border/40">
         <p className="text-xs text-black text-center">
-          {isLoading ? "Loading career path..." : error ? `Error: ${error}` : "Career path graph for Cybersecurity"}
+          Career path graph for Cybersecurity
         </p>
       </div>
     </div>

@@ -20,7 +20,7 @@ import ReactFlow, {
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { TierCourse, CareerPathConfig } from "@/types/careerPath";
-import { fetchCareerPath } from "@/lib/api";
+import { dataScienceCareerPathConfig } from "../data/careerPathConfig";
 import { TierCourse } from "@/types/careerPath";
 
 interface CareerPathGraphProps {
@@ -90,9 +90,7 @@ const nodeTypes = {
 };
 
 export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerPathGraphProps) {
-  const [careerPathConfig, setCareerPathConfig] = useState<CareerPathConfig | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const careerPathConfig = dataScienceCareerPathConfig;
   const [expandedTiers, setExpandedTiers] = useState<Set<string>>(new Set());
   const [nodePositions, setNodePositions] = useState<Record<string, { x: number; y: number }>>({});
   const [isDragging, setIsDragging] = useState(false);
@@ -101,24 +99,6 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
   const [isFormatted, setIsFormatted] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState<TierCourse | null>(null);
   const reactFlowInstance = useRef<ReactFlowInstance | null>(null);
-
-  // Fetch career path data on mount
-  useEffect(() => {
-    async function loadCareerPath() {
-      try {
-        setIsLoading(true);
-        const data = await fetchCareerPath("datascience");
-        setCareerPathConfig(data as CareerPathConfig);
-        setError(null);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to load career path");
-        console.error("Error loading career path:", err);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    loadCareerPath();
-  }, []);
 
   // Toggle tier expansion
   const toggleTier = useCallback((tierId: string) => {
@@ -153,9 +133,6 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
 
   // Create nodes and edges using useMemo
   const { nodes: graphNodes, edges: graphEdges } = useMemo(() => {
-    if (!careerPathConfig) {
-      return { nodes: [], edges: [] };
-    }
 
     // Create root node: Data Science
     const rootNode: Node = {
@@ -324,7 +301,6 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
   }, []);
 
   const handleFormat = useCallback(() => {
-    if (!careerPathConfig) return;
 
     const newPositions: Record<string, { x: number; y: number }> = {};
     
@@ -633,11 +609,7 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
 
       <div className="w-full px-4 py-2 bg-muted/20 border-t border-border/40">
         <p className="text-xs text-black text-center">
-          {isLoading 
-            ? "Loading career path..." 
-            : error 
-            ? `Error: ${error}` 
-            : "Career path graph for Data Science / Data Analytics"}
+          Career path graph for Data Science / Data Analytics
         </p>
       </div>
     </div>
