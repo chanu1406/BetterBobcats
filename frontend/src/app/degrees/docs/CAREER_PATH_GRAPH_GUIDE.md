@@ -61,6 +61,23 @@ export const tier1Courses: TierCourse[] = [
     description: "Team-based dev, SDLC, Git, real projects — *non-negotiable*",
     tier: 1,
     resources: [], // Optional: future bullet points
+    expandedInfo: { // Optional: detailed information for expanded course card
+      credits: 4,
+      prerequisites: "CSE 30 or equivalent programming experience",
+      learningOutcomes: [
+        "Understand software development lifecycle",
+        "Work effectively in teams",
+        "Use version control systems",
+      ],
+      topics: [
+        "Agile methodologies",
+        "Git and version control",
+        "Code reviews",
+        "Testing strategies",
+      ],
+      careerRelevance: "Essential for all software engineering roles. Builds foundational skills in collaboration and professional development practices.",
+      additionalNotes: "This course provides hands-on experience with real-world software development workflows.",
+    },
   },
   // ... more tier 1 courses
 ];
@@ -85,6 +102,15 @@ interface TierCourse {
   description: string;     // Why it's critical for this career path
   resources?: string[];    // Optional: future resources list
   tier: number;            // Tier number (1, 2, 3, etc.)
+  prerequisites?: string[]; // Optional: array of course IDs that this course requires
+  expandedInfo?: {         // Optional: detailed information shown in expanded course card
+    credits?: number;
+    prerequisites?: string; // Human-readable prerequisites
+    learningOutcomes?: string[]; // What you'll learn
+    topics?: string[]; // Topics covered
+    careerRelevance?: string; // How it relates to the career path
+    additionalNotes?: string; // Any additional information
+  };
 }
 ```
 
@@ -227,14 +253,33 @@ if (selectedCareerPath === "swe") {
 
 - **Root Node**: Large circular node with primary color styling
 - **Tier Nodes**: Medium circular nodes with dashed borders (collapsed) or solid borders (expanded)
-- **Course Nodes**: Rectangular cards displaying course code and name
+- **Course Nodes**: Rectangular cards displaying course code and name (clickable to expand)
+
+### Course Expansion Feature:
+
+When you click on a course node, an expanded card overlay appears showing:
+- **Class Name**: Full course name at the top
+- **Description**: Why the course matters for this career path
+- **Expanded Information** (if provided):
+  - Credits
+  - Prerequisites (human-readable)
+  - Learning Outcomes
+  - Topics Covered
+  - Career Relevance
+  - Additional Notes
+
+**Closing the Card**: 
+- Click the X button in the top-right corner
+- Click outside the card (on the backdrop)
+- Press the Escape key
 
 ### Interactive Features:
 
 - **Tier Expansion**: Click tier nodes to expand/collapse and show their courses
+- **Course Expansion**: Click any course node to open an expanded card with detailed information
 - **Node Dragging**: Click and drag any node to reposition it. Positions are saved automatically.
 - **Format Graph**: Click to automatically reposition all nodes with wider spacing to prevent overlap
-- **Reset Graph**: Click to fully reset the graph to its initial state (all tiers collapsed, default positions)
+- **Reset Graph**: Click to fully reset the graph to its initial state (collapses all tiers, closes course cards, clears positions)
 
 ## Example: Adding a New Career Path
 

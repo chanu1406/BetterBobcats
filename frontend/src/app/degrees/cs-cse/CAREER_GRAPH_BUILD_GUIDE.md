@@ -31,7 +31,7 @@ A career path graph is an interactive visualization that shows:
 - **Root Node**: The career path name (e.g., "Cybersecurity", "ML/AI")
 - **Tier Nodes**: Organized tiers/categories (e.g., "TIER 1: MUST-TAKE", "TIER 2: RECOMMENDED")
 - **Course Nodes**: Individual recommended courses displayed when tiers are expanded
-- **Interactive Features**: Click to expand/collapse tiers, drag nodes, format layout, reset graph
+- **Interactive Features**: Click to expand/collapse tiers, click courses to view details, drag nodes, format layout, reset graph
 
 ### How It Works
 
@@ -184,6 +184,21 @@ export const tier1Courses: TierCourse[] = [
     fullName: "CSE XXX: Course Name", // REQUIRED: Full display name
     description: "Why this course matters for this career", // REQUIRED: Brief description
     tier: 1,                          // REQUIRED: Must match tier number (1, 2, 3, etc.)
+    prerequisites: [],                 // OPTIONAL: Array of course IDs
+    expandedInfo: {                   // OPTIONAL: Detailed info shown when course is clicked
+      credits: 4,
+      prerequisites: "CSE 30 or equivalent",
+      learningOutcomes: [
+        "Outcome 1",
+        "Outcome 2",
+      ],
+      topics: [
+        "Topic 1",
+        "Topic 2",
+      ],
+      careerRelevance: "How this course relates to the career path",
+      additionalNotes: "Any additional information",
+    },
   },
   // Add more Tier 1 courses...
 ];
@@ -1091,8 +1106,11 @@ After creating your career path graph, verify the following:
 ### Interactive Features
 - [ ] Nodes can be dragged and repositioned
 - [ ] Node positions persist after drag
+- [ ] Clicking a course node opens expanded card
+- [ ] Expanded card shows course name, description, and expanded info (if provided)
+- [ ] Expanded card can be closed via X button, backdrop click, or Escape key
 - [ ] Format Graph button works (repositions with wider spacing)
-- [ ] Reset Graph button works (collapses all, resets positions)
+- [ ] Reset Graph button works (collapses all, closes course cards, resets positions)
 - [ ] Buttons are enabled and clickable
 
 ### Data Verification

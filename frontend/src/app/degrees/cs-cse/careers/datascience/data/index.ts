@@ -4,4 +4,4 @@
  */
 
 export { dataScienceCareerPathConfig } from "./careerPathConfig";
-export { tier1Courses, tier2Courses, tier3Courses } from "./tierCourses";
+export { tier1Courses, tier2Courses, tier3Courses, tier4Courses } from "./tierCourses";

@@ -74,8 +74,11 @@ function TierNode({ data }: { data: { label: string; emoji?: string; isExpanded?
 // Custom course node component - rectangular shape with course code and name
 function CourseNode({ data }: { data: { course: TierCourse } }) {
   const { course } = data;
+
   return (
-    <div className="min-w-[180px] max-w-[200px] rounded-lg border-2 border-slate-300 bg-white shadow-sm hover:shadow-md transition-shadow px-3 py-2 relative">
+    <div 
+      className="min-w-[180px] max-w-[200px] rounded-lg border-2 border-slate-300 bg-white shadow-sm hover:shadow-md transition-shadow px-3 py-2 relative cursor-pointer"
+    >
       <Handle type="target" position={Position.Top} />
       <div className="flex flex-col gap-1">
         <div className="font-bold text-sm text-slate-800">{course.code}</div>
@@ -99,6 +102,7 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
   const [nodesState, setNodesState] = useState<Node[]>([]);
   const [edgesState, setEdgesState] = useState<Edge[]>([]);
   const [isFormatted, setIsFormatted] = useState(false); // Track if formatting has been applied
+  const [selectedCourse, setSelectedCourse] = useState<TierCourse | null>(null); // Track selected/expanded course
   const reactFlowInstance = useRef<ReactFlowInstance | null>(null);
 
   // Toggle tier expansion
@@ -112,6 +116,24 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
       }
       return newSet;
     });
+  }, []);
+
+  // Handle course click - expand course card
+  const handleCourseClick = useCallback((course: TierCourse) => {
+    setSelectedCourse(course);
+  }, []);
+
+  // Handle node click from React Flow
+  const onNodeClick = useCallback((_event: React.MouseEvent, node: Node) => {
+    // Only handle clicks on course nodes
+    if (node.type === "course" && node.data?.course) {
+      handleCourseClick(node.data.course);
+    }
+  }, [handleCourseClick]);
+
+  // Handle closing expanded course card
+  const handleCloseCourseCard = useCallback(() => {
+    setSelectedCourse(null);
   }, []);
 
   // Create nodes and edges using useMemo (Option 2) - now dynamic based on expanded state
@@ -294,6 +316,8 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
     setIsDragging(false);
     // Reset formatting flag
     setIsFormatted(false);
+    // Close any open course card
+    setSelectedCourse(null);
     
     // Fit view after state resets
     setTimeout(() => {
@@ -445,6 +469,20 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
     return () => cancelAnimationFrame(rafId);
   }, [onFormatReady, handleFormat]);
 
+  // Handle ESC key to close course card
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && selectedCourse) {
+        handleCloseCourseCard();
+      }
+    };
+
+    if (selectedCourse) {
+      window.addEventListener("keydown", handleKeyDown);
+      return () => window.removeEventListener("keydown", handleKeyDown);
+    }
+  }, [selectedCourse, handleCloseCourseCard]);
+
   return (
     <div className="w-full border border-border/40 rounded-lg overflow-hidden relative pt-6">
       <div className="w-full h-[800px] relative [&_.react-flow__background]:opacity-30">
@@ -456,6 +494,7 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
             onNodesChange={onNodesChange}
             onNodeDragStart={onNodeDragStart}
             onNodeDragStop={onNodeDragStop}
+            onNodeClick={onNodeClick}
             onInit={onInit}
             nodesDraggable={true}
             fitView={!isDragging}
@@ -467,6 +506,155 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
           </ReactFlow>
         </ReactFlowProvider>
       </div>
+      
+      {/* Expanded Course Card Overlay */}
+      {selectedCourse && (
+        <div 
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+          onClick={handleCloseCourseCard}
+        >
+          <div 
+            className="bg-white rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button
+              onClick={handleCloseCourseCard}
+              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors text-slate-600 hover:text-slate-900"
+              aria-label="Close course details"
+            >
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+
+            {/* Course Card Content */}
+            <div className="p-6">
+              {/* Header */}
+              <div className="pr-10 mb-4">
+                <h2 className="text-2xl font-bold text-slate-900 mb-1">
+                  {selectedCourse.code}
+                </h2>
+                <h3 className="text-xl text-slate-700 mb-2">
+                  {selectedCourse.name}
+                </h3>
+                <p className="text-sm text-slate-600">
+                  {selectedCourse.fullName}
+                </p>
+              </div>
+
+              {/* Description */}
+              <div className="mb-6">
+                <h4 className="text-sm font-semibold text-slate-800 mb-2 uppercase tracking-wide">
+                  Why This Course Matters
+                </h4>
+                <p className="text-slate-700">{selectedCourse.description}</p>
+              </div>
+
+              {/* Expanded Information */}
+              {selectedCourse.expandedInfo && (
+                <div className="space-y-6 border-t border-slate-200 pt-6">
+                  {/* Credits */}
+                  {selectedCourse.expandedInfo.credits && (
+                    <div>
+                      <h4 className="text-sm font-semibold text-slate-800 mb-2">
+                        Credits
+                      </h4>
+                      <p className="text-slate-700">
+                        {selectedCourse.expandedInfo.credits} credits
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Prerequisites */}
+                  {selectedCourse.expandedInfo.prerequisites && (
+                    <div>
+                      <h4 className="text-sm font-semibold text-slate-800 mb-2">
+                        Prerequisites
+                      </h4>
+                      <p className="text-slate-700">
+                        {selectedCourse.expandedInfo.prerequisites}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Learning Outcomes */}
+                  {selectedCourse.expandedInfo.learningOutcomes && selectedCourse.expandedInfo.learningOutcomes.length > 0 && (
+                    <div>
+                      <h4 className="text-sm font-semibold text-slate-800 mb-2">
+                        Learning Outcomes
+                      </h4>
+                      <ul className="list-disc list-inside space-y-1 text-slate-700">
+                        {selectedCourse.expandedInfo.learningOutcomes.map((outcome, index) => (
+                          <li key={index}>{outcome}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Topics */}
+                  {selectedCourse.expandedInfo.topics && selectedCourse.expandedInfo.topics.length > 0 && (
+                    <div>
+                      <h4 className="text-sm font-semibold text-slate-800 mb-2">
+                        Topics Covered
+                      </h4>
+                      <ul className="list-disc list-inside space-y-1 text-slate-700">
+                        {selectedCourse.expandedInfo.topics.map((topic, index) => (
+                          <li key={index}>{topic}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Career Relevance */}
+                  {selectedCourse.expandedInfo.careerRelevance && (
+                    <div>
+                      <h4 className="text-sm font-semibold text-slate-800 mb-2">
+                        Career Relevance
+                      </h4>
+                      <p className="text-slate-700">
+                        {selectedCourse.expandedInfo.careerRelevance}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Additional Notes */}
+                  {selectedCourse.expandedInfo.additionalNotes && (
+                    <div>
+                      <h4 className="text-sm font-semibold text-slate-800 mb-2">
+                        Additional Information
+                      </h4>
+                      <p className="text-slate-700">
+                        {selectedCourse.expandedInfo.additionalNotes}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* If no expanded info, show a message */}
+              {!selectedCourse.expandedInfo && (
+                <div className="border-t border-slate-200 pt-6">
+                  <p className="text-slate-500 italic">
+                    Additional course information will be displayed here when available.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="w-full px-4 py-2 bg-muted/20 border-t border-border/40">
         <p className="text-xs text-black text-center">
           Career path graph for Cybersecurity
