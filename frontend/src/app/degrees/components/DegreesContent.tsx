@@ -9,6 +9,7 @@ import { useState, useRef, useEffect } from "react";
 import PrerequisiteGraph from "../cs-cse/components/PrerequisiteGraph";
 import GraphLegend from "../cs-cse/components/GraphLegend";
 import CareerPathGraph from "../cs-cse/careers/swe/components/CareerPathGraph";
+import CybersecurityCareerPathGraph from "../cs-cse/careers/cybersecurity/components/CareerPathGraph";
 
 interface DegreesContentProps {
   selectedDegree: string | null;
@@ -26,11 +27,17 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
   const resetCareerPathGraphRef = useRef<(() => void) | null>(null);
   const formatCareerPathGraphRef = useRef<(() => void) | null>(null);
   
+  // Cybersecurity graph handlers
+  const resetCybersecurityGraphRef = useRef<(() => void) | null>(null);
+  const formatCybersecurityGraphRef = useRef<(() => void) | null>(null);
+  
   // State to track when handlers are ready (updated in useEffect to avoid render-time updates)
   const [resetPrerequisiteReady, setResetPrerequisiteReady] = useState(false);
   const [fullResetPrerequisiteReady, setFullResetPrerequisiteReady] = useState(false);
   const [resetCareerPathReady, setResetCareerPathReady] = useState(false);
   const [formatCareerPathReady, setFormatCareerPathReady] = useState(false);
+  const [resetCybersecurityReady, setResetCybersecurityReady] = useState(false);
+  const [formatCybersecurityReady, setFormatCybersecurityReady] = useState(false);
   
   // Callbacks to register reset handlers from child components
   const handleResetPrerequisiteReady = useRef((handler: () => void) => {
@@ -65,6 +72,20 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
     });
   });
 
+  const handleResetCybersecurityReady = useRef((handler: () => void) => {
+    resetCybersecurityGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setResetCybersecurityReady(true);
+    });
+  });
+
+  const handleFormatCybersecurityReady = useRef((handler: () => void) => {
+    formatCybersecurityGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setFormatCybersecurityReady(true);
+    });
+  });
+
   // Reset readiness flags when switching between pages
   useEffect(() => {
     if (!selectedCareerPath && !selectedDegree) {
@@ -72,10 +93,14 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
       setFullResetPrerequisiteReady(false);
       setResetCareerPathReady(false);
       setFormatCareerPathReady(false);
+      setResetCybersecurityReady(false);
+      setFormatCybersecurityReady(false);
       resetPrerequisiteGraphRef.current = null;
       fullResetPrerequisiteGraphRef.current = null;
       resetCareerPathGraphRef.current = null;
       formatCareerPathGraphRef.current = null;
+      resetCybersecurityGraphRef.current = null;
+      formatCybersecurityGraphRef.current = null;
     }
   }, [selectedCareerPath, selectedDegree]);
 
@@ -130,6 +155,7 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
     // Get description for SWE (Generalist)
     const careerDescriptions: Record<string, string> = {
       swe: "Software Engineers (Generalists) build and maintain software systems across multiple areas of the stack. This role emphasizes strong fundamentals in programming, data structures, and system design, along with hands-on experience building real applications. It's a flexible path suited for students who want broad technical exposure and strong career mobility across industries.",
+      cybersecurity: "Cybersecurity professionals protect systems, networks, and data from threats and attacks. This career path focuses on understanding security principles, cryptography, network defense, system vulnerabilities, and secure coding practices. Roles include Security Engineer, SOC Analyst, Penetration Tester, and Security Architect.",
     };
 
     // Handle special sections (Resumes, Alumni)
@@ -234,6 +260,70 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
               <CareerPathGraph 
                 onResetReady={handleResetCareerPathReady.current}
                 onFormatReady={handleFormatCareerPathReady.current}
+              />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Show Cybersecurity career path with graph
+    if (selectedCareerPath === "cybersecurity") {
+      return (
+        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-10 text-center">
+              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+                {careerPathNames[selectedCareerPath]} - {selectedDegree}
+              </h2>
+              <p className="text-black mb-5">
+                Career pathway information and recommended courses
+              </p>
+              {careerDescriptions[selectedCareerPath] && (
+                <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+                  {careerDescriptions[selectedCareerPath]}
+                </p>
+              )}
+            </div>
+            
+            {/* Format and Reset buttons */}
+            <div className="mb-6 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  if (formatCybersecurityReady && formatCybersecurityGraphRef.current) {
+                    formatCybersecurityGraphRef.current();
+                  }
+                }}
+                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                  formatCybersecurityReady && formatCybersecurityGraphRef.current
+                    ? "text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+                }`}
+                title={formatCybersecurityReady && formatCybersecurityGraphRef.current ? "Format graph to prevent overlap" : "Waiting for format handler..."}
+              >
+                Format Graph
+              </button>
+              <button
+                onClick={() => {
+                  if (resetCybersecurityReady && resetCybersecurityGraphRef.current) {
+                    resetCybersecurityGraphRef.current();
+                  }
+                }}
+                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                  resetCybersecurityReady && resetCybersecurityGraphRef.current
+                    ? "text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+                }`}
+                title={resetCybersecurityReady && resetCybersecurityGraphRef.current ? "Reset career path graph view" : "Waiting for reset handler..."}
+              >
+                Reset Graph
+              </button>
+            </div>
+            
+            <div className="mb-10">
+              <CybersecurityCareerPathGraph 
+                onResetReady={handleResetCybersecurityReady.current}
+                onFormatReady={handleFormatCybersecurityReady.current}
               />
             </div>
           </div>
