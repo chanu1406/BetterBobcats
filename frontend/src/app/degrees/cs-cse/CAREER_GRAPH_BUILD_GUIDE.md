@@ -186,17 +186,39 @@ export const tier1Courses: TierCourse[] = [
     tier: 1,                          // REQUIRED: Must match tier number (1, 2, 3, etc.)
     prerequisites: [],                 // OPTIONAL: Array of course IDs
     expandedInfo: {                   // OPTIONAL: Detailed info shown when course is clicked
-      credits: 4,
-      prerequisites: "CSE 30 or equivalent",
-      learningOutcomes: [
-        "Outcome 1",
-        "Outcome 2",
+      credits: 4,                     // Number of credits/units
+      prerequisites: "CSE 30 or equivalent", // Human-readable prerequisites
+      learningOutcomes: [             // What students will learn (array of strings)
+        "Work effectively in software development teams",
+        "Use Git and version control systems professionally",
+        "Understand and apply software development lifecycle (SDLC)",
       ],
-      topics: [
+      topics: [                       // Topics covered in the course
         "Topic 1",
         "Topic 2",
       ],
-      careerRelevance: "How this course relates to the career path",
+      careerRelevance: "How this course relates to the career path", // Why it matters
+      realWorldApplications: [        // Examples of industry/real-world use (array of strings)
+        "Working in teams at companies like Google, Microsoft, or startups",
+        "Using Git/GitHub for version control in professional codebases",
+        "Following agile/scrum methodologies in real product development",
+      ],
+      resources: {                    // Learning resources with links
+        videos: [                     // YouTube links, video tutorials (array of URLs)
+          "https://youtube.com/watch?v=HkdAHXoRtos",  // Git tutorial
+          "https://youtube.com/watch?v=Z9QbYZh1YXY",  // Agile overview
+        ],
+        websites: [                   // Documentation, articles, official sites (array of URLs)
+          "https://git-scm.com/doc",  // Official Git documentation
+          "https://www.atlassian.com/agile",  // Agile guide
+        ],
+        tools: [                      // Software, tools, platforms used (array of tool names)
+          "Git",
+          "GitHub",
+          "Jira",
+          "Slack",
+        ],
+      },
       additionalNotes: "Any additional information",
     },
   },
@@ -251,11 +273,23 @@ export const tier3Courses: TierCourse[] = [
    - If you have `tier-2` in config, courses must have `tier: 2`
    - **Mismatch = courses won't show up**
 
-3. **All fields are required** (except `resources` and `prerequisites` if not using them)
+3. **All basic fields are required** (except `resources` and `prerequisites` if not using them)
+   - `id`, `code`, `name`, `fullName`, `description`, `tier` are all required
+   - `expandedInfo` is optional, but highly recommended for better user experience
 
 4. **Use kebab-case for IDs**: `cse-120`, not `cse_120` or `cse120`
 
 5. **Keep descriptions concise**: 1-2 sentences max
+
+6. **Recommended expandedInfo fields** (minimum 5 for best user experience):
+   - `credits` (number) - Number of credits/units (e.g., `4`)
+   - `careerRelevance` (string) - Why this course matters for the career (1-3 sentences)
+   - `realWorldApplications` (array) - Examples of industry use (e.g., `["Working at Google/Microsoft", "Using Git professionally"]`)
+   - `learningOutcomes` (array) - What students will learn (e.g., `["Work in teams", "Use Git professionally"]`)
+   - `resources` (object) - Learning resources:
+     - `videos` (array of URLs) - YouTube links, tutorials (e.g., `["https://youtube.com/watch?v=..."]`)
+     - `websites` (array of URLs) - Documentation, articles (e.g., `["https://git-scm.com/doc"]`)
+     - `tools` (array of names) - Software/tools used (e.g., `["Git", "GitHub"]`)
 
 #### Real Example (Cybersecurity)
 
@@ -279,6 +313,29 @@ export const tier1Courses: TierCourse[] = [
     fullName: "CSE 130: Cryptography",
     description: "Foundational crypto concepts, encryption, hashing - essential for security",
     tier: 1,
+    expandedInfo: {
+      credits: 4,
+      learningOutcomes: [
+        "Understand cryptographic algorithms and protocols",
+        "Implement encryption and hashing",
+        "Analyze security vulnerabilities",
+      ],
+      careerRelevance: "Critical for all cybersecurity roles. Understanding cryptography is fundamental to securing data and communications.",
+      realWorldApplications: [
+        "Securing data in transit (HTTPS, VPNs)",
+        "Protecting stored passwords and sensitive data",
+        "Implementing secure communication protocols",
+      ],
+      resources: {
+        videos: [
+          "https://youtube.com/watch?v=... (Cryptography basics)",
+        ],
+        websites: [
+          "https://cryptography.io/",
+        ],
+        tools: ["OpenSSL", "GnuPG"],
+      },
+    },
   },
   {
     id: "cybersec-cse-178",
@@ -287,6 +344,29 @@ export const tier1Courses: TierCourse[] = [
     fullName: "CSE 178: Computers & Network Security",
     description: "Network defense, systems security, vulnerability assessment",
     tier: 1,
+    expandedInfo: {
+      credits: 4,
+      learningOutcomes: [
+        "Identify common security threats",
+        "Implement network security measures",
+        "Conduct vulnerability assessments",
+      ],
+      careerRelevance: "Core security course for cybersecurity careers. Essential for SOC analysts, security engineers, and defensive security roles.",
+      realWorldApplications: [
+        "Monitoring network traffic for threats",
+        "Implementing firewalls and intrusion detection",
+        "Responding to security incidents",
+      ],
+      resources: {
+        videos: [
+          "https://youtube.com/watch?v=... (Network security)",
+        ],
+        websites: [
+          "https://owasp.org/",
+        ],
+        tools: ["Wireshark", "Nmap", "Metasploit"],
+      },
+    },
   },
 ];
 

@@ -17,6 +17,35 @@ export const tier1Courses: TierCourse[] = [
     fullName: "CSE 120: Software Engineering",
     description: "Team-based dev, SDLC, Git, real projects — non-negotiable",
     tier: 1,
+    expandedInfo: {
+      credits: 4,
+      careerRelevance: "CSE 120 mirrors real-world software engineering environments by emphasizing team-based development, version control, design processes, and maintainable code. It prepares students for SWE roles by teaching how professional teams plan, build, test, and ship software collaboratively using industry-standard workflows.",
+      realWorldApplications: [
+        "Working on cross-functional software teams using Git and collaborative workflows",
+        "Designing and implementing production-style software systems",
+        "Applying software development lifecycle (SDLC) models used in industry",
+        "Writing maintainable, reusable, and scalable code for long-term projects",
+        "Participating in code reviews, debugging, and iterative feature development",
+        "Managing project scope, deadlines, and deliverables in a team setting"
+      ],
+      learningOutcomes: [
+        "Understand and apply modern software engineering principles and design methodologies",
+        "Gain hands-on experience with team-based software development",
+        "Learn how to use version control systems (e.g., Git) effectively in collaborative projects",
+        "Develop skills in designing reliable, efficient, and maintainable software systems",
+        "Practice standard project management and development workflows",
+        "Improve communication and collaboration skills within technical teams",
+        "Experience the full lifecycle of a software project from design to delivery"
+      ],
+      resources: {
+        videos: ["https://www.youtube.com/watch?v=w4rG5GY9IlA","https://www.youtube.com/watch?v=RGOj5yH7evk&t=425s","https://www.youtube.com/watch?v=mJ-qvsxPHpY&t=1s"
+          , "https://www.youtube.com/watch?v=i53Gi_K3o7I&t=234s","https://www.youtube.com/watch?v=F2FmTdLtb_4","https://www.youtube.com/watch?v=_uQrJ0TkZlc&t=109s","https://www.youtube.com/watch?v=wSDyiEjhp8k",
+          "https://www.youtube.com/@ArjanCodes"
+        ],
+        websites: ["https://github.com","https://www.geeksforgeeks.org/","https://neetcode.io/","https://medium.com/write-a-catalyst/7-websites-that-i-visit-daily-as-a-9-5-software-engineer-751f044430a4"],
+        tools: ["Git","GitHub","Visual Studio Code","Cursor"]
+      }
+    }
   },
   {
     id: "cse-111",

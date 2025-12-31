@@ -24,6 +24,12 @@ export interface TierCourse {
     learningOutcomes?: string[]; // Array of learning outcomes (what students will learn)
     topics?: string[]; // Array of topics covered in the course
     careerRelevance?: string; // How this course relates to the career path
+    realWorldApplications?: string[]; // Examples of how this course is used in industry/real-world scenarios
+    resources?: {
+      videos?: string[]; // YouTube links, video tutorials, online courses
+      websites?: string[]; // Documentation, articles, official sites, helpful resources
+      tools?: string[]; // Software, tools, platforms used in the course
+    };
     additionalNotes?: string; // Any additional information about the course
   };
 }

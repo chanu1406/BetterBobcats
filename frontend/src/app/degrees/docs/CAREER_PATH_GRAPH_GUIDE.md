@@ -76,6 +76,22 @@ export const tier1Courses: TierCourse[] = [
         "Testing strategies",
       ],
       careerRelevance: "Essential for all software engineering roles. Builds foundational skills in collaboration and professional development practices.",
+      realWorldApplications: [
+        "Working in teams at companies like Google, Microsoft, or startups",
+        "Using Git/GitHub for version control in professional codebases",
+        "Following agile/scrum methodologies in real product development",
+      ],
+      resources: {
+        videos: [
+          "https://youtube.com/watch?v=HkdAHXoRtos",  // Git tutorial
+          "https://youtube.com/watch?v=Z9QbYZh1YXY",  // Agile overview
+        ],
+        websites: [
+          "https://git-scm.com/doc",  // Official Git documentation
+          "https://www.atlassian.com/agile",  // Agile guide
+        ],
+        tools: ["Git", "GitHub", "Jira", "Slack"],  // Software/tools used
+      },
       additionalNotes: "This course provides hands-on experience with real-world software development workflows.",
     },
   },
@@ -91,6 +107,48 @@ export const tier3Courses: TierCourse[] = [
 ];
 ```
 
+### Understanding expandedInfo Fields
+
+When adding `expandedInfo` to courses, here's what each field should contain:
+
+- **`credits`** (number): Number of credits/units for the course
+  - Example: `4`
+
+- **`prerequisites`** (string): Human-readable prerequisites
+  - Example: `"CSE 30 or equivalent programming experience"`
+
+- **`learningOutcomes`** (array of strings): What students will learn or be able to do
+  - Example: `["Work effectively in teams", "Use Git professionally", "Understand SDLC"]`
+  - Each item should be a clear, actionable learning goal
+
+- **`topics`** (array of strings): Topics covered in the course
+  - Example: `["Agile methodologies", "Git and version control", "Code reviews"]`
+  - List the main topics/subjects covered
+
+- **`careerRelevance`** (string): Why this course matters for the career path
+  - Example: `"Essential for all software engineering roles. Builds foundational skills..."`
+  - Should be 1-3 sentences explaining the career connection
+
+- **`realWorldApplications`** (array of strings): Examples of how this is used in industry
+  - Example: `["Working in teams at Google/Microsoft", "Using Git in professional codebases"]`
+  - Each item should be a specific, real-world use case or scenario
+
+- **`resources.videos`** (array of strings): YouTube links, video tutorials, online courses
+  - Example: `["https://youtube.com/watch?v=HkdAHXoRtos", "https://coursera.org/learn/..."]`
+  - Full URLs to video content
+
+- **`resources.websites`** (array of strings): Documentation, articles, official sites
+  - Example: `["https://git-scm.com/doc", "https://github.com/"]`
+  - Full URLs to helpful websites
+
+- **`resources.tools`** (array of strings): Software, tools, platforms used
+  - Example: `["Git", "GitHub", "Jira", "Slack"]`
+  - Just the tool names (not URLs)
+
+- **`additionalNotes`** (string): Any additional information
+  - Example: `"This course provides hands-on experience with real-world workflows."`
+  - Optional extra context
+
 ### TierCourse Interface
 
 ```typescript
@@ -100,16 +158,29 @@ interface TierCourse {
   name: string;            // Short name
   fullName: string;        // Full display name
   description: string;     // Why it's critical for this career path
-  resources?: string[];    // Optional: future resources list
+  resources?: string[];    // Optional: future resources list (legacy field)
   tier: number;            // Tier number (1, 2, 3, etc.)
   prerequisites?: string[]; // Optional: array of course IDs that this course requires
   expandedInfo?: {         // Optional: detailed information shown in expanded course card
-    credits?: number;
-    prerequisites?: string; // Human-readable prerequisites
-    learningOutcomes?: string[]; // What you'll learn
-    topics?: string[]; // Topics covered
-    careerRelevance?: string; // How it relates to the career path
-    additionalNotes?: string; // Any additional information
+    credits?: number;      // Number of credits/units (e.g., 4)
+    prerequisites?: string; // Human-readable prerequisites (e.g., "CSE 30 or equivalent")
+    learningOutcomes?: string[]; // What you'll learn - array of strings
+      // Example: ["Work effectively in teams", "Use Git professionally"]
+    topics?: string[]; // Topics covered - array of strings
+      // Example: ["Agile methodologies", "Git and version control"]
+    careerRelevance?: string; // How it relates to the career path - single paragraph
+      // Example: "Essential for all software engineering roles..."
+    realWorldApplications?: string[]; // Examples of industry use - array of strings
+      // Example: ["Working in teams at Google/Microsoft", "Using Git in professional codebases"]
+    resources?: {          // Learning resources with links
+      videos?: string[];   // YouTube links, video tutorials - array of URLs
+        // Example: ["https://youtube.com/watch?v=...", "https://coursera.org/..."]
+      websites?: string[]; // Documentation, articles, official sites - array of URLs
+        // Example: ["https://git-scm.com/doc", "https://github.com/"]
+      tools?: string[];     // Software, tools, platforms used - array of tool names
+        // Example: ["Git", "GitHub", "Jira", "Slack"]
+    };
+    additionalNotes?: string; // Any additional information - single paragraph
   };
 }
 ```
@@ -261,11 +332,13 @@ When you click on a course node, an expanded card overlay appears showing:
 - **Class Name**: Full course name at the top
 - **Description**: Why the course matters for this career path
 - **Expanded Information** (if provided):
-  - Credits
+  - Credits (units)
   - Prerequisites (human-readable)
   - Learning Outcomes
   - Topics Covered
   - Career Relevance
+  - Real World Applications (examples of industry use)
+  - Resources (videos, websites, tools with clickable links)
   - Additional Notes
 
 **Closing the Card**: 
@@ -413,6 +486,13 @@ courses: [
 3. **Organize by Tier**: Keep tier courses in separate arrays for clarity
 4. **Type Safety**: Always import types from `@/types/careerPath`
 5. **Reusability**: Remember - the component is generic, only config changes
+6. **Expanded Info**: Include `expandedInfo` for better user experience. Recommended minimum fields:
+   - `credits` - Number of credits/units
+   - `careerRelevance` - Why this course matters for the career
+   - `realWorldApplications` - Examples of industry/real-world use (array)
+   - `learningOutcomes` - What students will learn (array)
+   - `resources` - Videos, websites, and tools with clickable links
+7. **Resources Format**: Use the structured `resources` object with `videos`, `websites`, and `tools` arrays for better organization
 
 ## Troubleshooting
 

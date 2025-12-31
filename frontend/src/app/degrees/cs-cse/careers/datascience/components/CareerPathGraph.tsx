@@ -580,6 +580,84 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
                     </div>
                   )}
 
+                  {/* Real World Applications */}
+                  {selectedCourse.expandedInfo.realWorldApplications && selectedCourse.expandedInfo.realWorldApplications.length > 0 && (
+                    <div>
+                      <h4 className="text-sm font-semibold text-slate-800 mb-2">
+                        Real World Applications
+                      </h4>
+                      <ul className="list-disc list-inside space-y-1 text-slate-700">
+                        {selectedCourse.expandedInfo.realWorldApplications.map((application, index) => (
+                          <li key={index}>{application}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Resources */}
+                  {selectedCourse.expandedInfo.resources && (
+                    <div>
+                      <h4 className="text-sm font-semibold text-slate-800 mb-2">
+                        Resources
+                      </h4>
+                      <div className="space-y-3">
+                        {/* Videos */}
+                        {selectedCourse.expandedInfo.resources.videos && selectedCourse.expandedInfo.resources.videos.length > 0 && (
+                          <div>
+                            <h5 className="text-xs font-semibold text-slate-700 mb-1">Videos</h5>
+                            <ul className="list-disc list-inside space-y-1">
+                              {selectedCourse.expandedInfo.resources.videos.map((video, index) => (
+                                <li key={index}>
+                                  <a 
+                                    href={video} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="text-blue-600 hover:text-blue-800 underline"
+                                  >
+                                    {video}
+                                  </a>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        
+                        {/* Websites */}
+                        {selectedCourse.expandedInfo.resources.websites && selectedCourse.expandedInfo.resources.websites.length > 0 && (
+                          <div>
+                            <h5 className="text-xs font-semibold text-slate-700 mb-1">Websites</h5>
+                            <ul className="list-disc list-inside space-y-1">
+                              {selectedCourse.expandedInfo.resources.websites.map((website, index) => (
+                                <li key={index}>
+                                  <a 
+                                    href={website} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="text-blue-600 hover:text-blue-800 underline"
+                                  >
+                                    {website}
+                                  </a>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        
+                        {/* Tools */}
+                        {selectedCourse.expandedInfo.resources.tools && selectedCourse.expandedInfo.resources.tools.length > 0 && (
+                          <div>
+                            <h5 className="text-xs font-semibold text-slate-700 mb-1">Tools</h5>
+                            <ul className="list-disc list-inside space-y-1 text-slate-700">
+                              {selectedCourse.expandedInfo.resources.tools.map((tool, index) => (
+                                <li key={index}>{tool}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
                   {/* Additional Notes */}
                   {selectedCourse.expandedInfo.additionalNotes && (
                     <div>
