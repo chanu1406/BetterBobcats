@@ -12,6 +12,7 @@ import CareerPathGraph from "../cs-cse/careers/swe/components/CareerPathGraph";
 import CybersecurityCareerPathGraph from "../cs-cse/careers/cybersecurity/components/CareerPathGraph";
 import MLAICareerPathGraph from "../cs-cse/careers/ml-ai/components/CareerPathGraph";
 import DataScienceCareerPathGraph from "../cs-cse/careers/datascience/components/CareerPathGraph";
+import SystemsInfraCareerPathGraph from "../cs-cse/careers/systems-infra/components/CareerPathGraph";
 
 interface DegreesContentProps {
   selectedDegree: string | null;
@@ -41,6 +42,10 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
   const resetDataScienceGraphRef = useRef<(() => void) | null>(null);
   const formatDataScienceGraphRef = useRef<(() => void) | null>(null);
   
+  // Systems / Infrastructure Engineering graph handlers
+  const resetSystemsInfraGraphRef = useRef<(() => void) | null>(null);
+  const formatSystemsInfraGraphRef = useRef<(() => void) | null>(null);
+  
   // State to track when handlers are ready (updated in useEffect to avoid render-time updates)
   const [resetPrerequisiteReady, setResetPrerequisiteReady] = useState(false);
   const [fullResetPrerequisiteReady, setFullResetPrerequisiteReady] = useState(false);
@@ -52,6 +57,8 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
   const [formatMLAIReady, setFormatMLAIReady] = useState(false);
   const [resetDataScienceReady, setResetDataScienceReady] = useState(false);
   const [formatDataScienceReady, setFormatDataScienceReady] = useState(false);
+  const [resetSystemsInfraReady, setResetSystemsInfraReady] = useState(false);
+  const [formatSystemsInfraReady, setFormatSystemsInfraReady] = useState(false);
   
   // Callbacks to register reset handlers from child components
   const handleResetPrerequisiteReady = useRef((handler: () => void) => {
@@ -128,6 +135,20 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
     });
   });
 
+  const handleResetSystemsInfraReady = useRef((handler: () => void) => {
+    resetSystemsInfraGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setResetSystemsInfraReady(true);
+    });
+  });
+
+  const handleFormatSystemsInfraReady = useRef((handler: () => void) => {
+    formatSystemsInfraGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setFormatSystemsInfraReady(true);
+    });
+  });
+
   // Reset readiness flags when switching between pages
   useEffect(() => {
     if (!selectedCareerPath && !selectedDegree) {
@@ -141,6 +162,8 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
       setFormatMLAIReady(false);
       setResetDataScienceReady(false);
       setFormatDataScienceReady(false);
+      setResetSystemsInfraReady(false);
+      setFormatSystemsInfraReady(false);
       resetPrerequisiteGraphRef.current = null;
       fullResetPrerequisiteGraphRef.current = null;
       resetCareerPathGraphRef.current = null;
@@ -151,6 +174,8 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
       formatMLAIGraphRef.current = null;
       resetDataScienceGraphRef.current = null;
       formatDataScienceGraphRef.current = null;
+      resetSystemsInfraGraphRef.current = null;
+      formatSystemsInfraGraphRef.current = null;
     }
   }, [selectedCareerPath, selectedDegree]);
 
@@ -504,6 +529,70 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
               <DataScienceCareerPathGraph 
                 onResetReady={handleResetDataScienceReady.current}
                 onFormatReady={handleFormatDataScienceReady.current}
+              />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Show Systems / Infrastructure Engineering career path with graph
+    if (selectedCareerPath === "systems") {
+      return (
+        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-10 text-center">
+              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+                {careerPathNames[selectedCareerPath]} - {selectedDegree}
+              </h2>
+              <p className="text-black mb-5">
+                Career pathway information and recommended courses
+              </p>
+              {careerDescriptions[selectedCareerPath] && (
+                <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+                  {careerDescriptions[selectedCareerPath]}
+                </p>
+              )}
+            </div>
+            
+            {/* Format and Reset buttons */}
+            <div className="mb-6 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  if (formatSystemsInfraReady && formatSystemsInfraGraphRef.current) {
+                    formatSystemsInfraGraphRef.current();
+                  }
+                }}
+                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                  formatSystemsInfraReady && formatSystemsInfraGraphRef.current
+                    ? "text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+                }`}
+                title={formatSystemsInfraReady && formatSystemsInfraGraphRef.current ? "Format graph to prevent overlap" : "Waiting for format handler..."}
+              >
+                Format Graph
+              </button>
+              <button
+                onClick={() => {
+                  if (resetSystemsInfraReady && resetSystemsInfraGraphRef.current) {
+                    resetSystemsInfraGraphRef.current();
+                  }
+                }}
+                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                  resetSystemsInfraReady && resetSystemsInfraGraphRef.current
+                    ? "text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+                }`}
+                title={resetSystemsInfraReady && resetSystemsInfraGraphRef.current ? "Reset career path graph view" : "Waiting for reset handler..."}
+              >
+                Reset Graph
+              </button>
+            </div>
+            
+            <div className="mb-10">
+              <SystemsInfraCareerPathGraph 
+                onResetReady={handleResetSystemsInfraReady.current}
+                onFormatReady={handleFormatSystemsInfraReady.current}
               />
             </div>
           </div>
