@@ -25,9 +25,8 @@ export const tier1Courses: TierCourse[] = [
     tier: 1,
     expandedInfo: {
       credits: 3,
-      prerequisites: 'None (introductory course)',
       careerRelevance:
-        "This course establishes the foundational skills and mindset needed to think like a data scientist. It covers the full data analytics pipeline — from acquiring data and cleaning messy datasets to exploring and drawing insights that inform decisions. These skills are directly applicable to roles like Data Analyst, Business Intelligence Analyst, and early-stage Data Scientist. :contentReference[oaicite:1]{index=1}",
+        "This course establishes the foundational skills and mindset needed to think like a data scientist. It covers the full data analytics pipeline — from acquiring data and cleaning messy datasets to exploring and drawing insights that inform decisions. These skills are directly applicable to roles like Data Analyst, Business Intelligence Analyst, and early-stage Data Scientist. ",
   
       realWorldApplications: [
         "Gathering and cleaning real-world datasets from sources like APIs, CSVs, and databases",
@@ -63,9 +62,9 @@ export const tier1Courses: TierCourse[] = [
           "https://www.youtube.com/watch?v=-ETQ97mXXF0"  // Exploratory data analysis with Python
         ],
         websites: [
-          "https://en.wikipedia.org/wiki/Data_science",                      // Definitions & context of the field :contentReference[oaicite:2]{index=2}
-          "https://www.coursera.org/specializations/introduction-data-science", // Intro course example and curriculum structure :contentReference[oaicite:3]{index=3}
-          "https://datasciencecourse.net/2022/syllabus/"                     // Typical topics & skills learned :contentReference[oaicite:4]{index=4}
+          "https://en.wikipedia.org/wiki/Data_science",                      // Definitions & context of the field 
+          "https://www.coursera.org/specializations/introduction-data-science", // Intro course example and curriculum structure 
+          "https://datasciencecourse.net/2022/syllabus/"                     // Typical topics & skills learned 
         ],
         tools: [
           "Python / R",            // Main languages used in data science
@@ -76,7 +75,7 @@ export const tier1Courses: TierCourse[] = [
       },
   
       additionalNotes:
-        "Introduction to Data Science is an essential first course that teaches how to think about data, how to handle messy real datasets, and how to extract meaningful insights that can guide decisions. It emphasizes both analytical techniques and practical tool usage, preparing students for more advanced work in applied analytics and data modeling. :contentReference[oaicite:5]{index=5}"
+        "Introduction to Data Science is an essential first course that teaches how to think about data, how to handle messy real datasets, and how to extract meaningful insights that can guide decisions. It emphasizes both analytical techniques and practical tool usage, preparing students for more advanced work in applied analytics and data modeling. "
     }
   },
   {
@@ -88,9 +87,8 @@ export const tier1Courses: TierCourse[] = [
     tier: 1,
     expandedInfo: {
       credits: 4,
-      prerequisites: 'None (intro course)',
       careerRelevance:
-        "This course teaches the programming and statistical computing foundation crucial for data science roles. Students learn how to use languages like Python or R to wrangle data, perform statistical analysis, and implement reproducible analyses — skills directly applicable in data analyst and data scientist roles. The course is part of the core data science curriculum at UC Merced and is required for upper-division work.:contentReference[oaicite:0]{index=0}",
+        "This course teaches the programming and statistical computing foundation crucial for data science roles. Students learn how to use languages like Python or R to wrangle data, perform statistical analysis, and implement reproducible analyses — skills directly applicable in data analyst and data scientist roles. The course is part of the core data science curriculum at UC Merced and is required for upper-division work.",
   
       realWorldApplications: [
         "Writing code to import, clean, and transform real datasets",
@@ -125,7 +123,7 @@ export const tier1Courses: TierCourse[] = [
           "https://www.youtube.com/watch?v=EitU43WpLr4"  // Statistical computing with code
         ],
         websites: [
-          "https://en.wikipedia.org/wiki/R_(programming_language)", // R as a statistical tool:contentReference[oaicite:1]{index=1}
+          "https://en.wikipedia.org/wiki/R_(programming_language)", // R as a statistical tool
           "https://jupyter.org/",                                  // Interactive Python notebooks
           "https://www.python.org/about/gettingstarted/"           // Getting started with Python
         ],
@@ -151,9 +149,8 @@ export const tier1Courses: TierCourse[] = [
     tier: 1,
     expandedInfo: {
       credits: 4,
-      prerequisites: 'None (introductory course)',
       careerRelevance:
-        "This course provides a structured introduction to the **data analytics pipeline** — teaching how to collect, integrate, and visualize data, explore datasets for insights, and communicate results effectively. It’s foundational for careers like Data Analyst, Business Analyst, and early-stage Data Scientist, as it builds the mindset and skills used in real data workflows. :contentReference[oaicite:0]{index=0}",
+        "This course provides a structured introduction to the **data analytics pipeline** — teaching how to collect, integrate, and visualize data, explore datasets for insights, and communicate results effectively. It’s foundational for careers like Data Analyst, Business Analyst, and early-stage Data Scientist, as it builds the mindset and skills used in real data workflows. ",
   
       realWorldApplications: [
         "Identifying, collecting, and integrating useful data from multiple sources",
@@ -189,9 +186,9 @@ export const tier1Courses: TierCourse[] = [
           "https://www.youtube.com/watch?v=-ETQ97mXXF0"  // EDA & visualization fundamentals
         ],
         websites: [
-          "https://en.wikipedia.org/wiki/Data_science",       // Data science overview and workflow perspective :contentReference[oaicite:1]{index=1}
-          "https://dsa.ucmerced.edu/",                      // UC Merced DSA program context :contentReference[oaicite:2]{index=2}
-          "https://www.coursera.org/learn/foundations-of-data-science" // Example foundations syllabus :contentReference[oaicite:3]{index=3}
+          "https://en.wikipedia.org/wiki/Data_science",       // Data science overview and workflow perspective 
+          "https://dsa.ucmerced.edu/",                      // UC Merced DSA program context 
+          "https://www.coursera.org/learn/foundations-of-data-science" // Example foundations syllabus 
         ],
         tools: [
           "Python & Pandas",        // Standard data handling
@@ -202,7 +199,7 @@ export const tier1Courses: TierCourse[] = [
       },
   
       additionalNotes:
-        "Foundations of Data Science & Analytics teaches the essential end-to-end process for working with data — from ingestion and cleaning to exploration, visualization, and communication of results. It establishes the workflows and analytical thinking used across all subsequent data science courses. :contentReference[oaicite:4]{index=4}"
+        "Foundations of Data Science & Analytics teaches the essential end-to-end process for working with data — from ingestion and cleaning to exploration, visualization, and communication of results. It establishes the workflows and analytical thinking used across all subsequent data science courses. "
     }
   },
   {
@@ -214,9 +211,8 @@ export const tier1Courses: TierCourse[] = [
     tier: 1,
     expandedInfo: {
       credits: 4,
-      prerequisites: 'None (introductory programming/problem-solving course)',
       careerRelevance:
-        "Thinking Like a Programmer builds the essential logic, algorithmic reasoning, and structured problem-solving skills needed in data science and analytics. It teaches students how to break down complex problems into manageable steps and express solutions using code — a core capability for data analysts and data scientists alike. It is a required course in the UC Merced Data Science and Analytics curriculum. :contentReference[oaicite:0]{index=0}",
+        "Thinking Like a Programmer builds the essential logic, algorithmic reasoning, and structured problem-solving skills needed in data science and analytics. It teaches students how to break down complex problems into manageable steps and express solutions using code — a core capability for data analysts and data scientists alike. It is a required course in the UC Merced Data Science and Analytics curriculum. ",
   
       realWorldApplications: [
         "Breaking down data processing tasks into logical steps for automation",
@@ -253,7 +249,7 @@ export const tier1Courses: TierCourse[] = [
         ],
         websites: [
           "https://en.wikipedia.org/wiki/Algorithmic_thinking", // Concepts behind computational problem solving
-          "https://catalog.ucmerced.edu/preview_course_nopop.php?catoid=24&coid=69933", // Official course listing & description :contentReference[oaicite:1]{index=1}
+          "https://catalog.ucmerced.edu/preview_course_nopop.php?catoid=24&coid=69933", // Official course listing & description 
           "https://www.geeksforgeeks.org/fundamentals-of-algorithms/" // Algorithm fundamentals for learners
         ],
         tools: [
@@ -265,7 +261,7 @@ export const tier1Courses: TierCourse[] = [
       },
   
       additionalNotes:
-        "Thinking Like a Programmer is less about syntax and more about the ‘mindset’ of decomposing real problems into algorithmic steps that code can solve. This capability is critical in data science because data workflows typically involve transforming messy inputs into actionable outputs using code. :contentReference[oaicite:2]{index=2}"
+        "Thinking Like a Programmer is less about syntax and more about the ‘mindset’ of decomposing real problems into algorithmic steps that code can solve. This capability is critical in data science because data workflows typically involve transforming messy inputs into actionable outputs using code. "
     }
   },
   {
@@ -277,9 +273,8 @@ export const tier1Courses: TierCourse[] = [
     tier: 1,
     expandedInfo: {
       credits: 4,
-      prerequisites: 'DSC 008, DSC 011, DSA 001, and DSA 002 (intro and foundations courses)',
       careerRelevance:
-        "Advanced Data Science bridges foundational skills with real-world practice by engaging students in end-to-end data projects that mirror professional data work. This course prepares students for analyst and data scientist roles by sharpening analytical workflows, project design, and real application development. Data science integrates statistics, computing, and visualization to extract insights from complex data. :contentReference[oaicite:0]{index=0}",
+        "Advanced Data Science bridges foundational skills with real-world practice by engaging students in end-to-end data projects that mirror professional data work. This course prepares students for analyst and data scientist roles by sharpening analytical workflows, project design, and real application development. Data science integrates statistics, computing, and visualization to extract insights from complex data. ",
   
       realWorldApplications: [
         "Designing and executing complete data science pipelines from raw datasets to actionable insights",
@@ -315,9 +310,9 @@ export const tier1Courses: TierCourse[] = [
           "https://www.youtube.com/watch?v=4vryPwLtjIg"  // Machine learning concepts for analytics
         ],
         websites: [
-          "https://en.wikipedia.org/wiki/Data_science",                // Field overview & methods :contentReference[oaicite:1]{index=1}
-          "https://www.coursera.org/courses?query=advanced%20data%20science", // Examples of advanced syllabus :contentReference[oaicite:2]{index=2}
-          "https://ds100.org/" // Example advanced data course structure :contentReference[oaicite:3]{index=3}
+          "https://en.wikipedia.org/wiki/Data_science",                // Field overview & methods 
+          "https://www.coursera.org/courses?query=advanced%20data%20science", // Examples of advanced syllabus 
+          "https://ds100.org/" // Example advanced data course structure 
         ],
         tools: [
           "Python (scikit-learn, TensorFlow/PyTorch)", // Advanced analytics & ML
@@ -341,7 +336,6 @@ export const tier1Courses: TierCourse[] = [
     tier: 1,
     expandedInfo: {
       credits: 4,
-      prerequisites: 'Pre-calculus or equivalent quantitative background',
   
       careerRelevance:
         "Probability & Statistics provides the mathematical foundation for data science by teaching how to model uncertainty, draw inferences from data, and make data-driven decisions. Concepts like random variables, probability distributions, confidence intervals, and hypothesis testing are used in machine learning, A/B testing, survey analysis, and predictive modeling across data roles.",
@@ -375,14 +369,14 @@ export const tier1Courses: TierCourse[] = [
   
       resources: {
         videos: [
-          "https://www.youtube.com/watch?v=HZGCoVF3YvM", // Bayes theorem explained visually — great intuition (3Blue1Brown) :contentReference[oaicite:0]{index=0}
-          "https://www.youtube.com/playlist?list=PL4cNQ1YkG5WhQGmPnRe4vDUImh_nviriy", // 3Blue1Brown statistics playlist for probability basics :contentReference[oaicite:1]{index=1}
-          "https://www.youtube.com/watch?v=tFWsuO9f74o" // Confidence intervals explained (good conceptual video) :contentReference[oaicite:2]{index=2}
+          "https://www.youtube.com/watch?v=HZGCoVF3YvM", // Bayes theorem explained visually — great intuition (3Blue1Brown) 
+          "https://www.youtube.com/playlist?list=PL4cNQ1YkG5WhQGmPnRe4vDUImh_nviriy", // 3Blue1Brown statistics playlist for probability basics 
+          "https://www.youtube.com/watch?v=tFWsuO9f74o" // Confidence intervals explained (good conceptual video) 
         ],
         websites: [
           "https://en.wikipedia.org/wiki/Probability_theory", // Probability foundations
-          "https://en.wikipedia.org/wiki/Statistical_inference", // Inference concepts including hypothesis testing and estimation :contentReference[oaicite:3]{index=3}
-          "https://en.wikipedia.org/wiki/Bayes%27_theorem" // Bayes’ theorem and conditional probability :contentReference[oaicite:4]{index=4}
+          "https://en.wikipedia.org/wiki/Statistical_inference", // Inference concepts including hypothesis testing and estimation 
+          "https://en.wikipedia.org/wiki/Bayes%27_theorem" // Bayes’ theorem and conditional probability 
         ],
         tools: [
           "R / Python (SciPy, statsmodels)", // Tools for statistical computing
@@ -405,18 +399,17 @@ export const tier1Courses: TierCourse[] = [
     tier: 1,
     expandedInfo: {
       credits: 4,
-      prerequisites: 'MATH 022 (Calculus II) or equivalent',
   
       careerRelevance:
-        "Linear Algebra & Differential Equations provides mathematical tools that are essential for representing and transforming multidimensional data, solving systems of equations, and modeling dynamic processes — all of which underpin many data science algorithms used in machine learning and optimization. Understanding matrices, vectors, eigenvalues, and linear systems is crucial to techniques like dimensionality reduction and regression, while differential equations help model trends and changes over time in data. :contentReference[oaicite:0]{index=0}",
+        "Linear Algebra & Differential Equations provides mathematical tools that are essential for representing and transforming multidimensional data, solving systems of equations, and modeling dynamic processes — all of which underpin many data science algorithms used in machine learning and optimization. Understanding matrices, vectors, eigenvalues, and linear systems is crucial to techniques like dimensionality reduction and regression, while differential equations help model trends and changes over time in data. ",
   
       realWorldApplications: [
-        "Representing datasets as vectors and matrices to perform transformations and operations used in algorithms. :contentReference[oaicite:1]{index=1}",
-        "Using matrix factorizations and eigenvalues for dimensionality reduction (e.g., PCA) in machine learning. :contentReference[oaicite:2]{index=2}",
-        "Solving systems of linear equations that arise in regression, optimization, and model fitting. :contentReference[oaicite:3]{index=3}",
-        "Modeling dynamic behavior in time-series or continuous phenomena with differential equation techniques. :contentReference[oaicite:4]{index=4}",
-        "Understanding vector spaces and transformations to interpret complex analytical algorithms. :contentReference[oaicite:5]{index=5}",
-        "Linking algebraic structure with algorithmic workflows in advanced analytics and AI systems. :contentReference[oaicite:6]{index=6}"
+        "Representing datasets as vectors and matrices to perform transformations and operations used in algorithms. ",
+        "Using matrix factorizations and eigenvalues for dimensionality reduction (e.g., PCA) in machine learning. ",
+        "Solving systems of linear equations that arise in regression, optimization, and model fitting. ",
+        "Modeling dynamic behavior in time-series or continuous phenomena with differential equation techniques. ",
+        "Understanding vector spaces and transformations to interpret complex analytical algorithms. ",
+        "Linking algebraic structure with algorithmic workflows in advanced analytics and AI systems. "
       ],
   
       learningOutcomes: [
@@ -457,7 +450,7 @@ export const tier1Courses: TierCourse[] = [
       },
   
       additionalNotes:
-        "MATH 024 introduces both linear algebra and differential equations — two pillars of the mathematical foundation for data science. Linear algebra gives the language and tools to manipulate and understand structured data as vectors and matrices, which is core to many algorithms in machine learning and statistics. Differential equations equip students to model change and dynamics, which are insightful for time-series analysis and predictive modeling. :contentReference[oaicite:7]{index=7}"
+        "MATH 024 introduces both linear algebra and differential equations — two pillars of the mathematical foundation for data science. Linear algebra gives the language and tools to manipulate and understand structured data as vectors and matrices, which is core to many algorithms in machine learning and statistics. Differential equations equip students to model change and dynamics, which are insightful for time-series analysis and predictive modeling. "
     }
   },
   {
@@ -469,14 +462,13 @@ export const tier1Courses: TierCourse[] = [
     tier: 1,
     expandedInfo: {
       credits: 4,
-      prerequisites: 'Pre-calculus or equivalent quantitative skills',
   
       careerRelevance:
-        "Calculus I teaches the foundational tools of rate of change and accumulation — concepts used in optimization, growth/decay modeling, and understanding how functions behave. These ideas are directly relevant to *why* many data science algorithms work (e.g., optimization in machine learning) and help students interpret model behavior and trends. Understanding calculus strengthens analytical reasoning used in modeling, statistics, and machine learning. :contentReference[oaicite:0]{index=0}",
+        "Calculus I teaches the foundational tools of rate of change and accumulation — concepts used in optimization, growth/decay modeling, and understanding how functions behave. These ideas are directly relevant to *why* many data science algorithms work (e.g., optimization in machine learning) and help students interpret model behavior and trends. Understanding calculus strengthens analytical reasoning used in modeling, statistics, and machine learning. ",
   
       realWorldApplications: [
         "Modeling rates of change and trends in data time series",
-        "Understanding optimization principles like those used in gradient-based learning algorithms in ML (e.g., gradient descent) :contentReference[oaicite:1]{index=1}",
+        "Understanding optimization principles like those used in gradient-based learning algorithms in ML (e.g., gradient descent) ",
         "Analyzing continuous change and growth/decay processes in real systems",
         "Interpreting slopes and areas under curves in analytics and forecasting",
         "Applying derivative concepts to understand sensitivities and marginal effects",
@@ -507,9 +499,9 @@ export const tier1Courses: TierCourse[] = [
           "https://www.youtube.com/watch?v=5Njl0kWRkO8"  // Integrals & area concepts (3Blue1Brown inspired)
         ],
         websites: [
-          "https://en.wikipedia.org/wiki/Calculus",        // Overview of calculus and applications :contentReference[oaicite:2]{index=2}
-          "https://catalog.ucmerced.edu/preview_course_nopop.php?catoid=24&coid=68028", // UC Merced MATH021 official description :contentReference[oaicite:3]{index=3}
-          "https://medium.com/@rajat01221/calculus-and-algebra-for-data-science-beginner-to-advanced-062018c7f8ad" // Calculus in data science context :contentReference[oaicite:4]{index=4}
+          "https://en.wikipedia.org/wiki/Calculus",        // Overview of calculus and applications 
+          "https://catalog.ucmerced.edu/preview_course_nopop.php?catoid=24&coid=68028", // UC Merced MATH021 official description 
+          "https://medium.com/@rajat01221/calculus-and-algebra-for-data-science-beginner-to-advanced-062018c7f8ad" // Calculus in data science context 
         ],
         tools: [
           "Python (SymPy / NumPy)",   // Code for calculus problem exploration
@@ -520,7 +512,7 @@ export const tier1Courses: TierCourse[] = [
       },
   
       additionalNotes:
-        "MATH 021 at UC Merced is an introduction to differential and integral calculus of functions of one variable, covering topics like exponential and logarithmic functions, derivatives, and integrals with engineering applications. Calculus systems build the analytical intuition used in optimization and modeling across data science and machine learning. :contentReference[oaicite:5]{index=5}"
+        "MATH 021 at UC Merced is an introduction to differential and integral calculus of functions of one variable, covering topics like exponential and logarithmic functions, derivatives, and integrals with engineering applications. Calculus systems build the analytical intuition used in optimization and modeling across data science and machine learning. "
     }
   },
   {
@@ -532,10 +524,9 @@ export const tier1Courses: TierCourse[] = [
     tier: 1,
     expandedInfo: {
       credits: 4,
-      prerequisites: 'MATH 021 (Calculus I) or equivalent',
   
       careerRelevance:
-        "Calculus II teaches advanced integration techniques, infinite sequences and series, and basic differential equations. These topics deepen understanding of continuous change and approximation, which are foundational tools for analytical modeling, time-series analysis, and the mathematical underpinnings of algorithms used in data science and machine learning. Mastery of these ideas strengthens your ability to reason about change and limits — concepts that appear in optimization, probability approximations, and model behavior estimation. :contentReference[oaicite:0]{index=0}",
+        "Calculus II teaches advanced integration techniques, infinite sequences and series, and basic differential equations. These topics deepen understanding of continuous change and approximation, which are foundational tools for analytical modeling, time-series analysis, and the mathematical underpinnings of algorithms used in data science and machine learning. Mastery of these ideas strengthens your ability to reason about change and limits — concepts that appear in optimization, probability approximations, and model behavior estimation. ",
   
       realWorldApplications: [
         "Using advanced integration methods to solve area, volume, and accumulation problems that model real phenomena",
@@ -583,7 +574,7 @@ export const tier1Courses: TierCourse[] = [
       },
   
       additionalNotes:
-        "MATH 022 builds on Calculus I by advancing integration techniques, introducing infinite sequences and series, and covering basic ordinary differential equations. These mathematical tools help data science students handle continuous change, approximate difficult functions with series, and better understand the foundations of many analytical and algorithmic methods used in statistical inference and machine learning. :contentReference[oaicite:1]{index=1}"
+        "MATH 022 builds on Calculus I by advancing integration techniques, introducing infinite sequences and series, and covering basic ordinary differential equations. These mathematical tools help data science students handle continuous change, approximate difficult functions with series, and better understand the foundations of many analytical and algorithmic methods used in statistical inference and machine learning. "
     }
   },
 ];
@@ -605,10 +596,9 @@ export const tier2Courses: TierCourse[] = [
     tier: 2,
     expandedInfo: {
       credits: 4,
-      prerequisites: 'Intro programming & recommended discrete/math background',
   
       careerRelevance:
-        "Database Systems is a cornerstone CS course that teaches how structured data is stored, queried, and managed — skills essential for any data role. Knowledge of SQL, data modeling, and database design is crucial for data engineers, analysts, and scientists because almost all data work starts with extracting and transforming structured data from databases. ([turn0search0], [turn0search5])",
+        "Database Systems is a cornerstone CS course that teaches how structured data is stored, queried, and managed — skills essential for any data role. Knowledge of SQL, data modeling, and database design is crucial for data engineers, analysts, and scientists because almost all data work starts with extracting and transforming structured data from databases.",
   
       realWorldApplications: [
         "Designing and normalizing relational schemas for scalable systems",
@@ -669,10 +659,9 @@ export const tier2Courses: TierCourse[] = [
     tier: 2,
     expandedInfo: {
       credits: 4,
-      prerequisites: 'Intro programming (e.g., CSE 024 or equivalent)',
   
       careerRelevance:
-        "Data Structures teaches how to organize and access data efficiently — a core skill in data engineering, analytics, and machine learning. Understanding structures like lists, trees, hash tables, and graphs improves your ability to handle large datasets, optimize queries, and write responsive analytical code. These concepts are widely used in backend services, data pipelines, and performance-critical systems. ([turn0search1], [turn0search8])",
+        "Data Structures teaches how to organize and access data efficiently — a core skill in data engineering, analytics, and machine learning. Understanding structures like lists, trees, hash tables, and graphs improves your ability to handle large datasets, optimize queries, and write responsive analytical code. These concepts are widely used in backend services, data pipelines, and performance-critical systems.",
   
       realWorldApplications: [
         "Choosing the right data structures for large dataset processing",
@@ -733,10 +722,9 @@ export const tier2Courses: TierCourse[] = [
     tier: 2,
     expandedInfo: {
       credits: 4,
-      prerequisites: 'Fundamental programming courses (e.g., CSE 031 / intro to programming and data structures)',
   
       careerRelevance:
-        "Software Engineering teaches structured development processes, team collaboration, and maintainable code practices that help data scientists build reliable, scalable analytical tools, dashboards, and data products. Graduates understand real-world workflows used in data engineering and software teams. ([turn0search0], [turn0search16])",
+        "Software Engineering teaches structured development processes, team collaboration, and maintainable code practices that help data scientists build reliable, scalable analytical tools, dashboards, and data products. Graduates understand real-world workflows used in data engineering and software teams.",
   
       realWorldApplications: [
         "Working on team software projects using version control (e.g., Git) and modern workflows",
@@ -785,7 +773,7 @@ export const tier2Courses: TierCourse[] = [
       },
   
       additionalNotes:
-        "UC Merced’s CSE 120 course involves team design projects where students learn modern software engineering techniques used by professionals — a valuable skill set for data scientists who build production-grade analytical tools and systems. ([turn0search0], [turn0search16])"
+        "UC Merced’s CSE 120 course involves team design projects where students learn modern software engineering techniques used by professionals — a valuable skill set for data scientists who build production-grade analytical tools and systems."
     }
   },
   {
@@ -797,10 +785,9 @@ export const tier2Courses: TierCourse[] = [
     tier: 2,
     expandedInfo: {
       credits: 4,
-      prerequisites: 'Intro programming or equivalent experience',
   
       careerRelevance:
-        "Full Stack Web Development teaches both frontend and backend principles — essential when data scientists need to build interactive dashboards, REST APIs, or data products that expose analytical results to users. This course also covers security, scalable system design, and integration with databases. ([turn0search1], [turn0search4])",
+        "Full Stack Web Development teaches both frontend and backend principles — essential when data scientists need to build interactive dashboards, REST APIs, or data products that expose analytical results to users. This course also covers security, scalable system design, and integration with databases.",
   
       realWorldApplications: [
         "Building full stack data dashboards that visualize insights for stakeholders",
@@ -849,7 +836,7 @@ export const tier2Courses: TierCourse[] = [
       },
   
       additionalNotes:
-        "CSE 108 at UC Merced explores both frontend and backend web technologies, including web security, scalable architectures, frameworks, and databases — skills that empower data scientists to build interactive dashboards and data products and to understand the full lifecycle of data-driven web applications. ([turn0search1], [turn0search4])"
+        "CSE 108 at UC Merced explores both frontend and backend web technologies, including web security, scalable architectures, frameworks, and databases — skills that empower data scientists to build interactive dashboards and data products and to understand the full lifecycle of data-driven web applications."
     }
   },
   // Advanced / Applied Math for Data Science
@@ -862,10 +849,9 @@ export const tier2Courses: TierCourse[] = [
     tier: 2,
     expandedInfo: {
       credits: 4,
-      prerequisites: 'Introductory calculus and basic algebra',
   
       careerRelevance:
-        "Linear Algebra for Data Science focuses on the matrix and vector mathematics that power core machine learning and analytics workflows. Representing data as vectors and matrices, calculating transformations, and understanding eigenvalues/eigenvectors are foundational for dimensionality reduction, principal component analysis (PCA), and many model training methods used in modern data science and ML roles. Learners gain skills that directly connect mathematical theory with practical data processing and modeling tasks. :contentReference[oaicite:0]{index=0}",
+        "Linear Algebra for Data Science focuses on the matrix and vector mathematics that power core machine learning and analytics workflows. Representing data as vectors and matrices, calculating transformations, and understanding eigenvalues/eigenvectors are foundational for dimensionality reduction, principal component analysis (PCA), and many model training methods used in modern data science and ML roles. Learners gain skills that directly connect mathematical theory with practical data processing and modeling tasks. ",
   
       realWorldApplications: [
         "Representing high-dimensional dataset features as vectors or matrices for analysis",
@@ -900,9 +886,9 @@ export const tier2Courses: TierCourse[] = [
           "https://www.youtube.com/watch?v=Z_dEBCp2FAs"  // Eigenvalues & projections
         ],
         websites: [
-          "https://en.wikipedia.org/wiki/Matrix_(mathematics)", // Matrix fundamentals in data science :contentReference[oaicite:1]{index=1}
-          "https://en.wikipedia.org/wiki/Projection_matrix",     // Projections & regression matrices :contentReference[oaicite:2]{index=2}
-          "https://en.wikipedia.org/wiki/Cholesky_decomposition" // Decomposition and numerical stability :contentReference[oaicite:3]{index=3}
+          "https://en.wikipedia.org/wiki/Matrix_(mathematics)", // Matrix fundamentals in data science 
+          "https://en.wikipedia.org/wiki/Projection_matrix",     // Projections & regression matrices 
+          "https://en.wikipedia.org/wiki/Cholesky_decomposition" // Decomposition and numerical stability 
         ],
         tools: [
           "Python (NumPy / SciPy)", // Matrix operations and algorithms
@@ -913,7 +899,7 @@ export const tier2Courses: TierCourse[] = [
       },
   
       additionalNotes:
-        "MATH 041 focuses on the parts of linear algebra most immediately useful in data science — representing and transforming multivariate data, understanding the structure of linear systems, and applying these ideas to dimensionality reduction and model foundation. These techniques form the mathematical backbone of principal component analysis and many ML preprocessing steps. :contentReference[oaicite:4]{index=4}"
+        "MATH 041 focuses on the parts of linear algebra most immediately useful in data science — representing and transforming multivariate data, understanding the structure of linear systems, and applying these ideas to dimensionality reduction and model foundation. These techniques form the mathematical backbone of principal component analysis and many ML preprocessing steps. "
     }
   },
   {
@@ -925,10 +911,9 @@ export const tier2Courses: TierCourse[] = [
     tier: 2,
     expandedInfo: {
       credits: 4,
-      prerequisites: 'MATH 032 (Probability & Statistics) and basic programming',
   
       careerRelevance:
-        "Applied Statistics & Machine Learning equips students with the statistical modeling and ML techniques widely used in industry analytics, forecasting, and predictive modeling. Understanding how models are fit, evaluated, and interpreted is essential for mid-level data scientists, ML engineers, and research analysts working on real business or scientific problems. :contentReference[oaicite:5]{index=5}",
+        "Applied Statistics & Machine Learning equips students with the statistical modeling and ML techniques widely used in industry analytics, forecasting, and predictive modeling. Understanding how models are fit, evaluated, and interpreted is essential for mid-level data scientists, ML engineers, and research analysts working on real business or scientific problems. ",
   
       realWorldApplications: [
         "Summarizing real datasets with descriptive statistics and visual analytics",
@@ -963,7 +948,7 @@ export const tier2Courses: TierCourse[] = [
           "https://www.youtube.com/watch?v=Cr6VqTRO1v0"  // ML workflows explained
         ],
         websites: [
-          "https://en.wikipedia.org/wiki/Statistical_inference", // Statistical inference overview :contentReference[oaicite:6]{index=6}
+          "https://en.wikipedia.org/wiki/Statistical_inference", // Statistical inference overview 
           "https://en.wikipedia.org/wiki/Regression_analysis",   // Regression fundamentals
           "https://en.wikipedia.org/wiki/Machine_learning",     // Machine learning overview
         ],
@@ -976,7 +961,7 @@ export const tier2Courses: TierCourse[] = [
       },
   
       additionalNotes:
-        "MATH 180 blends statistical inference with practical machine learning techniques, teaching students how to analyze and model data, derive meaningful predictions, and validate results on new data. This course bridges theory with tools used in applied analytics and predictive modeling. :contentReference[oaicite:7]{index=7}"
+        "MATH 180 blends statistical inference with practical machine learning techniques, teaching students how to analyze and model data, derive meaningful predictions, and validate results on new data. This course bridges theory with tools used in applied analytics and predictive modeling. "
     }
   },
   {
@@ -988,10 +973,9 @@ export const tier2Courses: TierCourse[] = [
     tier: 2,
     expandedInfo: {
       credits: 4,
-      prerequisites: 'Probability & Statistics and introductory linear algebra',
   
       careerRelevance:
-        "Math & Stats Foundations of Data Science deepens the mathematical and statistical understanding underlying most advanced analytics and machine learning algorithms. It covers probability, inference, regression, classification, and dimensionality reduction — foundational theory that helps data scientists build, validate, and interpret models with rigor. :contentReference[oaicite:0]{index=0}",
+        "Math & Stats Foundations of Data Science deepens the mathematical and statistical understanding underlying most advanced analytics and machine learning algorithms. It covers probability, inference, regression, classification, and dimensionality reduction — foundational theory that helps data scientists build, validate, and interpret models with rigor. ",
   
       realWorldApplications: [
         "Formulating rigorous statistical models that underpin predictive analytics",
@@ -1037,7 +1021,7 @@ export const tier2Courses: TierCourse[] = [
       },
   
       additionalNotes:
-        "According to UC Merced’s catalog, MATH 280 introduces students to core probability and statistics concepts while connecting them with classification, regression, and dimensionality reduction — a strong theoretical base for data science analysis and machine learning. :contentReference[oaicite:1]{index=1}"
+        "According to UC Merced’s catalog, MATH 280 introduces students to core probability and statistics concepts while connecting them with classification, regression, and dimensionality reduction — a strong theoretical base for data science analysis and machine learning. "
     }
   },
   {
@@ -1049,10 +1033,9 @@ export const tier2Courses: TierCourse[] = [
     tier: 2,
     expandedInfo: {
       credits: 4,
-      prerequisites: 'Math & Stats foundations and basic programming',
   
       careerRelevance:
-        "Statistical & Machine Learning bridges advanced statistical methods with practical machine learning techniques. Data scientists use these tools daily to build predictive models and extract actionable insights from large datasets. Topics such as decision trees, random forests, support vector machines, and neural networks equip students with skills used in analytics roles across industries. :contentReference[oaicite:2]{index=2}",
+        "Statistical & Machine Learning bridges advanced statistical methods with practical machine learning techniques. Data scientists use these tools daily to build predictive models and extract actionable insights from large datasets. Topics such as decision trees, random forests, support vector machines, and neural networks equip students with skills used in analytics roles across industries. ",
   
       realWorldApplications: [
         "Building and tuning predictive models such as decision trees and ensemble methods",
@@ -1100,7 +1083,7 @@ export const tier2Courses: TierCourse[] = [
       },
   
       additionalNotes:
-        "According to the UC Merced graduate catalog listing for MATH 282, this course covers statistical and machine learning concepts including data processing, decision trees, random forests, support vector machines, and neural networks — forming a bridge between advanced statistics and applied ML practice. :contentReference[oaicite:3]{index=3}"
+        "According to the UC Merced graduate catalog listing for MATH 282, this course covers statistical and machine learning concepts including data processing, decision trees, random forests, support vector machines, and neural networks — forming a bridge between advanced statistics and applied ML practice. "
     }
   },
   {
@@ -1112,10 +1095,9 @@ export const tier2Courses: TierCourse[] = [
     tier: 2,
     expandedInfo: {
       credits: 4,
-      prerequisites: 'Introductory calculus or quantitative foundation',
   
       careerRelevance:
-        "Mathematical Modeling teaches how to construct, analyze, and apply mathematical representations of real systems — a critical skill when framing and solving complex problems in data science, analytics, simulation, and optimization. In data science, modeling helps translate real-world situations (e.g., customer behavior, biological systems, or market trends) into mathematical formulations that can be analyzed and solved. This course builds the theoretical foundation necessary to bridge mathematics and practical data-driven decision-making. ([turn0search1], [turn0search3])",
+        "Mathematical Modeling teaches how to construct, analyze, and apply mathematical representations of real systems — a critical skill when framing and solving complex problems in data science, analytics, simulation, and optimization. In data science, modeling helps translate real-world situations (e.g., customer behavior, biological systems, or market trends) into mathematical formulations that can be analyzed and solved. This course builds the theoretical foundation necessary to bridge mathematics and practical data-driven decision-making.",
   
       realWorldApplications: [
         "Translating real world questions into mathematical models that describe systems and behaviors",
@@ -1150,9 +1132,9 @@ export const tier2Courses: TierCourse[] = [
           "https://www.youtube.com/watch?v=8v4P8W8Zx9g"  // Modeling example: simple systems and predictions
         ],
         websites: [
-          "https://en.wikipedia.org/wiki/Mathematical_model", // Mathematical modeling overview and key concepts :contentReference[oaicite:0]{index=0}
-          "https://catalog.ucmerced.edu/preview_course_nopop.php?catoid=24&coid=68048", // Official UC Merced course description :contentReference[oaicite:1]{index=1}
-          "https://en.wikipedia.org/wiki/Model_(mathematics)", // Conceptual view of models across disciplines :contentReference[oaicite:2]{index=2}
+          "https://en.wikipedia.org/wiki/Mathematical_model", // Mathematical modeling overview and key concepts 
+          "https://catalog.ucmerced.edu/preview_course_nopop.php?catoid=24&coid=68048", // Official UC Merced course description 
+          "https://en.wikipedia.org/wiki/Model_(mathematics)", // Conceptual view of models across disciplines 
         ],
         tools: [
           "Python (NumPy / SciPy)", // Numerical modeling and analysis
@@ -1163,7 +1145,7 @@ export const tier2Courses: TierCourse[] = [
       },
   
       additionalNotes:
-        "MATH 150 at UC Merced introduces students to mathematical modelling — the art and science of translating real-world situations into mathematical expressions and systems. This includes identifying variables, making assumptions, building model equations, and analyzing their implications. Model development and analysis are central to data science problem framing and interpretation. ([turn0search1], [turn0search3])"
+        "MATH 150 at UC Merced introduces students to mathematical modelling — the art and science of translating real-world situations into mathematical expressions and systems. This includes identifying variables, making assumptions, building model equations, and analyzing their implications. Model development and analysis are central to data science problem framing and interpretation."
     }
   },
   
@@ -1185,7 +1167,6 @@ export const tier3Courses: TierCourse[] = [
     tier: 3,
     expandedInfo: {
       credits: 4,
-      prerequisites: 'MATH 032 (Probability & Statistics), basic programming, and introductory data science coursework',
       careerRelevance:
         "Machine Learning & NLP introduces students to both core machine learning methods and the specialized area of natural language processing — a key skill set for data scientists who work with unstructured text data, such as social media, customer reviews, or documents. NLP and ML skills are essential for roles in predictive analytics, data science research, and AI-assisted applications. ([catalog.ucmerced.edu](https://catalog.ucmerced.edu/preview_course_nopop.php?catoid=24&coid=79532&utm_source=chatgpt.com))",
   
@@ -1217,12 +1198,12 @@ export const tier3Courses: TierCourse[] = [
   
       resources: {
         videos: [
-          "https://www.youtube.com/watch?v=aircAruvnKk", // Intro to ML basics (supervised/unsupervised) :contentReference[oaicite:0]{index=0}
-          "https://www.youtube.com/watch?v=Cr6VqTRO1v0", // ML workflows explained :contentReference[oaicite:1]{index=1}
+          "https://www.youtube.com/watch?v=aircAruvnKk", // Intro to ML basics (supervised/unsupervised) 
+          "https://www.youtube.com/watch?v=Cr6VqTRO1v0", // ML workflows explained 
           "https://www.youtube.com/watch?v=DyZ2BF54a8Q"  // NLP introduction (text processing fundamentals)
         ],
         websites: [
-          "https://en.wikipedia.org/wiki/Machine_learning", // ML overview :contentReference[oaicite:2]{index=2}
+          "https://en.wikipedia.org/wiki/Machine_learning", // ML overview 
           "https://en.wikipedia.org/wiki/Natural_language_processing" // NLP basics
         ],
         tools: [
@@ -1246,9 +1227,8 @@ export const tier3Courses: TierCourse[] = [
     tier: 3,
     expandedInfo: {
       credits: 4,
-      prerequisites: 'Probability & Statistics, Linear Algebra, and basic programming',
       careerRelevance:
-        "CSE 176 introduces undergraduates to fundamental concepts and techniques in machine learning, including both supervised and unsupervised methods — preparing students for advanced analytics, predictive modeling, and ML engineering tasks. This course is widely used as a foundation for careers in data science, AI engineering, and analytics research. :contentReference[oaicite:3]{index=3}",
+        "CSE 176 introduces undergraduates to fundamental concepts and techniques in machine learning, including both supervised and unsupervised methods — preparing students for advanced analytics, predictive modeling, and ML engineering tasks. This course is widely used as a foundation for careers in data science, AI engineering, and analytics research. ",
   
       realWorldApplications: [
         "Building classification and regression models for predictive analytics",
@@ -1276,12 +1256,12 @@ export const tier3Courses: TierCourse[] = [
   
       resources: {
         videos: [
-          "https://www.youtube.com/watch?v=C99Z5vJdAyE", // ML fundamentals overview :contentReference[oaicite:4]{index=4}
-          "https://www.youtube.com/watch?v=aircAruvnKk", // Supervised/Unsupervised ML :contentReference[oaicite:5]{index=5}
-          "https://www.youtube.com/watch?v=Cr6VqTRO1v0"  // ML workflow explanation :contentReference[oaicite:6]{index=6}
+          "https://www.youtube.com/watch?v=C99Z5vJdAyE", // ML fundamentals overview 
+          "https://www.youtube.com/watch?v=aircAruvnKk", // Supervised/Unsupervised ML 
+          "https://www.youtube.com/watch?v=Cr6VqTRO1v0"  // ML workflow explanation 
         ],
         websites: [
-          "https://en.wikipedia.org/wiki/Machine_learning", // Machine learning overview :contentReference[oaicite:7]{index=7}
+          "https://en.wikipedia.org/wiki/Machine_learning", // Machine learning overview 
           "https://scikit-learn.org/stable/tutorial/basic/tutorial.html" // Practical ML guide
         ],
         tools: [
@@ -1305,9 +1285,8 @@ export const tier3Courses: TierCourse[] = [
     tier: 3,
     expandedInfo: {
       credits: 4,
-      prerequisites: 'Intro to Algorithms/Programming and basic probability/statistics',
       careerRelevance:
-        "Artificial Intelligence provides broad foundational understanding of AI principles, including search, reasoning, knowledge representation, and learning methods. These concepts are relevant for students aiming at ML-heavy roles, intelligent system design, and cutting-edge analytics that combine reasoning with learning. :contentReference[oaicite:8]{index=8}",
+        "Artificial Intelligence provides broad foundational understanding of AI principles, including search, reasoning, knowledge representation, and learning methods. These concepts are relevant for students aiming at ML-heavy roles, intelligent system design, and cutting-edge analytics that combine reasoning with learning. ",
   
       realWorldApplications: [
         "Implementing intelligent agents and decision systems",
@@ -1334,9 +1313,9 @@ export const tier3Courses: TierCourse[] = [
   
       resources: {
         videos: [
-          "https://www.youtube.com/watch?v=0oyDqO8PjIg", // AI foundations intro :contentReference[oaicite:9]{index=9}
+          "https://www.youtube.com/watch?v=0oyDqO8PjIg", // AI foundations intro 
           "https://www.youtube.com/watch?v=jxjUCoieW4A", // Search algorithms basics
-          "https://www.youtube.com/watch?v=AircAruvnKk"  // ML overview connections :contentReference[oaicite:10]{index=10}
+          "https://www.youtube.com/watch?v=AircAruvnKk"  // ML overview connections 
         ],
         websites: [
           "https://en.wikipedia.org/wiki/Artificial_intelligence", // AI overview
@@ -1371,10 +1350,9 @@ export const tier4Courses: TierCourse[] = [
     tier: 4,
     expandedInfo: {
       credits: 3,
-      prerequisites: 'Introductory data science or analytics course recommended',
       
       careerRelevance:
-        "Ethics in Data Science teaches foundational principles for responsible and ethical practices throughout the data lifecycle. Data scientists must understand the societal consequences of their work — including bias, fairness, privacy, transparency, and accountability — to build trustworthy models and systems that respect individual rights and social norms. This course prepares students for roles where ethical decision-making and ethical design are as important as technical skills. :contentReference[oaicite:0]{index=0}",
+        "Ethics in Data Science teaches foundational principles for responsible and ethical practices throughout the data lifecycle. Data scientists must understand the societal consequences of their work — including bias, fairness, privacy, transparency, and accountability — to build trustworthy models and systems that respect individual rights and social norms. This course prepares students for roles where ethical decision-making and ethical design are as important as technical skills. ",
   
       realWorldApplications: [
         "Analyzing the ethical implications of data collection and usage policies",
@@ -1405,14 +1383,14 @@ export const tier4Courses: TierCourse[] = [
   
       resources: {
         videos: [
-          "https://www.youtube.com/watch?v=mA4gypAiRYU", // Crash course in Data Science ethics basics :contentReference[oaicite:1]{index=1}
-          "https://www.youtube.com/watch?v=Gv9_4yMHFhI", // Regression & modeling intro (context for bias) :contentReference[oaicite:2]{index=2}
-          "https://www.youtube.com/watch?v=Ja4kyD8kh0o"  // Concepts of fairness in algorithmic decisions :contentReference[oaicite:3]{index=3}
+          "https://www.youtube.com/watch?v=mA4gypAiRYU", // Crash course in Data Science ethics basics 
+          "https://www.youtube.com/watch?v=Gv9_4yMHFhI", // Regression & modeling intro (context for bias) 
+          "https://www.youtube.com/watch?v=Ja4kyD8kh0o"  // Concepts of fairness in algorithmic decisions 
         ],
         websites: [
-          "https://catalog.ucmerced.edu/preview_course_nopop.php?catoid=24&coid=79650", // Official course description :contentReference[oaicite:4]{index=4}
-          "https://en.wikipedia.org/wiki/Algorithmic_accountability",               // Principles of accountability in algorithms :contentReference[oaicite:5]{index=5}
-          "https://en.wikipedia.org/wiki/Trustworthy_AI"                             // Concepts of trustworthy AI: fairness, explainability, privacy :contentReference[oaicite:6]{index=6}
+          "https://catalog.ucmerced.edu/preview_course_nopop.php?catoid=24&coid=79650", // Official course description 
+          "https://en.wikipedia.org/wiki/Algorithmic_accountability",               // Principles of accountability in algorithms 
+          "https://en.wikipedia.org/wiki/Trustworthy_AI"                             // Concepts of trustworthy AI: fairness, explainability, privacy 
         ],
         tools: [
           "Jupyter Notebooks",        // Document ethical exploration and analysis
@@ -1423,7 +1401,7 @@ export const tier4Courses: TierCourse[] = [
       },
   
       additionalNotes:
-        "According to UC Merced’s catalog, this course educates students on how data and data-driven algorithms influence the world and empowers them to recognize and address bias, fairness issues, privacy risks, and accountability challenges. Ethical reasoning is integral to responsible data science practice. :contentReference[oaicite:7]{index=7}"
+        "According to UC Merced’s catalog, this course educates students on how data and data-driven algorithms influence the world and empowers them to recognize and address bias, fairness issues, privacy risks, and accountability challenges. Ethical reasoning is integral to responsible data science practice. "
     }
   },
 ];

@@ -77,23 +77,23 @@ export const tier1Courses: TierCourse[] = [
       ],
       resources: {
         videos: [
-          "https://www.youtube.com/watch?v=7S_tz1z_5bA", // SQL Course for Beginners — full tutorial on SQL basics and queries :contentReference[oaicite:0]{index=0}
-          "https://www.youtube.com/watch?v=HXV3zeQKqGY", // Full Database Course for Beginners — MySQL & DB basics :contentReference[oaicite:1]{index=1}
-          "https://www.youtube.com/watch?v=NdeeSEknp58", // Relational DBMS course Lecture — database design & relations :contentReference[oaicite:2]{index=2}
-          "https://www.youtube.com/results?search_query=SQL+database+design+tutorial", // Series of practical DB design videos on YouTube :contentReference[oaicite:3]{index=3}
-          "https://www.youtube.com/results?search_query=postgresql+sql+beginner+tutorial" // PostgreSQL tutorial videos for real SQL practice :contentReference[oaicite:4]{index=4}
+          "https://www.youtube.com/watch?v=7S_tz1z_5bA", // SQL Course for Beginners — full tutorial on SQL basics and queries 
+          "https://www.youtube.com/watch?v=HXV3zeQKqGY", // Full Database Course for Beginners — MySQL & DB basics 
+          "https://www.youtube.com/watch?v=NdeeSEknp58", // Relational DBMS course Lecture — database design & relations 
+          "https://www.youtube.com/results?search_query=SQL+database+design+tutorial", // Series of practical DB design videos on YouTube 
+          "https://www.youtube.com/results?search_query=postgresql+sql+beginner+tutorial" // PostgreSQL tutorial videos for real SQL practice 
         ],
         websites: [
-          "https://sqlzoo.net",       // Interactive SQL practice and exercises :contentReference[oaicite:5]{index=5}
-          "https://sqlbolt.com",      // Interactive SQL lessons with embedded exercises :contentReference[oaicite:6]{index=6}
-          "https://www.w3schools.com/sql", // Beginner-friendly SQL tutorials :contentReference[oaicite:7]{index=7}
-          "https://www.coursera.org/courses?query=database", // Structured DB courses including design & SQL :contentReference[oaicite:8]{index=8}
-          "https://www.freecodecamp.org/news/tag/sql" // Free educational articles and SQL guidance :contentReference[oaicite:9]{index=9}
+          "https://sqlzoo.net",       // Interactive SQL practice and exercises 
+          "https://sqlbolt.com",      // Interactive SQL lessons with embedded exercises 
+          "https://www.w3schools.com/sql", // Beginner-friendly SQL tutorials 
+          "https://www.coursera.org/courses?query=database", // Structured DB courses including design & SQL 
+          "https://www.freecodecamp.org/news/tag/sql" // Free educational articles and SQL guidance 
         ],
         tools: [
-          "MySQL Workbench",  // Visual database design & SQL query tool :contentReference[oaicite:10]{index=10}
-          "DBeaver",          // Multi-platform database administration & query tool :contentReference[oaicite:11]{index=11}
-          "SQuirreL SQL Client", // Universal SQL client for exploring databases :contentReference[oaicite:12]{index=12}
+          "MySQL Workbench",  // Visual database design & SQL query tool 
+          "DBeaver",          // Multi-platform database administration & query tool 
+          "SQuirreL SQL Client", // Universal SQL client for exploring databases 
           "PostgreSQL",       // Widely used open-source relational database engine
           "SQLite"            // Lightweight embedded SQL database for apps and testing
         ]      
@@ -134,19 +134,19 @@ export const tier1Courses: TierCourse[] = [
       resources: {
         videos: [
           "https://www.youtube.com/watch?v=7ge7u5VUSbE&list=PL9vTTBa7QaQPdvEuMTqS9McY-ieaweU8M", //Core dumped videos are the best
-          "https://www.youtube.com/watch?v=dOiA2nNJpc0", // Intro to Operating Systems (fundamentals) :contentReference[oaicite:1]{index=1}
-          "https://www.youtube.com/watch?v=Tt5GKnfHUlY", // OS basics in ~25 min (scheduling, memory, threads) :contentReference[oaicite:2]{index=2}
-          "https://www.youtube.com/watch?v=Wv7mzX8w3jI", // Processes & threads (concurrency basics) :contentReference[oaicite:3]{index=3}
-          "https://www.youtube.com/watch?v=3obEP8eLsCw", // Complete OS deep dive video :contentReference[oaicite:4]{index=4}
-          "https://www.youtube.com/watch?v=EsGbQ0St5sc"  // Thread fundamentals lecture (university) :contentReference[oaicite:5]{index=5}
+          "https://www.youtube.com/watch?v=dOiA2nNJpc0", // Intro to Operating Systems (fundamentals) 
+          "https://www.youtube.com/watch?v=Tt5GKnfHUlY", // OS basics in ~25 min (scheduling, memory, threads) 
+          "https://www.youtube.com/watch?v=Wv7mzX8w3jI", // Processes & threads (concurrency basics) 
+          "https://www.youtube.com/watch?v=3obEP8eLsCw", // Complete OS deep dive video 
+          "https://www.youtube.com/watch?v=EsGbQ0St5sc"  // Thread fundamentals lecture (university) 
         ],
   
         websites: [
-          "https://oscourse.org/", // Full free online OS course with slides & lectures :contentReference[oaicite:6]{index=6}
-          "https://www.geeksforgeeks.org/operating-systems/operating-systems/", // OS tutorial (process, scheduling, memory) :contentReference[oaicite:7]{index=7}
-          "https://www.codecademy.com/learn/fundamentals-of-operating-systems", // Interactive OS fundamentals lessons (process, memory) :contentReference[oaicite:8]{index=8}
-          "https://openstax.org/books/introduction-computer-science/pages/6-2-fundamental-os-concepts", // OS concepts overview :contentReference[oaicite:9]{index=9}
-          "https://www.coursera.org/learn/bits-operating-systems" // Structured OS courses (threads, memory, scheduling) :contentReference[oaicite:10]{index=10}
+          "https://oscourse.org/", // Full free online OS course with slides & lectures 
+          "https://www.geeksforgeeks.org/operating-systems/operating-systems/", // OS tutorial (process, scheduling, memory) 
+          "https://www.codecademy.com/learn/fundamentals-of-operating-systems", // Interactive OS fundamentals lessons (process, memory) 
+          "https://openstax.org/books/introduction-computer-science/pages/6-2-fundamental-os-concepts", // OS concepts overview 
+          "https://www.coursera.org/learn/bits-operating-systems" // Structured OS courses (threads, memory, scheduling) 
         ],
   
         tools: [
@@ -154,7 +154,7 @@ export const tier1Courses: TierCourse[] = [
           "GDB",                             // Debugger for processes/threads
           "Valgrind",                        // Memory analysis & leak detection
           "QEMU",                            // Emulator for OS projects and experimentation
-          "Pintos"                           // Instructional OS to explore kernel internals :contentReference[oaicite:11]{index=11}
+          "Pintos"                           // Instructional OS to explore kernel internals 
         ]
       }
     }
@@ -192,21 +192,21 @@ export const tier1Courses: TierCourse[] = [
   
       resources: {
         videos: [
-          "https://www.youtube.com/watch?v=EPoNyBss5I8", // TCP/IP and Networks Explained (layers & protocols) :contentReference[oaicite:1]{index=1}
-          "https://www.youtube.com/watch?v=LUxeuFz_GQo", // TCP/IP Made Super Easy for Beginners :contentReference[oaicite:2]{index=2}
-          "https://www.youtube.com/watch?v=DYgRqIeuwVQ", // Networking basics in ~25 min (OSI, IP, TCP/UDP) :contentReference[oaicite:3]{index=3}
-          "https://www.youtube.com/watch?v=Cy5IgZHbOHI", // TCP/IP Model Overview (beginner friendly) :contentReference[oaicite:4]{index=4}
-          "https://www.youtube.com/playlist?list=PLEoK7C0HvDQnkx_yBfuFCvF7ecfCKiWA_", // Full playlist on TCP/IP networking :contentReference[oaicite:5]{index=5}
-          // Network Chuck videos: generally recommended on Reddit as a *solid crash course* starter, though personal taste varies. :contentReference[oaicite:6]{index=6}
+          "https://www.youtube.com/watch?v=EPoNyBss5I8", // TCP/IP and Networks Explained (layers & protocols) 
+          "https://www.youtube.com/watch?v=LUxeuFz_GQo", // TCP/IP Made Super Easy for Beginners 
+          "https://www.youtube.com/watch?v=DYgRqIeuwVQ", // Networking basics in ~25 min (OSI, IP, TCP/UDP) 
+          "https://www.youtube.com/watch?v=Cy5IgZHbOHI", // TCP/IP Model Overview (beginner friendly) 
+          "https://www.youtube.com/playlist?list=PLEoK7C0HvDQnkx_yBfuFCvF7ecfCKiWA_", // Full playlist on TCP/IP networking 
+          // Network Chuck videos: generally recommended on Reddit as a *solid crash course* starter, though personal taste varies. 
           "https://www.youtube.com/results?search_query=network+chuck+computer+networking"
         ],
   
         websites: [
-          "https://www.geeksforgeeks.org/computer-network-tutorials/", // Networking fundamentals and protocols :contentReference[oaicite:7]{index=7}
-          "https://en.wikipedia.org/wiki/Internet_protocol_suite", // TCP/IP protocol stack basics :contentReference[oaicite:8]{index=8}
-          "https://en.wikipedia.org/wiki/Computer_network", // Computer network overview :contentReference[oaicite:9]{index=9}
-          "https://dev.to/nicks101/8-computer-networking-resources-for-all-levels-766", // Networking resource list & tips :contentReference[oaicite:10]{index=10}
-          "https://www.coursera.org/learn/computer-networking" // Structured networking course (Google IT Support) :contentReference[oaicite:11]{index=11}
+          "https://www.geeksforgeeks.org/computer-network-tutorials/", // Networking fundamentals and protocols 
+          "https://en.wikipedia.org/wiki/Internet_protocol_suite", // TCP/IP protocol stack basics 
+          "https://en.wikipedia.org/wiki/Computer_network", // Computer network overview 
+          "https://dev.to/nicks101/8-computer-networking-resources-for-all-levels-766", // Networking resource list & tips 
+          "https://www.coursera.org/learn/computer-networking" // Structured networking course (Google IT Support) 
         ],
   
         tools: [
@@ -253,19 +253,19 @@ export const tier1Courses: TierCourse[] = [
   
       resources: {
         videos: [
-          "https://www.youtube.com/watch?v=pa27idiClUA", // Distributed Systems Explained — basics of nodes, communication, scalability, fault tolerance :contentReference[oaicite:1]{index=1}
-          "https://www.youtube.com/watch?v=UEAMfLPZZhE", // Intro to Distributed Systems — fundamental definition and why they matter :contentReference[oaicite:2]{index=2}
-          "https://www.youtube.com/watch?v=OyTEd9h_CVQ", // Distributed systems intro with scalability explanation :contentReference[oaicite:3]{index=3}
-          "https://www.youtube.com/watch?v=WhZ4PEn9v90", // Microservices & distributed architecture on cloud platforms :contentReference[oaicite:4]{index=4}
+          "https://www.youtube.com/watch?v=pa27idiClUA", // Distributed Systems Explained — basics of nodes, communication, scalability, fault tolerance 
+          "https://www.youtube.com/watch?v=UEAMfLPZZhE", // Intro to Distributed Systems — fundamental definition and why they matter 
+          "https://www.youtube.com/watch?v=OyTEd9h_CVQ", // Distributed systems intro with scalability explanation 
+          "https://www.youtube.com/watch?v=WhZ4PEn9v90", // Microservices & distributed architecture on cloud platforms 
           "https://www.youtube.com/results?search_query=network+chuck+microservices+cloud" // Suggestions from Network Chuck for approachable distributed systems & cloud content
         ],
   
         websites: [
-          "https://www.geeksforgeeks.org/system-design/microservices-vs-distributed-system/", // Microservices vs distributed systems explained :contentReference[oaicite:5]{index=5}
-          "https://www.coursera.org/courses?query=distributed+systems", // Structured courses on distributed systems principles & tools :contentReference[oaicite:6]{index=6}
-          "https://en.wikipedia.org/wiki/Scale_cube", // The Scale Cube model for application scalability architecture :contentReference[oaicite:7]{index=7}
-          "https://en.wikipedia.org/wiki/Event-driven_architecture", // Event-driven architecture model for scalable distributed systems :contentReference[oaicite:8]{index=8}
-          "https://en.wikipedia.org/wiki/Service-oriented_architecture" // SOA context and service concepts foundational to microservices :contentReference[oaicite:9]{index=9}
+          "https://www.geeksforgeeks.org/system-design/microservices-vs-distributed-system/", // Microservices vs distributed systems explained 
+          "https://www.coursera.org/courses?query=distributed+systems", // Structured courses on distributed systems principles & tools 
+          "https://en.wikipedia.org/wiki/Scale_cube", // The Scale Cube model for application scalability architecture 
+          "https://en.wikipedia.org/wiki/Event-driven_architecture", // Event-driven architecture model for scalable distributed systems 
+          "https://en.wikipedia.org/wiki/Service-oriented_architecture" // SOA context and service concepts foundational to microservices 
         ],
   
         tools: [
@@ -311,19 +311,19 @@ export const tier1Courses: TierCourse[] = [
   
       resources: {
         videos: [
-          "https://www.youtube.com/watch?v=ZxKM3DCV2kE", // Full Stack Web Dev Course ~22hrs covering major topics :contentReference[oaicite:1]{index=1}
-          "https://www.youtube.com/watch?v=LzMnsfqjzkA", // Complete beginner-friendly full-stack tutorial :contentReference[oaicite:2]{index=2}
-          "https://www.youtube.com/results?search_query=Traversy+Media+full+stack+web+development", // Traversy Media tutorials (HTML/CSS/JS + Node/Express) :contentReference[oaicite:3]{index=3}
-          "https://www.youtube.com/results?search_query=freecodecamp+web+development", // freeCodeCamp tutorials on full stack topics :contentReference[oaicite:4]{index=4}
-          "https://www.youtube.com/results?search_query=The+Net+Ninja+full+stack+web+development" // The Net Ninja playlists on JS frameworks & backend :contentReference[oaicite:5]{index=5}
+          "https://www.youtube.com/watch?v=ZxKM3DCV2kE", // Full Stack Web Dev Course ~22hrs covering major topics 
+          "https://www.youtube.com/watch?v=LzMnsfqjzkA", // Complete beginner-friendly full-stack tutorial 
+          "https://www.youtube.com/results?search_query=Traversy+Media+full+stack+web+development", // Traversy Media tutorials (HTML/CSS/JS + Node/Express) 
+          "https://www.youtube.com/results?search_query=freecodecamp+web+development", // freeCodeCamp tutorials on full stack topics 
+          "https://www.youtube.com/results?search_query=The+Net+Ninja+full+stack+web+development" // The Net Ninja playlists on JS frameworks & backend 
         ],
   
         websites: [
-          "https://www.freecodecamp.org", // Project-based interactive learning platform for full-stack web dev :contentReference[oaicite:6]{index=6}
-          "https://www.theodinproject.com", // Full stack project-oriented curriculum with assignments :contentReference[oaicite:7]{index=7}
-          "https://www.codecademy.com/learn/paths/full-stack-engineer-career-path", // Structured full-stack career path (HTML, CSS, JS, backend) :contentReference[oaicite:8]{index=8}
-          "https://developer.mozilla.org/en-US/docs/Learn", // MDN Web Docs — authoritative tutorials & references on HTML, CSS, JS :contentReference[oaicite:9]{index=9}
-          "https://www.coursera.org/courses?query=full+stack+web+development" // Full-stack course listings with frontend/back-end integration :contentReference[oaicite:10]{index=10}
+          "https://www.freecodecamp.org", // Project-based interactive learning platform for full-stack web dev 
+          "https://www.theodinproject.com", // Full stack project-oriented curriculum with assignments 
+          "https://www.codecademy.com/learn/paths/full-stack-engineer-career-path", // Structured full-stack career path (HTML, CSS, JS, backend) 
+          "https://developer.mozilla.org/en-US/docs/Learn", // MDN Web Docs — authoritative tutorials & references on HTML, CSS, JS 
+          "https://www.coursera.org/courses?query=full+stack+web+development" // Full-stack course listings with frontend/back-end integration 
         ],
   
         tools: [
@@ -423,17 +423,17 @@ export const tier2Courses: TierCourse[] = [
       ],
   
       learningOutcomes: [
-        "Understand foundational concepts in human-computer interaction, including how users perceive and interact with software systems", // general HCI definition and scope :contentReference[oaicite:0]{index=0}
-        "Apply human-centered design principles to create usable and satisfying interface designs", // user-centered emphasis :contentReference[oaicite:1]{index=1}
-        "Conduct basic user research and usability testing to gather insights about users’ needs and behavior", // research + evaluation in HCI :contentReference[oaicite:2]{index=2}
-        "Develop prototypes of interactive systems and iterate designs based on user feedback", // prototyping focus :contentReference[oaicite:3]{index=3}
-        "Evaluate interactive systems using qualitative and quantitative methods", // evaluation strategies :contentReference[oaicite:4]{index=4}
-        "Communicate design ideas effectively with both technical and non-technical audiences" // articulation skills in design :contentReference[oaicite:5]{index=5}
+        "Understand foundational concepts in human-computer interaction, including how users perceive and interact with software systems", // general HCI definition and scope 
+        "Apply human-centered design principles to create usable and satisfying interface designs", // user-centered emphasis 
+        "Conduct basic user research and usability testing to gather insights about users’ needs and behavior", // research + evaluation in HCI 
+        "Develop prototypes of interactive systems and iterate designs based on user feedback", // prototyping focus 
+        "Evaluate interactive systems using qualitative and quantitative methods", // evaluation strategies 
+        "Communicate design ideas effectively with both technical and non-technical audiences" // articulation skills in design 
       ],
   
       resources: {
         videos: [
-          "https://www.youtube.com/watch?v=yNzLBI0wsGU", // What is HCI? — primer on field and interaction concepts :contentReference[oaicite:6]{index=6}
+          "https://www.youtube.com/watch?v=yNzLBI0wsGU", // What is HCI? — primer on field and interaction concepts 
           "https://www.youtube.com/results?search_query=human+computer+interaction+tutorial", // Beginner HCI tutorials with UX/interaction focus
           "https://www.youtube.com/results?search_query=usability+testing+human+computer+interaction", // Usability testing explained
           "https://www.youtube.com/results?search_query=design+thinking+for+software+engineers", // Design thinking applied to SWE workflows
@@ -441,9 +441,9 @@ export const tier2Courses: TierCourse[] = [
         ],
   
         websites: [
-          "https://www.interaction-design.org/literature/topics/human-computer-interaction", // HCI fundamentals and UX principles :contentReference[oaicite:7]{index=7}
-          "https://www.geeksforgeeks.org/system-design/introduction-to-human-computer-interface-hci/", // Intro to HCI with examples :contentReference[oaicite:8]{index=8}
-          "https://www.coursera.org/courses?query=human+computer+interaction", // Structured courses on interaction design & usability :contentReference[oaicite:9]{index=9}
+          "https://www.interaction-design.org/literature/topics/human-computer-interaction", // HCI fundamentals and UX principles 
+          "https://www.geeksforgeeks.org/system-design/introduction-to-human-computer-interface-hci/", // Intro to HCI with examples 
+          "https://www.coursera.org/courses?query=human+computer+interaction", // Structured courses on interaction design & usability 
           "https://www.nngroup.com/articles/definition-user-experience/", // Nielsen Norman Group UX fundamentals (industry standard for UX/HCI)
           "https://www.usability.gov/" // Gov guide to usability and user-centered design (methods & process)
         ],
@@ -502,12 +502,12 @@ export const tier2Courses: TierCourse[] = [
           "https://developer.android.com/docs",     // Official Android development docs
           "https://developer.apple.com/documentation", // Official Apple iOS development docs
           "https://reactnative.dev/docs/getting-started", // React Native cross-platform resource
-          "https://www.coursera.org/learn/introduction-to-mobile-app-development", // Structured mobile app dev course overview :contentReference[oaicite:0]{index=0}
-          "https://en.wikipedia.org/wiki/Mobile_app_development" // Overview of mobile app development process :contentReference[oaicite:1]{index=1}
+          "https://www.coursera.org/learn/introduction-to-mobile-app-development", // Structured mobile app dev course overview 
+          "https://en.wikipedia.org/wiki/Mobile_app_development" // Overview of mobile app development process 
         ],
   
         tools: [
-          "Android Studio",  // Official IDE for Android development :contentReference[oaicite:2]{index=2}
+          "Android Studio",  // Official IDE for Android development 
           "Xcode",           // Official IDE for iOS Swift development
           "Flutter",         // Cross-platform UI toolkit (Dart) for mobile apps
           "React Native",    // Framework for building mobile apps using JavaScript
@@ -538,18 +538,18 @@ export const tier2Courses: TierCourse[] = [
       ],
   
       learningOutcomes: [
-        "Understand the internal architecture of database management systems, including storage structures and buffer management", // core internal DBMS topics :contentReference[oaicite:0]{index=0}
-        "Explain and implement indexing techniques like B+ trees, hash indexing, and other access structures", // typical syllabus focus :contentReference[oaicite:1]{index=1}
-        "Design and build components of a mini-DBMS, such as query engines and storage managers", // common project goal :contentReference[oaicite:2]{index=2}
-        "Analyze the performance and complexity of data intensive operations", // performance insight :contentReference[oaicite:3]{index=3}
-        "Apply principles of concurrency control and recovery in transactional systems", // advanced DB internals topic :contentReference[oaicite:4]{index=4}
-        "Implement parsing and execution strategies for database queries", // query execution focus :contentReference[oaicite:5]{index=5}
-        "Leverage systems-level programming skills (e.g., in C++ or Rust) to build low-level backend components" // real course programming practice :contentReference[oaicite:6]{index=6}
+        "Understand the internal architecture of database management systems, including storage structures and buffer management", // core internal DBMS topics 
+        "Explain and implement indexing techniques like B+ trees, hash indexing, and other access structures", // typical syllabus focus 
+        "Design and build components of a mini-DBMS, such as query engines and storage managers", // common project goal 
+        "Analyze the performance and complexity of data intensive operations", // performance insight 
+        "Apply principles of concurrency control and recovery in transactional systems", // advanced DB internals topic 
+        "Implement parsing and execution strategies for database queries", // query execution focus 
+        "Leverage systems-level programming skills (e.g., in C++ or Rust) to build low-level backend components" // real course programming practice 
       ],
   
       resources: {
         videos: [
-          "https://www.youtube.com/watch?v=NdeeSEknp58", // Relational DBMS course overview with structural internals basis :contentReference[oaicite:7]{index=7}
+          "https://www.youtube.com/watch?v=NdeeSEknp58", // Relational DBMS course overview with structural internals basis 
           "https://www.youtube.com/results?search_query=database+system+implementation+tutorial", // Practical implementation video tutorials on internals
           "https://www.youtube.com/results?search_query=b+tree+database+indexing", // B+ tree and index structure explanations
           "https://www.youtube.com/results?search_query=query+execution+internals+database", // Query processing in DBMS
@@ -557,15 +557,15 @@ export const tier2Courses: TierCourse[] = [
         ],
   
         websites: [
-          "https://en.wikipedia.org/wiki/Database_management_system", // Overview & architecture of DBMS :contentReference[oaicite:8]{index=8}
-          "https://15445.courses.cs.cmu.edu/spring2025/syllabus.html", // Example upper-level DB implementation syllabus with internals focus :contentReference[oaicite:9]{index=9}
-          "https://buzzdb-docs.readthedocs.io/part2/index.html", // Example DB implementation project doc with labs & topics :contentReference[oaicite:10]{index=10}
+          "https://en.wikipedia.org/wiki/Database_management_system", // Overview & architecture of DBMS 
+          "https://15445.courses.cs.cmu.edu/spring2025/syllabus.html", // Example upper-level DB implementation syllabus with internals focus 
+          "https://buzzdb-docs.readthedocs.io/part2/index.html", // Example DB implementation project doc with labs & topics 
           "https://www.geeksforgeeks.org/dbms/storage-structures-in-dbms/", // DB storage & indexing basics
           "https://www.geeksforgeeks.org/dbms/query-processing-optimization/" // Query processing and optimization
         ],
   
         tools: [
-          "C++",            // Systems programming language common in DB internals courses :contentReference[oaicite:11]{index=11}
+          "C++",            // Systems programming language common in DB internals courses 
           "Rust",           // Modern system language with strong memory safety for DB development
           "SQLite source code", // Real open-source database to explore internals
           "PostgreSQL",     // Full RDBMS codebase for studying real internals
@@ -596,18 +596,18 @@ export const tier2Courses: TierCourse[] = [
       ],
   
       learningOutcomes: [
-        "Understand the principles of parallelism and concurrency in modern computing systems", // parallel vs concurrency concepts :contentReference[oaicite:1]{index=1}
-        "Analyze performance trade-offs when executing code on multi-core and many-core architectures", // hardware and efficiency focus :contentReference[oaicite:2]{index=2}
+        "Understand the principles of parallelism and concurrency in modern computing systems", // parallel vs concurrency concepts 
+        "Analyze performance trade-offs when executing code on multi-core and many-core architectures", // hardware and efficiency focus 
         "Use threading and shared-memory abstractions to design concurrent programs",
         "Apply distributed parallel models like MPI or task-based parallelism",
         "Identify and resolve common concurrency issues such as race conditions, deadlocks, and resource contention",
         "Utilize tools and libraries that help build and debug parallel programs",
-        "Evaluate scalability and speed-up tradeoffs using theoretical models like Gustafson’s Law and practical benchmarks" // speed-up theory :contentReference[oaicite:3]{index=3}
+        "Evaluate scalability and speed-up tradeoffs using theoretical models like Gustafson’s Law and practical benchmarks" // speed-up theory 
       ],
   
       resources: {
         videos: [
-          "https://www.youtube.com/watch?v=V1tINV2-9p4", // Intro to parallel computing concepts (Stanford CS149 lecture) :contentReference[oaicite:4]{index=4}
+          "https://www.youtube.com/watch?v=V1tINV2-9p4", // Intro to parallel computing concepts (Stanford CS149 lecture) 
           "https://www.youtube.com/results?search_query=parallel+computing+tutorial+for+beginners", // Crash courses explaining parallelism basics
           "https://www.youtube.com/results?search_query=multithreading+vs+parallelism", // Videos explaining essential concurrency vs parallelism differences
           "https://www.youtube.com/results?search_query=OpenMP+parallel+programming+tutorial", // Parallel programming framework intro
@@ -615,19 +615,19 @@ export const tier2Courses: TierCourse[] = [
         ],
   
         websites: [
-          "https://www.geeksforgeeks.org/computer-science-fundamentals/introduction-to-parallel-computing/", // Parallel computing fundamentals overview :contentReference[oaicite:5]{index=5}
-          "https://csinparallel.org/csinparallel/parallel-computing/index.html", // Key parallel computing concepts (task & data parallelism) :contentReference[oaicite:6]{index=6}
+          "https://www.geeksforgeeks.org/computer-science-fundamentals/introduction-to-parallel-computing/", // Parallel computing fundamentals overview 
+          "https://csinparallel.org/csinparallel/parallel-computing/index.html", // Key parallel computing concepts (task & data parallelism) 
           "https://en.wikipedia.org/wiki/Concurrency_(computer_science)", // Concurrency definitions & fundamentals
-          "https://en.wikipedia.org/wiki/Gustafson%27s_law", // Theoretical performance model for parallel speed-ups :contentReference[oaicite:7]{index=7}
-          "https://dask.org/" // A practical Python library for parallel computing (scales from local to cluster) :contentReference[oaicite:8]{index=8}
+          "https://en.wikipedia.org/wiki/Gustafson%27s_law", // Theoretical performance model for parallel speed-ups 
+          "https://dask.org/" // A practical Python library for parallel computing (scales from local to cluster) 
         ],
   
         tools: [
           "OpenMP",             // Shared-memory parallel programming API
           "MPI",                // Message passing interface for distributed parallel computing
           "CUDA",               // GPU parallel computing platform
-          "Dask",               // Python library for parallel computing :contentReference[oaicite:9]{index=9}
-          "Intel Advisor"       // Tool for performance profiling and optimization :contentReference[oaicite:10]{index=10}
+          "Dask",               // Python library for parallel computing 
+          "Intel Advisor"       // Tool for performance profiling and optimization 
         ]
       }
     }
@@ -665,24 +665,24 @@ export const tier2Courses: TierCourse[] = [
   
       resources: {
         videos: [
-          "https://www.youtube.com/watch?v=ziMRjDlLEwo", // Intro to Computer Architecture lecture (ETH Zurich) :contentReference[oaicite:1]{index=1}
-          "https://www.youtube.com/watch?v=GRInNLx3Tug", // Basics of Computer Architecture overview (NESO Academy) :contentReference[oaicite:2]{index=2}
-          "https://www.youtube.com/watch?v=Onf7AKGHBzg", // Intro to architecture class lecture (~second-year level) :contentReference[oaicite:3]{index=3}
-          "https://www.youtube.com/playlist?list=PL59E5B57A04EAE09C", // Lecture series covering ISA, pipelining, microarchitecture, etc. :contentReference[oaicite:4]{index=4}
+          "https://www.youtube.com/watch?v=ziMRjDlLEwo", // Intro to Computer Architecture lecture (ETH Zurich) 
+          "https://www.youtube.com/watch?v=GRInNLx3Tug", // Basics of Computer Architecture overview (NESO Academy) 
+          "https://www.youtube.com/watch?v=Onf7AKGHBzg", // Intro to architecture class lecture (~second-year level) 
+          "https://www.youtube.com/playlist?list=PL59E5B57A04EAE09C", // Lecture series covering ISA, pipelining, microarchitecture, etc. 
           "https://www.youtube.com/results?search_query=computer+architecture+instruction+set+architecture+tutorial" // Search for targeted ISA explanations
         ],
   
         websites: [
-          "https://www.coursera.org/learn/comparch", // Structured computer architecture course overview and fundamentals :contentReference[oaicite:5]{index=5}
-          "https://www.codecademy.com/learn/computer-architecture", // Interactive architecture lessons including ISA and logic -level concepts :contentReference[oaicite:6]{index=6}
+          "https://www.coursera.org/learn/comparch", // Structured computer architecture course overview and fundamentals 
+          "https://www.codecademy.com/learn/computer-architecture", // Interactive architecture lessons including ISA and logic -level concepts 
           "https://en.wikipedia.org/wiki/Computer_architecture", // Broad overview of architecture concepts, goals, and components
           "https://en.wikipedia.org/wiki/Instruction_set_architecture", // Reference for how ISAs relate to code and hardware
           "https://en.wikipedia.org/wiki/Memory_hierarchy" // Overview of caches, RAM, and storage hierarchy
         ],
   
         tools: [
-          "gem5",             // Architecture simulator useful for exploring hardware configurations and performance :contentReference[oaicite:7]{index=7}
-          "CPU Sim",          // Educational CPU simulator for instruction execution and micro-architecture :contentReference[oaicite:8]{index=8}
+          "gem5",             // Architecture simulator useful for exploring hardware configurations and performance 
+          "CPU Sim",          // Educational CPU simulator for instruction execution and micro-architecture 
           "WebRISC-V",        // Web-based RISC-V pipeline simulator for visualizing instruction execution
           "Valgrind",         // Profiling and memory analysis useful for correlating software behavior with architecture
           "Perf (Linux)"      // Performance profiling tool to measure CPU cycles, cache misses, and hardware events
@@ -730,19 +730,19 @@ export const tier3Courses: TierCourse[] = [
   
       resources: {
         videos: [
-          "https://www.youtube.com/watch?v=NckTNpnZW_0", // Intro to AI course video covering fundamentals of AI topics like search & reasoning (AI intro) :contentReference[oaicite:1]{index=1}
-          "https://www.youtube.com/results?search_query=artificial+intelligence+for+beginners", // General AI beginner overviews (intro to concepts like ML, search, planning) :contentReference[oaicite:2]{index=2}
-          "https://www.youtube.com/watch?v=VGFpV3Qj4as", // AI basics for beginners — machine learning overview :contentReference[oaicite:3]{index=3}
-          "https://www.youtube.com/results?search_query=introduction+to+machine+learning+tutorial", // ML fundamentals including regression & classification :contentReference[oaicite:4]{index=4}
-          "https://www.youtube.com/results?search_query=search+algorithms+ai+tutorial" // Search & game tree fundamentals in AI :contentReference[oaicite:5]{index=5}
+          "https://www.youtube.com/watch?v=NckTNpnZW_0", // Intro to AI course video covering fundamentals of AI topics like search & reasoning (AI intro) 
+          "https://www.youtube.com/results?search_query=artificial+intelligence+for+beginners", // General AI beginner overviews (intro to concepts like ML, search, planning) 
+          "https://www.youtube.com/watch?v=VGFpV3Qj4as", // AI basics for beginners — machine learning overview 
+          "https://www.youtube.com/results?search_query=introduction+to+machine+learning+tutorial", // ML fundamentals including regression & classification 
+          "https://www.youtube.com/results?search_query=search+algorithms+ai+tutorial" // Search & game tree fundamentals in AI 
         ],
   
         websites: [
-          "https://www.elementsofai.com/", // Beginner-friendly foundational AI online course covering core ideas & concepts (Elements of AI) :contentReference[oaicite:6]{index=6}
-          "https://learn.microsoft.com/en-us/training/modules/get-started-ai-fundamentals/", // Microsoft AI fundamentals — intro to how AI works :contentReference[oaicite:7]{index=7}
-          "https://www.coursera.org/learn/introduction-to-ai", // Structured AI course covering core concepts (machine learning, neural nets, etc.) :contentReference[oaicite:8]{index=8}
-          "https://ai.google/learn-ai-skills/", // Google’s AI basics including generative AI and essentials :contentReference[oaicite:9]{index=9}
-          "https://microsoft.github.io/AI-For-Beginners/" // 12-week AI beginner curriculum with hands-on lessons :contentReference[oaicite:10]{index=10}
+          "https://www.elementsofai.com/", // Beginner-friendly foundational AI online course covering core ideas & concepts (Elements of AI) 
+          "https://learn.microsoft.com/en-us/training/modules/get-started-ai-fundamentals/", // Microsoft AI fundamentals — intro to how AI works 
+          "https://www.coursera.org/learn/introduction-to-ai", // Structured AI course covering core concepts (machine learning, neural nets, etc.) 
+          "https://ai.google/learn-ai-skills/", // Google’s AI basics including generative AI and essentials 
+          "https://microsoft.github.io/AI-For-Beginners/" // 12-week AI beginner curriculum with hands-on lessons 
         ],
   
         tools: [
@@ -777,8 +777,8 @@ export const tier3Courses: TierCourse[] = [
       ],
   
       learningOutcomes: [
-        "Understand the core principles of machine learning including how computers learn from data and optimize performance criteria", // ML definition :contentReference[oaicite:1]{index=1}
-        "Explain supervised learning and common algorithms such as linear regression, classification, and decision trees", // common ML topics in intro courses :contentReference[oaicite:2]{index=2}
+        "Understand the core principles of machine learning including how computers learn from data and optimize performance criteria", // ML definition 
+        "Explain supervised learning and common algorithms such as linear regression, classification, and decision trees", // common ML topics in intro courses 
         "Preprocess and clean real datasets for use in ML models",
         "Train, validate, and evaluate machine learning models using standard performance metrics",
         "Understand the trade-offs between models (bias vs variance) and techniques to improve generalization",
@@ -788,7 +788,7 @@ export const tier3Courses: TierCourse[] = [
   
       resources: {
         videos: [
-          "https://www.youtube.com/watch?v=i_LwzRVP7bg", // Full machine learning basics + TensorFlow code walkthrough (ML for everybody) :contentReference[oaicite:3]{index=3}
+          "https://www.youtube.com/watch?v=i_LwzRVP7bg", // Full machine learning basics + TensorFlow code walkthrough (ML for everybody) 
           "https://www.youtube.com/results?search_query=introduction+to+machine+learning+tutorial", // General ML concept tutorials (regression, classification)
           "https://www.youtube.com/results?search_query=supervised+learning+vs+unsupervised+learning", // Core ML paradigm comparison
           "https://www.youtube.com/results?search_query=scikit+learn+tutorial+for+beginners", // Hands-on Python machine learning with scikit-learn
@@ -796,18 +796,18 @@ export const tier3Courses: TierCourse[] = [
         ],
   
         websites: [
-          "https://scikit-learn.org/", // Core Python ML library with algorithms & examples :contentReference[oaicite:4]{index=4}
-          "https://www.tensorflow.org/learn", // TensorFlow beginner ML tutorials & guides :contentReference[oaicite:5]{index=5}
-          "https://www.coursera.org/learn/machine-learning-fundamentals-dartmouth", // Structured ML fundamentals course overview :contentReference[oaicite:6]{index=6}
-          "https://www.codecademy.com/article/scikit-learn-tutorial", // Beginner tutorial for ML modeling with scikit-learn :contentReference[oaicite:7]{index=7}
-          "https://ucmercedcse176.github.io/" // Example course site with ML introduction and topics :contentReference[oaicite:8]{index=8}
+          "https://scikit-learn.org/", // Core Python ML library with algorithms & examples 
+          "https://www.tensorflow.org/learn", // TensorFlow beginner ML tutorials & guides 
+          "https://www.coursera.org/learn/machine-learning-fundamentals-dartmouth", // Structured ML fundamentals course overview 
+          "https://www.codecademy.com/article/scikit-learn-tutorial", // Beginner tutorial for ML modeling with scikit-learn 
+          "https://ucmercedcse176.github.io/" // Example course site with ML introduction and topics 
         ],
   
         tools: [
           "Python",           // Primary language used for ML development and prototyping
-          "scikit-learn",     // Popular ML library for classical algorithms :contentReference[oaicite:9]{index=9}
-          "TensorFlow",       // ML & deep learning framework :contentReference[oaicite:10]{index=10}
-          "PyTorch",          // Alternative popular ML/deep learning library :contentReference[oaicite:11]{index=11}
+          "scikit-learn",     // Popular ML library for classical algorithms 
+          "TensorFlow",       // ML & deep learning framework 
+          "PyTorch",          // Alternative popular ML/deep learning library 
           "Jupyter Notebooks" // Interactive environment ideal for data exploration and model training
         ]
       }
@@ -835,29 +835,29 @@ export const tier3Courses: TierCourse[] = [
       ],
   
       learningOutcomes: [
-        "Understand basic cryptographic primitives such as symmetric and asymmetric encryption, hash functions, and digital signatures", // syllabus topics include one-way functions, pseudorandom functions, encryption, and protocols :contentReference[oaicite:0]{index=0}
-        "Explain how encryption ensures confidentiality and how hashing ensures data integrity and authenticity", // core distinction between encryption vs hashing :contentReference[oaicite:1]{index=1}
-        "Apply cryptography correctly within software systems while avoiding common implementation mistakes", // best practice emphasis (e.g., secure storage) :contentReference[oaicite:2]{index=2}
-        "Describe key exchange protocols such as Diffie–Hellman and their role in establishing secure channels", // DH key exchange basics :contentReference[oaicite:3]{index=3}
-        "Implement secure password hashing with modern algorithms and techniques (e.g., salting, stretching)", // salting and hashing importance :contentReference[oaicite:4]{index=4}
+        "Understand basic cryptographic primitives such as symmetric and asymmetric encryption, hash functions, and digital signatures", // syllabus topics include one-way functions, pseudorandom functions, encryption, and protocols 
+        "Explain how encryption ensures confidentiality and how hashing ensures data integrity and authenticity", // core distinction between encryption vs hashing 
+        "Apply cryptography correctly within software systems while avoiding common implementation mistakes", // best practice emphasis (e.g., secure storage) 
+        "Describe key exchange protocols such as Diffie–Hellman and their role in establishing secure channels", // DH key exchange basics 
+        "Implement secure password hashing with modern algorithms and techniques (e.g., salting, stretching)", // salting and hashing importance 
         "Recognize common cryptographic attacks and how to mitigate them in real software",
         "Discuss trade-offs and performance considerations when integrating cryptography into applications"
       ],
   
       resources: {
         videos: [
-          "https://www.youtube.com/watch?v=j_8PLI_wCVU", // Cryptography Full Course Part 1 — cryptographic primitives & security principles :contentReference[oaicite:5]{index=5}
-          "https://www.youtube.com/watch?v=2P2KdkLK1g", // Cryptography Explained: Encryption, Hashing, and more :contentReference[oaicite:6]{index=6}
-          "https://www.youtube.com/watch?v=bTkJr9eq0G4", // CompTIA Security+: Cryptography concepts & hashing overview :contentReference[oaicite:7]{index=7}
+          "https://www.youtube.com/watch?v=j_8PLI_wCVU", // Cryptography Full Course Part 1 — cryptographic primitives & security principles 
+          "https://www.youtube.com/watch?v=2P2KdkLK1g", // Cryptography Explained: Encryption, Hashing, and more 
+          "https://www.youtube.com/watch?v=bTkJr9eq0G4", // CompTIA Security+: Cryptography concepts & hashing overview 
           "https://www.youtube.com/results?search_query=diffie+hellman+key+exchange+tutorial", // Practical explanation of key exchange protocols
           "https://www.youtube.com/results?search_query=introduction+to+digital+signatures+cryptography" // Exploring digital signatures & authentication
         ],
   
         websites: [
           "https://en.wikipedia.org/wiki/Cryptography",            // High-level overview of cryptography and its role in modern computing
-          "https://www.geeksforgeeks.org/cryptographic-hash-functions/", // Deep dive on hash functions and their security properties :contentReference[oaicite:8]{index=8}
-          "https://loginradius.com/blog/engineering/encryption-and-hashing/", // Practical guide to encryption & hashing best practices :contentReference[oaicite:9]{index=9}
-          "https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange", // Key exchange protocol basics :contentReference[oaicite:10]{index=10}
+          "https://www.geeksforgeeks.org/cryptographic-hash-functions/", // Deep dive on hash functions and their security properties 
+          "https://loginradius.com/blog/engineering/encryption-and-hashing/", // Practical guide to encryption & hashing best practices 
+          "https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange", // Key exchange protocol basics 
           "https://owasp.org/www-project-top-ten/"                // OWASP Top 10 — common web security risks including cryptographic failures
         ],
   
@@ -904,19 +904,19 @@ export const tier3Courses: TierCourse[] = [
   
       resources: {
         videos: [
-          "https://www.youtube.com/watch?v=FXj7VdQiils", // Security fundamentals + network security concepts overview (importance and basics) :contentReference[oaicite:0]{index=0}
-          "https://www.youtube.com/watch?v=o99nZlTNGqQ", // Networking & cybersecurity fundamentals mini-course (network security basics) :contentReference[oaicite:1]{index=1}
+          "https://www.youtube.com/watch?v=FXj7VdQiils", // Security fundamentals + network security concepts overview (importance and basics) 
+          "https://www.youtube.com/watch?v=o99nZlTNGqQ", // Networking & cybersecurity fundamentals mini-course (network security basics) 
           "https://www.youtube.com/results?search_query=network+security+tutorial", // Packet filtering, firewalls, secure network design tutorials
           "https://www.youtube.com/results?search_query=ethical+hacking+for+beginners", // Intro to ethical hacking & penetration testing
           "https://www.youtube.com/results?search_query=wireshark+network+security+tutorial" // Network packet analysis with Wireshark
         ],
   
         websites: [
-          "https://www.geeksforgeeks.org/ethical-hacking/cyber-security-tutorial/", // Cybersecurity fundamentals including threats, defenses, OSI, security mechanisms :contentReference[oaicite:2]{index=2}
-          "https://www.coursera.org/learn/networks-and-network-security", // Structured course on network security including protocols, firewalls, VPNs :contentReference[oaicite:3]{index=3}
-          "https://en.wikipedia.org/wiki/Capture_the_flag_(cybersecurity)", // Intro to cybersecurity CTF challenges used for real-world practice :contentReference[oaicite:4]{index=4}
-          "https://en.wikipedia.org/wiki/Network_Security_Toolkit", // Security tools platform for packet capture, analysis, and defense :contentReference[oaicite:5]{index=5}
-          "https://www.codecademy.com/catalog/subject/cybersecurity" // Codecademy cybersecurity tutorials & tools overview :contentReference[oaicite:6]{index=6}
+          "https://www.geeksforgeeks.org/ethical-hacking/cyber-security-tutorial/", // Cybersecurity fundamentals including threats, defenses, OSI, security mechanisms 
+          "https://www.coursera.org/learn/networks-and-network-security", // Structured course on network security including protocols, firewalls, VPNs 
+          "https://en.wikipedia.org/wiki/Capture_the_flag_(cybersecurity)", // Intro to cybersecurity CTF challenges used for real-world practice 
+          "https://en.wikipedia.org/wiki/Network_Security_Toolkit", // Security tools platform for packet capture, analysis, and defense 
+          "https://www.codecademy.com/catalog/subject/cybersecurity" // Codecademy cybersecurity tutorials & tools overview 
         ],
   
         tools: [
@@ -951,28 +951,28 @@ export const tier3Courses: TierCourse[] = [
       ],
   
       learningOutcomes: [
-        "Understand what object-oriented programming is and why it is useful in software development", // general OOP definition and benefits :contentReference[oaicite:0]{index=0}
-        "Explain and apply the four core OOP principles: encapsulation, inheritance, polymorphism, and abstraction", // fundamental principles :contentReference[oaicite:1]{index=1}
-        "Define and use classes and objects to represent software entities and their behaviors", // basic structures :contentReference[oaicite:2]{index=2}
-        "Organize code into modular, reusable components using OOP concepts", // reusability and maintainability benefits :contentReference[oaicite:3]{index=3}
-        "Work with interfaces and class hierarchies to structure complex systems", // typical course topics :contentReference[oaicite:4]{index=4}
+        "Understand what object-oriented programming is and why it is useful in software development", // general OOP definition and benefits 
+        "Explain and apply the four core OOP principles: encapsulation, inheritance, polymorphism, and abstraction", // fundamental principles 
+        "Define and use classes and objects to represent software entities and their behaviors", // basic structures 
+        "Organize code into modular, reusable components using OOP concepts", // reusability and maintainability benefits 
+        "Work with interfaces and class hierarchies to structure complex systems", // typical course topics 
         "Write basic object-oriented programs in a modern language (e.g., Java, C++, Python)",
         "Apply OOP thinking to simplify real-world software problems and design cleaner APIs"
       ],
   
       resources: {
         videos: [
-          "https://www.youtube.com/watch?v=SiBw7os-_zI", // Crash course on OOP basics :contentReference[oaicite:5]{index=5}
-          "https://www.youtube.com/watch?v=pTB0EiLXUC8", // Explanation of core OOP principles :contentReference[oaicite:6]{index=6}
+          "https://www.youtube.com/watch?v=SiBw7os-_zI", // Crash course on OOP basics 
+          "https://www.youtube.com/watch?v=pTB0EiLXUC8", // Explanation of core OOP principles 
           "https://www.youtube.com/results?search_query=object+oriented+programming+tutorial+for+beginners", // General beginner tutorials
           "https://www.youtube.com/results?search_query=encapsulation+inheritance+polymorphism+abstraction", // Focused concept videos
           "https://www.youtube.com/results?search_query=oop+in+java+for+beginners" // Language-specific OOP example content
         ],
   
         websites: [
-          "https://en.wikipedia.org/wiki/Object-oriented_programming", // High-level OOP overview :contentReference[oaicite:7]{index=7}
-          "https://www.geeksforgeeks.org/dsa/introduction-of-object-oriented-programming/", // Intro & concepts :contentReference[oaicite:8]{index=8}
-          "https://www.coursera.org/courses?query=object+oriented+programming", // Structured online OOP course options :contentReference[oaicite:9]{index=9}
+          "https://en.wikipedia.org/wiki/Object-oriented_programming", // High-level OOP overview 
+          "https://www.geeksforgeeks.org/dsa/introduction-of-object-oriented-programming/", // Intro & concepts 
+          "https://www.coursera.org/courses?query=object+oriented+programming", // Structured online OOP course options 
           "https://www.interaction-design.org/literature/topics/object-oriented-programming", // Theory + OOP principles
           "https://docs.oracle.com/javase/tutorial/java/concepts/" // Java OOP tutorial (Oracle docs)
         ],
@@ -1020,19 +1020,19 @@ export const tier3Courses: TierCourse[] = [
   
       resources: {
         videos: [
-          "https://www.youtube.com/watch?v=uJvqbZtGIh4",                                                  // Intro lecture on digital image processing fundamentals (image basics & analytic methods) :contentReference[oaicite:1]{index=1}
-          "https://www.youtube.com/results?search_query=image+processing+tutorial+opencv",                 // Tutorials on image manipulation using OpenCV (practical SWE focus) :contentReference[oaicite:2]{index=2}
-          "https://www.youtube.com/results?search_query=histogram+equalization+image+processing",          // Enhancement example: histogram processing :contentReference[oaicite:3]{index=3}
-          "https://www.youtube.com/results?search_query=edge+detection+image+processing",                  // Edge detection & segmentation fundamentals :contentReference[oaicite:4]{index=4}
-          "https://www.youtube.com/results?search_query=image+compression+basics"                          // Intro to compression and transforms :contentReference[oaicite:5]{index=5}
+          "https://www.youtube.com/watch?v=uJvqbZtGIh4",                                                  // Intro lecture on digital image processing fundamentals (image basics & analytic methods) 
+          "https://www.youtube.com/results?search_query=image+processing+tutorial+opencv",                 // Tutorials on image manipulation using OpenCV (practical SWE focus) 
+          "https://www.youtube.com/results?search_query=histogram+equalization+image+processing",          // Enhancement example: histogram processing 
+          "https://www.youtube.com/results?search_query=edge+detection+image+processing",                  // Edge detection & segmentation fundamentals 
+          "https://www.youtube.com/results?search_query=image+compression+basics"                          // Intro to compression and transforms 
         ],
   
         websites: [
-          "https://www.geeksforgeeks.org/computer-graphics/digital-image-processing-basics/",              // Digital image processing basics and pipelines :contentReference[oaicite:6]{index=6}
-          "https://en.wikipedia.org/wiki/Image_segmentation",                                              // Segmentation basics in both vision and processing :contentReference[oaicite:7]{index=7}
-          "https://www.coursera.org/learn/digital-image-processing",                                       // Introductory image processing course (structured learning) :contentReference[oaicite:8]{index=8}
+          "https://www.geeksforgeeks.org/computer-graphics/digital-image-processing-basics/",              // Digital image processing basics and pipelines 
+          "https://en.wikipedia.org/wiki/Image_segmentation",                                              // Segmentation basics in both vision and processing 
+          "https://www.coursera.org/learn/digital-image-processing",                                       // Introductory image processing course (structured learning) 
           "https://docs.opencv.org/",                                                                       // Official OpenCV docs for practical implementation
-          "https://en.wikipedia.org/wiki/Raster_graphics"                                                  // How image data is stored and manipulated :contentReference[oaicite:9]{index=9}
+          "https://en.wikipedia.org/wiki/Raster_graphics"                                                  // How image data is stored and manipulated 
         ],
   
         tools: [

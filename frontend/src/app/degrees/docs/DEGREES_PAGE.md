@@ -304,7 +304,7 @@ degrees/
 │       ├── cybersecurity/ # Cybersecurity
 │       ├── ml-ai/      # Machine Learning / AI
 │       ├── data-science/  # Data Science / Analytics
-│       ├── systems/   # Systems / Infrastructure Engineering
+│       ├── systems-infra/   # Systems / Infrastructure Engineering ✅ Complete
 │       └── embedded/  # Embedded Systems Engineering
 └── docs/              # Documentation
 ```

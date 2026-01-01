@@ -2,8 +2,8 @@
 
 /**
  * CareerPathGraph Component
- * Interactive React Flow graph visualization for career paths
- * Used on: Career path pages (SWE, Cybersecurity, etc.)
+ * Interactive React Flow graph visualization for Systems / Infrastructure Engineering career path
+ * Used on: Systems / Infrastructure Engineering career path page
  * 
  * Uses static career path configuration from local data files
  */
@@ -23,19 +23,19 @@ import ReactFlow, {
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { TierCourse, CareerPathConfig } from "@/types/careerPath";
-import { cybersecurityCareerPathConfig } from "../data/careerPathConfig";
+import { systemsInfraCareerPathConfig } from "../data/careerPathConfig";
 
 interface CareerPathGraphProps {
   onResetReady?: (resetFn: () => void) => void;
   onFormatReady?: (formatFn: () => void) => void;
 }
 
-// Custom root node component for Cybersecurity career path
-function CybersecurityRootNode({ data }: { data: { label: string } }) {
+// Custom root node component for Systems / Infrastructure Engineering career path
+function SystemsInfraRootNode({ data }: { data: { label: string } }) {
   return (
     <div className="w-32 h-32 rounded-full border-2 border-primary bg-primary/10 flex items-center justify-center shadow-lg relative">
       <Handle type="source" position={Position.Bottom} />
-      <div className="text-lg font-bold text-primary text-center">
+      <div className="text-lg font-bold text-primary text-center px-2">
         {data.label}
       </div>
     </div>
@@ -89,13 +89,13 @@ function CourseNode({ data }: { data: { course: TierCourse } }) {
 
 // Define nodeTypes outside component to avoid React Flow warning
 const nodeTypes = {
-  root: CybersecurityRootNode,
+  root: SystemsInfraRootNode,
   tier: TierNode,
   course: CourseNode,
 };
 
 export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerPathGraphProps) {
-  const careerPathConfig = cybersecurityCareerPathConfig;
+  const careerPathConfig = systemsInfraCareerPathConfig;
   const [expandedTiers, setExpandedTiers] = useState<Set<string>>(new Set());
   const [nodePositions, setNodePositions] = useState<Record<string, { x: number; y: number }>>({});
   const [isDragging, setIsDragging] = useState(false);
@@ -136,17 +136,15 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
     setSelectedCourse(null);
   }, []);
 
-  // Create nodes and edges using useMemo (Option 2) - now dynamic based on expanded state
+  // Create nodes and edges using useMemo - now dynamic based on expanded state
   const { nodes: graphNodes, edges: graphEdges } = useMemo(() => {
-    // Return empty if no config loaded yet
-
-    // Create root node: Cybersecurity
+    // Create root node: Systems / Infrastructure Engineering
     // Center root node horizontally, position near top
     const rootNode: Node = {
-      id: "cybersecurity-root",
+      id: "systems-infra-root",
       type: "root",
       data: { label: careerPathConfig.rootLabel },
-      position: nodePositions["cybersecurity-root"] || { x: 0, y: 40 },
+      position: nodePositions["systems-infra-root"] || { x: 0, y: 40 },
     };
 
     // Create tier nodes from config
@@ -176,8 +174,8 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
 
     // Create edges from root to each tier
     const tierEdges: Edge[] = tierNodes.map((tierNode) => ({
-      id: `cybersecurity-root-${tierNode.id}`,
-      source: "cybersecurity-root",
+      id: `systems-infra-root-${tierNode.id}`,
+      source: "systems-infra-root",
       target: tierNode.id,
       type: "smoothstep",
       animated: false,
@@ -335,7 +333,7 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
     const newPositions: Record<string, { x: number; y: number }> = {};
     
     // Root node position
-    newPositions["cybersecurity-root"] = { x: 0, y: 40 };
+    newPositions["systems-infra-root"] = { x: 0, y: 40 };
     
     // Tier nodes positioning - INCREASED spacing to prevent overlap
     const tierSpacing = 600; // Increased from 400 to spread tiers further apart
@@ -400,10 +398,10 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
             
             // Calculate nodes the same way useMemo does, but with newPositions
             const rootNode: Node = {
-              id: "cybersecurity-root",
+              id: "systems-infra-root",
               type: "root",
               data: { label: careerPathConfig.rootLabel },
-              position: newPositions["cybersecurity-root"],
+              position: newPositions["systems-infra-root"],
             };
             
             const tierNodes: Node[] = careerPathConfig.categories.map((category, index) => ({
@@ -740,7 +738,7 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
 
       <div className="w-full px-4 py-2 bg-muted/20 border-t border-border/40">
         <p className="text-xs text-black text-center">
-          Career path graph for Cybersecurity
+          Career path graph for Systems / Infrastructure Engineering
         </p>
       </div>
     </div>

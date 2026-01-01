@@ -20,7 +20,6 @@ export const tier1Courses: TierCourse[] = [
     tier: 1,
     expandedInfo: {
       credits: 4,
-      prerequisites: "CSE 160 (Computer Networks) recommended",
       careerRelevance:
         "Core course for cybersecurity career paths including SOC Analyst, Security Engineer, Penetration Tester, and Network Security Analyst. Provides essential skills for identifying threats, applying defenses, and understanding real attack techniques.",
 
@@ -81,11 +80,10 @@ export const tier1Courses: TierCourse[] = [
     code: "CSE 160",
     name: "Computer Networks",
     fullName: "CSE 160: Computer Networks",
-    description: "You cannot secure what you don't understand — foundational networking principles for cybersecurity",
+    description: "Foundational networking principles, protocols, and network architecture essential for cybersecurity",
     tier: 1,
     expandedInfo: {
       credits: 4,
-      prerequisites: "Intro to Systems & Programming (recommended)",
       careerRelevance:
         "Fundamental networking knowledge is essential for cybersecurity roles such as Network Security Analyst, SOC Engineer, Incident Responder, and Penetration Tester. Understanding how networks operate makes it possible to detect, analyze, and defend against network-based threats.",
 
@@ -147,7 +145,6 @@ export const tier1Courses: TierCourse[] = [
     tier: 1,
     expandedInfo: {
       credits: 4,
-      prerequisites: "Intro to Systems & Programming (recommended)",
       careerRelevance:
         "Operating Systems knowledge is a must for cybersecurity careers such as Incident Response, Threat Hunting, Security Engineering, and Malware Analysis. OS fundamentals underpin how attackers exploit systems and how defenders harden them.",
 
@@ -211,7 +208,6 @@ export const tier1Courses: TierCourse[] = [
     tier: 1,
     expandedInfo: {
       credits: 4,
-      prerequisites: "Intro to Programming & Data Structures (recommended)",
       careerRelevance:
         "Understanding computer organization, instruction execution, and assembly language is crucial for cybersecurity roles such as Malware Analyst, Reverse Engineer, Exploit Developer, and Vulnerability Researcher. These fundamentals enable security professionals to see how high-level code translates to machine behavior and how low-level vulnerabilities arise.",
 
@@ -248,8 +244,8 @@ export const tier1Courses: TierCourse[] = [
           "https://www.youtube.com/watch?v=NhqAeQB_CZU"  // Assembly for reverse engineering basics
         ],
         websites: [
-          "https://en.wikipedia.org/wiki/Computer_organization", // Course overview and topics :contentReference[oaicite:0]{index=0}
-          "https://en.wikipedia.org/wiki/Assembly_language",     // Assembly language essentials :contentReference[oaicite:1]{index=1}
+          "https://en.wikipedia.org/wiki/Computer_organization", // Course overview and topics 
+          "https://en.wikipedia.org/wiki/Assembly_language",     // Assembly language essentials 
           "https://stackoverflow.com/questions/tagged/assembly",  // Community knowledge / examples
           "https://reverseengineering.stackexchange.com"          // Reverse engineering Q&A
         ],
@@ -274,7 +270,6 @@ export const tier1Courses: TierCourse[] = [
     tier: 1,
     expandedInfo: {
       credits: 4,
-      prerequisites: "CSE 031 (Computer Organization & Assembly) and CSE 100 (Algorithm Design & Analysis) recommended",
       careerRelevance:
         "Cryptography is a core security discipline used in practically all cybersecurity roles — from secure system design to threat analysis, secure communications, digital signatures, key management, and protecting data confidentiality and integrity in real systems.",
   
@@ -311,9 +306,9 @@ export const tier1Courses: TierCourse[] = [
           "https://www.youtube.com/watch?v=W1T5QC7iXAI"  // Cryptographic hash functions explained
         ],
         websites: [
-          "https://en.wikipedia.org/wiki/Outline_of_cryptography", // Cryptography overview and frameworks :contentReference[oaicite:1]{index=1}
-          "https://en.wikipedia.org/wiki/Public-key_cryptography", // Public-key cryptography fundamentals :contentReference[oaicite:2]{index=2}
-          "https://en.wikipedia.org/wiki/Cryptographic_hash_function" // Hash function basics :contentReference[oaicite:3]{index=3}
+          "https://en.wikipedia.org/wiki/Outline_of_cryptography", // Cryptography overview and frameworks 
+          "https://en.wikipedia.org/wiki/Public-key_cryptography", // Public-key cryptography fundamentals 
+          "https://en.wikipedia.org/wiki/Cryptographic_hash_function" // Hash function basics 
         ],
         tools: [
           "OpenSSL",        // Cryptographic library for encryption and certificates
@@ -336,7 +331,6 @@ export const tier1Courses: TierCourse[] = [
     tier: 1,
     expandedInfo: {
       credits: 4,
-      prerequisites: "Intro to Programming & Data Structures recommended",
       careerRelevance:
         "Software Engineering is essential for cybersecurity engineers, secure software developers, and security-aware SRE/DevOps roles. Understanding how large systems are built collaboratively and how to bake security into design and code helps prevent vulnerabilities before they reach production.",
   
@@ -375,7 +369,7 @@ export const tier1Courses: TierCourse[] = [
         websites: [
           "https://git-scm.com", // Core Git resource
           "https://www.owasp.org", // Secure coding and vulnerability guidance
-          "https://en.wikipedia.org/wiki/Secure_coding" // Overview of secure coding practices :contentReference[oaicite:0]{index=0}
+          "https://en.wikipedia.org/wiki/Secure_coding" // Overview of secure coding practices 
         ],
         tools: [
           "Git & GitHub",      // Version control & collaboration
@@ -406,7 +400,6 @@ export const tier2Courses: TierCourse[] = [
     tier: 2,
     expandedInfo: {
       credits: 4,
-      prerequisites: "CSE 160 (Computer Networks) and CSE 150 (Operating Systems) recommended",
       careerRelevance:
         "Distributed systems are foundational for cloud, microservices, and large-scale secure applications — critical for roles such as Cloud Security Engineer, Distributed Systems Engineer, DevSecOps, and Backend Security Specialist. Understanding distributed system principles helps cybersecurity professionals secure systems that span multiple machines and services.",
   
@@ -443,8 +436,8 @@ export const tier2Courses: TierCourse[] = [
           "https://www.youtube.com/watch?v=Zd5hjcvv2fg"  // Distributed systems overview & challenges
         ],
         websites: [
-          "https://en.wikipedia.org/wiki/Distributed_computing", // Distributed systems core definitions and patterns :contentReference[oaicite:1]{index=1}
-          "https://en.wikipedia.org/wiki/Distributed_file_system_for_cloud", // Cloud distributed storage and security concepts :contentReference[oaicite:2]{index=2}
+          "https://en.wikipedia.org/wiki/Distributed_computing", // Distributed systems core definitions and patterns 
+          "https://en.wikipedia.org/wiki/Distributed_file_system_for_cloud", // Cloud distributed storage and security concepts 
           "https://www.geeksforgeeks.org/distributed-systems-introduction/" // Distributed systems introduction and examples
         ],
         tools: [
@@ -468,7 +461,6 @@ export const tier2Courses: TierCourse[] = [
     tier: 2,
     expandedInfo: {
       credits: 4,
-      prerequisites: "CSE 150 (Operating Systems) and CSE 031 (Computer Org & Assembly) recommended",
       careerRelevance:
         "Parallel Computing is important for cybersecurity professionals working on performance-critical systems, high-performance computing, cryptographic acceleration, and secure concurrent services. Understanding concurrency and parallel execution helps identify subtle vulnerabilities like race conditions and deadlocks that arise in multi-threaded environments.",
   
@@ -507,7 +499,7 @@ export const tier2Courses: TierCourse[] = [
         websites: [
           "https://en.wikipedia.org/wiki/Parallel_computing", // Fundaments of parallel computing ([en.wikipedia.org](https://en.wikipedia.org/wiki/Parallel_computing?utm_source=chatgpt.com))  
           "https://en.wikipedia.org/wiki/Concurrency_(computer_science)", // Concurrency basics & relation ([en.wikipedia.org](https://en.wikipedia.org/wiki/Concurrency_(computer_science)?utm_source=chatgpt.com))  
-          "https://medium.com/@MakeComputerScienceGreatAgain/concurrency-vs-parallelism-in-programming-b85fb3d9f77f" // Distinction and relevance to secure coding :contentReference[oaicite:0]{index=0}
+          "https://medium.com/@MakeComputerScienceGreatAgain/concurrency-vs-parallelism-in-programming-b85fb3d9f77f" // Distinction and relevance to secure coding 
         ],
         tools: [
           "OpenMP",   // Shared-memory parallel programming
@@ -530,9 +522,8 @@ export const tier2Courses: TierCourse[] = [
     tier: 2,
     expandedInfo: {
       credits: 4,
-      prerequisites: "CSE 030 or equivalent programming experience",
       careerRelevance:
-        "Understanding databases is essential for application security, threat analysis, and secure backend development. This course equips students to secure data storage, enforce access controls, and prevent common vulnerabilities like SQL injection which are top threats in web applications. :contentReference[oaicite:0]{index=0}",
+        "Understanding databases is essential for application security, threat analysis, and secure backend development. This course equips students to secure data storage, enforce access controls, and prevent common vulnerabilities like SQL injection which are top threats in web applications. ",
   
       realWorldApplications: [
         "Designing secure and normalized relational database schemas",
@@ -567,7 +558,7 @@ export const tier2Courses: TierCourse[] = [
           "https://www.youtube.com/watch?v=9Pzj7Aj25lw"  // Database design fundamentals
         ],
         websites: [
-          "https://en.wikipedia.org/wiki/SQL_injection",       // SQL Injection overview :contentReference[oaicite:1]{index=1}
+          "https://en.wikipedia.org/wiki/SQL_injection",       // SQL Injection overview 
           "https://en.wikipedia.org/wiki/Relational_database", // Relational DB fundamentals
           "https://owasp.org/www-project-top-ten/2017/A1_2017-Injection/" // OWASP injection threat info
         ],
@@ -575,7 +566,7 @@ export const tier2Courses: TierCourse[] = [
           "MySQL/PostgreSQL",  // Relational database engines
           "SQLMap",            // SQL injection testing tool
           "DB Browser for SQLite", // Lightweight query tool
-          "Database activity monitoring tools" // Audit & monitor DB access :contentReference[oaicite:2]{index=2}
+          "Database activity monitoring tools" // Audit & monitor DB access 
         ]
       },
   
@@ -592,7 +583,6 @@ export const tier2Courses: TierCourse[] = [
     tier: 2,
     expandedInfo: {
       credits: 4,
-      prerequisites: "CSE 031, CSE 100, CSE 111, and MATH 024 (by catalog listing) recommended", 
   
       careerRelevance:
         "Database Systems Implementation gives deep insight into how database engines work under the hood — including storage management, indexing, and query execution. This helps cybersecurity professionals better understand where security controls should be placed in storage systems, how attackers can leverage internals for exploits, and how to design defenses at the system level.",
@@ -625,13 +615,13 @@ export const tier2Courses: TierCourse[] = [
   
       resources: {
         videos: [
-          "https://www.youtube.com/watch?v=2byzOKa36o8", // DBMS internals overview (storage, indexing, execution) :contentReference[oaicite:0]{index=0}
-          "https://www.youtube.com/watch?v=HXV3zeQKqGY"  // SQL basics to connect to internal mechanics :contentReference[oaicite:1]{index=1}
+          "https://www.youtube.com/watch?v=2byzOKa36o8", // DBMS internals overview (storage, indexing, execution) 
+          "https://www.youtube.com/watch?v=HXV3zeQKqGY"  // SQL basics to connect to internal mechanics 
         ],
         websites: [
-          "https://en.wikipedia.org/wiki/Database_index",      // DB indexing fundamentals :contentReference[oaicite:2]{index=2}
-          "https://en.wikipedia.org/wiki/Query_optimization",  // Query planning/execution :contentReference[oaicite:3]{index=3}
-          "https://en.wikipedia.org/wiki/Database_security"    // High-level security overview :contentReference[oaicite:4]{index=4}
+          "https://en.wikipedia.org/wiki/Database_index",      // DB indexing fundamentals 
+          "https://en.wikipedia.org/wiki/Query_optimization",  // Query planning/execution 
+          "https://en.wikipedia.org/wiki/Database_security"    // High-level security overview 
         ],
         tools: [
           "PostgreSQL internals modules", // Explore DBMS structures
@@ -654,7 +644,6 @@ export const tier2Courses: TierCourse[] = [
     tier: 2,
     expandedInfo: {
       credits: 4,
-      prerequisites: "CSE 031 (Computer Organization & Assembly) recommended",
       careerRelevance:
         "Computer Architecture is critical for cybersecurity professionals focused on hardware-level threats, secure system design, and understanding how CPUs and memory systems impact security. Knowledge from this course aids roles like Secure Systems Engineer, Malware Analyst, Hardware Security Specialist, and Cloud Security Architect.",
   
@@ -691,9 +680,9 @@ export const tier2Courses: TierCourse[] = [
           "https://www.youtube.com/watch?v=a6wd2kgU0sA"  // Hardware security lecture (side channels)
         ],
         websites: [
-          "https://catalog.ucmerced.edu/preview_course_nopop.php?catoid=24&coid=67529", // Official course description 📚 :contentReference[oaicite:0]{index=0}
+          "https://catalog.ucmerced.edu/preview_course_nopop.php?catoid=24&coid=67529", // Official course description 📚 
           "https://en.wikipedia.org/wiki/Computer_architecture", // Architecture overview  
-          "https://en.wikipedia.org/wiki/Transient_execution_CPU_vulnerability" // Side-channel hardware threats (Spectre/Meltdown) :contentReference[oaicite:1]{index=1}
+          "https://en.wikipedia.org/wiki/Transient_execution_CPU_vulnerability" // Side-channel hardware threats (Spectre/Meltdown) 
         ],
         tools: [
           "RISC-V or MIPS simulators",   // Explore instruction pipelines  
@@ -716,9 +705,8 @@ export const tier2Courses: TierCourse[] = [
     tier: 2,
     expandedInfo: {
       credits: 4,
-      prerequisites: "Intro to Programming recommended",
       careerRelevance:
-        "Full stack web development is essential for security engineers, application security specialists, and penetration testers. Knowing how web applications are built end-to-end — including client UI, server logic, databases, and APIs — equips cybersecurity professionals to identify, assess, and defend against real attack surfaces that web apps expose. :contentReference[oaicite:0]{index=0}",
+        "Full stack web development is essential for security engineers, application security specialists, and penetration testers. Knowing how web applications are built end-to-end — including client UI, server logic, databases, and APIs — equips cybersecurity professionals to identify, assess, and defend against real attack surfaces that web apps expose. ",
   
       realWorldApplications: [
         "Building full stack web applications with secure practices from frontend to backend",
@@ -766,7 +754,7 @@ export const tier2Courses: TierCourse[] = [
       },
   
       additionalNotes:
-        "CSE 108 explores full stack development including frontend, backend, and database systems, with foundational coverage of web security concepts. Understanding how modern web applications are built and where attack surfaces appear prepares students for roles in secure application development and web penetration testing. :contentReference[oaicite:1]{index=1}"
+        "CSE 108 explores full stack development including frontend, backend, and database systems, with foundational coverage of web security concepts. Understanding how modern web applications are built and where attack surfaces appear prepares students for roles in secure application development and web penetration testing. "
     }
   },
 ];
@@ -785,7 +773,6 @@ export const tier3Courses: TierCourse[] = [
     tier: 3,
     expandedInfo: {
       credits: 4,
-      prerequisites: "CSE 100 (Algorithm Design & Analysis) and CSE 031 (Organization & Assembly) recommended",
       careerRelevance:
         "Foundational AI concepts support cybersecurity roles like Threat Intelligence Analyst, Security Data Scientist, and SOC Automation Engineer. AI skills power behavior-based anomaly detection, intrusion detection analytics, and automated threat triage.",
   
@@ -843,9 +830,8 @@ export const tier3Courses: TierCourse[] = [
     tier: 3,
     expandedInfo: {
       credits: 4,
-      prerequisites: "CSE 175 (Intro to AI) or equivalent statistics/background recommended",
       careerRelevance:
-        "Machine Learning is increasingly integrated into security tooling like SIEMs, IDS/IPS, and endpoint analytics. Cybersecurity roles leveraging ML include ML Security Engineer, Threat Analyst, and Research Scientist focused on behavior detection and forensic inference. :contentReference[oaicite:1]{index=1}",
+        "Machine Learning is increasingly integrated into security tooling like SIEMs, IDS/IPS, and endpoint analytics. Cybersecurity roles leveraging ML include ML Security Engineer, Threat Analyst, and Research Scientist focused on behavior detection and forensic inference. ",
   
       realWorldApplications: [
         "Building models to detect anomalous network behavior",
@@ -903,9 +889,8 @@ export const tier3Courses: TierCourse[] = [
     tier: 3,
     expandedInfo: {
       credits: 4,
-      prerequisites: "CSE 108 (Web Development) or CSE 030 (Data Structures) recommended",
       careerRelevance:
-        "Mobile platforms are ubiquitous and frequently attacked. Roles like Mobile Security Engineer, AppSec Specialist, and Forensics Analyst require understanding of mobile OS, sandboxing, permissions models, and secure coding practices for mobile applications. :contentReference[oaicite:2]{index=2}",
+        "Mobile platforms are ubiquitous and frequently attacked. Roles like Mobile Security Engineer, AppSec Specialist, and Forensics Analyst require understanding of mobile OS, sandboxing, permissions models, and secure coding practices for mobile applications. ",
   
       realWorldApplications: [
         "Building mobile apps while preventing common vulnerabilities",
@@ -963,9 +948,8 @@ export const tier3Courses: TierCourse[] = [
     tier: 3,
     expandedInfo: {
       credits: 4,
-      prerequisites: "CSE 176 (Machine Learning) recommended",
       careerRelevance:
-        "Computer Vision is vital for surveillance, biometric security, and automated monitoring systems. Security roles leveraging CV include AI Security Engineer, Vision for Security Application Developer, and Threat Detection Specialist in video analytics. :contentReference[oaicite:3]{index=3}",
+        "Computer Vision is vital for surveillance, biometric security, and automated monitoring systems. Security roles leveraging CV include AI Security Engineer, Vision for Security Application Developer, and Threat Detection Specialist in video analytics. ",
   
       realWorldApplications: [
         "Building vision-based threat detection for cameras and automated surveillance",
@@ -1019,7 +1003,6 @@ export const tier3Courses: TierCourse[] = [
     tier: 3,
     expandedInfo: {
       credits: 4,
-      prerequisites: "Intro Programming recommended",
       careerRelevance:
         "Digital Image Processing supports cybersecurity fields involving forensic analysis, evidence validation, and multimedia integrity verification. Understanding how images are processed and manipulated aids analysts who investigate altered media or visual evidence.",
   
