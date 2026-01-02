@@ -31,6 +31,12 @@ export default function HeroSection() {
           >
             Explore Degrees
           </Link>
+          <Link 
+            href="/clubs"
+            className="px-8 py-3 bg-accent text-accent-foreground rounded-lg font-semibold hover:bg-accent/90 transition-colors shadow-lg hover:shadow-xl inline-block"
+          >
+            Student Clubs
+          </Link>
         </div>
       </div>
     </section>

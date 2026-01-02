@@ -20,6 +20,12 @@ export default function Navigation() {
             >
               Degrees
             </Link>
+            <Link
+              href="/clubs"
+              className="text-sm font-medium hover:text-primary transition-colors"
+            >
+              Clubs
+            </Link>
             <a
               href="#"
               className="text-sm font-medium hover:text-primary transition-colors"
