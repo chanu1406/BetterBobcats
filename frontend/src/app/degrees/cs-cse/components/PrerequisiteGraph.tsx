@@ -19,8 +19,8 @@ import ReactFlow, {
   applyNodeChanges,
 } from "reactflow";
 import "reactflow/dist/style.css";
-import { cseCourses } from "../data/courses";
 import { Course } from "@/types/course";
+import { cseCourses } from "../data/courses";
 
 // Custom circular node component for CS/CSE root
 function RootNode({ data }: { data: { label: string } }) {
@@ -540,6 +540,7 @@ interface PrerequisiteGraphProps {
 }
 
 export default function PrerequisiteGraph({ onLayoutChange, useFormattedLayoutExternal, onResetReady, onFullResetReady }: PrerequisiteGraphProps) {
+  const courses = cseCourses;
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
   const [useFormattedLayoutInternal, setUseFormattedLayoutInternal] = useState(false);
   const [nodePositions, setNodePositions] = useState<Record<string, { x: number; y: number }>>({});
@@ -714,7 +715,7 @@ export default function PrerequisiteGraph({ onLayoutChange, useFormattedLayoutEx
 
     if (isMathExpanded) {
       // Filter math courses (courses starting with "math-")
-      const mathCourses = cseCourses.filter((course) => course.id.startsWith("math-"));
+      const mathCourses = courses.filter((course) => course.id.startsWith("math-"));
       
       // Create course nodes for math courses
       mathCourses.forEach((course) => {
@@ -766,7 +767,7 @@ export default function PrerequisiteGraph({ onLayoutChange, useFormattedLayoutEx
 
     if (isWritingExpanded) {
       // Filter writing courses (courses starting with "wri-")
-      const writingCourses = cseCourses.filter((course) => course.id.startsWith("wri-"));
+      const writingCourses = courses.filter((course) => course.id.startsWith("wri-"));
       
       // Create course nodes for writing courses
       writingCourses.forEach((course) => {
@@ -818,7 +819,7 @@ export default function PrerequisiteGraph({ onLayoutChange, useFormattedLayoutEx
 
     if (isPhysicsExpanded) {
       // Filter physics courses (courses starting with "phys-")
-      const physicsCourses = cseCourses.filter((course) => course.id.startsWith("phys-"));
+      const physicsCourses = courses.filter((course) => course.id.startsWith("phys-"));
       
       // Create course nodes for physics courses
       physicsCourses.forEach((course) => {
@@ -870,7 +871,7 @@ export default function PrerequisiteGraph({ onLayoutChange, useFormattedLayoutEx
 
     if (isSparkExpanded) {
       // Filter spark courses (course with id "spark")
-      const sparkCourses = cseCourses.filter((course) => course.id === "spark");
+      const sparkCourses = courses.filter((course) => course.id === "spark");
       
       // Create course nodes for spark courses
       sparkCourses.forEach((course) => {
@@ -922,7 +923,7 @@ export default function PrerequisiteGraph({ onLayoutChange, useFormattedLayoutEx
 
     if (isEngineeringExpanded) {
       // Filter engineering courses (courses starting with "engr-")
-      const engineeringCourses = cseCourses.filter((course) => course.id.startsWith("engr-"));
+      const engineeringCourses = courses.filter((course) => course.id.startsWith("engr-"));
       
       // Create course nodes for engineering courses
       engineeringCourses.forEach((course) => {
@@ -985,7 +986,7 @@ export default function PrerequisiteGraph({ onLayoutChange, useFormattedLayoutEx
 
     if (isCseExpanded) {
       // Filter CSE courses (courses starting with "cse-")
-      const filteredCseCourses = cseCourses.filter((course) => course.id.startsWith("cse-"));
+      const filteredCseCourses = courses.filter((course) => course.id.startsWith("cse-"));
       
       // Create course nodes for CSE courses
       filteredCseCourses.forEach((course) => {
@@ -1035,7 +1036,7 @@ export default function PrerequisiteGraph({ onLayoutChange, useFormattedLayoutEx
     // Apply layout (preserving saved positions)
     // Don't recalculate layout during drag to prevent nodes from disappearing
     return getLayoutedElements(allNodes, allEdges, useFormattedLayout, nodePositions);
-  }, [expandedCategories, useFormattedLayout, nodePositions]);
+  }, [courses, expandedCategories, useFormattedLayout, nodePositions]);
 
   // Always use controlled nodes/edges - sync from layout when not dragging
   useEffect(() => {
@@ -1069,6 +1070,7 @@ export default function PrerequisiteGraph({ onLayoutChange, useFormattedLayoutEx
 
   // Memoize nodeTypes to prevent React Flow warning - ensure stable reference
   const memoizedNodeTypes = useMemo(() => nodeTypes, []);
+
 
   return (
     <div className="w-full border border-border/40 rounded-lg overflow-hidden relative pt-6">

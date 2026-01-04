@@ -2,11 +2,10 @@
 
 /**
  * CareerPathGraph Component
- * Interactive React Flow graph visualization for career paths
- * Used on: Career path pages (SWE, Cybersecurity, etc.)
+ * Interactive React Flow graph visualization for Embedded Systems Engineering career path
+ * Used on: Embedded Systems Engineering career path page
  * 
- * This is a minimal implementation with just the React Flow frame.
- * Nodes and edges will be added later.
+ * Uses static career path configuration from local data files
  */
 
 import { useState, useCallback, useRef, useEffect, useMemo } from "react";
@@ -24,20 +23,19 @@ import ReactFlow, {
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { TierCourse, CareerPathConfig } from "@/types/careerPath";
-import { mlAiCareerPathConfig } from "../data/careerPathConfig";
-import { TierCourse } from "@/types/careerPath";
+import { embeddedSystemsCareerPathConfig } from "../data/careerPathConfig";
 
 interface CareerPathGraphProps {
   onResetReady?: (resetFn: () => void) => void;
   onFormatReady?: (formatFn: () => void) => void;
 }
 
-// Custom root node component for ML-AI career path
-function MLAIRootNode({ data }: { data: { label: string } }) {
+// Custom root node component for Embedded Systems Engineering career path
+function EmbeddedSystemsRootNode({ data }: { data: { label: string } }) {
   return (
     <div className="w-32 h-32 rounded-full border-2 border-primary bg-primary/10 flex items-center justify-center shadow-lg relative">
       <Handle type="source" position={Position.Bottom} />
-      <div className="text-sm font-bold text-primary text-center">
+      <div className="text-lg font-bold text-primary text-center px-2">
         {data.label}
       </div>
     </div>
@@ -64,7 +62,7 @@ function TierNode({ data }: { data: { label: string; emoji?: string; isExpanded?
     >
       <Handle type="target" position={Position.Top} />
       <Handle type="source" position={Position.Bottom} />
-      <div className="text-[10px] font-semibold text-primary text-center px-2 flex flex-col items-center gap-0.5">
+      <div className="text-[7.5px] font-semibold text-primary text-center px-2 flex flex-col items-center gap-0.5">
         {data.emoji && <span className="text-sm">{data.emoji}</span>}
         <span className="leading-tight break-words">{data.label}</span>
       </div>
@@ -75,8 +73,11 @@ function TierNode({ data }: { data: { label: string; emoji?: string; isExpanded?
 // Custom course node component - rectangular shape with course code and name
 function CourseNode({ data }: { data: { course: TierCourse } }) {
   const { course } = data;
+
   return (
-    <div className="min-w-[180px] max-w-[200px] rounded-lg border-2 border-slate-300 bg-white shadow-sm hover:shadow-md transition-shadow px-3 py-2 relative cursor-pointer">
+    <div 
+      className="min-w-[180px] max-w-[200px] rounded-lg border-2 border-slate-300 bg-white shadow-sm hover:shadow-md transition-shadow px-3 py-2 relative cursor-pointer"
+    >
       <Handle type="target" position={Position.Top} />
       <div className="flex flex-col gap-1">
         <div className="font-bold text-sm text-slate-800">{course.code}</div>
@@ -88,21 +89,33 @@ function CourseNode({ data }: { data: { course: TierCourse } }) {
 
 // Define nodeTypes outside component to avoid React Flow warning
 const nodeTypes = {
-  root: MLAIRootNode,
+  root: EmbeddedSystemsRootNode,
   tier: TierNode,
   course: CourseNode,
 };
 
 export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerPathGraphProps) {
-  const careerPathConfig = mlAiCareerPathConfig;
+  const careerPathConfig = embeddedSystemsCareerPathConfig;
   const [expandedTiers, setExpandedTiers] = useState<Set<string>>(new Set());
   const [nodePositions, setNodePositions] = useState<Record<string, { x: number; y: number }>>({});
   const [isDragging, setIsDragging] = useState(false);
   const [nodesState, setNodesState] = useState<Node[]>([]);
   const [edgesState, setEdgesState] = useState<Edge[]>([]);
-  const [isFormatted, setIsFormatted] = useState(false);
-  const [selectedCourse, setSelectedCourse] = useState<TierCourse | null>(null);
+  const [isFormatted, setIsFormatted] = useState(false); // Track if formatting has been applied
+  const [selectedCourse, setSelectedCourse] = useState<TierCourse | null>(null); // Track selected/expanded course
   const reactFlowInstance = useRef<ReactFlowInstance | null>(null);
+
+  // Helper function to map tier ID to tier number (handles decimal tiers like 1.5, 2.5)
+  const getTierNumber = (tierId: string): number => {
+    const tierMapping: Record<string, number> = {
+      "tier-1": 1,
+      "tier-1-5": 1.5,
+      "tier-2": 2,
+      "tier-2-5": 2.5,
+      "tier-3": 3,
+    };
+    return tierMapping[tierId] ?? 0;
+  };
 
   // Toggle tier expansion
   const toggleTier = useCallback((tierId: string) => {
@@ -122,11 +135,6 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
     setSelectedCourse(course);
   }, []);
 
-  // Handle closing expanded course card
-  const handleCloseCourseCard = useCallback(() => {
-    setSelectedCourse(null);
-  }, []);
-
   // Handle node click from React Flow
   const onNodeClick = useCallback((_event: React.MouseEvent, node: Node) => {
     // Only handle clicks on course nodes
@@ -135,16 +143,20 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
     }
   }, [handleCourseClick]);
 
-  // Create nodes and edges using useMemo (Option 2) - now dynamic based on expanded state
-  const { nodes: graphNodes, edges: graphEdges } = useMemo(() => {
+  // Handle closing expanded course card
+  const handleCloseCourseCard = useCallback(() => {
+    setSelectedCourse(null);
+  }, []);
 
-    // Create root node: ML-AI
+  // Create nodes and edges using useMemo - now dynamic based on expanded state
+  const { nodes: graphNodes, edges: graphEdges } = useMemo(() => {
+    // Create root node: Embedded Systems Engineering
     // Center root node horizontally, position near top
     const rootNode: Node = {
-      id: "ml-ai-root",
+      id: "embedded-systems-root",
       type: "root",
       data: { label: careerPathConfig.rootLabel },
-      position: nodePositions["ml-ai-root"] || { x: 0, y: 40 },
+      position: nodePositions["embedded-systems-root"] || { x: 0, y: 40 },
     };
 
     // Create tier nodes from config
@@ -174,19 +186,13 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
 
     // Create edges from root to each tier
     const tierEdges: Edge[] = tierNodes.map((tierNode) => ({
-      id: `ml-ai-root-${tierNode.id}`,
-      source: "ml-ai-root",
+      id: `embedded-systems-root-${tierNode.id}`,
+      source: "embedded-systems-root",
       target: tierNode.id,
       type: "smoothstep",
       animated: false,
       style: { stroke: "#94a3b8", strokeWidth: 2 },
     }));
-
-    // Helper function to get tier number from tier ID
-    const getTierNumber = (tierId: string): number => {
-      const match = tierId.match(/tier-(\d+)/);
-      return match ? parseInt(match[1], 10) : 0;
-    };
 
     // Create course nodes for expanded tiers
     const courseNodes: Node[] = [];
@@ -329,22 +335,15 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
 
   // Format function - recalculates all node positions with increased spacing to prevent overlap
   const handleFormat = useCallback(() => {
-
     const newPositions: Record<string, { x: number; y: number }> = {};
     
     // Root node position
-    newPositions["ml-ai-root"] = { x: 0, y: 40 };
+    newPositions["embedded-systems-root"] = { x: 0, y: 40 };
     
     // Tier nodes positioning - INCREASED spacing to prevent overlap
     const tierSpacing = 600; // Increased from 400 to spread tiers further apart
     const tierStartX = -((careerPathConfig.categories.length - 1) * tierSpacing) / 2;
     const tierY = 220;
-    
-    // Helper function to get tier number from tier ID
-    const getTierNumber = (tierId: string): number => {
-      const match = tierId.match(/tier-(\d+)/);
-      return match ? parseInt(match[1], 10) : 0;
-    };
     
     careerPathConfig.categories.forEach((category, index) => {
       const tierNodeId = category.id;
@@ -398,10 +397,10 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
             
             // Calculate nodes the same way useMemo does, but with newPositions
             const rootNode: Node = {
-              id: "ml-ai-root",
+              id: "embedded-systems-root",
               type: "root",
               data: { label: careerPathConfig.rootLabel },
-              position: newPositions["ml-ai-root"],
+              position: newPositions["embedded-systems-root"],
             };
             
             const tierNodes: Node[] = careerPathConfig.categories.map((category, index) => ({
@@ -450,7 +449,7 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
         });
       });
     });
-  }, [careerPathConfig, expandedTiers, toggleTier]);
+  }, [careerPathConfig, expandedTiers, toggleTier, getTierNumber]);
 
   // Expose reset handler to parent component
   useEffect(() => {
@@ -541,11 +540,17 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
 
             {/* Course Card Content */}
             <div className="p-6">
-              {/* Class Name at Top */}
-              <div className="pr-10 mb-6 border-b border-slate-200 pb-4">
-                <h2 className="text-3xl font-bold text-slate-900">
-                  {selectedCourse.fullName}
+              {/* Header */}
+              <div className="pr-10 mb-4">
+                <h2 className="text-2xl font-bold text-slate-900 mb-1">
+                  {selectedCourse.code}
                 </h2>
+                <h3 className="text-xl text-slate-700 mb-2">
+                  {selectedCourse.name}
+                </h3>
+                <p className="text-sm text-slate-600">
+                  {selectedCourse.fullName}
+                </p>
               </div>
 
               {/* Description */}
@@ -558,8 +563,8 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
                 </div>
               )}
 
-              {/* Expanded Information Section - Space for additional info */}
-              {selectedCourse.expandedInfo && (
+              {/* Expanded Information */}
+              {selectedCourse.expandedInfo && Object.keys(selectedCourse.expandedInfo).length > 0 && (
                 <div className="space-y-6 border-t border-slate-200 pt-6">
                   {/* Credits */}
                   {selectedCourse.expandedInfo.credits && (
@@ -717,11 +722,11 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
                 </div>
               )}
 
-              {/* Placeholder for additional info when expandedInfo is not yet added */}
-              {!selectedCourse.expandedInfo && (
+              {/* If no expanded info or empty expanded info, show a message */}
+              {(!selectedCourse.expandedInfo || Object.keys(selectedCourse.expandedInfo).length === 0) && (
                 <div className="border-t border-slate-200 pt-6">
-                  <p className="text-slate-500 italic text-sm">
-                    Additional course information can be added here.
+                  <p className="text-slate-500 italic">
+                    Additional course information will be displayed here when available.
                   </p>
                 </div>
               )}
@@ -732,11 +737,13 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
 
       <div className="w-full px-4 py-2 bg-muted/20 border-t border-border/40">
         <p className="text-xs text-black text-center">
-          Career path graph for ML-AI (Machine Learning / AI)
+          Career path graph for Embedded Systems Engineering
         </p>
       </div>
     </div>
   );
 }
+
+
 
 

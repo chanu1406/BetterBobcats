@@ -65,6 +65,23 @@ This project is configured with several MCP (Model Context Protocol) servers to 
    BRAVE_API_KEY=your_key_here
    ```
 
+### 7. Supabase
+**Purpose**: Connect to your Supabase database and projects
+
+**Type**: Remote HTTP server
+**URL**: https://mcp.supabase.com/mcp
+
+**No setup required** - uses OAuth authentication (browser-based login)
+
+**Features**:
+- Query your database with natural language
+- Manage tables, migrations, and extensions
+- Deploy Edge Functions
+- View logs and advisors for debugging
+- Generate TypeScript types from your schema
+
+**Security**: Automatically prompts for login during first use. Recommended to use with development projects only, not production data.
+
 ## Configuration File
 
 The MCP servers are configured in [.vscode/mcp.json](.vscode/mcp.json).
@@ -98,6 +115,15 @@ Once configured, you'll have access to:
 - **Documentation lookup**: Get latest docs for any library via Context7
 - **GitHub operations**: Search repos, read files, create issues, etc.
 - **File operations**: Read, write, and search files in your project
+- **Persistent memory**: Store and recall information across conversations
+- **Web search**: Search the web for up-to-date information via Brave
+- **Supabase operations**: 
+  - Query databases with natural language
+  - Manage tables, schemas, and migrations
+  - Deploy and manage Edge Functions
+  - View logs and debugging advisors
+  - Generate TypeScript types from your schema
+  - List projects and organizations
 - **Persistent memory**: Store and retrieve information across sessions
 - **Web search**: Search the web for current information
 
