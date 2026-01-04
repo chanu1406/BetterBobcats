@@ -355,7 +355,7 @@ export const tier1_5Courses: TierCourse[] = [
       ],
   
       careerRelevance:
-        "EE 140 is a core embedded/firmware class for roles like **Embedded Software Engineer**, **Firmware Engineer**, **IoT/Edge Systems Engineer**, and **Robotics/Controls SWE**. It builds the hardware-aware intuition you need to ship reliable firmware (interrupts, peripherals, memory constraints) and to debug real devices when timing, performance, or correctness breaks in production.",
+        "EE 140 is a core embedded/firmware class for roles like Embedded Software Engineer, Firmware Engineer IoT/Edge Systems Engineer, and Robotics/Controls SWE. It builds the hardware-aware intuition you need to ship reliable firmware (interrupts, peripherals, memory constraints) and to debug real devices when timing, performance, or correctness breaks in production.",
   
       realWorldApplications: [
         "Writing peripheral drivers (GPIO/UART/SPI/I2C) and bringing up new boards",
