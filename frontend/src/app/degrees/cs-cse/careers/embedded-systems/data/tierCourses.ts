@@ -24,7 +24,7 @@ export const tier1Courses: TierCourse[] = [
     code: "CSE 140",
     name: "Computer Architecture",
     fullName: "CSE 140: Computer Architecture",
-    description: "CPU, memory, I/O",
+    description: "Computer architecture fundamentals",
     tier: 1,
     expandedInfo: {},
   },
@@ -33,7 +33,7 @@ export const tier1Courses: TierCourse[] = [
     code: "CSE 150",
     name: "Operating Systems",
     fullName: "CSE 150: Operating Systems",
-    description: "Processes, interrupts, concurrency",
+    description: "OS fundamentals for embedded systems",
     tier: 1,
     expandedInfo: {
         credits: 4,
@@ -246,9 +246,9 @@ export const tier1Courses: TierCourse[] = [
         },
       
         additionalNotes:
-          "If you want this to read as ‘real firmware projects’: emphasize requirements, interface contracts, deterministic behavior, and a CI pipeline that includes tests + (optional) hardware-in-the-loop. That’s exactly what hiring managers look for in embedded/system teams."
-      },
-  },
+          "If you want this to read as 'real firmware projects': emphasize requirements, interface contracts, deterministic behavior, and a CI pipeline that includes tests + (optional) hardware-in-the-loop. That's exactly what hiring managers look for in embedded/system teams."
+      }
+    },
 ];
 
 /**
@@ -330,7 +330,7 @@ export const tier1_5Courses: TierCourse[] = [
     code: "EE 140",
     name: "Computer & Microcontroller Architecture",
     fullName: "EE 140: Computer and Microcontroller Architecture",
-    description: "Microcontrollers, firmware",
+    description: "Microcontroller programming & firmware",
     tier: 1.5,
     expandedInfo: {
       credits: 4,
@@ -370,7 +370,7 @@ export const tier1_5Courses: TierCourse[] = [
           "https://www.youtube.com/playlist?list=PLPdZb20cG9f5ZAzWX9Wxv_mkg6hPSXPP5", // UTAustinX: Embedded Systems - Shape the World (hands-on firmware + MCU concepts)
           "https://www.youtube.com/playlist?list=PLPW8O6W-1chwyTzI3BHwBLbGQoPFxPAPM", // Modern Embedded Systems Programming (machine-level view, interrupts, debugging)
           "https://www.youtube.com/playlist?list=PL0E131A78ABFBFDD0",                 // Microprocessors & Microcontrollers (architecture fundamentals)
-          "https://www.youtube.com/watch?v=u_RJhThJN9M",                             // Arm Education Media: efficient embedded systems course overview  // UT intro playlist (quick ramp into MCU + embedded workflow)
+          "https://www.youtube.com/watch?v=u_RJhThJN9M",                             // Arm Education Media: efficient embedded systems course overview  
         ],
         websites: [
           "https://catalog.ucmerced.edu/preview_course_nopop.php?catoid=24&coid=70000",
@@ -388,7 +388,7 @@ export const tier1_5Courses: TierCourse[] = [
       },
   
       additionalNotes:
-        "If you treat this like an infra course for devices: focus on **observability** (serial logs, metrics, tracing-like timestamps), **reliability** (watchdogs, brownout/reset handling), and **performance discipline** (interrupt latency, buffering, fixed memory budgets). Those map directly to shipping real edge systems."
+        "If you treat this like an infra course for devices: focus on observability (serial logs, metrics, tracing-like timestamps), reliability (watchdogs, brownout/reset handling), and performance discipline (interrupt latency, buffering, fixed memory budgets). Those map directly to shipping real edge systems."
     }
   },
   {
@@ -466,7 +466,7 @@ export const tier1_5Courses: TierCourse[] = [
     code: "EE 185",
     name: "Instrumentation",
     fullName: "EE 185: Instrumentation",
-    description: "Sensors, real-world signals",
+    description: "Sensor interfaces & signal processing",
     tier: 1.5,
     expandedInfo: {
         credits: 4,
@@ -1149,7 +1149,7 @@ export const tier2_5Courses: TierCourse[] = [
     code: "ME 146",
     name: "Sensors & Actuators",
     fullName: "ME 146: Sensors & Actuators",
-    description: "Physical interfaces",
+    description: "Sensors & actuators integration",
     tier: 2.5,
     expandedInfo: {
       credits: 3,
@@ -1220,7 +1220,7 @@ export const tier2_5Courses: TierCourse[] = [
     code: "ME 140",
     name: "Vibrations & Control Systems",
     fullName: "ME 140: Vibration and Control",
-    description: "Stability & control",
+    description: "Vibration analysis & control systems",
     tier: 2.5,
     expandedInfo: {
       credits: 4,
@@ -1249,7 +1249,7 @@ export const tier2_5Courses: TierCourse[] = [
   
       careerRelevance:
         "ME 140 is extremely valuable for embedded/robotics/mechatronics paths because it explains why real hardware oscillates and how to stabilize it. "
-        + "It directly supports roles like **Robotics/Mechatronics Engineer**, **Controls/Autonomy Engineer**, **Embedded Systems Engineer (motion/control)**, and **Test/Validation Engineer**—especially when you’re dealing with motors, structures, sensors, and feedback loops where vibration and stability limits dominate performance.",
+        + "It directly supports roles like Robotics/Mechatronics Engineer, Controls/Autonomy Engineer, Embedded Systems Engineer (motion/control), and Test/Validation Engineer—especially when you're dealing with motors, structures, sensors, and feedback loops where vibration and stability limits dominate performance.",
   
       realWorldApplications: [
         "Tuning motor control loops (speed/position) without exciting mechanical resonance",
@@ -1290,7 +1290,7 @@ export const tier2_5Courses: TierCourse[] = [
     code: "ME 145",
     name: "Lagrange Dynamics",
     fullName: "ME 145: Lagrange Dynamics",
-    description: "System modeling",
+    description: "Dynamics modeling for robotics",
     tier: 2.5,
     expandedInfo: {
       credits: 3,
@@ -1438,7 +1438,7 @@ export const tier3Courses: TierCourse[] = [
     code: "CSE 157",
     name: "Signal Processing for IoT",
     fullName: "CSE 157: Signal Processing for Internet of Things",
-    description: "Sensor-heavy embedded",
+    description: "Signal processing for IoT devices",
     tier: 3,
     expandedInfo: {
       credits: 4,
@@ -1513,10 +1513,10 @@ export const tier3Courses: TierCourse[] = [
     code: "EE 180",
     name: "Autonomous Vehicles",
     fullName: "EE 180: Autonomous Vehicles",
-    description: "Embedded autonomy",
+    description: "Autonomous vehicle systems",
     tier: 3,
     expandedInfo: {
-      credits: 4, // UC Merced catalog/program listings show EE 180 as 4 units. :contentReference[oaicite:0]{index=0}
+      credits: 4, // UC Merced catalog/program listings show EE 180 as 4 units.
   
       prerequisites:
         "Not consistently visible in the publicly accessible listing; recommended background: signals/linear systems, probability, basic controls, and embedded programming. Familiarity with sensors (IMU/camera/LiDAR) and networking helps.",
@@ -1543,7 +1543,7 @@ export const tier3Courses: TierCourse[] = [
       ],
   
       careerRelevance:
-        "EE 180 maps directly to embedded autonomy roles (Autonomy/Robotics Engineer, Embedded Perception/Planning Engineer, ADAS Engineer, Validation/Simulation Engineer). It builds the “systems glue” skill: integrating sensors, compute, and real-time software into a reliable pipeline—and understanding how standards (SAE levels) and safety constraints shape what you can actually ship. :contentReference[oaicite:1]{index=1}",
+        "EE 180 maps directly to embedded autonomy roles (Autonomy/Robotics Engineer, Embedded Perception/Planning Engineer, ADAS Engineer, Validation/Simulation Engineer). It builds the \"systems glue\" skill: integrating sensors, compute, and real-time software into a reliable pipeline—and understanding how standards (SAE levels) and safety constraints shape what you can actually ship.",
   
       realWorldApplications: [
         "Designing an embedded perception pipeline that meets latency budgets and degrades safely under sensor dropouts",
@@ -1562,11 +1562,11 @@ export const tier3Courses: TierCourse[] = [
           "https://www.youtube.com/watch?v=TOgVngDl0BE"  // Tier IV talk: SOAFEE-based SDV + Autoware Open AD Kit (modern SDV stack)
         ],
         websites: [
-          "https://ee.ucmerced.edu/courses", // UC Merced EE course list (includes EE 180) :contentReference[oaicite:2]{index=2}
-          "https://www.sae.org/news/blog/sae-levels-driving-automation-clarity-refinements", // SAE levels overview/refinements :contentReference[oaicite:3]{index=3}
-          "https://www.nhtsa.gov/vehicle-manufacturers/automated-driving-systems", // NHTSA ADS guidance context :contentReference[oaicite:4]{index=4}
-          "https://autoware.org/autoware-overview/", // Autoware modular autonomy stack overview :contentReference[oaicite:5]{index=5}
-          "https://github.com/ApolloAuto/apollo" // Apollo open AV stack (modules + repo) :contentReference[oaicite:6]{index=6}
+          "https://ee.ucmerced.edu/courses", // UC Merced EE course list (includes EE 180)
+          "https://www.sae.org/news/blog/sae-levels-driving-automation-clarity-refinements", // SAE levels overview/refinements
+          "https://www.nhtsa.gov/vehicle-manufacturers/automated-driving-systems", // NHTSA ADS guidance context
+          "https://autoware.org/autoware-overview/", // Autoware modular autonomy stack overview
+          "https://github.com/ApolloAuto/apollo" // Apollo open AV stack (modules + repo)
         ],
         tools: [
           "ROS 2 (DDS pub/sub) + bagging/log replay",
@@ -1588,7 +1588,7 @@ export const tier3Courses: TierCourse[] = [
     code: "EECS 270",
     name: "Robot Algorithms",
     fullName: "EECS 270: Robot Algorithms",
-    description: "Robotics systems",
+    description: "Robotics algorithms & planning",
     tier: 3,
     expandedInfo: {
       credits: 4,
@@ -1691,7 +1691,7 @@ export const tier3Courses: TierCourse[] = [
   
       careerRelevance:
         "EECS 283 is a direct fit for embedded/IoT infrastructure roles where the hard part is not ‘a device that works once,’ but a fleet that operates for years. "
-        + "It maps to **IoT Platform Engineer**, **Embedded Systems Engineer (connected devices)**, **Edge/Robotics Systems Engineer**, **Reliability/SRE for device fleets**, and **Applied ML for sensing**—because it forces you to think about protocols, deployment constraints, sensor-data quality, and real-world drift all at once.",
+        + "It maps to IoT Platform Engineer, Embedded Systems Engineer (connected devices), Edge/Robotics Systems Engineer, Reliability/SRE for device fleets, and Applied ML for sensing—because it forces you to think about protocols, deployment constraints, sensor-data quality, and real-world drift all at once.",
   
       realWorldApplications: [
         "Designing a secure device onboarding pipeline (provisioning, certs/keys, identity, policy)",
@@ -1729,7 +1729,7 @@ export const tier3Courses: TierCourse[] = [
       },
   
       additionalNotes:
-        "If you want this to read as ‘large IoT deployments’, your best project framing is: **fleet onboarding + telemetry ingestion + drift monitoring + OTA updates**. "
+        "If you want this to read as 'large IoT deployments', your best project framing is: fleet onboarding + telemetry ingestion + drift monitoring + OTA updates. "
         + "Ship a demo where devices keep working through disconnects, updates roll out safely, and you can prove data quality with metrics (not vibes)."
     }
   },

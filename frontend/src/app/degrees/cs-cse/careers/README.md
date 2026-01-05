@@ -17,7 +17,7 @@ Each career path has its own directory with:
 - `ml-ai/` - Machine Learning / AI ✅ **Complete with interactive graph**
 - `datascience/` - Data Science / Data Analytics ✅ **Complete with interactive graph**
 - `systems-infra/` - Systems / Infrastructure Engineering ✅ **Complete with interactive graph**
-- `embedded/` - Embedded Systems Engineering Pathway (Coming soon)
+- `embedded-systems/` - Embedded Systems Engineering ✅ **Complete with interactive graph**
 
 ### Documentation Available
 
@@ -26,8 +26,7 @@ Each completed career path includes:
 - **Comprehensive README**: Career overview, course details, skills, resources
 - **Tier System**: Courses organized by importance (Tier 1: Must-Take, Tier 2: Boosters, Tier 3: Optional)
 
-**Completed**: SWE, Cybersecurity, ML/AI, Data Science, Systems / Infrastructure Engineering  
-**In Progress**: Embedded
+**Completed**: SWE, Cybersecurity, ML/AI, Data Science, Systems / Infrastructure Engineering, Embedded Systems Engineering
 
 ## Config-Driven Architecture
 

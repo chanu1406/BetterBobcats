@@ -1168,7 +1168,7 @@ export const tier3Courses: TierCourse[] = [
     expandedInfo: {
       credits: 4,
       careerRelevance:
-        "Machine Learning & NLP introduces students to both core machine learning methods and the specialized area of natural language processing — a key skill set for data scientists who work with unstructured text data, such as social media, customer reviews, or documents. NLP and ML skills are essential for roles in predictive analytics, data science research, and AI-assisted applications. ([catalog.ucmerced.edu](https://catalog.ucmerced.edu/preview_course_nopop.php?catoid=24&coid=79532&utm_source=chatgpt.com))",
+        "Machine Learning & NLP introduces students to both core machine learning methods and the specialized area of natural language processing — a key skill set for data scientists who work with unstructured text data, such as social media, customer reviews, or documents. NLP and ML skills are essential for roles in predictive analytics, data science research, and AI-assisted applications. ([catalog.ucmerced.edu](https://catalog.ucmerced.edu/preview_course_nopop.php?catoid=24&coid=79532))",
   
       realWorldApplications: [
         "Using supervised learning models to classify text (e.g., sentiment analysis)",
