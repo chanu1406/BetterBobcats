@@ -4,8 +4,19 @@ An open-source platform for UC Merced students to explore degree programs, caree
 
 ## 🚀 Project Status
 
-**Current Phase:** Scaffolding Complete ✅  
-The project structure has been initialized with all necessary configuration files and directory structures. Business logic implementation is pending.
+**Current Phase:** Core Features Implemented ✅  
+The project has implemented core features including:
+- ✅ Homepage with hero section
+- ✅ Degrees page with CS/CSE degree program
+- ✅ Interactive prerequisite graph visualization
+- ✅ Six complete career path graphs (SWE, Cybersecurity, ML/AI, Data Science, Systems/Infrastructure, Embedded Systems)
+- ✅ Student clubs page with filtering
+- ✅ Interactive course exploration with detailed information
+
+**In Progress:**
+- Additional degree programs beyond CS/CSE
+- Backend API integration
+- User roadmap/planning features
 
 ## 🏗️ Architecture
 
@@ -119,15 +130,28 @@ backend/
 frontend/
 ├── src/
 │   ├── app/                # Next.js App Router
-│   │   ├── layout.tsx
-│   │   ├── page.tsx
-│   │   └── globals.css
-│   ├── components/         # React components (TODO)
-│   ├── lib/
+│   │   ├── page.tsx        # Homepage
+│   │   ├── layout.tsx      # Root layout
+│   │   ├── globals.css     # Global styles
+│   │   ├── components/     # Homepage components
+│   │   ├── degrees/        # Degrees page and CS/CSE content
+│   │   │   ├── page.tsx    # Main degrees page
+│   │   │   ├── components/ # Degrees page components
+│   │   │   └── cs-cse/     # CS/CSE degree content
+│   │   │       ├── components/ # Prerequisite graph components
+│   │   │       ├── careers/    # Career path implementations
+│   │   │       └── data/       # Course data
+│   │   └── clubs/         # Student clubs page
+│   ├── components/         # Shared components (currently empty)
+│   ├── lib/                # Utility functions and API clients
+│   │   ├── api.ts          # Backend API client
+│   │   ├── supabase.ts     # Supabase client
 │   │   └── utils.ts        # Utility functions
-│   └── types/              # TypeScript types
+│   └── types/              # TypeScript type definitions
 │       ├── degree.ts
 │       ├── career.ts
+│       ├── careerPath.ts
+│       ├── course.ts
 │       └── roadmap.ts
 ├── package.json
 ├── tsconfig.json
@@ -167,13 +191,36 @@ npm run lint
 
 ## 📝 Data Models
 
-The platform revolves around three core entities:
+The platform revolves around several core entities:
 
-1. **Degree** - UC Merced degree programs
-2. **Career** - Career paths and opportunities
-3. **Roadmap Items** - Personalized academic planning
+1. **Degree** - UC Merced degree programs (CS/CSE implemented)
+2. **Career Path** - Career paths with tiered course recommendations (6 paths implemented)
+3. **Course** - Course information with prerequisites, descriptions, and metadata
+4. **Club** - Student organizations with major associations
+5. **Roadmap Items** - Personalized academic planning (planned)
 
-*Note: Model definitions are placeholders and require implementation.*
+## 🎯 Current Features
+
+### Implemented Pages
+- **Homepage** (`/`) - Landing page with hero section
+- **Degrees** (`/degrees`) - Browse degree programs
+  - CS/CSE degree with prerequisite graph
+  - Six career paths with interactive graphs
+- **Clubs** (`/clubs`) - Student organizations with filtering
+
+### Career Paths Available
+1. Software Engineering (Generalist)
+2. Cybersecurity
+3. Machine Learning / AI
+4. Data Science / Data Analytics
+5. Systems / Infrastructure Engineering
+6. Embedded Systems Engineering
+
+Each career path includes:
+- Interactive tier-based course graph
+- Detailed course descriptions
+- Learning outcomes and career relevance
+- Resource links and recommendations
 
 ## 🤝 Contributing
 
@@ -196,4 +243,4 @@ TBD
 
 ---
 
-**⚠️ Note:** This project is in early development. Many features are marked as TODO and require implementation.
+**📌 Note:** The frontend is actively developed with core features implemented. Backend API integration and additional degree programs are in progress.
