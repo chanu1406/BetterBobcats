@@ -26,18 +26,6 @@ export default function Navigation() {
             >
               Clubs
             </Link>
-            <a
-              href="#"
-              className="text-sm font-medium hover:text-primary transition-colors"
-            >
-              Careers
-            </a>
-            <a
-              href="#"
-              className="text-sm font-medium hover:text-primary transition-colors"
-            >
-              About
-            </a>
             <button className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:bg-primary/90 transition-colors">
               Get Started
             </button>
