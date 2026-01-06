@@ -25,6 +25,7 @@ export default function DegreesSidebar({
   
   const degrees = [
     "CS/CSE",
+    "COGS",
   ];
 
   const careerPaths: Record<string, { id: string; name: string }[]> = {
@@ -37,6 +38,11 @@ export default function DegreesSidebar({
       { id: "data-science", name: "Data Science / Data Analytics" },
       { id: "systems", name: "Systems / Infrastructure Engineering Pathway" },
       { id: "embedded", name: "Embedded Systems Engineering Pathway" },
+    ],
+    "COGS": [
+      { id: "resumes", name: "Resumes" },
+      { id: "alumni", name: "Alumni" },
+      { id: "ux-ui", name: "UX/UI Design & Research (Generalist)" },
     ],
   };
 
