@@ -1,404 +1,340 @@
+/**
+ * Market Research Analyst Career Path Graph Component
+ * Interactive React Flow graph visualization for Market Research Analyst (Generalist) career path
+ */
+
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useState, useCallback, useRef, useEffect, useMemo } from "react";
 import ReactFlow, {
   Node,
   Edge,
-  Controls,
   Background,
-  useNodesState,
-  useEdgesState,
-  MarkerType,
+  Controls,
+  ReactFlowProvider,
+  ReactFlowInstance,
+  NodeChange,
+  applyNodeChanges,
+  Handle,
   Position,
-  NodeMouseHandler,
-  BackgroundVariant,
 } from "reactflow";
 import "reactflow/dist/style.css";
-import { marketResearchConfig } from "../data";
 import { TierCourse } from "@/types/careerPath";
+import { marketResearchConfig } from "../data/careerPathConfig";
 
-// ==================== TYPE DEFINITIONS ====================
-interface CourseNodeData {
-  label: string;
-  fullName?: string;
-  description?: string;
-  tier?: number;
-  courseData?: TierCourse;
-  isExpanded?: boolean;
-  isTier?: boolean;
-  isRoot?: boolean;
+interface CareerPathGraphProps {
+  onResetReady?: (resetFn: () => void) => void;
+  onFormatReady?: (formatFn: () => void) => void;
 }
 
-interface MarketResearchCareerPathGraphProps {
-  onResetReady?: (handler: () => void) => void;
-  onFormatReady?: (handler: () => void) => void;
-}
-
-// ==================== CUSTOM NODE COMPONENTS ====================
-const RootNode = ({ data }: { data: CourseNodeData }) => (
-  <div className="px-6 py-4 shadow-lg rounded-lg bg-gradient-to-br from-primary to-accent border-2 border-primary/30 min-w-[200px] text-center">
-    <div className="font-bold text-lg text-white">{data.label}</div>
-  </div>
-);
-
-const TierNode = ({ data }: { data: CourseNodeData }) => {
-  const tierColors: Record<number, { bg: string; border: string; text: string }> = {
-    1: {
-      bg: "bg-gradient-to-br from-green-50 to-green-100",
-      border: "border-green-500",
-      text: "text-green-800",
-    },
-    2: {
-      bg: "bg-gradient-to-br from-yellow-50 to-yellow-100",
-      border: "border-yellow-500",
-      text: "text-yellow-800",
-    },
-    3: {
-      bg: "bg-gradient-to-br from-orange-50 to-orange-100",
-      border: "border-orange-500",
-      text: "text-orange-800",
-    },
-  };
-
-  const colors = tierColors[data.tier || 1];
-
+// Custom root node component
+function MarketResearchRootNode({ data }: { data: { label: string } }) {
   return (
-    <div
-      className={`px-5 py-3 shadow-md rounded-lg ${colors.bg} border-2 ${colors.border} min-w-[280px] max-w-[320px] cursor-pointer hover:shadow-xl transition-all duration-200`}
-    >
-      <div className={`font-bold text-sm ${colors.text} text-center leading-tight`}>
+    <div className="w-32 h-32 rounded-full border-2 border-primary bg-primary/10 flex items-center justify-center shadow-lg relative">
+      <Handle type="source" position={Position.Bottom} />
+      <div className="text-lg font-bold text-primary text-center">
         {data.label}
       </div>
     </div>
   );
-};
+}
 
-const CourseNode = ({ data }: { data: CourseNodeData }) => (
-  <div className="px-4 py-3 shadow-md rounded-md bg-white border-2 border-gray-300 hover:border-primary hover:shadow-lg transition-all duration-200 min-w-[180px] max-w-[200px] cursor-pointer">
-    <div className="font-semibold text-xs text-primary mb-1">{data.courseData?.code}</div>
-    <div className="text-xs text-gray-700 leading-tight line-clamp-2">{data.courseData?.name}</div>
-  </div>
-);
+// Custom tier node component
+function TierNode({ data }: { data: { label: string; emoji?: string; isExpanded?: boolean; onToggle?: () => void } }) {
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (data.onToggle) {
+      data.onToggle();
+    }
+  };
+
+  return (
+    <div
+      className={`w-24 h-24 rounded-full border-2 ${
+        data.isExpanded
+          ? "border-primary bg-primary/15 border-solid"
+          : "border-primary/50 bg-primary/5 border-dashed"
+      } flex items-center justify-center shadow-md relative cursor-pointer hover:bg-primary/10 transition-colors`}
+      onClick={handleClick}
+    >
+      <Handle type="target" position={Position.Top} />
+      <Handle type="source" position={Position.Bottom} />
+      <div className="text-[10px] font-semibold text-primary text-center px-2 flex flex-col items-center gap-0.5">
+        {data.emoji && <span className="text-sm">{data.emoji}</span>}
+        <span className="leading-tight break-words">{data.label}</span>
+      </div>
+    </div>
+  );
+}
+
+// Custom course node component
+function CourseNode({ data }: { data: { course: TierCourse } }) {
+  const { course } = data;
+  return (
+    <div className="min-w-[180px] max-w-[200px] rounded-lg border-2 border-slate-300 bg-white shadow-sm hover:shadow-md transition-shadow px-3 py-2 relative cursor-pointer">
+      <Handle type="target" position={Position.Top} />
+      <div className="flex flex-col gap-1">
+        <div className="font-bold text-sm text-slate-800">{course.code}</div>
+        <div className="text-xs text-slate-600 line-clamp-2">{course.name}</div>
+      </div>
+    </div>
+  );
+}
 
 const nodeTypes = {
-  root: RootNode,
+  root: MarketResearchRootNode,
   tier: TierNode,
   course: CourseNode,
 };
 
-// ==================== MAIN COMPONENT ====================
-export default function MarketResearchCareerPathGraph({
-  onResetReady,
-  onFormatReady,
-}: MarketResearchCareerPathGraphProps) {
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [selectedCourse, setSelectedCourse] = useState<TierCourse | null>(null);
+export default function MarketResearchCareerPathGraph({ onResetReady, onFormatReady }: CareerPathGraphProps) {
+  const careerPathConfig = marketResearchConfig;
   const [expandedTiers, setExpandedTiers] = useState<Set<string>>(new Set());
+  const [nodePositions, setNodePositions] = useState<Record<string, { x: number; y: number }>>({});
+  const [nodesState, setNodesState] = useState<Node[]>([]);
+  const [edgesState, setEdgesState] = useState<Edge[]>([]);
+  const [selectedCourse, setSelectedCourse] = useState<TierCourse | null>(null);
+  const reactFlowInstance = useRef<ReactFlowInstance | null>(null);
 
-  // Track initial positions to enable reset
-  const initialNodesRef = useRef<Node[]>([]);
-  const initialEdgesRef = useRef<Edge[]>([]);
-
-  // ==================== GRAPH GENERATION ====================
-  const generateGraph = useCallback(() => {
-    const newNodes: Node<CourseNodeData>[] = [];
-    const newEdges: Edge[] = [];
-
-    // Root node
-    const rootNode: Node<CourseNodeData> = {
-      id: "root",
-      type: "root",
-      position: { x: 400, y: 50 },
-      data: { label: marketResearchConfig.rootLabel, isRoot: true },
-      sourcePosition: Position.Bottom,
-      targetPosition: Position.Top,
-    };
-    newNodes.push(rootNode);
-
-    // Group courses by tier
-    const coursesByTier = marketResearchConfig.courses.reduce((acc, course) => {
-      if (!acc[course.tier]) acc[course.tier] = [];
-      acc[course.tier].push(course);
-      return acc;
-    }, {} as Record<number, TierCourse[]>);
-
-    let currentY = 200;
-    const tierSpacing = 150;
-    const courseSpacing = 250;
-
-    // Create tier nodes and course nodes
-    marketResearchConfig.categories.forEach((category) => {
-      const tierId = category.id;
-      const tierNumber = parseInt(tierId.split("-")[1]);
-      const tierCourses = coursesByTier[tierNumber] || [];
-
-      // Tier node
-      const tierNode: Node<CourseNodeData> = {
-        id: tierId,
-        type: "tier",
-        position: { x: 350, y: currentY },
-        data: {
-          label: `${category.emoji || ""} ${category.label}`.trim(),
-          tier: tierNumber,
-          isTier: true,
-          isExpanded: expandedTiers.has(tierId),
-        },
-        sourcePosition: Position.Bottom,
-        targetPosition: Position.Top,
-      };
-      newNodes.push(tierNode);
-
-      // Edge from root/previous tier to this tier
-      if (tierId === "tier-1") {
-        newEdges.push({
-          id: `root-${tierId}`,
-          source: "root",
-          target: tierId,
-          type: "smoothstep",
-          animated: true,
-          style: { stroke: "#3b82f6", strokeWidth: 2 },
-          markerEnd: { type: MarkerType.ArrowClosed, color: "#3b82f6" },
-        });
+  // Toggle tier expansion
+  const toggleTier = useCallback((tierId: string) => {
+    setExpandedTiers((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(tierId)) {
+        newSet.delete(tierId);
       } else {
-        const prevTierId = `tier-${tierNumber - 1}`;
-        newEdges.push({
-          id: `${prevTierId}-${tierId}`,
-          source: prevTierId,
-          target: tierId,
-          type: "smoothstep",
-          animated: true,
-          style: { stroke: "#3b82f6", strokeWidth: 2 },
-          markerEnd: { type: MarkerType.ArrowClosed, color: "#3b82f6" },
-        });
+        newSet.add(tierId);
       }
+      return newSet;
+    });
+  }, []);
 
-      // Course nodes (only if tier is expanded)
-      if (expandedTiers.has(tierId)) {
-        const coursesY = currentY + 120;
-        const totalWidth = tierCourses.length * courseSpacing;
-        const startX = 400 - totalWidth / 2;
+  // Handle course click
+  const handleCourseClick = useCallback((course: TierCourse) => {
+    setSelectedCourse(course);
+  }, []);
 
-        tierCourses.forEach((course, idx) => {
-          const courseNode: Node<CourseNodeData> = {
+  // Handle closing expanded course card
+  const handleCloseCourseCard = useCallback(() => {
+    setSelectedCourse(null);
+  }, []);
+
+  // Handle node click from React Flow
+  const onNodeClick = useCallback((_event: React.MouseEvent, node: Node) => {
+    if (node.type === "course" && node.data?.course) {
+      handleCourseClick(node.data.course);
+    }
+  }, [handleCourseClick]);
+
+  // Create nodes and edges
+  const { nodes: graphNodes, edges: graphEdges } = useMemo(() => {
+    // Create root node
+    const rootNode: Node = {
+      id: "market-research-root",
+      type: "root",
+      data: { label: careerPathConfig.rootLabel },
+      position: nodePositions["market-research-root"] || { x: 400, y: 40 },
+    };
+
+    // Create tier nodes (3 tiers for this career path)
+    const tierNodes: Node[] = careerPathConfig.categories.map((category, index) => {
+      const x = 150 + index * 250;
+      const y = 200;
+      return {
+        id: category.id,
+        type: "tier",
+        data: {
+          label: category.label,
+          emoji: category.emoji,
+          isExpanded: expandedTiers.has(category.id),
+          onToggle: () => toggleTier(category.id),
+        },
+        position: nodePositions[category.id] || { x, y },
+      };
+    });
+
+    // Create edges from root to tiers
+    const rootToTierEdges: Edge[] = careerPathConfig.categories.map((category) => ({
+      id: `root-${category.id}`,
+      source: "market-research-root",
+      target: category.id,
+      type: "smoothstep",
+      animated: false,
+      style: { stroke: "#0070f3", strokeWidth: 2 },
+    }));
+
+    // Create course nodes for expanded tiers
+    const courseNodes: Node[] = [];
+    const tierToCoursesEdges: Edge[] = [];
+
+    careerPathConfig.categories.forEach((category, tierIndex) => {
+      if (expandedTiers.has(category.id)) {
+        const coursesInTier = careerPathConfig.courses.filter(
+          (course) => course.tier === tierIndex + 1
+        );
+
+        coursesInTier.forEach((course, courseIndex) => {
+          const baseX = 100 + tierIndex * 250;
+          const baseY = 350 + courseIndex * 100;
+          
+          courseNodes.push({
             id: course.id,
             type: "course",
-            position: { x: startX + idx * courseSpacing, y: coursesY },
-            data: {
-              label: course.code,
-              fullName: course.fullName,
-              description: course.description,
-              courseData: course,
-              tier: tierNumber,
-            },
-            sourcePosition: Position.Bottom,
-            targetPosition: Position.Top,
-          };
-          newNodes.push(courseNode);
+            data: { course },
+            position: nodePositions[course.id] || { x: baseX, y: baseY },
+          });
 
-          // Edge from tier to course
-          newEdges.push({
-            id: `${tierId}-${course.id}`,
-            source: tierId,
+          tierToCoursesEdges.push({
+            id: `${category.id}-${course.id}`,
+            source: category.id,
             target: course.id,
             type: "smoothstep",
+            animated: true,
             style: { stroke: "#94a3b8", strokeWidth: 1.5 },
-            markerEnd: { type: MarkerType.ArrowClosed, color: "#94a3b8" },
           });
         });
-
-        currentY = coursesY + 150;
-      } else {
-        currentY += tierSpacing;
       }
     });
 
-    return { nodes: newNodes, edges: newEdges };
-  }, [expandedTiers]);
+    const allNodes = [rootNode, ...tierNodes, ...courseNodes];
+    const allEdges = [...rootToTierEdges, ...tierToCoursesEdges];
 
-  // ==================== INITIALIZE GRAPH ====================
+    return { nodes: allNodes, edges: allEdges };
+  }, [careerPathConfig, expandedTiers, nodePositions, toggleTier]);
+
+  // Update nodes state when graphNodes changes
   useEffect(() => {
-    const { nodes: initialNodes, edges: initialEdges } = generateGraph();
-    setNodes(initialNodes);
-    setEdges(initialEdges);
-    initialNodesRef.current = initialNodes;
-    initialEdgesRef.current = initialEdges;
-  }, [generateGraph, setNodes, setEdges]);
+    setNodesState(graphNodes);
+  }, [graphNodes]);
 
-  // ==================== EVENT HANDLERS ====================
-  const handleNodeClick: NodeMouseHandler = useCallback(
-    (event, node) => {
-      const nodeData = node.data as CourseNodeData;
+  // Update edges state when graphEdges changes
+  useEffect(() => {
+    setEdgesState(graphEdges);
+  }, [graphEdges]);
 
-      // Handle tier node clicks (expand/collapse)
-      if (nodeData.isTier) {
-        setExpandedTiers((prev) => {
-          const newSet = new Set(prev);
-          if (newSet.has(node.id)) {
-            newSet.delete(node.id);
-          } else {
-            newSet.add(node.id);
+  // Handle node changes (dragging, etc.)
+  const onNodesChange = useCallback(
+    (changes: NodeChange[]) => {
+      setNodesState((nds) => {
+        const updatedNodes = applyNodeChanges(changes, nds);
+        
+        // Update nodePositions for dragged nodes
+        changes.forEach((change) => {
+          if (change.type === "position" && change.position && change.dragging === false) {
+            setNodePositions((prev) => ({
+              ...prev,
+              [change.id]: change.position!,
+            }));
           }
-          return newSet;
         });
-        return;
-      }
-
-      // Handle course node clicks (show details)
-      if (nodeData.courseData) {
-        setSelectedCourse(nodeData.courseData);
-      }
+        
+        return updatedNodes;
+      });
     },
     []
   );
 
-  const closeModal = useCallback(() => {
-    setSelectedCourse(null);
-  }, []);
-
-  // ==================== RESET & FORMAT FUNCTIONS ====================
+  // Reset graph function
   const resetGraph = useCallback(() => {
     setExpandedTiers(new Set());
+    setNodePositions({});
     setSelectedCourse(null);
-    setNodes(initialNodesRef.current);
-    setEdges(initialEdgesRef.current);
-  }, [setNodes, setEdges]);
+    if (reactFlowInstance.current) {
+      reactFlowInstance.current.fitView({ padding: 0.2, duration: 500 });
+    }
+  }, []);
 
+  // Format graph function (auto-layout)
   const formatGraph = useCallback(() => {
-    const { nodes: formattedNodes, edges: formattedEdges } = generateGraph();
-    setNodes(formattedNodes);
-    setEdges(formattedEdges);
-  }, [generateGraph, setNodes, setEdges]);
+    if (reactFlowInstance.current) {
+      reactFlowInstance.current.fitView({ padding: 0.2, duration: 500 });
+    }
+  }, []);
 
-  // Register handlers with parent
+  // Register reset and format handlers with parent
   useEffect(() => {
-    if (onResetReady) onResetReady(resetGraph);
-    if (onFormatReady) onFormatReady(formatGraph);
+    if (onResetReady) {
+      onResetReady(resetGraph);
+    }
+    if (onFormatReady) {
+      onFormatReady(formatGraph);
+    }
   }, [onResetReady, onFormatReady, resetGraph, formatGraph]);
 
-  // ==================== RENDER ====================
   return (
-    <div className="w-full h-[800px] bg-gradient-to-br from-gray-50 to-blue-50 rounded-lg border-2 border-gray-200 shadow-inner">
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onNodeClick={handleNodeClick}
-        nodeTypes={nodeTypes}
-        fitView
-        minZoom={0.3}
-        maxZoom={1.5}
-        defaultEdgeOptions={{
-          type: "smoothstep",
-          animated: false,
-          style: { strokeWidth: 2 },
-        }}
-      >
-        <Background variant={BackgroundVariant.Dots} gap={16} size={1} color="#e2e8f0" />
-        <Controls showInteractive={false} />
-      </ReactFlow>
-
-      {/* Course Detail Modal */}
-      {selectedCourse && (
-        <div
-          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
-          onClick={closeModal}
-        >
-          <div
-            className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
+    <div className="relative">
+      <div className="w-full h-[700px] border-2 border-border rounded-lg overflow-hidden bg-white">
+        <ReactFlowProvider>
+          <ReactFlow
+            nodes={nodesState}
+            edges={edgesState}
+            onNodesChange={onNodesChange}
+            onNodeClick={onNodeClick}
+            nodeTypes={nodeTypes}
+            onInit={(instance) => {
+              reactFlowInstance.current = instance;
+              instance.fitView({ padding: 0.2 });
+            }}
+            fitView
+            minZoom={0.2}
+            maxZoom={1.5}
+            defaultEdgeOptions={{
+              type: "smoothstep",
+              animated: false,
+            }}
           >
-            <div className="sticky top-0 bg-gradient-to-r from-primary to-accent text-white p-6 rounded-t-xl">
-              <div className="flex justify-between items-start">
-                <div>
-                  <h3 className="text-2xl font-bold mb-1">{selectedCourse.code}</h3>
-                  <p className="text-sm opacity-90">{selectedCourse.name}</p>
-                </div>
-                <button
-                  onClick={closeModal}
-                  className="text-white hover:bg-white/20 rounded-full p-2 transition-colors"
-                  aria-label="Close modal"
-                >
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div>
+            <Background color="#e5e7eb" gap={16} />
+            <Controls />
+          </ReactFlow>
+        </ReactFlowProvider>
+      </div>
 
-            <div className="p-6 space-y-6">
+      {/* Expanded Course Card */}
+      {selectedCourse && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={handleCloseCourseCard}>
+          <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full mx-4 p-6" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-between items-start mb-4">
               <div>
-                <h4 className="text-lg font-semibold text-gray-900 mb-2">
-                  Why It's High-ROI for Market Research
-                </h4>
-                <p className="text-gray-700 leading-relaxed">{selectedCourse.description}</p>
+                <h3 className="text-2xl font-bold text-slate-800">{selectedCourse.code}</h3>
+                <p className="text-lg text-slate-600">{selectedCourse.name}</p>
+              </div>
+              <button
+                onClick={handleCloseCourseCard}
+                className="text-slate-400 hover:text-slate-600 text-2xl"
+              >
+                ×
+              </button>
+            </div>
+            
+            <div className="space-y-4">
+              <div>
+                <h4 className="font-semibold text-slate-700 mb-2">Why This Course Matters</h4>
+                <p className="text-slate-600">{selectedCourse.description}</p>
               </div>
 
-              {selectedCourse.expandedInfo?.learningOutcomes && (
+              {selectedCourse.expandedInfo?.careerRelevance && (
                 <div>
-                  <h4 className="text-lg font-semibold text-gray-900 mb-2">Learning Outcomes</h4>
-                  <ul className="list-disc list-inside space-y-1 text-gray-700">
-                    {selectedCourse.expandedInfo.learningOutcomes.map((outcome, idx) => (
-                      <li key={idx}>{outcome}</li>
+                  <h4 className="font-semibold text-slate-700 mb-2">Career Relevance</h4>
+                  <p className="text-slate-600">{selectedCourse.expandedInfo.careerRelevance}</p>
+                </div>
+              )}
+
+              {selectedCourse.expandedInfo?.topics && selectedCourse.expandedInfo.topics.length > 0 && (
+                <div>
+                  <h4 className="font-semibold text-slate-700 mb-2">Key Topics</h4>
+                  <ul className="list-disc list-inside text-slate-600 space-y-1">
+                    {selectedCourse.expandedInfo.topics.map((topic, idx) => (
+                      <li key={idx}>{topic}</li>
                     ))}
                   </ul>
                 </div>
               )}
 
-              {selectedCourse.expandedInfo?.topics && (
-                <div>
-                  <h4 className="text-lg font-semibold text-gray-900 mb-2">Topics Covered</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {selectedCourse.expandedInfo.topics.map((topic, idx) => (
-                      <span
-                        key={idx}
-                        className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium"
-                      >
-                        {topic}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {selectedCourse.expandedInfo?.careerRelevance && (
-                <div className="bg-blue-50 border-l-4 border-primary p-4 rounded">
-                  <h4 className="text-lg font-semibold text-gray-900 mb-2">Career Relevance</h4>
-                  <p className="text-gray-700 leading-relaxed">
-                    {selectedCourse.expandedInfo.careerRelevance}
-                  </p>
-                </div>
-              )}
-
-              {selectedCourse.expandedInfo?.credits && (
-                <div className="flex items-center gap-2 text-gray-600">
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                  <span className="font-medium">{selectedCourse.expandedInfo.credits} Credits</span>
-                </div>
-              )}
+              <div className="pt-4 border-t border-slate-200">
+                <span className="inline-block px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
+                  Tier {selectedCourse.tier}
+                </span>
+              </div>
             </div>
           </div>
         </div>
