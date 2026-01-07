@@ -10,9 +10,9 @@ The homepage now has its own components folder following **Option 1** structure.
 frontend/src/app/
 ├── page.tsx                    # Homepage (imports components)
 ├── components/                 # Homepage-specific components
-│   ├── HeroSection.tsx        # Top banner section (includes logo and navigation links)
-│   ├── FeaturesSection.tsx    # Features display (available but not currently used)
-│   └── Navigation.tsx          # Header navigation (available but not currently used)
+│   ├── HeroSection.tsx        # Top banner section
+│   ├── FeaturesSection.tsx    # Features display
+│   └── Navigation.tsx          # Header navigation
 ├── layout.tsx
 └── globals.css
 ```
@@ -21,28 +21,30 @@ frontend/src/app/
 
 ### 1. The Homepage (`page.tsx`)
 
-The homepage currently imports and uses only the HeroSection component:
+The homepage imports and arranges components:
 
 ```tsx
+import Navigation from "./components/Navigation";
 import HeroSection from "./components/HeroSection";
+import FeaturesSection from "./components/FeaturesSection";
 
 export default function Home() {
   return (
-    <main className="min-h-screen">
+    <main>
+      <Navigation />
       <HeroSection />
+      <FeaturesSection />
     </main>
   );
 }
 ```
 
-**Note:** The `HeroSection` component includes the logo and navigation links within it, so separate `Navigation` and `FeaturesSection` components are available but not currently used on the homepage.
-
 ### 2. Components Live Next to the Page
 
 Each component is in `src/app/components/`:
-- `HeroSection.tsx` - The welcome banner (currently used, includes logo and navigation)
-- `FeaturesSection.tsx` - Shows platform features (available but not currently used)
-- `Navigation.tsx` - Header navigation (available but not currently used)
+- `HeroSection.tsx` - The welcome banner
+- `FeaturesSection.tsx` - Shows platform features  
+- `Navigation.tsx` - Header with links
 
 ### 3. Import Path
 

@@ -37,10 +37,11 @@ async def health():
 
 
 # API Routers
-from app.api import courses, careers
+from app.api import courses, careers, admin
 
 app.include_router(courses.router, prefix="/api/courses", tags=["courses"])
 app.include_router(careers.router, prefix="/api/careers", tags=["careers"])
+app.include_router(admin.router, prefix="/api/admin", tags=["admin"])
 
 # TODO: Import and include remaining API routers
 # from app.api import degrees, roadmaps

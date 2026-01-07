@@ -60,9 +60,9 @@ src/
 **Where:** `src/app/components/`
 
 **Example:**
-- `HeroSection.tsx` - The big banner at the top (currently used, includes logo and navigation)
-- `FeaturesSection.tsx` - Shows platform features (available but not currently used)
-- `Navigation.tsx` - Header navigation (available but not currently used on homepage)
+- `HeroSection.tsx` - The big banner at the top
+- `FeaturesSection.tsx` - Shows platform features
+- `Navigation.tsx` - Header navigation (if only on homepage)
 
 **Why:** If a component is only used on one page, keep it close to that page!
 
