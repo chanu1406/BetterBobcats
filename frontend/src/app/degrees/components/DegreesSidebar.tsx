@@ -43,6 +43,7 @@ export default function DegreesSidebar({
       { id: "resumes", name: "Resumes" },
       { id: "alumni", name: "Alumni" },
       { id: "ux-ui", name: "UX/UI Design & Research (Generalist)" },
+      { id: "data-analyst", name: "Data Analyst (Generalist)" },
     ],
   };
 
