@@ -18,6 +18,7 @@ import COGSPrerequisiteGraph from "../cogs/components/PrerequisiteGraph";
 import UXUICareerPathGraph from "../cogs/careers/ux-ui/components/CareerPathGraph";
 import DataAnalystCareerPathGraph from "../cogs/careers/data-analyst/components/CareerPathGraph";
 import MarketResearchCareerPathGraph from "../cogs/careers/market-research/components/CareerPathGraph";
+import HumanResourcesCareerPathGraph from "../cogs/careers/human-resources/components/CareerPathGraph";
 
 interface DegreesContentProps {
   selectedDegree: string | null;
@@ -67,6 +68,10 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
   const resetMarketResearchGraphRef = useRef<(() => void) | null>(null);
   const formatMarketResearchGraphRef = useRef<(() => void) | null>(null);
   
+  // Human Resources graph handlers
+  const resetHumanResourcesGraphRef = useRef<(() => void) | null>(null);
+  const formatHumanResourcesGraphRef = useRef<(() => void) | null>(null);
+  
   // State to track when handlers are ready (updated in useEffect to avoid render-time updates)
   const [resetPrerequisiteReady, setResetPrerequisiteReady] = useState(false);
   const [fullResetPrerequisiteReady, setFullResetPrerequisiteReady] = useState(false);
@@ -88,6 +93,8 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
   const [formatDataAnalystReady, setFormatDataAnalystReady] = useState(false);
   const [resetMarketResearchReady, setResetMarketResearchReady] = useState(false);
   const [formatMarketResearchReady, setFormatMarketResearchReady] = useState(false);
+  const [resetHumanResourcesReady, setResetHumanResourcesReady] = useState(false);
+  const [formatHumanResourcesReady, setFormatHumanResourcesReady] = useState(false);
   
   // Callbacks to register reset handlers from child components
   const handleResetPrerequisiteReady = useRef((handler: () => void) => {
@@ -234,6 +241,20 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
     });
   });
 
+  const handleResetHumanResourcesReady = useRef((handler: () => void) => {
+    resetHumanResourcesGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setResetHumanResourcesReady(true);
+    });
+  });
+
+  const handleFormatHumanResourcesReady = useRef((handler: () => void) => {
+    formatHumanResourcesGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setFormatHumanResourcesReady(true);
+    });
+  });
+
   // Reset readiness flags when switching between pages
   useEffect(() => {
     if (!selectedCareerPath && !selectedDegree) {
@@ -323,6 +344,7 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
       "ux-ui": "UX/UI Design & Research (Generalist)",
       "data-analyst": "Data Analyst (Generalist)",
       "market-research": "Market Research Analyst (Generalist)",
+      "human-resources": "Human Resources Specialist (Generalist)",
       resumes: "Resumes",
       alumni: "Alumni",
     };
@@ -338,6 +360,7 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
       "ux-ui": "UX/UI Design & Research professionals create user-centered products and experiences that combine cognitive science, design thinking, and technical skills. This career path focuses on understanding human behavior, conducting user research, designing intuitive interfaces, and collaborating with engineering teams. Students learn user research methods, prototyping, interaction design, visual design, and usability testing. It emphasizes both the psychological principles behind good design and the practical skills needed to create and validate designs. Roles include UX Designer, UI Designer, UX Researcher, Product Designer, Interaction Designer, and Design Engineer.",
       "data-analyst": "Data Analysts transform raw data into actionable insights that drive business decisions. This career path combines statistics, programming (Python/R/SQL), and domain expertise to collect, clean, analyze, visualize, and model data. Students learn statistical inference, hypothesis testing, database systems, data visualization, and experimental design. The path emphasizes both technical analytical skills and business communication—translating complex findings into clear recommendations. Roles include Data Analyst, Business Intelligence Analyst, Analytics Engineer, Marketing Analyst, Product Analyst, and Junior Data Scientist.",
       "market-research": "Market Research Analysts bridge consumer psychology, economic theory, and data analytics to understand market dynamics and inform business strategy. This career path integrates behavioral economics, statistical modeling, and business analytics to predict consumer behavior, analyze competitive landscapes, and forecast market trends. Students learn consumer decision-making, marketing strategy, econometrics, and data visualization. The path emphasizes both quantitative analytical skills and strategic thinking—translating market data into actionable business recommendations. Roles include Market Research Analyst, Consumer Insights Analyst, Business Analyst, Strategic Consultant, Product Marketing Analyst, and Competitive Intelligence Analyst.",
+      "human-resources": "Human Resources Specialists manage the employee lifecycle and shape organizational culture by combining psychology, sociology, economics, and data analytics. This career path integrates industrial-organizational psychology, labor economics, and people analytics to optimize talent acquisition, development, retention, and organizational effectiveness. Students learn workplace behavior, compensation strategy, DEI principles, leadership development, and HR technology. The path emphasizes both interpersonal skills and data-driven decision-making—translating employee insights into strategic HR initiatives. Roles include HR Generalist, Talent Acquisition Specialist, Compensation Analyst, HR Business Partner, People Analytics Specialist, and Organizational Development Consultant.",
     };
 
     // Handle special sections (Resumes, Alumni)
@@ -952,6 +975,69 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
               <MarketResearchCareerPathGraph 
                 onResetReady={handleResetMarketResearchReady.current}
                 onFormatReady={handleFormatMarketResearchReady.current}
+              />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (selectedCareerPath === "human-resources") {
+      return (
+        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-10 text-center">
+              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+                {careerPathNames[selectedCareerPath]} - {selectedDegree}
+              </h2>
+              <p className="text-black mb-5">
+                Career pathway information and recommended courses
+              </p>
+              {careerDescriptions[selectedCareerPath] && (
+                <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+                  {careerDescriptions[selectedCareerPath]}
+                </p>
+              )}
+            </div>
+            
+            {/* Format and Reset buttons */}
+            <div className="mb-6 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  if (formatHumanResourcesReady && formatHumanResourcesGraphRef.current) {
+                    formatHumanResourcesGraphRef.current();
+                  }
+                }}
+                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                  formatHumanResourcesReady && formatHumanResourcesGraphRef.current
+                    ? "text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+                }`}
+                title={formatHumanResourcesReady && formatHumanResourcesGraphRef.current ? "Format graph to prevent overlap" : "Waiting for format handler..."}
+              >
+                Format Graph
+              </button>
+              <button
+                onClick={() => {
+                  if (resetHumanResourcesReady && resetHumanResourcesGraphRef.current) {
+                    resetHumanResourcesGraphRef.current();
+                  }
+                }}
+                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                  resetHumanResourcesReady && resetHumanResourcesGraphRef.current
+                    ? "text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+                }`}
+                title={resetHumanResourcesReady && resetHumanResourcesGraphRef.current ? "Reset career path graph view" : "Waiting for reset handler..."}
+              >
+                Reset Graph
+              </button>
+            </div>
+            
+            <div className="mb-10">
+              <HumanResourcesCareerPathGraph 
+                onResetReady={handleResetHumanResourcesReady.current}
+                onFormatReady={handleFormatHumanResourcesReady.current}
               />
             </div>
           </div>
