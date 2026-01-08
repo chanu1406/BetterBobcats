@@ -1,0 +1,45 @@
+-- WARNING: This schema is for context only and is not meant to be run.
+-- Table order and constraints may not be valid for execution.
+
+CREATE TABLE public.club_major_notes (
+  club_id uuid NOT NULL,
+  major_id uuid NOT NULL,
+  note text NOT NULL,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT club_major_notes_pkey PRIMARY KEY (club_id, major_id),
+  CONSTRAINT club_major_notes_club_id_fkey FOREIGN KEY (club_id) REFERENCES public.clubs(id),
+  CONSTRAINT club_major_notes_major_id_fkey FOREIGN KEY (major_id) REFERENCES public.majors(id)
+);
+CREATE TABLE public.club_majors (
+  club_id uuid NOT NULL,
+  major_id uuid NOT NULL,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT club_majors_pkey PRIMARY KEY (club_id, major_id),
+  CONSTRAINT club_majors_club_id_fkey FOREIGN KEY (club_id) REFERENCES public.clubs(id),
+  CONSTRAINT club_majors_major_id_fkey FOREIGN KEY (major_id) REFERENCES public.majors(id)
+);
+CREATE TABLE public.club_tags (
+  club_id uuid NOT NULL,
+  tag text NOT NULL,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT club_tags_pkey PRIMARY KEY (club_id, tag),
+  CONSTRAINT club_tags_club_id_fkey FOREIGN KEY (club_id) REFERENCES public.clubs(id)
+);
+CREATE TABLE public.clubs (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  name text NOT NULL,
+  description text NOT NULL,
+  website text,
+  created_at timestamp with time zone DEFAULT now(),
+  slug text UNIQUE,
+  is_active boolean NOT NULL DEFAULT true,
+  display_order integer NOT NULL DEFAULT 0,
+  CONSTRAINT clubs_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.majors (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  name text NOT NULL UNIQUE,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT majors_pkey PRIMARY KEY (id)
+);
+
