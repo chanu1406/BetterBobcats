@@ -1,29 +1,20 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { generateSlug } from "@/lib/utils";
 import ImageUpload from "./ImageUpload";
 import type { ClubCreate } from "@/types/club";
-import type { Major } from "@/types/major";
-import { fetchMajors } from "@/lib/api";
-
-interface AddClubFormProps {
-  onClubCreated?: () => void;
-}
 
 /**
- * Form component for adding a new club with image uploads, tags, majors, and notes
+ * Form component for adding a new club with image uploads
  */
-export default function AddClubForm({ onClubCreated }: AddClubFormProps) {
+export default function AddClubForm() {
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [bannerFile, setBannerFile] = useState<File | null>(null);
-  const [majors, setMajors] = useState<Major[]>([]);
-  const [selectedMajors, setSelectedMajors] = useState<string[]>([]);
-  const [majorNotes, setMajorNotes] = useState<Record<string, string>>({});
-  const [tags, setTags] = useState<string[]>([]);
-  const [tagInput, setTagInput] = useState("");
   const [formData, setFormData] = useState<ClubCreate>({
     name: "",
     description: "",
@@ -34,19 +25,6 @@ export default function AddClubForm({ onClubCreated }: AddClubFormProps) {
     logo_url: null,
     banner_url: null,
   });
-
-  // Fetch majors on mount
-  useEffect(() => {
-    const loadMajors = async () => {
-      try {
-        const data = await fetchMajors();
-        setMajors(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to load majors");
-      }
-    };
-    loadMajors();
-  }, []);
 
   // Auto-generate slug from name
   useEffect(() => {
@@ -86,24 +64,6 @@ export default function AddClubForm({ onClubCreated }: AddClubFormProps) {
       if (formData.slug) formDataToSend.append("slug", formData.slug);
       formDataToSend.append("is_active", formData.is_active.toString());
       formDataToSend.append("display_order", formData.display_order.toString());
-      
-      // Add tags, majors, and notes as JSON strings
-      if (tags.length > 0) {
-        formDataToSend.append("tags", JSON.stringify(tags));
-      }
-      if (selectedMajors.length > 0) {
-        formDataToSend.append("major_ids", JSON.stringify(selectedMajors));
-      }
-      // Include notes only for majors that have notes
-      const notesToSend: Record<string, string> = {};
-      selectedMajors.forEach(majorId => {
-        if (majorNotes[majorId] && majorNotes[majorId].trim()) {
-          notesToSend[majorId] = majorNotes[majorId].trim();
-        }
-      });
-      if (Object.keys(notesToSend).length > 0) {
-        formDataToSend.append("major_notes", JSON.stringify(notesToSend));
-      }
 
       const createResponse = await fetch(`${API_BASE_URL}/api/clubs/`, {
         method: "POST",
@@ -152,15 +112,7 @@ export default function AddClubForm({ onClubCreated }: AddClubFormProps) {
       });
       setLogoFile(null);
       setBannerFile(null);
-      setTags([]);
-      setTagInput("");
-      setSelectedMajors([]);
-      setMajorNotes({});
-      
-      // Refresh the clubs list immediately
-      if (onClubCreated) {
-        onClubCreated();
-      }
+      router.refresh(); // Refresh to show new club in list
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
@@ -185,37 +137,6 @@ export default function AddClubForm({ onClubCreated }: AddClubFormProps) {
           ? null
           : value,
     }));
-  };
-
-  const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && tagInput.trim()) {
-      e.preventDefault();
-      const newTag = tagInput.trim();
-      if (!tags.includes(newTag)) {
-        setTags([...tags, newTag]);
-      }
-      setTagInput("");
-    }
-  };
-
-  const handleRemoveTag = (tagToRemove: string) => {
-    setTags(tags.filter(tag => tag !== tagToRemove));
-  };
-
-  const handleMajorChange = (majorId: string, checked: boolean) => {
-    if (checked) {
-      setSelectedMajors([...selectedMajors, majorId]);
-    } else {
-      setSelectedMajors(selectedMajors.filter(id => id !== majorId));
-      // Remove note for deselected major
-      const newNotes = { ...majorNotes };
-      delete newNotes[majorId];
-      setMajorNotes(newNotes);
-    }
-  };
-
-  const handleMajorNoteChange = (majorId: string, note: string) => {
-    setMajorNotes({ ...majorNotes, [majorId]: note });
   };
 
   return (
@@ -335,121 +256,7 @@ export default function AddClubForm({ onClubCreated }: AddClubFormProps) {
             </div>
           </div>
 
-          {/* Section C: Tags */}
-          <div className="space-y-6">
-            <div className="space-y-1.5 mb-8">
-              <h3 className="text-lg font-semibold text-foreground">Tags</h3>
-              <p className="text-sm text-muted-foreground">Categorize the club (e.g., STEM, Social, Professional)</p>
-            </div>
-
-            <div>
-              <label
-                htmlFor="tags"
-                className="block text-sm font-medium text-foreground mb-2"
-              >
-                Tags
-              </label>
-              <input
-                type="text"
-                id="tags"
-                value={tagInput}
-                onChange={(e) => setTagInput(e.target.value)}
-                onKeyDown={handleAddTag}
-                disabled={isSubmitting}
-                className="w-full px-4 py-3 rounded-lg focus:ring-2 focus:ring-primary/20 focus:outline-none bg-muted/40 text-foreground transition-all disabled:opacity-50 placeholder:text-muted-foreground"
-                placeholder="Type a tag and press Enter to add"
-              />
-              <p className="mt-1.5 text-xs text-muted-foreground">
-                Press Enter to add a tag
-              </p>
-              {tags.length > 0 && (
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-md text-sm"
-                    >
-                      {tag}
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveTag(tag)}
-                        disabled={isSubmitting}
-                        className="hover:text-destructive transition-colors disabled:opacity-50"
-                      >
-                        ×
-                      </button>
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Section D: Majors */}
-          <div className="space-y-6">
-            <div className="space-y-1.5 mb-8">
-              <h3 className="text-lg font-semibold text-foreground">Related Majors</h3>
-              <p className="text-sm text-muted-foreground">Select majors this club is relevant to</p>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-3">
-                Majors
-              </label>
-              <div className="space-y-3 max-h-64 overflow-y-auto border border-border rounded-lg p-4 bg-muted/20">
-                {majors.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">Loading majors...</p>
-                ) : (
-                  majors.map((major) => (
-                    <div key={major.id} className="space-y-2">
-                      <div className="flex items-center space-x-3">
-                        <input
-                          type="checkbox"
-                          id={`major-${major.id}`}
-                          checked={selectedMajors.includes(major.id)}
-                          onChange={(e) => handleMajorChange(major.id, e.target.checked)}
-                          disabled={isSubmitting}
-                          className="w-4 h-4 text-primary border-border rounded focus:ring-primary/20 disabled:opacity-50"
-                        />
-                        <label
-                          htmlFor={`major-${major.id}`}
-                          className="text-sm font-medium text-foreground cursor-pointer flex-1"
-                        >
-                          {major.name}
-                        </label>
-                      </div>
-                      {selectedMajors.includes(major.id) && (
-                        <div className="ml-7">
-                          <label
-                            htmlFor={`note-${major.id}`}
-                            className="block text-xs font-medium text-muted-foreground mb-1"
-                          >
-                            Note (optional)
-                          </label>
-                          <textarea
-                            id={`note-${major.id}`}
-                            value={majorNotes[major.id] || ""}
-                            onChange={(e) => handleMajorNoteChange(major.id, e.target.value)}
-                            disabled={isSubmitting}
-                            rows={2}
-                            className="w-full px-3 py-2 text-sm rounded-lg focus:ring-2 focus:ring-primary/20 focus:outline-none bg-background/50 text-foreground transition-all disabled:opacity-50 placeholder:text-muted-foreground resize-y"
-                            placeholder="Explain how this club relates to this major..."
-                          />
-                        </div>
-                      )}
-                    </div>
-                  ))
-                )}
-              </div>
-              {selectedMajors.length > 0 && (
-                <p className="mt-2 text-xs text-muted-foreground">
-                  {selectedMajors.length} major{selectedMajors.length !== 1 ? "s" : ""} selected
-                </p>
-              )}
-            </div>
-          </div>
-
-          {/* Section E: Advanced Settings */}
+          {/* Section C: Advanced Settings */}
           <div className="space-y-6">
             <div className="bg-muted/15 rounded-lg p-6">
               <div className="space-y-1.5 mb-6">

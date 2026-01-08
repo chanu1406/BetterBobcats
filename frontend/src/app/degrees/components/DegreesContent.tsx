@@ -1161,6 +1161,14 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
               This page shows the full COGS academic foundation at UC Merced. Use the graph below to understand how cognitive science courses connect across psychology, neuroscience, and computation.
             </p>
           </div>
+          <div className="mb-8">
+            <GraphLegend 
+              onFormatLayoutClick={() => setUseFormattedLayout(!useFormattedLayout)}
+              useFormattedLayout={useFormattedLayout}
+              onResetClick={resetPrerequisiteReady ? resetPrerequisiteGraphRef.current || undefined : undefined}
+              onFullResetClick={fullResetPrerequisiteReady ? fullResetPrerequisiteGraphRef.current || undefined : undefined}
+            />
+          </div>
           <div className="mb-10">
             <COGSPrerequisiteGraph 
               useFormattedLayoutExternal={useFormattedLayout}

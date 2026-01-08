@@ -5,9 +5,12 @@ This guide explains how to create career path graph visualizations using the reu
 ## Overview
 
 The career path graph is an interactive visualization that shows:
-- **Root Node**: The career path name (e.g., "SWE", "Cybersecurity")
+- **Root Node**: 
+  - **For Career Path Graphs**: The career path name (e.g., "SWE", "Cybersecurity", "ML/AI")
+  - **For Major Prerequisite Graphs**: The major name (e.g., "COGS", "CS/CSE")
 - **Category/Tier Nodes**: Organized tiers or categories (e.g., "TIER 1: MUST-TAKE", "TIER 2: BOOSTERS")
 - **Course Nodes**: Individual recommended courses with expandable descriptions
+  - **Course Node IDs**: Automatically formatted as `course-${course.id}` (e.g., `course-cse-120`)
 - **Edges**: Arrows connecting root → categories → courses
 
 ## Key Design Principle: Config-Driven Architecture
@@ -197,7 +200,9 @@ import { tier1Courses, tier2Courses, tier3Courses } from "./tierCourses";
 
 export const [careerId]CareerPathConfig: CareerPathConfig = {
   // Root node label
-  rootLabel: "SWE", // or "Cybersecurity", "ML/AI", etc.
+  // For Career Path Graphs: Use career name (e.g., "SWE", "Cybersecurity", "ML/AI")
+  // For Major Prerequisite Graphs: Use major name (e.g., "COGS", "CS/CSE")
+  rootLabel: "SWE", // or "Cybersecurity", "ML/AI", "COGS", "CS/CSE", etc.
   
   // Define categories/tiers
   categories: [
@@ -230,10 +235,14 @@ export const [careerId]CareerPathConfig: CareerPathConfig = {
 
 ### Important Notes:
 
-1. **Category IDs must match tier numbers**: If you use `"tier-1"`, courses must have `tier: 1`
-2. **Flexible tier structure**: You can have 2, 3, 4, or any number of tiers
-3. **Emoji is optional**: Categories work fine without emojis
-4. **Category intros are optional**: Only include if you want intro text
+1. **Root Label Naming**:
+   - **Career Path Graphs**: Use the career name (e.g., `rootLabel: "SWE"`, `rootLabel: "Cybersecurity"`)
+   - **Major Prerequisite Graphs**: Use the major name (e.g., `rootLabel: "COGS"`, `rootLabel: "CS/CSE"`)
+2. **Category IDs must match tier numbers**: If you use `"tier-1"`, courses must have `tier: 1`
+3. **Flexible tier structure**: You can have 2, 3, 4, or any number of tiers
+4. **Emoji is optional**: Categories work fine without emojis
+5. **Category intros are optional**: Only include if you want intro text
+6. **Course Node IDs**: Course nodes automatically use the format `course-${course.id}` - you only need to provide the base `id` in your course data
 
 ## Step 4: Use the Component
 
@@ -306,18 +315,25 @@ if (selectedCareerPath === "swe") {
 
 ### Component Behavior:
 
-1. **Root Node**: Displays the career path name (e.g., "SWE") - configured via `careerPathConfig.rootLabel`
+1. **Root Node**: 
+   - **Career Path Graphs**: Displays the career path name (e.g., "SWE", "Cybersecurity") - configured via `careerPathConfig.rootLabel`
+   - **Major Prerequisite Graphs**: Displays the major name (e.g., "COGS", "CS/CSE") - configured via `careerPathConfig.rootLabel`
+   - Root node function name should match the career/major (e.g., `SWERootNode`, `CybersecurityRootNode`, `COGSRootNode`)
 2. **Tier/Category Nodes**: Creates nodes from `config.categories` - circular nodes with emoji indicators
 3. **Course Expansion**: When a tier node is clicked, shows courses with matching `tier` number below it
+   - **Course Node IDs**: Automatically formatted as `course-${course.id}` (e.g., if course has `id: "cse-120"`, node ID is `"course-cse-120"`)
 4. **Draggable Nodes**: All nodes can be dragged to reposition them on the graph
 5. **Format Graph Button**: Repositions all nodes with increased spacing to prevent overlap:
-   - Increases tier spacing from 400px to 600px
-   - Reduces courses per row from 3 to 2
-   - Increases course spacing from 220px to 300px
-   - Increases row spacing from 100px to 120px
+   - **Reference starting values** (adjust based on graph size):
+     - Increases tier spacing from 400px to 600px
+     - Reduces courses per row from 3 to 2
+     - Increases course spacing from 220px to 300px
+     - Increases row spacing from 100px to 120px
+   - **Note**: Spacing values should be adjusted based on graph size (number of tiers, courses per tier, overall graph dimensions)
 6. **Reset Graph Button**: Fully resets the graph:
    - Collapses all expanded tiers
    - Clears all saved node positions
+   - Closes any open course cards
    - Returns to initial unopened state
 
 ### Node Structure:
@@ -400,13 +416,19 @@ export const cybersecurityCareerPathConfig: CareerPathConfig = {
 
 ### 4. Create Component File
 
-The `CareerPathGraph` component is shared and reused across all career paths. Each career path should have its own component file that imports the shared component, but currently all career paths use the same component directly.
+Each career path has its own component file that is copied from the SWE reference implementation.
 
 **File**: `cs-cse/careers/[career-id]/components/CareerPathGraph.tsx`
 
-For new career paths, you can either:
-- Reuse the existing SWE component (it's config-driven, so it works for all)
-- Copy the component and customize if needed
+**Steps**:
+1. Copy the entire file from `cs-cse/careers/swe/components/CareerPathGraph.tsx`
+2. Update the config import to use your career's config
+3. **Rename the root node function** to match your career/major:
+   - Career paths: `SWERootNode` → `[CareerName]RootNode` (e.g., `CybersecurityRootNode`)
+   - Major graphs: `SWERootNode` → `[MajorName]RootNode` (e.g., `COGSRootNode`)
+4. Update the `nodeTypes` object to use your renamed root node function
+5. Update all root node ID references from `"swe-root"` to `"[career-id]-root"` or `"[major-id]-root"`
+6. **Background variant**: Use `variant={"lines" as any}` for the grid-line pattern (standard for all graphs)
 
 ### 5. Use in DegreesContent
 
@@ -481,18 +503,26 @@ courses: [
 
 ## Best Practices
 
-1. **Consistent Naming**: Use kebab-case for IDs (`tier-1`, not `tier_1`)
-2. **Clear Descriptions**: Make descriptions concise but informative
-3. **Organize by Tier**: Keep tier courses in separate arrays for clarity
-4. **Type Safety**: Always import types from `@/types/careerPath`
-5. **Reusability**: Remember - the component is generic, only config changes
-6. **Expanded Info**: Include `expandedInfo` for better user experience. Recommended minimum fields:
+1. **Consistent Naming**: 
+   - Use kebab-case for IDs (`tier-1`, not `tier_1`)
+   - Course node IDs are automatically formatted as `course-${course.id}` - you only need to provide the base `id` in your course data
+2. **Root Node Naming**:
+   - **Career Path Graphs**: Root node function should be named after the career (e.g., `SWERootNode`, `CybersecurityRootNode`)
+   - **Major Prerequisite Graphs**: Root node function should be named after the major (e.g., `COGSRootNode`, `CSCSERootNode`)
+   - Root node label in config should match: career name for career paths, major name for major graphs
+3. **Clear Descriptions**: Make descriptions concise but informative
+4. **Organize by Tier**: Keep tier courses in separate arrays for clarity
+5. **Type Safety**: Always import types from `@/types/careerPath`
+6. **Reusability**: Remember - the component is generic, only config changes
+7. **Expanded Info**: Include `expandedInfo` for better user experience. Recommended minimum fields:
    - `credits` - Number of credits/units
    - `careerRelevance` - Why this course matters for the career
    - `realWorldApplications` - Examples of industry/real-world use (array)
    - `learningOutcomes` - What students will learn (array)
    - `resources` - Videos, websites, and tools with clickable links
-7. **Resources Format**: Use the structured `resources` object with `videos`, `websites`, and `tools` arrays for better organization
+8. **Resources Format**: Use the structured `resources` object with `videos`, `websites`, and `tools` arrays for better organization
+9. **Background Variant**: Always use `variant={"lines" as any}` for the Background component (grid-line pattern)
+10. **Spacing**: Adjust spacing values based on your graph size - use reference starting values as a baseline
 
 ## Troubleshooting
 
@@ -507,9 +537,16 @@ courses: [
 
 ### Layout Issues
 - Use "Format Graph" button to automatically reposition nodes with wider spacing to prevent overlap
-- Use "Reset Graph" button to fully reset the graph (collapses all tiers, clears positions, returns to initial state)
+- Use "Reset Graph" button to fully reset the graph (collapses all tiers, clears positions, closes course cards, returns to initial state)
 - Nodes are automatically positioned - if overlap occurs after expanding tiers, click "Format Graph" again
-- Spacing values are defined in the `useMemo` calculation: `tierSpacing`, `courseSpacing`, `rowSpacing`, `coursesPerRow`
+- **Spacing values** are defined in the `useMemo` calculation and should be adjusted based on graph size:
+  - **Reference starting values**:
+    - Normal: `tierSpacing=400`, `courseSpacing=220`, `rowSpacing=100`, `coursesPerRow=3`
+    - Formatted: `tierSpacing=600`, `courseSpacing=300`, `rowSpacing=120`, `coursesPerRow=2`
+  - Adjust these values based on:
+    - Number of tiers (more tiers = wider tier spacing)
+    - Number of courses per tier (more courses = wider course spacing, fewer per row)
+    - Overall graph size (larger graphs may need more spacing)
 
 ## Related Documentation
 

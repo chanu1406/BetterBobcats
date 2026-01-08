@@ -1,20 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
-import EditClubForm from "../../components/EditClubForm";
-import { checkAuthAction } from "../../../actions";
+import AddMajorForm from "./components/AddMajorForm";
+import MajorsList, { MajorsListRef } from "./components/MajorsList";
+import { checkAuthAction } from "../actions";
 
 /**
- * Edit Club Page
+ * Majors Management Dashboard
  * Protected route - requires authentication
  * Redirects to login if not authenticated
  */
-export default function EditClubPage() {
+export default function MajorsManagementPage() {
   const router = useRouter();
-  const params = useParams();
-  const clubId = params.id as string;
+  const majorsListRef = useRef<MajorsListRef>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
   // Check authentication on mount
@@ -29,6 +29,11 @@ export default function EditClubPage() {
     checkAuth();
   }, [router]);
 
+  const handleMajorCreated = () => {
+    // Refresh the majors list immediately after major is created
+    majorsListRef.current?.refresh();
+  };
+
   // Show loading state while checking auth
   if (isAuthenticated === null) {
     return (
@@ -39,7 +44,7 @@ export default function EditClubPage() {
   }
 
   // If not authenticated, redirect (handled by useEffect)
-  if (!isAuthenticated || !clubId) {
+  if (!isAuthenticated) {
     return null;
   }
 
@@ -50,23 +55,28 @@ export default function EditClubPage() {
         <div className="flex justify-between items-start mb-12">
           <div>
             <h1 className="text-5xl font-semibold text-foreground mb-3">
-              Edit Club
+              Manage Majors
             </h1>
             <p className="text-muted-foreground text-base">
-              Update club information and settings
+              Create and manage academic majors and degree programs
             </p>
           </div>
           <Link
-            href="/admin/clubs"
+            href="/admin"
             className="px-4 py-2 text-muted-foreground hover:text-foreground rounded-lg font-medium hover:bg-muted/50 transition-colors"
           >
-            ← Back to Clubs
+            ← Back to Dashboard
           </Link>
         </div>
 
-        {/* Edit Club Form */}
+        {/* Add Major Form */}
+        <div className="mb-12">
+          <AddMajorForm onMajorCreated={handleMajorCreated} />
+        </div>
+
+        {/* Existing Majors List */}
         <div>
-          <EditClubForm clubId={clubId} />
+          <MajorsList ref={majorsListRef} />
         </div>
       </div>
     </div>

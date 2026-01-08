@@ -1,22 +1,16 @@
 "use client";
 
-import { useEffect, useState, useImperativeHandle, forwardRef } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import type { Club } from "@/types/club";
-
-export interface ClubsListRef {
-  refresh: () => void;
-}
 
 /**
  * Component to display a list of all clubs
  */
-const ClubsList = forwardRef<ClubsListRef>((props, ref) => {
+export default function ClubsList() {
   const [clubs, setClubs] = useState<Club[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchClubs();
@@ -41,40 +35,6 @@ const ClubsList = forwardRef<ClubsListRef>((props, ref) => {
       setIsLoading(false);
     }
   };
-
-  const handleDelete = async (clubId: string, clubName: string) => {
-    if (!confirm(`Are you sure you want to delete "${clubName}"? This action cannot be undone.`)) {
-      return;
-    }
-
-    try {
-      setDeletingId(clubId);
-      setError(null);
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-      const response = await fetch(`${API_BASE_URL}/api/clubs/${clubId}`, {
-        method: "DELETE",
-      });
-
-      if (!response.ok) {
-        if (response.status === 404) {
-          throw new Error("Club not found");
-        }
-        throw new Error("Failed to delete club");
-      }
-
-      // Refresh the list after successful deletion
-      await fetchClubs();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to delete club");
-    } finally {
-      setDeletingId(null);
-    }
-  };
-
-  // Expose refresh function to parent components
-  useImperativeHandle(ref, () => ({
-    refresh: fetchClubs,
-  }));
 
   if (isLoading) {
     return (
@@ -171,22 +131,14 @@ const ClubsList = forwardRef<ClubsListRef>((props, ref) => {
                 )}
               </div>
 
-              {/* Actions */}
-              <div className="flex-shrink-0 flex items-center gap-2">
-                <Link
-                  href={`/admin/clubs/edit/${club.id}`}
+              {/* Edit Button */}
+              <div className="flex-shrink-0">
+                <button
                   className="px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition-colors"
-                  title={`Edit ${club.name}`}
+                  disabled
+                  title="Edit functionality coming soon"
                 >
                   Edit
-                </Link>
-                <button
-                  onClick={() => handleDelete(club.id, club.name)}
-                  disabled={deletingId === club.id}
-                  className="px-3 py-1.5 text-sm text-destructive hover:text-destructive hover:bg-destructive/10 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  title={`Delete ${club.name}`}
-                >
-                  {deletingId === club.id ? "Deleting..." : "Delete"}
                 </button>
               </div>
             </div>
@@ -195,9 +147,5 @@ const ClubsList = forwardRef<ClubsListRef>((props, ref) => {
       )}
     </div>
   );
-});
-
-ClubsList.displayName = "ClubsList";
-
-export default ClubsList;
+}
 

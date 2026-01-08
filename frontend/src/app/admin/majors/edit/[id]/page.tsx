@@ -3,18 +3,18 @@
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
-import EditClubForm from "../../components/EditClubForm";
+import EditMajorForm from "../../components/EditMajorForm";
 import { checkAuthAction } from "../../../actions";
 
 /**
- * Edit Club Page
+ * Edit Major Page
  * Protected route - requires authentication
  * Redirects to login if not authenticated
  */
-export default function EditClubPage() {
+export default function EditMajorPage() {
   const router = useRouter();
   const params = useParams();
-  const clubId = params.id as string;
+  const majorId = params.id as string;
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
   // Check authentication on mount
@@ -39,7 +39,7 @@ export default function EditClubPage() {
   }
 
   // If not authenticated, redirect (handled by useEffect)
-  if (!isAuthenticated || !clubId) {
+  if (!isAuthenticated || !majorId) {
     return null;
   }
 
@@ -50,23 +50,23 @@ export default function EditClubPage() {
         <div className="flex justify-between items-start mb-12">
           <div>
             <h1 className="text-5xl font-semibold text-foreground mb-3">
-              Edit Club
+              Edit Major
             </h1>
             <p className="text-muted-foreground text-base">
-              Update club information and settings
+              Update major information
             </p>
           </div>
           <Link
-            href="/admin/clubs"
+            href="/admin/majors"
             className="px-4 py-2 text-muted-foreground hover:text-foreground rounded-lg font-medium hover:bg-muted/50 transition-colors"
           >
-            ← Back to Clubs
+            ← Back to Majors
           </Link>
         </div>
 
-        {/* Edit Club Form */}
+        {/* Edit Major Form */}
         <div>
-          <EditClubForm clubId={clubId} />
+          <EditMajorForm majorId={majorId} />
         </div>
       </div>
     </div>

@@ -1,51 +1,28 @@
-"use client";
-
-import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import Link from "next/link";
-import AddClubForm from "./components/AddClubForm";
-import ClubsList, { ClubsListRef } from "./components/ClubsList";
 import { checkAuthAction } from "../actions";
+import AddClubForm from "./components/AddClubForm";
+import ClubsList from "./components/ClubsList";
+
+export const metadata = {
+  title: "Manage Clubs - Admin - BetterBobcats",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 /**
  * Clubs Management Dashboard
  * Protected route - requires authentication
  * Redirects to login if not authenticated
  */
-export default function ClubsManagementPage() {
-  const router = useRouter();
-  const clubsListRef = useRef<ClubsListRef>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-
-  // Check authentication on mount
-  useEffect(() => {
-    const checkAuth = async () => {
-      const auth = await checkAuthAction();
-      setIsAuthenticated(auth);
-      if (!auth) {
-        router.push("/admin/login");
-      }
-    };
-    checkAuth();
-  }, [router]);
-
-  const handleClubCreated = () => {
-    // Refresh the clubs list immediately after club is created
-    clubsListRef.current?.refresh();
-  };
-
-  // Show loading state while checking auth
-  if (isAuthenticated === null) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <p className="text-muted-foreground">Loading...</p>
-      </div>
-    );
-  }
-
-  // If not authenticated, redirect (handled by useEffect)
+export default async function ClubsManagementPage() {
+  // Check authentication using server action
+  const isAuthenticated = await checkAuthAction();
+  
   if (!isAuthenticated) {
-    return null;
+    redirect("/admin/login");
   }
 
   return (
@@ -71,12 +48,12 @@ export default function ClubsManagementPage() {
 
         {/* Add Club Form */}
         <div className="mb-12">
-          <AddClubForm onClubCreated={handleClubCreated} />
+          <AddClubForm />
         </div>
 
         {/* Existing Clubs List */}
         <div>
-          <ClubsList ref={clubsListRef} />
+          <ClubsList />
         </div>
       </div>
     </div>
