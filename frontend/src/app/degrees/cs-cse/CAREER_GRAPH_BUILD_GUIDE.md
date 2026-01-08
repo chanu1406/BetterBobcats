@@ -118,6 +118,34 @@ You will add a new conditional block for your career path, following the exact p
 
 ## 🚀 Step-by-Step Implementation
 
+### Placeholder Conventions
+
+Throughout this guide, you'll see placeholders that need to be replaced with your actual values:
+
+- **`[career-id]`** or **`[your-career-id]`**: Your kebab-case career identifier (e.g., `cybersecurity`, `ml-ai`, `data-science`)
+  - Used in: directory names, file paths, import paths, conditional checks, root node IDs
+  - Format: lowercase letters and hyphens only (e.g., `cybersecurity`, NOT `Cybersecurity` or `cyber_security`)
+
+- **`[CareerName]`**: Your career name in PascalCase (e.g., `Cybersecurity`, `MLAI`, `DataScience`)
+  - Used in: React component function names, variable names, TypeScript identifiers
+  - Format: PascalCase, no spaces or hyphens (e.g., `Cybersecurity`, NOT `cybersecurity` or `cyber-security`)
+
+- **`[careerId]`**: Your career ID in camelCase (e.g., `cybersecurity`, `mlAi`, `dataScience`)
+  - Used in: TypeScript variable names, config export names
+  - Format: camelCase (e.g., `cybersecurityCareerPathConfig`, NOT `CybersecurityCareerPathConfig`)
+
+**Example Mapping**:
+- Career ID: `cybersecurity` → CareerName: `Cybersecurity` → careerId: `cybersecurity`
+- Career ID: `ml-ai` → CareerName: `MLAI` → careerId: `mlAi`
+- Career ID: `data-science` → CareerName: `DataScience` → careerId: `dataScience`
+
+**IMPORTANT**: When replacing placeholders:
+1. Replace ALL instances of the same placeholder consistently
+2. Use the exact same value across all files
+3. Check for typos - a single character difference will break the integration
+
+---
+
 ### Step 1: Choose Your Career ID
 
 **Choose a kebab-case identifier** for your career path. This will be used in:
@@ -161,6 +189,9 @@ cs-cse/careers/cybersecurity/
 **File Path**: `cs-cse/careers/[your-career-id]/data/tierCourses.ts`
 
 This file contains all course recommendations organized by tiers.
+
+**IMPORTANT**: 
+- **Course Node IDs**: Course nodes in the graph use the format `course-${course.id}` (e.g., if your course has `id: "cse-120"`, the node ID will be `"course-cse-120"`). This is handled automatically by the component - you don't need to add the prefix yourself.
 
 #### File Template
 
@@ -409,6 +440,10 @@ export const tier3Courses: TierCourse[] = [
 
 This file defines the structure and configuration of your career path graph.
 
+**IMPORTANT**: 
+- **For Career Path Graphs**: Use the career name as `rootLabel` (e.g., "SWE", "Cybersecurity", "ML/AI")
+- **For Major Prerequisite Graphs**: Use the major name as `rootLabel` (e.g., "COGS", "CS/CSE")
+
 #### File Template
 
 ```typescript
@@ -548,7 +583,39 @@ import { sweCareerPathConfig } from "../data/careerPathConfig";
 import { [careerId]CareerPathConfig } from "../data/careerPathConfig";
 ```
 
-**Then modify ONLY this line** (around line 106):
+**Then modify the root node component function name** (around line 34-44):
+
+```typescript
+// OLD (from SWE):
+function SWERootNode({ data }: { data: { label: string } }) {
+  // ...
+}
+
+// NEW (for your career):
+function [CareerName]RootNode({ data }: { data: { label: string } }) {
+  // ... (keep implementation the same, only change function name)
+}
+```
+
+**Then update the nodeTypes object** (around line 88-93):
+
+```typescript
+// OLD (from SWE):
+const nodeTypes = {
+  root: SWERootNode,
+  tier: TierNode,
+  course: CourseNode,
+};
+
+// NEW (for your career):
+const nodeTypes = {
+  root: [CareerName]RootNode,  // Use your renamed function
+  tier: TierNode,
+  course: CourseNode,
+};
+```
+
+**Then modify the root node definition** (around line 106):
 
 ```typescript
 // OLD (from SWE):
@@ -556,7 +623,7 @@ const rootNode: Node = {
   id: "swe-root",
   type: "root",
   data: { label: sweCareerPathConfig.rootLabel },
-  // ...
+  position: nodePositions["swe-root"] || { x: 0, y: 40 },
 };
 
 // NEW (for your career):
@@ -564,16 +631,23 @@ const rootNode: Node = {
   id: "[career-id]-root",  // Change this to your career ID + "-root"
   type: "root",
   data: { label: [careerId]CareerPathConfig.rootLabel },
-  // ...
+  position: nodePositions["[career-id]-root"] || { x: 0, y: 40 },
 };
 ```
 
-**Then modify ONLY these references** (search for "swe-root" and replace with "[career-id]-root"):
+**Then modify ALL "swe-root" references** (search for "swe-root" and replace with "[career-id]-root"):
 
 - Around line 106: `id: "swe-root"` → `id: "[career-id]-root"`
+- Around line 147: `nodePositions["swe-root"]` → `nodePositions["[career-id]-root"]`
 - Around line 135: `id: "swe-root-${tierNode.id}"` → `id: "[career-id]-root-${tierNode.id}"`
 - Around line 154: `source: "swe-root"` → `source: "[career-id]-root"`
-- Around line 297: `newPositions["swe-root"]` → `newPositions["[career-id]-root"]`
+- Around line 336: `newPositions["swe-root"]` → `newPositions["[career-id]-root"]`
+- Around line 400: `id: "swe-root"` → `id: "[career-id]-root"` (in handleFormat function)
+
+**IMPORTANT**: 
+- **Root node label**: For **career path graphs**, use the career name (e.g., "SWE", "Cybersecurity", "ML/AI")
+- **Root node label**: For **major prerequisite graphs**, use the major name (e.g., "COGS", "CS/CSE")
+- The root node function name should match your career/major (e.g., `SWERootNode`, `CybersecurityRootNode`, `COGSRootNode`)
 
 #### Real Example (Cybersecurity)
 
@@ -582,6 +656,25 @@ Copy the file, then change:
 ```typescript
 // Line ~26:
 import { cybersecurityCareerPathConfig } from "../data/careerPathConfig";
+
+// Line ~34 (rename root node function):
+function CybersecurityRootNode({ data }: { data: { label: string } }) {
+  return (
+    <div className="w-32 h-32 rounded-full border-2 border-primary bg-primary/10 flex items-center justify-center shadow-lg relative">
+      <Handle type="source" position={Position.Bottom} />
+      <div className="text-lg font-bold text-primary text-center">
+        {data.label}
+      </div>
+    </div>
+  );
+}
+
+// Line ~88 (update nodeTypes):
+const nodeTypes = {
+  root: CybersecurityRootNode,  // Changed from SWERootNode
+  tier: TierNode,
+  course: CourseNode,
+};
 
 // Line ~106:
 const rootNode: Node = {
@@ -599,25 +692,96 @@ const tierEdges: Edge[] = tierNodes.map((tierNode) => ({
   // ...
 }));
 
-// Line ~297 (in handleFormat):
+// Line ~336 (in handleFormat):
 newPositions["cybersecurity-root"] = { x: 0, y: 40 };
+
+// Line ~400 (in handleFormat, recalculated root node):
+const rootNode: Node = {
+  id: "cybersecurity-root",
+  type: "root",
+  data: { label: cybersecurityCareerPathConfig.rootLabel },
+  position: newPositions["cybersecurity-root"],
+};
 ```
 
 **IMPORTANT**: 
 - Keep all other code exactly the same
 - Don't change component structure, styling, or logic
-- Only change the config import and root node ID references
-- The Background component uses `variant="lines"` for a grid-line pattern (this is standard for all career path graphs)
+- Only change: config import, root node function name, root node ID references, and nodeTypes mapping
+- The Background component uses `variant={"lines" as any}` for a grid-line pattern (this is standard for all career path graphs)
+- **Course node IDs**: Course nodes use the format `course-${course.id}` (e.g., `course-cse-120`). This is handled automatically by the component.
 
 ---
 
-### Step 7: Integrate into DegreesContent.tsx
+### Step 7: Add Career Path to Sidebar Navigation
+
+**File Path**: `cs-cse/components/DegreesSidebar.tsx`
+
+**Action**: Verify your career ID exists in the sidebar navigation. If missing, add it.
+
+#### Step 7a: Locate the careerPaths Object
+
+Find the `careerPaths` object (around line 31-50):
+
+```typescript
+const careerPaths: Record<string, { id: string; name: string }[]> = {
+  "CS/CSE": [
+    { id: "resumes", name: "Resumes" },
+    { id: "alumni", name: "Alumni" },
+    { id: "swe", name: "SWE (Generalist)" },
+    { id: "cybersecurity", name: "Cybersecurity" },
+    // ... more career paths
+  ],
+  "COGS": [
+    // ... COGS career paths
+  ],
+};
+```
+
+#### Step 7b: Add Your Career Path Entry
+
+Add your career path to the appropriate degree array:
+
+```typescript
+const careerPaths: Record<string, { id: string; name: string }[]> = {
+  "CS/CSE": [
+    // ... existing entries ...
+    { id: "[career-id]", name: "[Display Name]" },  // Add this line
+  ],
+};
+```
+
+**IMPORTANT**:
+- The `id` field MUST match your career ID exactly (e.g., `"cybersecurity"`, `"ml-ai"`)
+- The `id` must match what you use in `DegreesContent.tsx` conditional check
+- The `name` field is the display name shown in the sidebar (can include spaces and special characters)
+- Add it to the correct degree array (`"CS/CSE"` or `"COGS"`)
+
+#### Real Example (Cybersecurity)
+
+```typescript
+const careerPaths: Record<string, { id: string; name: string }[]> = {
+  "CS/CSE": [
+    { id: "resumes", name: "Resumes" },
+    { id: "alumni", name: "Alumni" },
+    { id: "swe", name: "SWE (Generalist)" },
+    { id: "cybersecurity", name: "Cybersecurity" },  // Added this
+    // ... rest of entries
+  ],
+};
+```
+
+**Note**: If your career path is already listed in the sidebar, skip this step. Just verify the ID matches.
+
+---
+
+### Step 8: Integrate into DegreesContent.tsx
 
 **File Path**: `cs-cse/components/DegreesContent.tsx`
 
 **Action**: Add a new conditional block for your career path, following the exact pattern used for SWE.
 
-#### Step 7a: Add Import
+#### Step 8a: Add Import
 
 Find the imports section (around line 8-11) and add:
 
@@ -625,7 +789,7 @@ Find the imports section (around line 8-11) and add:
 import CareerPathGraph from "../cs-cse/careers/[your-career-id]/components/CareerPathGraph";
 ```
 
-#### Step 7b: Add Refs and State
+#### Step 8b: Add Refs and State
 
 Find where SWE refs are defined (around line 26-33) and add similar ones for your career:
 
@@ -645,7 +809,7 @@ const [resetCybersecurityReady, setResetCybersecurityReady] = useState(false);
 const [formatCybersecurityReady, setFormatCybersecurityReady] = useState(false);
 ```
 
-#### Step 7c: Add Handler Functions
+#### Step 8c: Add Handler Functions
 
 Find where SWE handlers are defined (around line 52-66) and add:
 
@@ -665,7 +829,7 @@ const handleFormat[CareerName]Ready = useRef((handler: () => void) => {
 });
 ```
 
-#### Step 7d: Add Cleanup in useEffect
+#### Step 8d: Add Cleanup in useEffect
 
 Find the useEffect that cleans up refs (around line 68-80) and add:
 
@@ -676,7 +840,7 @@ reset[CareerName]GraphRef.current = null;
 format[CareerName]GraphRef.current = null;
 ```
 
-#### Step 7e: Add Conditional Render Block
+#### Step 8e: Add Conditional Render Block
 
 Find the SWE conditional block (around line 181-230) and add a similar one AFTER it:
 
@@ -889,22 +1053,7 @@ export { tier1Courses, tier2Courses, tier3Courses } from "./tierCourses";
 
 ## 🔗 Integration Steps
 
-### Step 1: Verify Career ID is in Sidebar
-
-**File**: `cs-cse/components/DegreesSidebar.tsx`
-
-Check that your career ID exists in the `careerPaths` object:
-
-```typescript
-const careerPaths: Record<string, { id: string; name: string }[]> = {
-  "CS/CSE": [
-    // ...
-    { id: "[your-career-id]", name: "[Display Name]" },
-  ],
-};
-```
-
-If it's missing, add it. The ID must match what you use in `DegreesContent.tsx`.
+**Note**: The integration steps (Steps 7-8) are now included in the main Step-by-Step Implementation section above. This section is kept for reference but the detailed instructions are in Steps 7-8.
 
 ### Step 2: Verify Career Description
 
@@ -1037,7 +1186,19 @@ const careerPathNames: Record<string, string> = {
    - ❌ Still using `sweCareerPathConfig.rootLabel`
    - ✅ Fix: Change to `[careerId]CareerPathConfig.rootLabel`
 
-3. **Using SWE component file**
+3. **Forgot to rename root node function**
+   - ❌ Still using `SWERootNode` function name
+   - ✅ Fix: Rename to match your career/major:
+     ```typescript
+     // For career paths:
+     function CybersecurityRootNode({ data }: { data: { label: string } }) { ... }
+     
+     // For major graphs:
+     function COGSRootNode({ data }: { data: { label: string } }) { ... }
+     ```
+   - Then update `nodeTypes` to use your renamed function
+
+4. **Using SWE component file**
    - ❌ Accidentally using `swe/components/CareerPathGraph.tsx` instead of your copy
    - ✅ Fix: Ensure you're importing from your career's component folder
 
@@ -1045,6 +1206,9 @@ const careerPathNames: Record<string, string> = {
 - [ ] Import path points to your `data/careerPathConfig.ts`
 - [ ] Variable name matches your export name
 - [ ] All references to `sweCareerPathConfig` replaced with your config name
+- [ ] Root node function renamed (e.g., `SWERootNode` → `CybersecurityRootNode` or `COGSRootNode`)
+- [ ] `nodeTypes` object updated to use renamed root node function
+- [ ] All `"swe-root"` references replaced with `"[career-id]-root"` or `"[major-id]-root"`
 - [ ] Import in `DegreesContent.tsx` points to your component folder
 
 ---
@@ -1066,10 +1230,16 @@ const careerPathNames: Record<string, string> = {
    - ❌ Two courses with same `id` in same `tierCourses.ts`
    - ✅ Fix: Ensure all IDs are unique within the file
 
+3. **Course Node ID Format**
+   - **Note**: Course nodes in the graph automatically use the format `course-${course.id}`
+   - If your course has `id: "cse-120"`, the node ID becomes `"course-cse-120"`
+   - This prefix is added automatically - you only need to ensure the base `id` is unique
+
 **Debug Checklist**:
-- [ ] All course IDs are unique across entire codebase
+- [ ] All course IDs are unique across entire codebase (base IDs, before `course-` prefix)
 - [ ] Use career prefix if reusing course codes from other careers
 - [ ] No duplicate IDs within same `tierCourses.ts` file
+- [ ] Remember: Course node IDs are `course-${course.id}` - check for conflicts with this format
 
 ---
 
@@ -1108,20 +1278,33 @@ const careerPathNames: Record<string, string> = {
 
 1. **Use Format Graph button**
    - Click "Format Graph" button to automatically reposition nodes with wider spacing
+   - Spacing values are automatically adjusted based on graph size
 
-2. **Manual spacing adjustment** (if needed)
-   - In `CareerPathGraph.tsx`, find spacing constants (around line 180-182):
+2. **Reference starting spacing values** (adjust based on your graph size):
+   - In `CareerPathGraph.tsx`, find spacing constants (around line 152-164):
      ```typescript
-     const coursesPerRow = isFormatted ? 2 : 3;
-     const courseSpacing = isFormatted ? 300 : 220;
-     const rowSpacing = isFormatted ? 120 : 100;
+     // Normal (unformatted) spacing:
+     const tierSpacing = 400;        // Horizontal spacing between tier nodes
+     const coursesPerRow = 3;        // Number of courses per row
+     const courseSpacing = 220;      // Horizontal spacing between courses
+     const rowSpacing = 100;         // Vertical spacing between course rows
+     
+     // Formatted spacing (when Format button is clicked):
+     const tierSpacing = 600;        // Increased horizontal spacing between tiers
+     const coursesPerRow = 2;        // Reduced to 2 per row
+     const courseSpacing = 300;      // Increased horizontal spacing between courses
+     const rowSpacing = 120;         // Increased vertical spacing between rows
      ```
-   - Adjust these values if needed (but Format button should handle it)
+   - **Adjust these values based on your graph size**: If you have many courses or tiers, increase spacing values. If you have few courses, you may decrease them.
 
-**Note**: Format button increases spacing automatically. If overlap persists, check:
-- [ ] Format button is working (check console for errors)
-- [ ] Enough space in viewport (try zooming out)
-- [ ] Not too many courses per row (Format reduces to 2 per row)
+**Note**: Format button increases spacing automatically. Spacing should be adjusted based on:
+- Number of tiers (more tiers = wider tier spacing)
+- Number of courses per tier (more courses = wider course spacing, fewer per row)
+- Overall graph size (larger graphs may need more spacing)
+- If overlap persists, check:
+  - [ ] Format button is working (check console for errors)
+  - [ ] Enough space in viewport (try zooming out)
+  - [ ] Spacing values are appropriate for your graph size
 
 ---
 
@@ -1243,15 +1426,16 @@ After creating your career path graph, verify the following:
 
 **Minimum Steps to Create a New Career Path:**
 
-1. ✅ Create directory: `cs-cse/careers/[career-id]/`
-2. ✅ Create `data/tierCourses.ts` with course data
-3. ✅ Create `data/careerPathConfig.ts` with configuration
-4. ✅ Create `data/index.ts` with exports
-5. ✅ Copy `components/CareerPathGraph.tsx` from SWE
-6. ✅ Update import and root node ID in copied component
-7. ✅ Add integration code to `DegreesContent.tsx`
-8. ✅ Verify career ID in `DegreesSidebar.tsx`
-9. ✅ Test all functionality
+1. ✅ Choose your career ID (kebab-case)
+2. ✅ Create directory: `cs-cse/careers/[career-id]/`
+3. ✅ Create `data/tierCourses.ts` with course data
+4. ✅ Create `data/careerPathConfig.ts` with configuration
+5. ✅ Create `data/index.ts` with exports
+6. ✅ Copy `components/CareerPathGraph.tsx` from SWE
+7. ✅ Update import, root node function name, and root node ID in copied component
+8. ✅ Add career path to `DegreesSidebar.tsx` (if not already present)
+9. ✅ Add integration code to `DegreesContent.tsx`
+10. ✅ Test all functionality
 
 **Estimated Time**: 30-60 minutes for experienced developers, 1-2 hours for first-time setup.
 

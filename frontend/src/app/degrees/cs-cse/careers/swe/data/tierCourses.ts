@@ -47,6 +47,7 @@ export const tier1Courses: TierCourse[] = [
       }
     }
   },
+ 
   {
     id: "cse-111",
     code: "CSE 111",
