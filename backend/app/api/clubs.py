@@ -3,13 +3,12 @@ Clubs API Routes
 Endpoints for managing clubs in the database
 """
 from fastapi import APIRouter, HTTPException, Depends, UploadFile, File, Form, Body
-from typing import List, Optional, Dict
+from typing import List, Optional
 from app.models.club import Club, ClubCreate
 from app.db.client import get_db
 from app.utils.slug import generate_slug
 from supabase import Client
 import os
-import json
 
 router = APIRouter()
 
@@ -45,13 +44,10 @@ async def create_club(
     display_order: int = Form(0),
     logo_url: Optional[str] = Form(None),
     banner_url: Optional[str] = Form(None),
-    tags: Optional[str] = Form(None),  # JSON array of tag strings
-    major_ids: Optional[str] = Form(None),  # JSON array of major UUIDs
-    major_notes: Optional[str] = Form(None),  # JSON object mapping major_id to note text
-    db: Client = Depends(lambda: get_db(admin=True))  # Use admin client to bypass RLS
+    db: Client = Depends(get_db)
 ):
     """
-    Create a new club with optional tags, majors, and major-specific notes
+    Create a new club
     
     Args:
         name: Club name
@@ -62,9 +58,6 @@ async def create_club(
         display_order: Display order
         logo_url: Logo URL (optional)
         banner_url: Banner URL (optional)
-        tags: JSON array of tag strings (optional, e.g., '["STEM", "Social"]')
-        major_ids: JSON array of major UUID strings (optional)
-        major_notes: JSON object mapping major_id to note (optional, e.g., '{"uuid1": "note1"}')
         
     Returns:
         Created club with generated id and created_at
@@ -108,59 +101,7 @@ async def create_club(
                 detail="Failed to create club: No data returned"
             )
         
-        club = Club(**response.data[0])
-        club_id = str(club.id)
-        
-        # Parse and insert tags
-        if tags:
-            try:
-                tags_list = json.loads(tags)
-                if isinstance(tags_list, list) and tags_list:
-                    # Insert tags into club_tags table
-                    tag_records = [{"club_id": club_id, "tag": tag} for tag in tags_list if tag.strip()]
-                    if tag_records:
-                        db.table("club_tags").insert(tag_records).execute()
-            except json.JSONDecodeError:
-                # Invalid JSON, skip tags
-                pass
-        
-        # Parse and insert majors and notes
-        if major_ids:
-            try:
-                majors_list = json.loads(major_ids)
-                if isinstance(majors_list, list) and majors_list:
-                    # Verify all major IDs exist
-                    major_response = db.table("majors").select("id").in_("id", majors_list).execute()
-                    valid_major_ids = [m["id"] for m in major_response.data]
-                    
-                    # Insert club-major relationships
-                    if valid_major_ids:
-                        major_records = [{"club_id": club_id, "major_id": major_id} for major_id in valid_major_ids]
-                        db.table("club_majors").insert(major_records).execute()
-                        
-                        # Parse and insert major notes if provided
-                        if major_notes:
-                            try:
-                                notes_dict = json.loads(major_notes)
-                                if isinstance(notes_dict, dict):
-                                    note_records = []
-                                    for major_id, note_text in notes_dict.items():
-                                        if major_id in valid_major_ids and note_text and note_text.strip():
-                                            note_records.append({
-                                                "club_id": club_id,
-                                                "major_id": major_id,
-                                                "note": note_text.strip()
-                                            })
-                                    if note_records:
-                                        db.table("club_major_notes").insert(note_records).execute()
-                            except json.JSONDecodeError:
-                                # Invalid JSON for notes, skip
-                                pass
-            except json.JSONDecodeError:
-                # Invalid JSON, skip majors
-                pass
-        
-        return club
+        return Club(**response.data[0])
     except HTTPException:
         raise
     except Exception as e:
@@ -174,7 +115,7 @@ async def create_club(
 async def upload_logo(
     club_slug: str,
     file: UploadFile = File(...),
-    db: Client = Depends(lambda: get_db(admin=True))  # Use admin client to bypass RLS
+    db: Client = Depends(get_db)
 ):
     """
     Upload logo image for a club
@@ -242,7 +183,7 @@ async def upload_logo(
 async def upload_banner(
     club_slug: str,
     file: UploadFile = File(...),
-    db: Client = Depends(lambda: get_db(admin=True))  # Use admin client to bypass RLS
+    db: Client = Depends(get_db)
 ):
     """
     Upload banner image for a club
@@ -310,7 +251,7 @@ async def upload_banner(
 async def update_club(
     club_id: str,
     update_data: dict = Body(...),
-    db: Client = Depends(lambda: get_db(admin=True))  # Use admin client to bypass RLS
+    db: Client = Depends(get_db)
 ):
     """
     Update club fields (typically image URLs)

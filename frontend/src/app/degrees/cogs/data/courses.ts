@@ -44,6 +44,16 @@ export const cogsCourses: Course[] = [
   
   // Year 1 - Spring
   {
+    id: 'math-022',
+    code: 'MATH 022',
+    name: 'Calculus II',
+    fullName: 'MATH 022: Calculus II for Physical Sciences and Engineering',
+    year: 1,
+    semester: 'spring',
+    prerequisites: ['math-021'],
+    category: 'Math',
+  },
+  {
     id: 'psych-001',
     code: 'PSYCH 001',
     name: 'Introduction to Psychology',
@@ -72,7 +82,7 @@ export const cogsCourses: Course[] = [
     fullName: 'COGS 101: Cognitive Psychology',
     year: 2,
     semester: 'fall',
-    prerequisites: ['cogs-001', 'psych-001'],
+    prerequisites: ['cogs-001'],
     category: 'COGS Core',
   },
   {
@@ -94,34 +104,20 @@ export const cogsCourses: Course[] = [
     fullName: 'COGS 102: Neuroscience and Behavior',
     year: 2,
     semester: 'spring',
-    prerequisites: ['cogs-001', 'psych-001'],
+    prerequisites: ['cogs-101', 'cogs-110'],
     category: 'COGS Core',
-  },
-  
-  // Year 3 - Fall
-  {
-    id: 'cogs-elective-1',
-    code: 'COGS Elective',
-    name: 'COGS Upper Division Elective',
-    fullName: 'COGS Upper Division Elective',
-    year: 3,
-    semester: 'fall',
-    prerequisites: ['cogs-101'],
-    isCategory: true,
-    category: 'COGS Elective',
   },
   
   // Year 3 - Spring
   {
-    id: 'cogs-elective-2',
-    code: 'COGS Elective',
-    name: 'COGS Upper Division Elective',
-    fullName: 'COGS Upper Division Elective',
+    id: 'cogs-105',
+    code: 'COGS 105',
+    name: 'Research Methods for Cognitive Scientists',
+    fullName: 'COGS 105: Research Methods for Cognitive Scientists',
     year: 3,
     semester: 'spring',
-    prerequisites: ['cogs-101'],
-    isCategory: true,
-    category: 'COGS Elective',
+    prerequisites: ['cogs-102'],
+    category: 'COGS Core',
   },
   
   // Year 4 - Fall
@@ -132,7 +128,7 @@ export const cogsCourses: Course[] = [
     fullName: 'COGS 190: Senior Capstone Project',
     year: 4,
     semester: 'fall',
-    prerequisites: ['cogs-101', 'cogs-110'],
+    prerequisites: ['cogs-105'],
     category: 'COGS Core',
   },
 ];

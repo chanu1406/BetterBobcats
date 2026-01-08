@@ -1,17 +1,13 @@
 "use client";
 
-import { useEffect, useState, useImperativeHandle, forwardRef } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import type { Club } from "@/types/club";
-
-export interface ClubsListRef {
-  refresh: () => void;
-}
 
 /**
  * Component to display a list of all clubs
  */
-const ClubsList = forwardRef<ClubsListRef>((props, ref) => {
+export default function ClubsList() {
   const [clubs, setClubs] = useState<Club[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -39,11 +35,6 @@ const ClubsList = forwardRef<ClubsListRef>((props, ref) => {
       setIsLoading(false);
     }
   };
-
-  // Expose refresh function to parent components
-  useImperativeHandle(ref, () => ({
-    refresh: fetchClubs,
-  }));
 
   if (isLoading) {
     return (
@@ -156,9 +147,5 @@ const ClubsList = forwardRef<ClubsListRef>((props, ref) => {
       )}
     </div>
   );
-});
-
-ClubsList.displayName = "ClubsList";
-
-export default ClubsList;
+}
 

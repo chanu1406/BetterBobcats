@@ -90,6 +90,11 @@ export default async function AdminDashboardPage() {
                 Manage Clubs
               </button>
             </Link>
+            <Link href="/admin/majors">
+              <button className="w-full px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors text-left">
+                Manage Majors
+              </button>
+            </Link>
             <button className="px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors text-left">
               Manage Careers
             </button>
