@@ -112,4 +112,3 @@ export async function logoutAction() {
     redirect("/admin/login");
   }
 }
-

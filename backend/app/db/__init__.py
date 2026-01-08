@@ -1,1 +1,2 @@
-"""Database Package"""
+"""Database client package"""
+

@@ -51,9 +51,9 @@ if ! python -c "import fastapi" 2>/dev/null; then
     pip install -r requirements.txt
 fi
 
-# Start backend server
+# Start backend server using venv's Python directly
 echo -e "${GREEN}Backend running on http://localhost:8000${NC}"
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000 &
+./venv/bin/python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000 &
 BACKEND_PID=$!
 
 cd ..

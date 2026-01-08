@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { logoutAction, checkAuthAction } from "./actions";
 
 export const metadata = {
@@ -84,9 +85,11 @@ export default async function AdminDashboardPage() {
             Quick Actions
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <button className="px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors text-left">
-              Manage Courses
-            </button>
+            <Link href="/admin/clubs">
+              <button className="w-full px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors text-left">
+                Manage Clubs
+              </button>
+            </Link>
             <button className="px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors text-left">
               Manage Careers
             </button>
