@@ -1,45 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import EditMajorForm from "../../components/EditMajorForm";
-import { checkAuthAction } from "../../../actions";
 
 /**
  * Edit Major Page
- * Protected route - requires authentication
- * Redirects to login if not authenticated
+ * Protected by admin layout (requirePlatformAdmin)
  */
 export default function EditMajorPage() {
-  const router = useRouter();
   const params = useParams();
   const majorId = params.id as string;
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
-  // Check authentication on mount
-  useEffect(() => {
-    const checkAuth = async () => {
-      const auth = await checkAuthAction();
-      setIsAuthenticated(auth);
-      if (!auth) {
-        router.push("/admin/login");
-      }
-    };
-    checkAuth();
-  }, [router]);
-
-  // Show loading state while checking auth
-  if (isAuthenticated === null) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <p className="text-muted-foreground">Loading...</p>
-      </div>
-    );
-  }
-
-  // If not authenticated, redirect (handled by useEffect)
-  if (!isAuthenticated || !majorId) {
+  if (!majorId) {
     return null;
   }
 

@@ -161,30 +161,32 @@ const [selectedDegree, setSelectedDegree] = useState<string | null>(null);
 
 ## Adding New Degrees
 
-To add a new degree to the sidebar:
+**⚠️ IMPORTANT**: Before creating a new degree, read the comprehensive guide: **[DEGREE_PREREQUISITE_GRAPH_GUIDE.md](DEGREE_PREREQUISITE_GRAPH_GUIDE.md)**
 
-1. Open `src/app/degrees/components/DegreesSidebar.tsx`
-2. Add the degree code to the `degrees` array:
+The guide provides step-by-step instructions for creating a new degree prerequisite graph, including:
 
-```tsx
-const degrees = [
-  "CS/CSE",
-  "NEW_DEGREE", // Add here
-];
-```
+- Complete file structure and setup
+- **Critical rule: No cross-category prerequisites** (each category only shows prerequisites within that category)
+- Code templates and examples
+- Integration instructions
+- Testing checklist
 
-3. Create a new directory structure for the degree:
-   ```
-   degrees/
-   └── new-degree/        # Use kebab-case for directory name
-       ├── data/
-       │   └── courses.ts # Degree course data
-       └── components/    # Degree-specific components (optional)
-   ```
+### Quick Overview
 
-4. The degree will automatically appear in the sidebar as a new block with the same styling
+To add a new degree:
 
-**Note:** Currently only CS/CSE is fully implemented. Additional degrees should follow the same folder structure pattern.
+1. **Read the complete guide**: `DEGREE_PREREQUISITE_GRAPH_GUIDE.md` for detailed instructions
+2. **Create directory structure**: `degrees/[degree-id]/data/` and `degrees/[degree-id]/components/`
+3. **Create courses.ts**: Define all courses with prerequisites
+4. **Copy and adapt PrerequisiteGraph.tsx**: From CS/CSE, adapt for your categories
+5. **Add to sidebar**: Update `DegreesSidebar.tsx` to include your degree
+6. **Integrate into DegreesContent**: Add imports and conditional rendering
+
+### Critical Rule: No Cross-Category Prerequisites
+
+**Prerequisite graphs MUST NOT show cross-category prerequisites.** Each category branch (e.g., Math, Biology, Chemistry) only shows prerequisite relationships within that same category. See the guide for details and implementation examples.
+
+**Note:** Currently only CS/CSE is fully implemented. Additional degrees should follow the same folder structure pattern and the comprehensive guide.
 
 ## Adding Career Path Data
 
@@ -402,8 +404,9 @@ For detailed instructions on creating career path graphs, see **`CAREER_PATH_GRA
 
 ## Related Documentation
 
-- See `CAREER_PATH_GRAPH_GUIDE.md` for career path graph creation guide
-- See `GRAPH_STRUCTURE_GUIDE.md` for prerequisite graph structure
+- **[DEGREE_PREREQUISITE_GRAPH_GUIDE.md](DEGREE_PREREQUISITE_GRAPH_GUIDE.md)** - **Complete guide for creating new degree prerequisite graphs** (start here!)
+- See `CAREER_PATH_GRAPH_GUIDE.md` for career path graph creation guide (different type of graph)
+- See `GRAPH_STRUCTURE_GUIDE.md` for prerequisite graph structure details
 - See `COMPONENT_STRUCTURE.md` for overall component organization
 - See `CODING_STANDARDS.md` for coding guidelines
 - See `FUNCTION_TEMPLATES.md` for component templates

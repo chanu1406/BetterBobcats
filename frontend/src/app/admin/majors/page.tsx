@@ -1,52 +1,21 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRef } from "react";
 import Link from "next/link";
 import AddMajorForm from "./components/AddMajorForm";
 import MajorsList, { MajorsListRef } from "./components/MajorsList";
-import { checkAuthAction } from "../actions";
 
 /**
  * Majors Management Dashboard
- * Protected route - requires authentication
- * Redirects to login if not authenticated
+ * Protected by admin layout (requirePlatformAdmin)
  */
 export default function MajorsManagementPage() {
-  const router = useRouter();
   const majorsListRef = useRef<MajorsListRef>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-
-  // Check authentication on mount
-  useEffect(() => {
-    const checkAuth = async () => {
-      const auth = await checkAuthAction();
-      setIsAuthenticated(auth);
-      if (!auth) {
-        router.push("/admin/login");
-      }
-    };
-    checkAuth();
-  }, [router]);
 
   const handleMajorCreated = () => {
     // Refresh the majors list immediately after major is created
     majorsListRef.current?.refresh();
   };
-
-  // Show loading state while checking auth
-  if (isAuthenticated === null) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <p className="text-muted-foreground">Loading...</p>
-      </div>
-    );
-  }
-
-  // If not authenticated, redirect (handled by useEffect)
-  if (!isAuthenticated) {
-    return null;
-  }
 
   return (
     <div className="min-h-screen bg-background">

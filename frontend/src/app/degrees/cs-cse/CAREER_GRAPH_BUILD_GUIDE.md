@@ -28,67 +28,96 @@ This guide provides **extremely detailed, step-by-step instructions** for creati
 ### What You're Building
 
 A career path graph is an interactive visualization that shows:
-- **Root Node**: The career path name (e.g., "Cybersecurity", "ML/AI")
+- **Root Node**: The career path name (e.g., "Cybersecurity", "ML/AI", "UX/UI Design")
 - **Tier Nodes**: Organized tiers/categories (e.g., "TIER 1: MUST-TAKE", "TIER 2: RECOMMENDED")
 - **Course Nodes**: Individual recommended courses displayed when tiers are expanded
 - **Interactive Features**: Click to expand/collapse tiers, click courses to view details, drag nodes, format layout, reset graph
+
+**IMPORTANT**: Career paths are **NOT timeline-based**. They do **NOT** include:
+- ❌ Year recommendations (no "Year 1", "Year 2", etc.)
+- ❌ Semester recommendations (no "Fall", "Spring")
+- ❌ Course sequencing by academic year
+
+Career paths are **tier-based charts** that organize courses by **importance/priority** (TIER 1 = most important, TIER 2 = recommended, etc.), not by when to take them. They show **which courses are recommended** for a career path, not **when** to take them.
 
 ### How It Works
 
 The system uses a **config-driven architecture**:
 1. You create data files (`tierCourses.ts`, `careerPathConfig.ts`)
-2. You copy the component file from SWE and update the import path
+2. You copy the component file from SWE (reference implementation) and update the import path
 3. The component automatically reads your config and displays the graph
 4. No code changes needed in the component itself (only the import path)
 
 ### File Structure Overview
 
+**IMPORTANT**: Career paths can be created for **ANY degree**, not just CS/CSE. The structure is the same for all degrees:
+
 ```
-cs-cse/
-├── careers/
-│   ├── swe/                    ⚠️ DO NOT MODIFY - Reference only
-│   │   ├── components/
-│   │   │   └── CareerPathGraph.tsx
-│   │   └── data/
-│   │       ├── tierCourses.ts
-│   │       ├── careerPathConfig.ts
-│   │       └── index.ts
+degrees/
+├── [degree-id]/              # e.g., cs-cse, cogs, biology
+│   ├── careers/
+│   │   ├── [reference-career]/     ⚠️ DO NOT MODIFY - Reference only
+│   │   │   ├── components/
+│   │   │   │   └── CareerPathGraph.tsx
+│   │   │   └── data/
+│   │   │       ├── tierCourses.ts
+│   │   │       ├── careerPathConfig.ts
+│   │   │       └── index.ts
+│   │   │
+│   │   └── [your-career-id]/      ✅ CREATE THIS
+│   │       ├── components/
+│   │       │   └── CareerPathGraph.tsx   (copy from reference career)
+│   │       └── data/
+│   │           ├── tierCourses.ts         (create new)
+│   │           ├── careerPathConfig.ts    (create new)
+│   │           └── index.ts               (create new)
 │   │
-│   └── [your-career-id]/      ✅ CREATE THIS
-│       ├── components/
-│       │   └── CareerPathGraph.tsx   (copy from SWE)
-│       └── data/
-│           ├── tierCourses.ts         (create new)
-│           ├── careerPathConfig.ts    (create new)
-│           └── index.ts               (create new)
+│   └── components/           # Degree-specific components (prerequisite graphs, etc.)
 │
-└── components/
-    └── DegreesContent.tsx      ⚠️ MODIFY - Add your career path
+└── components/               # Shared across all degrees
+    └── DegreesContent.tsx    ⚠️ MODIFY - Add your career path
 ```
+
+**Examples**:
+- **CS/CSE careers**: `degrees/cs-cse/careers/[career-id]/` (reference: `swe/`)
+- **COGS careers**: `degrees/cogs/careers/[career-id]/` (reference: `ux-ui/` or any existing COGS career)
+- **Other degrees**: `degrees/[degree-id]/careers/[career-id]/` (reference: use SWE from CS/CSE or any existing career)
+
+**Note**: For CS/CSE, use `swe/` as the reference. For other degrees, you can use any existing career path from any degree as a reference (SWE from CS/CSE is a good default choice).
 
 ---
 
 ## 📁 Files You Will Create
 
-When creating a new career path (e.g., "cybersecurity"), you will create the following files:
+When creating a new career path, you will create the following files:
 
 ### Required Files
 
-1. **`cs-cse/careers/[career-id]/components/CareerPathGraph.tsx`**
-   - Copy from `swe/components/CareerPathGraph.tsx`
-   - Only change the import path for the config
+**File Path Pattern**: `degrees/[degree-id]/careers/[career-id]/`
 
-2. **`cs-cse/careers/[career-id]/data/tierCourses.ts`**
+1. **`degrees/[degree-id]/careers/[career-id]/components/CareerPathGraph.tsx`**
+   - Copy from a reference career (e.g., `cs-cse/careers/swe/components/CareerPathGraph.tsx` for CS/CSE)
+   - Only change the import path for the config
+   - For CS/CSE: Copy from `swe/components/CareerPathGraph.tsx`
+   - For COGS: Copy from any existing COGS career (e.g., `ux-ui/components/CareerPathGraph.tsx`) or use SWE as reference
+   - For other degrees: Use SWE from CS/CSE as reference, or any existing career
+
+2. **`degrees/[degree-id]/careers/[career-id]/data/tierCourses.ts`**
    - New file with your course data
    - Organized by tiers (tier1Courses, tier2Courses, etc.)
 
-3. **`cs-cse/careers/[career-id]/data/careerPathConfig.ts`**
+3. **`degrees/[degree-id]/careers/[career-id]/data/careerPathConfig.ts`**
    - New file with your configuration
    - Defines root label, categories, and combines all courses
 
-4. **`cs-cse/careers/[career-id]/data/index.ts`**
+4. **`degrees/[degree-id]/careers/[career-id]/data/index.ts`**
    - New file that exports your config and courses
    - Simple re-export file
+
+**Examples**:
+- CS/CSE career: `degrees/cs-cse/careers/cybersecurity/...`
+- COGS career: `degrees/cogs/careers/ux-ui/...`
+- Future degree: `degrees/biology/careers/research/...`
 
 ---
 
@@ -96,11 +125,16 @@ When creating a new career path (e.g., "cybersecurity"), you will create the fol
 
 ### Single File to Modify
 
-**`cs-cse/components/DegreesContent.tsx`**
+**`degrees/components/DegreesContent.tsx`** (shared file for all degrees)
 
-You will add a new conditional block for your career path, following the exact pattern used for SWE.
+You will add a new conditional block for your career path, following the exact pattern used for existing careers.
 
-**Location**: Around line 180-230 (after the SWE section)
+**Location**: 
+- For CS/CSE careers: Around line 180-230 (after the SWE section)
+- For COGS careers: Around line 600-900 (in the COGS career path sections)
+- For other degrees: Add in the appropriate section for that degree
+
+**Note**: This is a shared file used by all degrees. Be careful to add your career path in the correct degree section.
 
 ---
 
@@ -108,11 +142,16 @@ You will add a new conditional block for your career path, following the exact p
 
 **NEVER modify these files** when creating a new career path:
 
-1. ❌ `cs-cse/careers/swe/` - **ENTIRE DIRECTORY** (Reference implementation only)
-2. ❌ `cs-cse/components/PrerequisiteGraph.tsx` (Different graph type)
-3. ❌ `cs-cse/components/GraphLegend.tsx` (Used for prerequisite graph, not career paths)
-4. ❌ `cs-cse/data/courses.ts` (Prerequisite graph data, different purpose)
-5. ❌ `src/types/careerPath.ts` (Shared types - do not modify unless adding new fields)
+1. ❌ Reference career directories - **DO NOT MODIFY** (e.g., `cs-cse/careers/swe/`, `cogs/careers/ux-ui/`)
+   - These serve as reference implementations only
+   - For CS/CSE: Use `swe/` as reference
+   - For COGS: Use any existing COGS career as reference
+2. ❌ Prerequisite graph components (e.g., `PrerequisiteGraph.tsx`, `GraphLegend.tsx`)
+   - These are for prerequisite graphs, not career path graphs
+3. ❌ Course data files for prerequisite graphs (e.g., `degrees/[degree-id]/data/courses.ts`)
+   - Different purpose (prerequisite graphs vs career path graphs)
+4. ❌ `src/types/careerPath.ts` (Shared types - do not modify unless adding new fields)
+5. ❌ Existing career paths (unless you're explicitly updating that specific career)
 
 ---
 
@@ -146,54 +185,84 @@ Throughout this guide, you'll see placeholders that need to be replaced with you
 
 ---
 
-### Step 1: Choose Your Career ID
+### Step 1: Choose Your Career ID and Determine Your Degree
 
-**Choose a kebab-case identifier** for your career path. This will be used in:
+**First, identify which degree this career belongs to:**
+- CS/CSE careers: `degrees/cs-cse/careers/[career-id]/`
+- COGS careers: `degrees/cogs/careers/[career-id]/`
+- Other degrees: `degrees/[degree-id]/careers/[career-id]/`
+
+**Then choose a kebab-case identifier** for your career path. This will be used in:
 - Directory name
 - File names
 - Import paths
 - Conditional checks in DegreesContent
+- Sidebar navigation (must match `careerPaths` object in `DegreesSidebar.tsx`)
 
 **Examples:**
-- `cybersecurity` (not `cyber-security` or `cybersecurity-path`)
-- `ml-ai` (not `mlai` or `machine-learning-ai`)
-- `data-science` (not `dataScience` or `data_science`)
+- CS/CSE: `cybersecurity`, `ml-ai`, `data-science`, `systems-infra`
+- COGS: `ux-ui`, `data-analyst`, `market-research`, `human-resources`
+- Other degrees: Choose appropriate identifiers for that degree's careers
 
 **Rule**: Use lowercase letters and hyphens only. No underscores, no camelCase, no spaces.
+
+**Important**: Make sure your career ID matches what's defined in `degrees/components/DegreesSidebar.tsx` in the `careerPaths` object for your degree.
 
 ---
 
 ### Step 2: Create Directory Structure
 
-Create the following directory structure:
+Create the following directory structure for your degree:
 
 ```bash
-cs-cse/careers/[your-career-id]/
+degrees/[degree-id]/careers/[your-career-id]/
 ├── components/
 └── data/
 ```
 
-**Example for Cybersecurity:**
+**Examples:**
+
+**CS/CSE career:**
 ```bash
-cs-cse/careers/cybersecurity/
+degrees/cs-cse/careers/cybersecurity/
 ├── components/
 └── data/
 ```
 
-**Do NOT create these directories inside `swe/`**. Create them as siblings to `swe/`.
+**COGS career:**
+```bash
+degrees/cogs/careers/ux-ui/
+├── components/
+└── data/
+```
+
+**Other degree career:**
+```bash
+degrees/biology/careers/research/
+├── components/
+└── data/
+```
+
+**Do NOT create these directories inside an existing career directory**. Create them as siblings to existing careers in the same degree folder.
+
+**Reference careers** (do not modify):
+- CS/CSE: `degrees/cs-cse/careers/swe/` (use as reference)
+- COGS: `degrees/cogs/careers/ux-ui/` or any existing COGS career (use as reference)
 
 ---
 
 ### Step 3: Create tierCourses.ts File
 
-**File Path**: `cs-cse/careers/[your-career-id]/data/tierCourses.ts`
+**File Path**: `degrees/[degree-id]/careers/[your-career-id]/data/tierCourses.ts`
 
 This file contains all course recommendations organized by tiers.
 
 **IMPORTANT**: 
+- **NO Year/Semester Information**: Career paths do NOT include year or semester recommendations. Courses are organized by **tiers (priority/importance)**, not by when to take them. Do NOT include `year` or `semester` fields - these are only used in prerequisite graphs, not career paths.
 - **Course Node IDs**: Course nodes in the graph use the format `course-${course.id}` (e.g., if your course has `id: "cse-120"`, the node ID will be `"course-cse-120"`). This is handled automatically by the component - you don't need to add the prefix yourself.
+- **Manual Data Entry**: All course data must be filled out manually. Copy the structure template below for each course and fill in the actual information.
 
-#### File Template
+#### File Template Structure
 
 ```typescript
 /**
@@ -208,52 +277,75 @@ import { TierCourse } from "@/types/careerPath";
  * [Explanation of what makes these Tier 1 courses]
  */
 export const tier1Courses: TierCourse[] = [
+  // COPY THE STRUCTURE BELOW FOR EACH COURSE - FILL OUT ALL FIELDS MANUALLY
   {
-    id: "cse-xxx",                    // REQUIRED: Unique kebab-case ID
-    code: "CSE XXX",                  // REQUIRED: Course code
+    id: "unique-course-id",           // REQUIRED: Unique kebab-case ID
+    code: "CSE XXX",                  // REQUIRED: Course code (e.g., "CSE 120")
     name: "Course Name",              // REQUIRED: Short course name
     fullName: "CSE XXX: Course Name", // REQUIRED: Full display name
-    description: "Why this course matters for this career", // REQUIRED: Brief description
+    description: "Brief description of why this course matters", // REQUIRED: 1-2 sentences
     tier: 1,                          // REQUIRED: Must match tier number (1, 2, 3, etc.)
-    prerequisites: [],                 // OPTIONAL: Array of course IDs
-    expandedInfo: {                   // OPTIONAL: Detailed info shown when course is clicked
-      credits: 4,                     // Number of credits/units
-      prerequisites: "CSE 30 or equivalent", // Human-readable prerequisites
-      learningOutcomes: [             // What students will learn (array of strings)
-        "Work effectively in software development teams",
-        "Use Git and version control systems professionally",
-        "Understand and apply software development lifecycle (SDLC)",
+    expandedInfo: {                   // OPTIONAL but RECOMMENDED: Detailed info shown when course is clicked
+      credits: 4,                     // REQUIRED in expandedInfo: Number of credits/units
+      careerRelevance: "1-3 sentences explaining why this course matters for this career path", // REQUIRED in expandedInfo
+      realWorldApplications: [        // REQUIRED in expandedInfo: Array of strings with examples
+        "Example 1 of industry/real-world use",
+        "Example 2 of industry/real-world use",
+        "Example 3 of industry/real-world use",
       ],
-      topics: [                       // Topics covered in the course
+      learningOutcomes: [             // REQUIRED in expandedInfo: Array of strings
+        "What students will learn or be able to do",
+        "Another learning outcome",
+        "Another learning outcome",
+      ],
+      topics: [                       // OPTIONAL: Topics covered in the course (array of strings)
         "Topic 1",
         "Topic 2",
+        "Topic 3",
       ],
-      careerRelevance: "How this course relates to the career path", // Why it matters
-      realWorldApplications: [        // Examples of industry/real-world use (array of strings)
-        "Working in teams at companies like Google, Microsoft, or startups",
-        "Using Git/GitHub for version control in professional codebases",
-        "Following agile/scrum methodologies in real product development",
-      ],
-      resources: {                    // Learning resources with links
-        videos: [                     // YouTube links, video tutorials (array of URLs)
-          "https://youtube.com/watch?v=HkdAHXoRtos",  // Git tutorial
-          "https://youtube.com/watch?v=Z9QbYZh1YXY",  // Agile overview
+      resources: {                    // OPTIONAL but RECOMMENDED: Learning resources with links
+        videos: [                     // Array of YouTube/video URLs
+          "https://youtube.com/watch?v=...",
+          "https://youtube.com/watch?v=...",
         ],
-        websites: [                   // Documentation, articles, official sites (array of URLs)
-          "https://git-scm.com/doc",  // Official Git documentation
-          "https://www.atlassian.com/agile",  // Agile guide
+        websites: [                   // Array of documentation/article URLs
+          "https://example.com",
+          "https://example.com",
         ],
-        tools: [                      // Software, tools, platforms used (array of tool names)
-          "Git",
-          "GitHub",
-          "Jira",
-          "Slack",
+        tools: [                      // Array of tool/software names (not URLs)
+          "Tool Name 1",
+          "Tool Name 2",
         ],
       },
-      additionalNotes: "Any additional information",
+      additionalNotes: "Optional additional information", // OPTIONAL: Any extra context
     },
   },
-  // Add more Tier 1 courses...
+  
+  // COPY THE STRUCTURE ABOVE FOR EACH ADDITIONAL COURSE IN THIS TIER
+  // Fill out all fields manually for each course
+  {
+    id: "another-unique-id",
+    code: "CSE YYY",
+    name: "Another Course Name",
+    fullName: "CSE YYY: Another Course Name",
+    description: "Description for this course",
+    tier: 1,
+    expandedInfo: {
+      credits: 4,
+      careerRelevance: "Why this course matters",
+      realWorldApplications: [
+        "Real-world example 1",
+        "Real-world example 2",
+      ],
+      learningOutcomes: [
+        "Learning outcome 1",
+        "Learning outcome 2",
+      ],
+      // ... fill out remaining fields
+    },
+  },
+  
+  // Add more courses by copying the structure and filling in the data...
 ];
 
 /**
@@ -261,15 +353,29 @@ export const tier1Courses: TierCourse[] = [
  * [Explanation of what makes these Tier 2 courses]
  */
 export const tier2Courses: TierCourse[] = [
+  // COPY THE SAME STRUCTURE AS TIER 1 - FILL OUT MANUALLY FOR EACH COURSE
   {
-    id: "cse-yyy",
+    id: "unique-tier2-course-id",
     code: "CSE YYY",
-    name: "Another Course",
-    fullName: "CSE YYY: Another Course",
-    description: "Why this course is recommended",
+    name: "Course Name",
+    fullName: "CSE YYY: Course Name",
+    description: "Brief description",
     tier: 2,                          // Must be 2 for Tier 2
+    expandedInfo: {
+      credits: 4,
+      careerRelevance: "Why this course matters",
+      realWorldApplications: [
+        "Example 1",
+        "Example 2",
+      ],
+      learningOutcomes: [
+        "Outcome 1",
+        "Outcome 2",
+      ],
+      // ... fill out remaining fields
+    },
   },
-  // Add more Tier 2 courses...
+  // Copy structure for more Tier 2 courses...
 ];
 
 /**
@@ -277,18 +383,32 @@ export const tier2Courses: TierCourse[] = [
  * [Explanation of what makes these Tier 3 courses]
  */
 export const tier3Courses: TierCourse[] = [
+  // COPY THE SAME STRUCTURE - FILL OUT MANUALLY FOR EACH COURSE
   {
-    id: "cse-zzz",
+    id: "unique-tier3-course-id",
     code: "CSE ZZZ",
-    name: "Optional Course",
-    fullName: "CSE ZZZ: Optional Course",
-    description: "Why this course might be useful",
+    name: "Course Name",
+    fullName: "CSE ZZZ: Course Name",
+    description: "Brief description",
     tier: 3,                          // Must be 3 for Tier 3
+    expandedInfo: {
+      credits: 4,
+      careerRelevance: "Why this course matters",
+      realWorldApplications: [
+        "Example 1",
+        "Example 2",
+      ],
+      learningOutcomes: [
+        "Outcome 1",
+        "Outcome 2",
+      ],
+      // ... fill out remaining fields
+    },
   },
-  // Add more Tier 3 courses...
+  // Copy structure for more Tier 3 courses...
 ];
 
-// If you need more tiers, add them:
+// If you need more tiers, add them using the same structure:
 // export const tier4Courses: TierCourse[] = [...];
 // export const tier5Courses: TierCourse[] = [...];
 ```
@@ -304,133 +424,38 @@ export const tier3Courses: TierCourse[] = [
    - If you have `tier-2` in config, courses must have `tier: 2`
    - **Mismatch = courses won't show up**
 
-3. **All basic fields are required** (except `resources` and `prerequisites` if not using them)
-   - `id`, `code`, `name`, `fullName`, `description`, `tier` are all required
-   - `expandedInfo` is optional, but highly recommended for better user experience
+3. **All basic fields are required** and must be filled out manually
+   - `id`, `code`, `name`, `fullName`, `description`, `tier` are all required - fill with actual data
+   - `expandedInfo` is optional but highly recommended - if included, all fields within it must be filled manually with actual information
 
 4. **Use kebab-case for IDs**: `cse-120`, not `cse_120` or `cse120`
 
 5. **Keep descriptions concise**: 1-2 sentences max
 
-6. **Recommended expandedInfo fields** (minimum 5 for best user experience):
-   - `credits` (number) - Number of credits/units (e.g., `4`)
-   - `careerRelevance` (string) - Why this course matters for the career (1-3 sentences)
-   - `realWorldApplications` (array) - Examples of industry use (e.g., `["Working at Google/Microsoft", "Using Git professionally"]`)
-   - `learningOutcomes` (array) - What students will learn (e.g., `["Work in teams", "Use Git professionally"]`)
-   - `resources` (object) - Learning resources:
+6. **Recommended expandedInfo fields** (fill out manually for each course):
+   - `credits` (number) - REQUIRED: Number of credits/units (e.g., `4`)
+   - `careerRelevance` (string) - REQUIRED: Why this course matters for the career (1-3 sentences, write manually)
+   - `realWorldApplications` (array) - REQUIRED: Examples of industry use (array of strings, fill manually, e.g., `["Working at Google/Microsoft", "Using Git professionally"]`)
+   - `learningOutcomes` (array) - REQUIRED: What students will learn (array of strings, fill manually, e.g., `["Work in teams", "Use Git professionally"]`)
+   - `topics` (array) - OPTIONAL: Topics covered in the course (array of strings, fill manually)
+   - `resources` (object) - OPTIONAL but RECOMMENDED: Learning resources (fill manually):
      - `videos` (array of URLs) - YouTube links, tutorials (e.g., `["https://youtube.com/watch?v=..."]`)
      - `websites` (array of URLs) - Documentation, articles (e.g., `["https://git-scm.com/doc"]`)
-     - `tools` (array of names) - Software/tools used (e.g., `["Git", "GitHub"]`)
+     - `tools` (array of names) - Software/tools used (e.g., `["Git", "GitHub"]`) - tool names only, not URLs
+   - `additionalNotes` (string) - OPTIONAL: Any additional information (fill manually)
 
-#### Real Example (Cybersecurity)
+**⚠️ REMINDER**: All fields in `expandedInfo` must be filled out manually with actual course information. Do not leave placeholder values.
 
-```typescript
-/**
- * Cybersecurity Tier Courses Data
- * Course recommendations organized by tier for Cybersecurity career path
- */
+#### Real Example Reference
 
-import { TierCourse } from "@/types/careerPath";
+For reference, see the actual implementations in:
+- `cs-cse/careers/swe/data/tierCourses.ts` - SWE tier courses (reference implementation)
+- `cs-cse/careers/cybersecurity/data/tierCourses.ts` - Cybersecurity tier courses
+- `cs-cse/careers/ml-ai/data/tierCourses.ts` - ML/AI tier courses
 
-/**
- * 🟢 TIER 1: ESSENTIAL SECURITY FOUNDATIONS
- * Core security courses required for all cybersecurity roles
- */
-export const tier1Courses: TierCourse[] = [
-  {
-    id: "cybersec-cse-130",
-    code: "CSE 130",
-    name: "Cryptography",
-    fullName: "CSE 130: Cryptography",
-    description: "Foundational crypto concepts, encryption, hashing - essential for security",
-    tier: 1,
-    expandedInfo: {
-      credits: 4,
-      learningOutcomes: [
-        "Understand cryptographic algorithms and protocols",
-        "Implement encryption and hashing",
-        "Analyze security vulnerabilities",
-      ],
-      careerRelevance: "Critical for all cybersecurity roles. Understanding cryptography is fundamental to securing data and communications.",
-      realWorldApplications: [
-        "Securing data in transit (HTTPS, VPNs)",
-        "Protecting stored passwords and sensitive data",
-        "Implementing secure communication protocols",
-      ],
-      resources: {
-        videos: [
-          "https://youtube.com/watch?v=... (Cryptography basics)",
-        ],
-        websites: [
-          "https://cryptography.io/",
-        ],
-        tools: ["OpenSSL", "GnuPG"],
-      },
-    },
-  },
-  {
-    id: "cybersec-cse-178",
-    code: "CSE 178",
-    name: "Computers & Network Security",
-    fullName: "CSE 178: Computers & Network Security",
-    description: "Network defense, systems security, vulnerability assessment",
-    tier: 1,
-    expandedInfo: {
-      credits: 4,
-      learningOutcomes: [
-        "Identify common security threats",
-        "Implement network security measures",
-        "Conduct vulnerability assessments",
-      ],
-      careerRelevance: "Core security course for cybersecurity careers. Essential for SOC analysts, security engineers, and defensive security roles.",
-      realWorldApplications: [
-        "Monitoring network traffic for threats",
-        "Implementing firewalls and intrusion detection",
-        "Responding to security incidents",
-      ],
-      resources: {
-        videos: [
-          "https://youtube.com/watch?v=... (Network security)",
-        ],
-        websites: [
-          "https://owasp.org/",
-        ],
-        tools: ["Wireshark", "Nmap", "Metasploit"],
-      },
-    },
-  },
-];
+These files show the complete structure with all fields filled out. Use them as examples of what the final data should look like, but **always copy the structure template from this guide and fill in your own data manually**.
 
-/**
- * 🟡 TIER 2: ADVANCED SECURITY TOPICS
- * Specialized courses that strengthen cybersecurity expertise
- */
-export const tier2Courses: TierCourse[] = [
-  {
-    id: "cybersec-cse-150",
-    code: "CSE 150",
-    name: "Operating Systems",
-    fullName: "CSE 150: Operating Systems",
-    description: "Understanding OS internals for security analysis",
-    tier: 2,
-  },
-];
-
-/**
- * 🟠 TIER 3: SECURITY-ADJACENT (Optional)
- * Useful but not required for cybersecurity careers
- */
-export const tier3Courses: TierCourse[] = [
-  {
-    id: "cybersec-cse-165",
-    code: "CSE 165",
-    name: "Introduction to Object-Oriented Programming",
-    fullName: "CSE 165: Introduction to Object-Oriented Programming",
-    description: "Only if OOP fundamentals need strengthening",
-    tier: 3,
-  },
-];
-```
+**Note**: The examples above show the structure but with placeholder/simplified data. For actual implementations, refer to the real files listed above to see how all fields are filled out with complete information.
 
 ---
 
@@ -569,9 +594,12 @@ export { tier1Courses, tier2Courses, tier3Courses } from "./tierCourses";
 
 ### Step 6: Copy CareerPathGraph Component
 
-**File Path**: `cs-cse/careers/[your-career-id]/components/CareerPathGraph.tsx`
+**File Path**: `degrees/[degree-id]/careers/[your-career-id]/components/CareerPathGraph.tsx`
 
-**Action**: Copy the entire file from `cs-cse/careers/swe/components/CareerPathGraph.tsx`
+**Action**: Copy the entire file from a reference career:
+- **CS/CSE careers**: Copy from `degrees/cs-cse/careers/swe/components/CareerPathGraph.tsx`
+- **COGS careers**: Copy from `degrees/cogs/careers/ux-ui/components/CareerPathGraph.tsx` or any existing COGS career
+- **Other degrees**: Copy from `degrees/cs-cse/careers/swe/components/CareerPathGraph.tsx` (SWE is a good reference) or any existing career
 
 **Then modify ONLY this line** (around line 26):
 
@@ -715,9 +743,9 @@ const rootNode: Node = {
 
 ### Step 7: Add Career Path to Sidebar Navigation
 
-**File Path**: `cs-cse/components/DegreesSidebar.tsx`
+**File Path**: `degrees/components/DegreesSidebar.tsx` (shared file for all degrees)
 
-**Action**: Verify your career ID exists in the sidebar navigation. If missing, add it.
+**Action**: Verify your career ID exists in the sidebar navigation. If missing, add it to the appropriate degree's career paths array.
 
 #### Step 7a: Locate the careerPaths Object
 
@@ -783,10 +811,17 @@ const careerPaths: Record<string, { id: string; name: string }[]> = {
 
 #### Step 8a: Add Import
 
-Find the imports section (around line 8-11) and add:
+Find the imports section (around line 8-25) and add:
 
 ```typescript
+// For CS/CSE careers:
 import CareerPathGraph from "../cs-cse/careers/[your-career-id]/components/CareerPathGraph";
+
+// For COGS careers:
+import CareerPathGraph from "../cogs/careers/[your-career-id]/components/CareerPathGraph";
+
+// For other degrees:
+import CareerPathGraph from "../[degree-id]/careers/[your-career-id]/components/CareerPathGraph";
 ```
 
 #### Step 8b: Add Refs and State
@@ -973,45 +1008,96 @@ if (selectedCareerPath === "cybersecurity") {
 
 #### tierCourses.ts Template
 
+**⚠️ IMPORTANT**: Copy the structure template below for EACH course and fill in all fields manually.
+
 ```typescript
 /**
  * [Career Name] Tier Courses Data
  * Course recommendations organized by tier for [Career Name] career path
+ * 
+ * NOTE: All course data must be filled out manually. Copy the structure template for each course.
  */
 
 import { TierCourse } from "@/types/careerPath";
 
 export const tier1Courses: TierCourse[] = [
+  // COPY THIS STRUCTURE FOR EACH COURSE - FILL OUT ALL FIELDS MANUALLY
   {
-    id: "[unique-id-1]",
-    code: "CSE XXX",
-    name: "Course Name",
-    fullName: "CSE XXX: Course Name",
-    description: "Description",
-    tier: 1,
+    id: "",                             // FILL: Unique kebab-case ID
+    code: "",                           // FILL: Course code (e.g., "CSE 120")
+    name: "",                           // FILL: Short course name
+    fullName: "",                       // FILL: Full display name
+    description: "",                    // FILL: Brief 1-2 sentence description
+    tier: 1,                            // FILL: Tier number
+    expandedInfo: {                     // FILL: All fields with actual information
+      credits: 0,                       // FILL: Number of credits
+      careerRelevance: "",              // FILL: 1-3 sentences
+      realWorldApplications: [          // FILL: Array of use case strings
+        "",
+        "",
+      ],
+      learningOutcomes: [               // FILL: Array of outcome strings
+        "",
+        "",
+      ],
+      topics: [                         // FILL (OPTIONAL): Array of topic strings
+        "",
+      ],
+      resources: {                      // FILL (OPTIONAL but recommended)
+        videos: [                       // FILL: Array of video URLs
+          "",
+        ],
+        websites: [                     // FILL: Array of website URLs
+          "",
+        ],
+        tools: [                        // FILL: Array of tool names
+          "",
+        ],
+      },
+      additionalNotes: "",              // FILL (OPTIONAL): Additional context
+    },
   },
+  // Copy structure above for more Tier 1 courses...
 ];
 
 export const tier2Courses: TierCourse[] = [
+  // Copy the same structure template for each Tier 2 course
   {
-    id: "[unique-id-2]",
-    code: "CSE YYY",
-    name: "Another Course",
-    fullName: "CSE YYY: Another Course",
-    description: "Description",
+    id: "",
+    code: "",
+    name: "",
+    fullName: "",
+    description: "",
     tier: 2,
+    expandedInfo: {
+      credits: 0,
+      careerRelevance: "",
+      realWorldApplications: [],
+      learningOutcomes: [],
+      // ... fill out all fields
+    },
   },
+  // Copy structure for more Tier 2 courses...
 ];
 
 export const tier3Courses: TierCourse[] = [
+  // Copy the same structure template for each Tier 3 course
   {
-    id: "[unique-id-3]",
-    code: "CSE ZZZ",
-    name: "Third Course",
-    fullName: "CSE ZZZ: Third Course",
-    description: "Description",
+    id: "",
+    code: "",
+    name: "",
+    fullName: "",
+    description: "",
     tier: 3,
+    expandedInfo: {
+      credits: 0,
+      careerRelevance: "",
+      realWorldApplications: [],
+      learningOutcomes: [],
+      // ... fill out all fields
+    },
   },
+  // Copy structure for more Tier 3 courses...
 ];
 ```
 
@@ -1426,18 +1512,27 @@ After creating your career path graph, verify the following:
 
 **Minimum Steps to Create a New Career Path:**
 
-1. ✅ Choose your career ID (kebab-case)
-2. ✅ Create directory: `cs-cse/careers/[career-id]/`
-3. ✅ Create `data/tierCourses.ts` with course data
-4. ✅ Create `data/careerPathConfig.ts` with configuration
-5. ✅ Create `data/index.ts` with exports
-6. ✅ Copy `components/CareerPathGraph.tsx` from SWE
-7. ✅ Update import, root node function name, and root node ID in copied component
-8. ✅ Add career path to `DegreesSidebar.tsx` (if not already present)
-9. ✅ Add integration code to `DegreesContent.tsx`
-10. ✅ Test all functionality
+1. ✅ Identify which degree this career belongs to (CS/CSE, COGS, or other)
+2. ✅ Choose your career ID (kebab-case)
+3. ✅ Verify career ID exists in `DegreesSidebar.tsx` (or add it to the appropriate degree's careerPaths array)
+4. ✅ Create directory: `degrees/[degree-id]/careers/[career-id]/`
+5. ✅ Create `data/tierCourses.ts` with course data
+   - **Copy the structure template for each course**
+   - **Fill out all fields manually** with actual course information
+6. ✅ Create `data/careerPathConfig.ts` with configuration
+7. ✅ Create `data/index.ts` with exports
+8. ✅ Copy `components/CareerPathGraph.tsx` from reference career
+   - CS/CSE: Copy from `swe/`
+   - COGS: Copy from `ux-ui/` or any existing COGS career
+   - Other: Copy from SWE or any existing career
+9. ✅ Update import, root node function name, and root node ID in copied component
+10. ✅ Add integration code to `DegreesContent.tsx` (in the appropriate degree section)
+11. ✅ Test all functionality
 
-**Estimated Time**: 30-60 minutes for experienced developers, 1-2 hours for first-time setup.
+**Estimated Time**: 
+- Structure setup: 30-60 minutes
+- Data entry (filling out tier courses manually): 1-3 hours depending on number of courses
+- Total: 2-4 hours for complete implementation with all course data
 
 ---
 

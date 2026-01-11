@@ -1,3 +1,7 @@
+"use client";
+
+import Link from "next/link";
+
 /**
  * DegreesHeader Component
  * Header section with logo and "Degrees @ UCM" title
@@ -11,13 +15,17 @@ export default function DegreesHeader() {
           {/* Left: Degrees label + Logo */}
           <div className="flex items-center gap-3">
             <span className="text-sm font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight">Degrees</span>
-            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+            <Link 
+              href="/"
+              className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center hover:bg-primary/20 transition-colors cursor-pointer"
+              aria-label="Navigate to home page"
+            >
               <img 
                 src="/BetterBobcatsLogo.svg" 
                 alt="BetterBobcats Logo"
                 className="h-6 w-6"
               />
-            </div>
+            </Link>
           </div>
           
           {/* Center: Degrees @ UCM title */}
