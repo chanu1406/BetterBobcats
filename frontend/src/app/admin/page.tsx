@@ -1,6 +1,5 @@
-import { redirect } from "next/navigation";
 import Link from "next/link";
-import { logoutAction, checkAuthAction } from "./actions";
+import { logoutAction } from "./actions";
 
 export const metadata = {
   title: "Admin Dashboard - BetterBobcats",
@@ -12,16 +11,9 @@ export const metadata = {
 
 /**
  * Admin Dashboard Page
- * Protected route - requires authentication
- * Redirects to login if not authenticated
+ * Protected by admin layout (requirePlatformAdmin)
  */
 export default async function AdminDashboardPage() {
-  // Check authentication using server action
-  const isAuthenticated = await checkAuthAction();
-  
-  if (!isAuthenticated) {
-    redirect("/admin/login");
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/8 via-background to-accent/15">

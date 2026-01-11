@@ -1,6 +1,4 @@
-import { redirect } from "next/navigation";
 import Link from "next/link";
-import { checkAuthAction } from "../actions";
 import AddClubForm from "./components/AddClubForm";
 import ClubsList from "./components/ClubsList";
 
@@ -14,16 +12,9 @@ export const metadata = {
 
 /**
  * Clubs Management Dashboard
- * Protected route - requires authentication
- * Redirects to login if not authenticated
+ * Protected by admin layout (requirePlatformAdmin)
  */
 export default async function ClubsManagementPage() {
-  // Check authentication using server action
-  const isAuthenticated = await checkAuthAction();
-  
-  if (!isAuthenticated) {
-    redirect("/admin/login");
-  }
 
   return (
     <div className="min-h-screen bg-background">

@@ -13,6 +13,17 @@ The career path graph is an interactive visualization that shows:
   - **Course Node IDs**: Automatically formatted as `course-${course.id}` (e.g., `course-cse-120`)
 - **Edges**: Arrows connecting root → categories → courses
 
+**IMPORTANT: Career Paths vs. Prerequisite Graphs**
+
+Career path graphs are **NOT timeline-based** and do **NOT** include:
+- ❌ Year recommendations (no "Year 1", "Year 2", etc.)
+- ❌ Semester recommendations (no "Fall", "Spring")
+- ❌ Course sequencing by academic year
+
+Career paths organize courses by **importance/priority** using tiers (TIER 1 = most important/essential, TIER 2 = recommended, TIER 3 = optional), not by when to take them. They show **which courses are recommended** for a career path, not **when** to take them.
+
+**Prerequisite graphs** (see `DEGREE_PREREQUISITE_GRAPH_GUIDE.md`) use years and semesters to show course sequencing and prerequisites. **Career path graphs** use tiers to show course importance/recommendations.
+
 ## Key Design Principle: Config-Driven Architecture
 
 The `CareerPathGraph` component is **completely generic and reusable**. It accepts a `CareerPathConfig` object that defines:
@@ -25,19 +36,39 @@ This means **one component works for all career paths** - you just provide diffe
 
 ## File Structure
 
+**IMPORTANT**: Career paths can be created for **ANY degree**, not just CS/CSE. The structure is the same for all degrees:
+
 ```
 degrees/
 ├── components/
-│   └── CareerPathGraph.tsx  # Shared, reusable component (generic)
+│   └── CareerPathGraph.tsx  # NOTE: Actually, each career has its own component copy
 ├── cs-cse/
 │   └── careers/
 │       └── [career-id]/
+│           ├── components/
+│           │   └── CareerPathGraph.tsx  # Component copy (required)
 │           └── data/
 │               ├── tierCourses.ts        # Course data with descriptions
 │               └── careerPathConfig.ts  # Configuration object
-└── types/
-    └── careerPath.ts  # Shared types (TierCourse, CareerPathConfig, etc.)
+├── cogs/
+│   └── careers/
+│       └── [career-id]/
+│           ├── components/
+│           │   └── CareerPathGraph.tsx  # Component copy (required)
+│           └── data/
+│               ├── tierCourses.ts        # Course data with descriptions
+│               └── careerPathConfig.ts  # Configuration object
+└── [other-degree]/
+    └── careers/
+        └── [career-id]/
+            ├── components/
+            │   └── CareerPathGraph.tsx  # Component copy (required)
+            └── data/
+                ├── tierCourses.ts        # Course data with descriptions
+                └── careerPathConfig.ts  # Configuration object
 ```
+
+**Note**: Each career path has its own copy of the CareerPathGraph component. This allows customization while maintaining the config-driven architecture.
 
 ## Step 1: Create Shared Types
 
@@ -48,7 +79,14 @@ The types are already defined in `src/types/careerPath.ts`. You'll use:
 
 ## Step 2: Define Course Data
 
-### File: `cs-cse/careers/[career-id]/data/tierCourses.ts`
+### File: `degrees/[degree-id]/careers/[career-id]/data/tierCourses.ts`
+
+**Examples**:
+- CS/CSE: `degrees/cs-cse/careers/cybersecurity/data/tierCourses.ts`
+- COGS: `degrees/cogs/careers/ux-ui/data/tierCourses.ts`
+- Other: `degrees/[degree-id]/careers/[career-id]/data/tierCourses.ts`
+
+**IMPORTANT**: Career paths do **NOT** include year or semester fields. Courses are organized by **tiers (priority/importance)**, not by when to take them. The `TierCourse` type does not include `year` or `semester` fields - these are only used in prerequisite graphs (`Course` type), not career paths.
 
 Create course data organized by tiers:
 
@@ -190,7 +228,12 @@ interface TierCourse {
 
 ## Step 3: Create Configuration File
 
-### File: `cs-cse/careers/[career-id]/data/careerPathConfig.ts`
+### File: `degrees/[degree-id]/careers/[career-id]/data/careerPathConfig.ts`
+
+**Examples**:
+- CS/CSE: `degrees/cs-cse/careers/cybersecurity/data/careerPathConfig.ts`
+- COGS: `degrees/cogs/careers/ux-ui/data/careerPathConfig.ts`
+- Other: `degrees/[degree-id]/careers/[career-id]/data/careerPathConfig.ts`
 
 This is the **key file** that tells the component what to display:
 
@@ -374,10 +417,37 @@ When you click on a course node, an expanded card overlay appears showing:
 
 ### 1. Create Directory Structure
 
+**CS/CSE Example:**
 ```
-cs-cse/
+degrees/cs-cse/
 └── careers/
     └── cybersecurity/
+        ├── components/
+        │   └── CareerPathGraph.tsx
+        └── data/
+            ├── tierCourses.ts
+            └── careerPathConfig.ts
+```
+
+**COGS Example:**
+```
+degrees/cogs/
+└── careers/
+    └── ux-ui/
+        ├── components/
+        │   └── CareerPathGraph.tsx
+        └── data/
+            ├── tierCourses.ts
+            └── careerPathConfig.ts
+```
+
+**Other Degree Example:**
+```
+degrees/biology/
+└── careers/
+    └── research/
+        ├── components/
+        │   └── CareerPathGraph.tsx
         └── data/
             ├── tierCourses.ts
             └── careerPathConfig.ts
@@ -416,24 +486,35 @@ export const cybersecurityCareerPathConfig: CareerPathConfig = {
 
 ### 4. Create Component File
 
-Each career path has its own component file that is copied from the SWE reference implementation.
+Each career path has its own component file that is copied from a reference implementation.
 
-**File**: `cs-cse/careers/[career-id]/components/CareerPathGraph.tsx`
+**File**: `degrees/[degree-id]/careers/[career-id]/components/CareerPathGraph.tsx`
 
 **Steps**:
-1. Copy the entire file from `cs-cse/careers/swe/components/CareerPathGraph.tsx`
+1. Copy the entire file from a reference career:
+   - **CS/CSE**: Copy from `degrees/cs-cse/careers/swe/components/CareerPathGraph.tsx`
+   - **COGS**: Copy from `degrees/cogs/careers/ux-ui/components/CareerPathGraph.tsx` or any existing COGS career
+   - **Other degrees**: Copy from `degrees/cs-cse/careers/swe/components/CareerPathGraph.tsx` (SWE is a good default reference)
 2. Update the config import to use your career's config
-3. **Rename the root node function** to match your career/major:
-   - Career paths: `SWERootNode` → `[CareerName]RootNode` (e.g., `CybersecurityRootNode`)
-   - Major graphs: `SWERootNode` → `[MajorName]RootNode` (e.g., `COGSRootNode`)
+3. **Rename the root node function** to match your career:
+   - Examples: `SWERootNode` → `CybersecurityRootNode`, `UXUIRootNode` → `DataAnalystRootNode`
 4. Update the `nodeTypes` object to use your renamed root node function
-5. Update all root node ID references from `"swe-root"` to `"[career-id]-root"` or `"[major-id]-root"`
+5. Update all root node ID references from the reference career's ID to your career ID (e.g., `"swe-root"` → `"cybersecurity-root"`, `"ux-ui-root"` → `"data-analyst-root"`)
 6. **Background variant**: Use `variant={"lines" as any}` for the grid-line pattern (standard for all graphs)
 
 ### 5. Use in DegreesContent
 
+**File**: `degrees/components/DegreesContent.tsx` (shared file for all degrees)
+
 ```typescript
+// For CS/CSE careers:
 import CareerPathGraph from "../cs-cse/careers/cybersecurity/components/CareerPathGraph";
+
+// For COGS careers:
+import CareerPathGraph from "../cogs/careers/ux-ui/components/CareerPathGraph";
+
+// For other degrees:
+import CareerPathGraph from "../[degree-id]/careers/[career-id]/components/CareerPathGraph";
 
 // Set up refs and handlers (same pattern as SWE)
 const resetCareerPathGraphRef = useRef<(() => void) | null>(null);
@@ -474,7 +555,7 @@ categories: [
   { id: "tier-2", label: "RECOMMENDED", emoji: "💡" },
 ]
 
-// Example: 4-tier structure
+// Example: 4-tier structure 
 categories: [
   { id: "tier-1", label: "CORE", emoji: "🟢" },
   { id: "tier-2", label: "IMPORTANT", emoji: "🟡" },

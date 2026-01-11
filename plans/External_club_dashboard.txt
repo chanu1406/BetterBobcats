@@ -1,0 +1,51 @@
+This file is used to design and plan a way for clubs to submit request to be added to the BetterBobcats platform.
+
+The general flow:
+
+Club officers hit a sign up page. 
+Fill out information:
+    - Club name
+    - description
+    - Contact information
+    - Officer emails/ numbers
+    - website
+    - slug(Autogenerate for them or allow them to create)
+    - logo_url
+    - banner_url
+
+- > 
+
+This will be sent to our admin dashboard as a request to be a club on BetterBobcats
+
+-> We in the admin dashboard have a review page where we review these clubs.
+
+if(accepted):
+    - Our program sends out an email to the emails in the club form letting them know their club has been approved.
+    - Send out credentials: or come up with some sort of Oauth system that allows them to use google or whatever they prefer.
+
+if(rejected):
+    - On admin dashboard we can fill out a message of why they have been rejected.
+     - Whether it is because they lacked sufficent information.
+     - Not active enough 
+Up to us at that point
+
+If a club has been accepted:
+We want to have some page only accessible to that club where they can manage for now these things:
+- Their clubs details on BetterBobcats
+- Post events that their club will be hosting
+- Remove events
+- Edit events. 
+
+TBD Need to figure out:
+- Whether we create an individual dashboard for each club. May be efficent:
+- Have one club dashboard that takes in props of which club is being looked at.
+    -Pulls that clubs specfiic information into the dashboard.
+
+
+Questions:
+- How we will authenticate club admins and make sure they can only access their dashboard.
+- How to make sure they only have access to their clubs data and can't edit any other clubs information.
+- How we can set up an approval and rejection system.
+- How to set up Oauth in our use case. 
+- Whether it is better for us to generate them a username and password or what is the best option
+- Whether to make individual dashboards in our codebase or have one dashboard that pulls information based on which club is signed in.

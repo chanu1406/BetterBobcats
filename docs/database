@@ -1,26 +1,3 @@
-# Database Schema Reference
-
-This document provides a reference for the BetterBobcats database schema. The actual schema is managed through SQL migrations in `supabase/migrations/`.
-
-**⚠️ WARNING:** This schema dump is for reference only. Table order and constraints may not be valid for execution. Always use migration files to modify the database.
-
-## Schema Overview
-
-The database uses PostgreSQL via Supabase and includes the following main entities:
-
-- **Clubs** - Student organizations and clubs
-- **Majors** - Academic majors at UC Merced
-- **Club-Major Relationships** - Many-to-many associations between clubs and majors
-- **Club Requests** - Pending club approval requests (future feature)
-- **Events** - Club events (future feature)
-- **Memberships** - Club membership management (future feature)
-
-## Schema Dump
-
-<details>
-<summary>Click to view complete schema</summary>
-
-```sql
 -- WARNING: This schema is for context only and is not meant to be run.
 -- Table order and constraints may not be valid for execution.
 
@@ -40,7 +17,6 @@ CREATE TABLE public.club_invites (
   CONSTRAINT club_invites_created_by_fkey FOREIGN KEY (created_by) REFERENCES auth.users(id),
   CONSTRAINT club_invites_accepted_by_fkey FOREIGN KEY (accepted_by) REFERENCES auth.users(id)
 );
-
 CREATE TABLE public.club_major_notes (
   club_id uuid NOT NULL,
   major_id uuid NOT NULL,
@@ -50,7 +26,6 @@ CREATE TABLE public.club_major_notes (
   CONSTRAINT club_major_notes_club_id_fkey FOREIGN KEY (club_id) REFERENCES public.clubs(id),
   CONSTRAINT club_major_notes_major_id_fkey FOREIGN KEY (major_id) REFERENCES public.majors(id)
 );
-
 CREATE TABLE public.club_majors (
   club_id uuid NOT NULL,
   major_id uuid NOT NULL,
@@ -59,7 +34,6 @@ CREATE TABLE public.club_majors (
   CONSTRAINT club_majors_club_id_fkey FOREIGN KEY (club_id) REFERENCES public.clubs(id),
   CONSTRAINT club_majors_major_id_fkey FOREIGN KEY (major_id) REFERENCES public.majors(id)
 );
-
 CREATE TABLE public.club_memberships (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   club_id uuid NOT NULL,
@@ -70,7 +44,6 @@ CREATE TABLE public.club_memberships (
   CONSTRAINT club_memberships_club_id_fkey FOREIGN KEY (club_id) REFERENCES public.clubs(id),
   CONSTRAINT club_memberships_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
 );
-
 CREATE TABLE public.club_request_major_notes (
   request_id uuid NOT NULL,
   major_id uuid NOT NULL,
@@ -80,7 +53,6 @@ CREATE TABLE public.club_request_major_notes (
   CONSTRAINT club_request_major_notes_request_id_fkey FOREIGN KEY (request_id) REFERENCES public.club_requests(id),
   CONSTRAINT club_request_major_notes_major_id_fkey FOREIGN KEY (major_id) REFERENCES public.majors(id)
 );
-
 CREATE TABLE public.club_request_majors (
   request_id uuid NOT NULL,
   major_id uuid NOT NULL,
@@ -89,7 +61,6 @@ CREATE TABLE public.club_request_majors (
   CONSTRAINT club_request_majors_request_id_fkey FOREIGN KEY (request_id) REFERENCES public.club_requests(id),
   CONSTRAINT club_request_majors_major_id_fkey FOREIGN KEY (major_id) REFERENCES public.majors(id)
 );
-
 CREATE TABLE public.club_request_tags (
   request_id uuid NOT NULL,
   tag text NOT NULL,
@@ -97,7 +68,6 @@ CREATE TABLE public.club_request_tags (
   CONSTRAINT club_request_tags_pkey PRIMARY KEY (request_id, tag),
   CONSTRAINT club_request_tags_request_id_fkey FOREIGN KEY (request_id) REFERENCES public.club_requests(id)
 );
-
 CREATE TABLE public.club_requests (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   name text NOT NULL,
@@ -120,7 +90,6 @@ CREATE TABLE public.club_requests (
   CONSTRAINT club_requests_submitted_by_fkey FOREIGN KEY (submitted_by) REFERENCES auth.users(id),
   CONSTRAINT club_requests_reviewed_by_fkey FOREIGN KEY (reviewed_by) REFERENCES auth.users(id)
 );
-
 CREATE TABLE public.club_tags (
   club_id uuid NOT NULL,
   tag text NOT NULL,
@@ -128,7 +97,6 @@ CREATE TABLE public.club_tags (
   CONSTRAINT club_tags_pkey PRIMARY KEY (club_id, tag),
   CONSTRAINT club_tags_club_id_fkey FOREIGN KEY (club_id) REFERENCES public.clubs(id)
 );
-
 CREATE TABLE public.clubs (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   name text NOT NULL,
@@ -142,7 +110,6 @@ CREATE TABLE public.clubs (
   banner_url text,
   CONSTRAINT clubs_pkey PRIMARY KEY (id)
 );
-
 CREATE TABLE public.events (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   club_id uuid NOT NULL,
@@ -157,67 +124,15 @@ CREATE TABLE public.events (
   CONSTRAINT events_pkey PRIMARY KEY (id),
   CONSTRAINT events_club_id_fkey FOREIGN KEY (club_id) REFERENCES public.clubs(id)
 );
-
 CREATE TABLE public.majors (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   name text NOT NULL UNIQUE,
   created_at timestamp with time zone DEFAULT now(),
   CONSTRAINT majors_pkey PRIMARY KEY (id)
 );
-
 CREATE TABLE public.platform_admins (
   user_id uuid NOT NULL,
   created_at timestamp with time zone NOT NULL DEFAULT now(),
   CONSTRAINT platform_admins_pkey PRIMARY KEY (user_id),
   CONSTRAINT platform_admins_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
 );
-```
-
-</details>
-
-## Currently Active Tables
-
-The following tables are actively used by the application:
-
-### Clubs
-- **Purpose:** Store club/organization information
-- **Key Fields:** `name`, `description`, `slug`, `website`, `logo_url`, `banner_url`, `is_active`, `display_order`
-- **Relationships:** Many-to-many with majors via `club_majors`
-
-### Majors
-- **Purpose:** Store academic major information
-- **Key Fields:** `name` (unique)
-- **Relationships:** Many-to-many with clubs via `club_majors`
-
-### Club-Major Junction Tables
-- `club_majors` - Links clubs to majors
-- `club_major_notes` - Stores notes about club-major relationships
-- `club_tags` - Tags associated with clubs
-
-## Future Tables (Schema Defined, Not Yet Used)
-
-These tables are defined in the schema but are not yet actively used by the application:
-
-- `club_requests` - For club approval workflow
-- `club_memberships` - For club member management
-- `events` - For club event management
-- `club_invites` - For club invitation system
-- `platform_admins` - For platform administrator management
-
-## Row Level Security (RLS)
-
-Currently, RLS policies are implemented for SELECT operations on:
-- `clubs` (public read)
-- `majors` (public read)
-- `club_majors` (public read)
-
-INSERT, UPDATE, and DELETE operations are not yet protected by RLS policies. The backend uses service role keys for write operations, which bypass RLS.
-
-## Migrations
-
-Database schema changes should be made through migration files in `supabase/migrations/`. Migration files are named with timestamps: `YYYYMMDDHHMMSS_description.sql`.
-
-## Related Documentation
-
-- [Tech Stack & Architecture Report](TECH_STACK_ARCHITECTURE_REPORT.md) - Detailed architecture and security considerations
-- [Backend API Documentation](../backend/docs/) - API endpoint documentation

@@ -1,6 +1,6 @@
 """
 BetterBobcats Backend API
-Minimal FastAPI instance - business logic to be implemented
+FastAPI application providing REST API endpoints for clubs, majors, and platform data
 """
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -37,11 +37,9 @@ async def health():
 
 
 # API Routers
-from app.api import admin, clubs
+from app.api import clubs, majors
 
-app.include_router(admin.router, prefix="/api/admin", tags=["admin"])
+# Admin router removed - admin auth now handled via Supabase Auth in Next.js
+# app.include_router(admin.router, prefix="/api/admin", tags=["admin"])
 app.include_router(clubs.router, prefix="/api/clubs", tags=["clubs"])
-
-# TODO: Import and include remaining API routers for database entities
-# from app.api import majors
-# app.include_router(majors.router, prefix="/api/majors", tags=["majors"])
+app.include_router(majors.router, prefix="/api/majors", tags=["majors"])
