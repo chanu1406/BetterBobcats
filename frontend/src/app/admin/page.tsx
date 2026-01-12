@@ -79,12 +79,22 @@ export default async function AdminDashboardPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Link href="/admin/clubs">
               <button className="w-full px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors text-left">
-                Manage Clubs
+                Clubs
               </button>
             </Link>
             <Link href="/admin/majors">
               <button className="w-full px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors text-left">
                 Manage Majors
+              </button>
+            </Link>
+            <Link href="/admin/club-requests">
+              <button className="w-full px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors text-left">
+                Club Requests
+              </button>
+            </Link>
+            <Link href="/admin/maintenance">
+              <button className="w-full px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors text-left">
+                Maintenance
               </button>
             </Link>
             <button className="px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors text-left">
