@@ -335,7 +335,7 @@ export default function EditClubForm({ clubId, onClubUpdated }: EditClubFormProp
                 <ImageUpload
                   label="Club Logo"
                   type="logo"
-                  currentUrl={formData.logo_url}
+                  currentUrl={formData.logo_url ?? null}
                   onUpload={handleLogoUpload}
                   onError={(err) => setError(err)}
                   disabled={isSubmitting}
@@ -346,7 +346,7 @@ export default function EditClubForm({ clubId, onClubUpdated }: EditClubFormProp
                 <ImageUpload
                   label="Club Banner"
                   type="banner"
-                  currentUrl={formData.banner_url}
+                  currentUrl={formData.banner_url ?? null}
                   onUpload={handleBannerUpload}
                   onError={(err) => setError(err)}
                   disabled={isSubmitting}

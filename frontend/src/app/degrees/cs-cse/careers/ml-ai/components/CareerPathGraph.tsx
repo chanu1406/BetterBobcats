@@ -25,7 +25,6 @@ import ReactFlow, {
 import "reactflow/dist/style.css";
 import { TierCourse, CareerPathConfig } from "@/types/careerPath";
 import { mlAiCareerPathConfig } from "../data/careerPathConfig";
-import { TierCourse } from "@/types/careerPath";
 
 interface CareerPathGraphProps {
   onResetReady?: (resetFn: () => void) => void;
