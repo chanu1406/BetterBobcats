@@ -26,6 +26,7 @@ export default function DegreesSidebar({
   const degrees = [
     "CS/CSE",
     "COGS",
+    "Electrical Engineering",
   ];
 
   const careerPaths: Record<string, { id: string; name: string }[]> = {
@@ -46,6 +47,16 @@ export default function DegreesSidebar({
       { id: "data-analyst", name: "Data Analyst (Generalist)" },
       { id: "market-research", name: "Market Research Analyst (Generalist)" },
       { id: "human-resources", name: "Human Resources Specialist (Generalist)" },
+    ],
+    "Electrical Engineering": [
+      { id: "resumes", name: "Resumes" },
+      { id: "alumni", name: "Alumni" },
+      { id: "power-systems", name: "Power Systems & Energy" },
+      { id: "embedded-systems", name: "Embedded Systems & Robotics" },
+      { id: "ev-automotive", name: "Electric Vehicle & Automotive Systems" },
+      { id: "signals-rf", name: "Signals, Communications & RF" },
+      { id: "controls-automation", name: "Controls & Automation" },
+      { id: "hardware-ic-design", name: "Hardware / IC Design" },
     ],
   };
 

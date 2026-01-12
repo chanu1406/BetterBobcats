@@ -19,6 +19,14 @@ import UXUICareerPathGraph from "../cogs/careers/ux-ui/components/CareerPathGrap
 import DataAnalystCareerPathGraph from "../cogs/careers/data-analyst/components/CareerPathGraph";
 import MarketResearchCareerPathGraph from "../cogs/careers/market-research/components/CareerPathGraph";
 import HumanResourcesCareerPathGraph from "../cogs/careers/human-resources/components/CareerPathGraph";
+import EEPrerequisiteGraph from "../electrical-engineering/components/PrerequisiteGraph";
+import EEGraphLegend from "../electrical-engineering/components/GraphLegend";
+import PowerSystemsCareerPathGraph from "../electrical-engineering/careers/power-systems/components/CareerPathGraph";
+import EmbeddedSystemsEECareerPathGraph from "../electrical-engineering/careers/embedded-systems/components/CareerPathGraph";
+import EVAutomotiveCareerPathGraph from "../electrical-engineering/careers/ev-automotive/components/CareerPathGraph";
+import SignalsRFCareerPathGraph from "../electrical-engineering/careers/signals-rf/components/CareerPathGraph";
+import ControlsAutomationCareerPathGraph from "../electrical-engineering/careers/controls-automation/components/CareerPathGraph";
+import HardwareICDesignCareerPathGraph from "../electrical-engineering/careers/hardware-ic-design/components/CareerPathGraph";
 
 interface DegreesContentProps {
   selectedDegree: string | null;
@@ -72,6 +80,34 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
   const resetHumanResourcesGraphRef = useRef<(() => void) | null>(null);
   const formatHumanResourcesGraphRef = useRef<(() => void) | null>(null);
   
+  // Electrical Engineering graph handlers
+  const resetEEGraphRef = useRef<(() => void) | null>(null);
+  const fullResetEEGraphRef = useRef<(() => void) | null>(null);
+  
+  // Power Systems career path graph handlers
+  const resetPowerSystemsGraphRef = useRef<(() => void) | null>(null);
+  const formatPowerSystemsGraphRef = useRef<(() => void) | null>(null);
+  
+  // Embedded Systems EE career path graph handlers
+  const resetEmbeddedSystemsEEGraphRef = useRef<(() => void) | null>(null);
+  const formatEmbeddedSystemsEEGraphRef = useRef<(() => void) | null>(null);
+  
+  // EV Automotive career path graph handlers
+  const resetEVAutomotiveGraphRef = useRef<(() => void) | null>(null);
+  const formatEVAutomotiveGraphRef = useRef<(() => void) | null>(null);
+  
+  // Signals RF career path graph handlers
+  const resetSignalsRFGraphRef = useRef<(() => void) | null>(null);
+  const formatSignalsRFGraphRef = useRef<(() => void) | null>(null);
+  
+  // Controls Automation career path graph handlers
+  const resetControlsAutomationGraphRef = useRef<(() => void) | null>(null);
+  const formatControlsAutomationGraphRef = useRef<(() => void) | null>(null);
+  
+  // Hardware IC Design career path graph handlers
+  const resetHardwareICDesignGraphRef = useRef<(() => void) | null>(null);
+  const formatHardwareICDesignGraphRef = useRef<(() => void) | null>(null);
+  
   // State to track when handlers are ready (updated in useEffect to avoid render-time updates)
   const [resetPrerequisiteReady, setResetPrerequisiteReady] = useState(false);
   const [fullResetPrerequisiteReady, setFullResetPrerequisiteReady] = useState(false);
@@ -95,6 +131,20 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
   const [formatMarketResearchReady, setFormatMarketResearchReady] = useState(false);
   const [resetHumanResourcesReady, setResetHumanResourcesReady] = useState(false);
   const [formatHumanResourcesReady, setFormatHumanResourcesReady] = useState(false);
+  const [resetEEReady, setResetEEReady] = useState(false);
+  const [fullResetEEReady, setFullResetEEReady] = useState(false);
+  const [resetPowerSystemsReady, setResetPowerSystemsReady] = useState(false);
+  const [formatPowerSystemsReady, setFormatPowerSystemsReady] = useState(false);
+  const [resetEmbeddedSystemsEEReady, setResetEmbeddedSystemsEEReady] = useState(false);
+  const [formatEmbeddedSystemsEEReady, setFormatEmbeddedSystemsEEReady] = useState(false);
+  const [resetEVAutomotiveReady, setResetEVAutomotiveReady] = useState(false);
+  const [formatEVAutomotiveReady, setFormatEVAutomotiveReady] = useState(false);
+  const [resetSignalsRFReady, setResetSignalsRFReady] = useState(false);
+  const [formatSignalsRFReady, setFormatSignalsRFReady] = useState(false);
+  const [resetControlsAutomationReady, setResetControlsAutomationReady] = useState(false);
+  const [formatControlsAutomationReady, setFormatControlsAutomationReady] = useState(false);
+  const [resetHardwareICDesignReady, setResetHardwareICDesignReady] = useState(false);
+  const [formatHardwareICDesignReady, setFormatHardwareICDesignReady] = useState(false);
   
   // Callbacks to register reset handlers from child components
   const handleResetPrerequisiteReady = useRef((handler: () => void) => {
@@ -255,6 +305,104 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
     });
   });
 
+  const handleResetEEReady = useRef((handler: () => void) => {
+    resetEEGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setResetEEReady(true);
+    });
+  });
+
+  const handleFullResetEEReady = useRef((handler: () => void) => {
+    fullResetEEGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setFullResetEEReady(true);
+    });
+  });
+  
+  const handleResetPowerSystemsReady = useRef((handler: () => void) => {
+    resetPowerSystemsGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setResetPowerSystemsReady(true);
+    });
+  });
+  
+  const handleFormatPowerSystemsReady = useRef((handler: () => void) => {
+    formatPowerSystemsGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setFormatPowerSystemsReady(true);
+    });
+  });
+  
+  const handleResetEmbeddedSystemsEEReady = useRef((handler: () => void) => {
+    resetEmbeddedSystemsEEGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setResetEmbeddedSystemsEEReady(true);
+    });
+  });
+  
+  const handleFormatEmbeddedSystemsEEReady = useRef((handler: () => void) => {
+    formatEmbeddedSystemsEEGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setFormatEmbeddedSystemsEEReady(true);
+    });
+  });
+  
+  const handleResetEVAutomotiveReady = useRef((handler: () => void) => {
+    resetEVAutomotiveGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setResetEVAutomotiveReady(true);
+    });
+  });
+  
+  const handleFormatEVAutomotiveReady = useRef((handler: () => void) => {
+    formatEVAutomotiveGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setFormatEVAutomotiveReady(true);
+    });
+  });
+  
+  const handleResetSignalsRFReady = useRef((handler: () => void) => {
+    resetSignalsRFGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setResetSignalsRFReady(true);
+    });
+  });
+  
+  const handleFormatSignalsRFReady = useRef((handler: () => void) => {
+    formatSignalsRFGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setFormatSignalsRFReady(true);
+    });
+  });
+  
+  const handleResetControlsAutomationReady = useRef((handler: () => void) => {
+    resetControlsAutomationGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setResetControlsAutomationReady(true);
+    });
+  });
+  
+  const handleFormatControlsAutomationReady = useRef((handler: () => void) => {
+    formatControlsAutomationGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setFormatControlsAutomationReady(true);
+    });
+  });
+  
+  const handleResetHardwareICDesignReady = useRef((handler: () => void) => {
+    resetHardwareICDesignGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setResetHardwareICDesignReady(true);
+    });
+  });
+  
+  const handleFormatHardwareICDesignReady = useRef((handler: () => void) => {
+    formatHardwareICDesignGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setFormatHardwareICDesignReady(true);
+    });
+  });
+
   // Reset readiness flags when switching between pages
   useEffect(() => {
     if (!selectedCareerPath && !selectedDegree) {
@@ -373,7 +521,7 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
                 Resumes - {selectedDegree}
               </h2>
               <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
-                Explore resume examples, templates, and best practices for CS/CSE students.
+                Explore resume examples, templates, and best practices for {selectedDegree} students.
               </p>
             </div>
             <div className="bg-card border-2 border-primary/20 rounded-xl p-8 shadow-lg">
@@ -395,7 +543,7 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
                 Alumni - {selectedDegree}
               </h2>
               <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
-                Connect with CS/CSE alumni and learn about their career journeys and experiences.
+                Connect with {selectedDegree} alumni and learn about their career journeys and experiences.
               </p>
             </div>
             <div className="bg-card border-2 border-primary/20 rounded-xl p-8 shadow-lg">
@@ -1045,6 +1193,378 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
       );
     }
 
+    // Show Power Systems career path with graph
+    if (selectedCareerPath === "power-systems") {
+      return (
+        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-10 text-center">
+              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+                Power Systems & Energy - {selectedDegree}
+              </h2>
+              <p className="text-black mb-5">
+                Career pathway information and recommended courses
+              </p>
+              <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+                Power Systems & Energy focuses on electrical power generation, transmission, distribution, and renewable energy integration. This career path prepares students for roles in utility companies, grid operators (ISOs), renewable energy firms, and energy infrastructure companies. Key areas include power system analysis, energy conversion, power electronics, and smart grid technologies.
+              </p>
+            </div>
+            
+            {/* Reset and Format buttons for Power Systems career path graph */}
+            <div className="mb-6 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  if (formatPowerSystemsReady && formatPowerSystemsGraphRef.current) {
+                    formatPowerSystemsGraphRef.current();
+                  }
+                }}
+                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                  formatPowerSystemsReady && formatPowerSystemsGraphRef.current
+                    ? "text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+                }`}
+                title={formatPowerSystemsReady && formatPowerSystemsGraphRef.current ? "Format graph to prevent overlap" : "Waiting for format handler..."}
+              >
+                Format Graph
+              </button>
+              <button
+                onClick={() => {
+                  if (resetPowerSystemsReady && resetPowerSystemsGraphRef.current) {
+                    resetPowerSystemsGraphRef.current();
+                  }
+                }}
+                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                  resetPowerSystemsReady && resetPowerSystemsGraphRef.current
+                    ? "text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+                }`}
+                title={resetPowerSystemsReady && resetPowerSystemsGraphRef.current ? "Reset career path graph view" : "Waiting for reset handler..."}
+              >
+                Reset Graph
+              </button>
+            </div>
+            
+            <div className="mb-10">
+              <PowerSystemsCareerPathGraph 
+                onResetReady={handleResetPowerSystemsReady.current}
+                onFormatReady={handleFormatPowerSystemsReady.current}
+              />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Show Embedded Systems & Robotics career path with graph
+    if (selectedCareerPath === "embedded-systems") {
+      return (
+        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-10 text-center">
+              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+                Embedded Systems & Robotics - {selectedDegree}
+              </h2>
+              <p className="text-black mb-5">
+                Career pathway information and recommended courses
+              </p>
+              <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+                Embedded Systems & Robotics focuses on designing and programming microcontroller-based systems for robotics, IoT devices, autonomous vehicles, and industrial automation. This career path prepares students for roles as embedded software engineers, firmware developers, robotics engineers, and IoT systems developers. Key areas include microcontroller programming, real-time systems, sensor integration, motor control, and autonomous navigation.
+              </p>
+            </div>
+            
+            {/* Reset and Format buttons for Embedded Systems career path graph */}
+            <div className="mb-6 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  if (formatEmbeddedSystemsEEReady && formatEmbeddedSystemsEEGraphRef.current) {
+                    formatEmbeddedSystemsEEGraphRef.current();
+                  }
+                }}
+                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                  formatEmbeddedSystemsEEReady && formatEmbeddedSystemsEEGraphRef.current
+                    ? "text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+                }`}
+                title={formatEmbeddedSystemsEEReady && formatEmbeddedSystemsEEGraphRef.current ? "Format graph to prevent overlap" : "Waiting for format handler..."}
+              >
+                Format Graph
+              </button>
+              <button
+                onClick={() => {
+                  if (resetEmbeddedSystemsEEReady && resetEmbeddedSystemsEEGraphRef.current) {
+                    resetEmbeddedSystemsEEGraphRef.current();
+                  }
+                }}
+                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                  resetEmbeddedSystemsEEReady && resetEmbeddedSystemsEEGraphRef.current
+                    ? "text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+                }`}
+                title={resetEmbeddedSystemsEEReady && resetEmbeddedSystemsEEGraphRef.current ? "Reset career path graph view" : "Waiting for reset handler..."}
+              >
+                Reset Graph
+              </button>
+            </div>
+            
+            <div className="mb-10">
+              <EmbeddedSystemsEECareerPathGraph 
+                onResetReady={handleResetEmbeddedSystemsEEReady.current}
+                onFormatReady={handleFormatEmbeddedSystemsEEReady.current}
+              />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Show Electric Vehicle & Automotive Systems career path with graph
+    if (selectedCareerPath === "ev-automotive") {
+      return (
+        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-10 text-center">
+              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+                Electric Vehicle & Automotive Systems - {selectedDegree}
+              </h2>
+              <p className="text-black mb-5">
+                Career pathway information and recommended courses
+              </p>
+              <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+                Electric Vehicle & Automotive Systems focuses on designing EV powertrains, battery management systems, motor drives, and vehicle control systems. This career path prepares students for roles at Tesla, Rivian, GM, Ford, Lucid, and automotive suppliers. Key areas include power electronics, electrical machines, battery systems, vehicle dynamics, and embedded control for automotive applications.
+              </p>
+            </div>
+            
+            {/* Reset and Format buttons for EV Automotive career path graph */}
+            <div className="mb-6 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  if (formatEVAutomotiveReady && formatEVAutomotiveGraphRef.current) {
+                    formatEVAutomotiveGraphRef.current();
+                  }
+                }}
+                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                  formatEVAutomotiveReady && formatEVAutomotiveGraphRef.current
+                    ? "text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+                }`}
+                title={formatEVAutomotiveReady && formatEVAutomotiveGraphRef.current ? "Format graph to prevent overlap" : "Waiting for format handler..."}
+              >
+                Format Graph
+              </button>
+              <button
+                onClick={() => {
+                  if (resetEVAutomotiveReady && resetEVAutomotiveGraphRef.current) {
+                    resetEVAutomotiveGraphRef.current();
+                  }
+                }}
+                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                  resetEVAutomotiveReady && resetEVAutomotiveGraphRef.current
+                    ? "text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+                }`}
+                title={resetEVAutomotiveReady && resetEVAutomotiveGraphRef.current ? "Reset career path graph view" : "Waiting for reset handler..."}
+              >
+                Reset Graph
+              </button>
+            </div>
+            
+            <div className="mb-10">
+              <EVAutomotiveCareerPathGraph 
+                onResetReady={handleResetEVAutomotiveReady.current}
+                onFormatReady={handleFormatEVAutomotiveReady.current}
+              />
+            </div>
+          </div>
+        </div>
+      );
+    }
+    
+    // Show Signals, Communications & RF career path with graph
+    if (selectedCareerPath === "signals-rf") {
+      return (
+        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-10 text-center">
+              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+                Signals, Communications & RF - {selectedDegree}
+              </h2>
+              <p className="text-black mb-5">
+                Career pathway information and recommended courses
+              </p>
+              <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+                Signals, Communications & RF Engineering focuses on designing wireless systems, RF/microwave circuits, signal processing algorithms, and communication protocols. This career path prepares students for roles at Qualcomm, Broadcom, Nokia, Ericsson, SpaceX, and defense contractors. Key areas include digital signal processing, communication theory, RF/microwave engineering, antenna design, and wireless network systems for 5G, satellite, IoT, and radar applications.
+              </p>
+            </div>
+            
+            {/* Reset and Format buttons for Signals RF career path graph */}
+            <div className="mb-6 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  if (formatSignalsRFReady && formatSignalsRFGraphRef.current) {
+                    formatSignalsRFGraphRef.current();
+                  }
+                }}
+                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                  formatSignalsRFReady && formatSignalsRFGraphRef.current
+                    ? "text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+                }`}
+                title={formatSignalsRFReady && formatSignalsRFGraphRef.current ? "Format graph to prevent overlap" : "Waiting for format handler..."}
+              >
+                Format Graph
+              </button>
+              <button
+                onClick={() => {
+                  if (resetSignalsRFReady && resetSignalsRFGraphRef.current) {
+                    resetSignalsRFGraphRef.current();
+                  }
+                }}
+                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                  resetSignalsRFReady && resetSignalsRFGraphRef.current
+                    ? "text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+                }`}
+                title={resetSignalsRFReady && resetSignalsRFGraphRef.current ? "Reset career path graph view" : "Waiting for reset handler..."}
+              >
+                Reset Graph
+              </button>
+            </div>
+            
+            <div className="mb-10">
+              <SignalsRFCareerPathGraph 
+                onResetReady={handleResetSignalsRFReady.current}
+                onFormatReady={handleFormatSignalsRFReady.current}
+              />
+            </div>
+          </div>
+        </div>
+      );
+    }
+    
+    // Show Controls & Automation career path with graph
+    if (selectedCareerPath === "controls-automation") {
+      return (
+        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-10 text-center">
+              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+                Controls & Automation - {selectedDegree}
+              </h2>
+              <p className="text-black mb-5">
+                Career pathway information and recommended courses
+              </p>
+              <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+                Controls & Automation Engineering focuses on industrial automation, PLC programming, SCADA systems, robotics control, and manufacturing systems. This career path prepares students for roles at Siemens, Rockwell Automation, ABB, Schneider Electric, Honeywell, and manufacturing companies. Key areas include control systems theory, PLC/SCADA, motor drives, microcontrollers, and systems integration for automated manufacturing, process control, and building automation.
+              </p>
+            </div>
+            
+            {/* Reset and Format buttons for Controls Automation career path graph */}
+            <div className="mb-6 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  if (formatControlsAutomationReady && formatControlsAutomationGraphRef.current) {
+                    formatControlsAutomationGraphRef.current();
+                  }
+                }}
+                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                  formatControlsAutomationReady && formatControlsAutomationGraphRef.current
+                    ? "text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+                }`}
+                title={formatControlsAutomationReady && formatControlsAutomationGraphRef.current ? "Format graph to prevent overlap" : "Waiting for format handler..."}
+              >
+                Format Graph
+              </button>
+              <button
+                onClick={() => {
+                  if (resetControlsAutomationReady && resetControlsAutomationGraphRef.current) {
+                    resetControlsAutomationGraphRef.current();
+                  }
+                }}
+                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                  resetControlsAutomationReady && resetControlsAutomationGraphRef.current
+                    ? "text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+                }`}
+                title={resetControlsAutomationReady && resetControlsAutomationGraphRef.current ? "Reset career path graph view" : "Waiting for reset handler..."}
+              >
+                Reset Graph
+              </button>
+            </div>
+            
+            <div className="mb-10">
+              <ControlsAutomationCareerPathGraph 
+                onResetReady={handleResetControlsAutomationReady.current}
+                onFormatReady={handleFormatControlsAutomationReady.current}
+              />
+            </div>
+          </div>
+        </div>
+      );
+    }
+    
+    // Show Hardware / IC Design career path with graph
+    if (selectedCareerPath === "hardware-ic-design") {
+      return (
+        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-10 text-center">
+              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+                Hardware / IC Design - {selectedDegree}
+              </h2>
+              <p className="text-black mb-5">
+                Career pathway information and recommended courses
+              </p>
+              <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+                Hardware / Computer Engineering & IC Design focuses on digital logic design, computer architecture, analog/RF circuits, VLSI, and ASIC/FPGA development. This career path prepares students for roles at Intel, AMD, NVIDIA, Qualcomm, Broadcom, Apple Silicon, and semiconductor companies. Key areas include digital design, processor architecture, mixed-signal ICs, RF circuits, CMOS design, and hardware verification for chips, SoCs, and custom silicon.
+              </p>
+            </div>
+            
+            {/* Reset and Format buttons for Hardware IC Design career path graph */}
+            <div className="mb-6 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  if (formatHardwareICDesignReady && formatHardwareICDesignGraphRef.current) {
+                    formatHardwareICDesignGraphRef.current();
+                  }
+                }}
+                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                  formatHardwareICDesignReady && formatHardwareICDesignGraphRef.current
+                    ? "text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+                }`}
+                title={formatHardwareICDesignReady && formatHardwareICDesignGraphRef.current ? "Format graph to prevent overlap" : "Waiting for format handler..."}
+              >
+                Format Graph
+              </button>
+              <button
+                onClick={() => {
+                  if (resetHardwareICDesignReady && resetHardwareICDesignGraphRef.current) {
+                    resetHardwareICDesignGraphRef.current();
+                  }
+                }}
+                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                  resetHardwareICDesignReady && resetHardwareICDesignGraphRef.current
+                    ? "text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+                }`}
+                title={resetHardwareICDesignReady && resetHardwareICDesignGraphRef.current ? "Reset career path graph view" : "Waiting for reset handler..."}
+              >
+                Reset Graph
+              </button>
+            </div>
+            
+            <div className="mb-10">
+              <HardwareICDesignCareerPathGraph 
+                onResetReady={handleResetHardwareICDesignReady.current}
+                onFormatReady={handleFormatHardwareICDesignReady.current}
+              />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     // Default career path view (for other careers)
     return (
       <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
@@ -1182,6 +1702,74 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
           <div className="mt-16">
             <h3 className="text-2xl md:text-3xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-8 text-center">
               COGS Alumni
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, index) => (
+                <div
+                  key={index}
+                  className="bg-card border border-border rounded-lg p-6 animate-pulse"
+                >
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-16 h-16 bg-muted rounded-full"></div>
+                    <div className="flex-1">
+                      <div className="h-4 bg-muted rounded w-3/4 mb-2"></div>
+                      <div className="h-3 bg-muted rounded w-1/2"></div>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="h-3 bg-muted rounded w-full"></div>
+                    <div className="h-3 bg-muted rounded w-5/6"></div>
+                    <div className="h-3 bg-muted rounded w-4/6"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show Electrical Engineering degree overview if selected
+  if (selectedDegree === "Electrical Engineering") {
+    return (
+      <div className="flex-1 p-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-10 text-center">
+            <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+              Electrical Engineering
+            </h2>
+            <p className="text-base text-black max-w-3xl mx-auto mb-5 leading-relaxed">
+              Electrical Engineering is the study of how electrical and electronic systems are designed, analyzed, and applied to solve real-world problems. The major combines strong foundations in circuit theory, electromagnetics, signals and systems, and control theory with hands-on laboratory experience. Students learn to design power systems, communication networks, embedded systems, VLSI circuits, and electronic devices that power modern technology.
+            </p>
+            <p className="text-black mb-5">
+              Prerequisite graph showing course requirements and progression
+            </p>
+            <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+              This page shows the full Electrical Engineering academic foundation at UC Merced. Use the graph below to understand how core math, physics, chemistry, and EE courses connect, what depends on what, and how early choices affect later specialization options.
+            </p>
+          </div>
+          <div className="mb-8">
+            <EEGraphLegend 
+              onFormatLayoutClick={() => setUseFormattedLayout(!useFormattedLayout)}
+              useFormattedLayout={useFormattedLayout}
+              onResetPositions={resetEEReady ? resetEEGraphRef.current || undefined : undefined}
+              onFullReset={fullResetEEReady ? fullResetEEGraphRef.current || undefined : undefined}
+            />
+          </div>
+          <div className="mb-10">
+            <EEPrerequisiteGraph 
+              useFormattedLayoutExternal={useFormattedLayout}
+              onLayoutChange={setUseFormattedLayout}
+              onResetReady={handleResetEEReady.current}
+              onFullResetReady={handleFullResetEEReady.current}
+            />
+          </div>
+          
+          {/* EE Alumni Section */}
+          <div className="mt-16">
+            <h3 className="text-2xl md:text-3xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-8 text-center">
+              Electrical Engineering Alumni
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(6)].map((_, index) => (
