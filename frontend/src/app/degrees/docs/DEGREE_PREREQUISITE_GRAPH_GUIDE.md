@@ -18,9 +18,10 @@ This guide provides **extremely detailed, step-by-step instructions** for creati
 6. [Step-by-Step Implementation](#step-by-step-implementation)
 7. [Code Templates](#code-templates)
 8. [Integration Steps](#integration-steps)
-9. [Common Issues and Solutions](#common-issues-and-solutions)
-10. [Rules and Best Practices](#rules-and-best-practices)
-11. [Testing Checklist](#testing-checklist)
+9. [Export Positions Button](#461-export-positions-button-for-setting-custom-layouts) (in Step 4.6.1)
+10. [Common Issues and Solutions](#common-issues-and-solutions)
+11. [Rules and Best Practices](#rules-and-best-practices)
+12. [Testing Checklist](#testing-checklist)
 
 ---
 
@@ -456,6 +457,8 @@ const biologyCourseEdges: Edge[] = [];
 
 if (isBiologyExpanded) {
   // 1. Filter courses for this category (courses starting with "bio-")
+  // ⚠️ IMPORTANT: If using generic patterns (like "upper-div", "elective"), 
+  // exclude other category prefixes to avoid overlapping filters
   const filteredBiologyCourses = courses.filter((course) => 
     course.id.startsWith("bio-")
   );
@@ -505,6 +508,31 @@ if (isBiologyExpanded) {
 
 **Repeat this pattern for each category** (Math, Chemistry, Physics, Writing, etc.).
 
+**⚠️ Special Case: Generic Patterns in Course IDs**
+
+If your course IDs use generic patterns that might overlap with other categories (e.g., "upper-div", "lower-div", "elective"), you must exclude other category prefixes:
+
+```typescript
+// Example: POLI category with upper-division courses
+// Problem: Both POLI and Writing have "upper-div" in their IDs
+// - POLI: "poli-upper-div-american"
+// - Writing: "wri-upper-div"
+
+// ❌ WRONG - Catches courses from Writing category too
+const allPoliCourses = courses.filter((course) => 
+  course.id.startsWith("poli-") || course.id.includes("upper-div")
+);
+
+// ✅ CORRECT - Excludes Writing courses
+const allPoliCourses = courses.filter((course) => 
+  course.id.startsWith("poli-") || (course.id.includes("upper-div") && !course.id.startsWith("wri-"))
+);
+```
+
+**Apply this pattern in BOTH places:**
+1. Course creation (in `useMemo` when filtering `courses`)
+2. Layout positioning (in `getLayoutedElements` when filtering `courseNodes`)
+
 #### 4.6: Update Layout Function
 
 The `getLayoutedElements` function needs to be adapted for your specific course structure. The CS/CSE version has hardcoded logic for specific courses (MATH 021, MATH 022, CSE 022, etc.).
@@ -522,6 +550,114 @@ You have two options:
 - Follow the CS/CSE pattern if your structure is similarly complex
 
 For most degrees, **Option A (generic layout)** is recommended. You can simplify the layout function to use prerequisite depth.
+
+#### 4.6.1: Export Positions Button (For Setting Custom Layouts)
+
+When creating a prerequisite graph, you may want to manually arrange nodes to prevent overlap and create an optimal layout. The graph component includes an **"Export Positions"** button that allows you to export the current node positions after manually dragging them into place.
+
+**How to Use Export Positions:**
+
+1. **Enable the Export Button**:
+   - The export functionality is already built into the `PrerequisiteGraph` component
+   - Add the export handler to `DegreesContent.tsx` following the pattern for reset handlers:
+
+   ```typescript
+   // Add ref for export positions
+   const export[DegreeName]PositionsRef = useRef<(() => void) | null>(null);
+
+   // Add handler
+   const handleExport[DegreeName]PositionsReady = useRef((handler: () => void) => {
+     export[DegreeName]PositionsRef.current = handler;
+   });
+   ```
+
+2. **Add Export Button to GraphLegend**:
+   - The `GraphLegend` component accepts an `onExportPositionsClick` prop
+   - Pass the export handler to the legend:
+
+   ```typescript
+   <[DegreeName]GraphLegend 
+     onExportPositionsClick={export[DegreeName]PositionsRef.current || undefined}
+     // ... other props
+   />
+   ```
+
+3. **Pass Export Handler to PrerequisiteGraph**:
+   - Add `onExportPositionsReady` prop to your PrerequisiteGraph component:
+
+   ```typescript
+   <[DegreeName]PrerequisiteGraph 
+     onExportPositionsReady={handleExport[DegreeName]PositionsReady.current}
+     // ... other props
+   />
+   ```
+
+4. **Export Positions**:
+   - Navigate to your degree page in the browser
+   - Expand all categories to show all course nodes
+   - Manually drag nodes to their desired positions (arrange them to prevent overlap)
+   - Click the **"Export Positions"** button in the graph legend
+   - The positions will be:
+     - Logged to the browser console
+     - Automatically copied to your clipboard
+   - You'll get a JSON object with all node positions
+
+5. **Use Exported Positions in Code**:
+   - Copy the exported JSON from the console
+   - Create a constant in your `PrerequisiteGraph.tsx` file:
+
+   ```typescript
+   // Predefined optimal positions when formatted layout is active
+   // These positions were manually arranged to prevent overlap
+   const FORMATTED_LAYOUT_POSITIONS: Record<string, { x: number; y: number }> = {
+     "[degree-id]-root": { x: 0, y: 40 },
+     "category-[category-1]": { x: -180, y: 160 },
+     "category-[category-2]": { x: 0, y: 160 },
+     "category-[category-3]": { x: 180, y: 160 },
+     "course-id-1": { x: -461, y: 270 },
+     // ... paste all your exported positions here
+   };
+   ```
+
+6. **Update Layout Function to Use Predefined Positions**:
+   - In the `getLayoutedElements` function, check for predefined positions when formatted layout is active:
+
+   ```typescript
+   // Position root node
+   if (rootNode) {
+     if (useFormattedLayout && FORMATTED_LAYOUT_POSITIONS[rootNode.id]) {
+       rootNode.position = FORMATTED_LAYOUT_POSITIONS[rootNode.id];
+     } else {
+       rootNode.position = savedPositions[rootNode.id] || { x: 0, y: 40 };
+     }
+   }
+
+   // Position category nodes
+   if (useFormattedLayout) {
+     categoryNodes.forEach((node) => {
+       if (FORMATTED_LAYOUT_POSITIONS[node.id]) {
+         node.position = FORMATTED_LAYOUT_POSITIONS[node.id];
+       } else {
+         node.position = savedPositions[node.id] || { x: 0, y: 160 };
+       }
+     });
+   }
+
+   // Position course nodes (similar pattern for each category)
+   if (useFormattedLayout && FORMATTED_LAYOUT_POSITIONS[courseNode.id]) {
+     courseNode.position = FORMATTED_LAYOUT_POSITIONS[courseNode.id];
+   } else {
+     // Use calculated or saved position
+   }
+   ```
+
+**Benefits of Using Export Positions:**
+- Allows developers to manually arrange nodes for optimal layout
+- Prevents overlap when all categories are expanded
+- Creates a consistent, professional appearance
+- Positions are saved in code, so they're always used when formatted layout is active
+
+**Note**: The formatted layout is automatically enabled when any category is expanded, so your predefined positions will be used by default when users expand categories.
 
 #### 4.7: Update Component Export
 
@@ -565,14 +701,15 @@ import [DegreeName]PrerequisiteGraph from "../[degree-id]/components/Prerequisit
 import [DegreeName]GraphLegend from "../[degree-id]/components/GraphLegend";
 ```
 
-#### 7.2: Add Reset Handlers
+#### 7.2: Add Reset and Export Handlers
 
-Add refs and handlers for reset functionality (follow the CS/CSE pattern):
+Add refs and handlers for reset and export functionality (follow the CS/CSE pattern):
 
 ```typescript
 // Add refs
 const reset[DegreeName]GraphRef = useRef<(() => void) | null>(null);
 const fullReset[DegreeName]GraphRef = useRef<(() => void) | null>(null);
+const export[DegreeName]PositionsRef = useRef<(() => void) | null>(null);
 
 // Add state
 const [reset[DegreeName]Ready, setReset[DegreeName]Ready] = useState(false);
@@ -592,6 +729,10 @@ const handleFullReset[DegreeName]Ready = useRef((handler: () => void) => {
     setFullReset[DegreeName]Ready(true);
   });
 });
+
+const handleExport[DegreeName]PositionsReady = useRef((handler: () => void) => {
+  export[DegreeName]PositionsRef.current = handler;
+});
 ```
 
 #### 7.3: Add Conditional Rendering
@@ -606,6 +747,7 @@ else if (selectedDegree === "[Your Degree Name]" && !selectedCareerPath) {
       <[DegreeName]PrerequisiteGraph
         onResetReady={handleReset[DegreeName]Ready.current}
         onFullResetReady={handleFullReset[DegreeName]Ready.current}
+        onExportPositionsReady={handleExport[DegreeName]PositionsReady.current}
       />
       <[DegreeName]GraphLegend
         onResetPositions={() => {
@@ -618,6 +760,7 @@ else if (selectedDegree === "[Your Degree Name]" && !selectedCareerPath) {
             fullReset[DegreeName]GraphRef.current();
           }
         }}
+        onExportPositionsClick={export[DegreeName]PositionsRef.current || undefined}
       />
     </div>
   );
@@ -647,6 +790,13 @@ See Step 3 for the complete template with examples.
   - [ ] Create prerequisite edges with filtering (e.g., `if (prereqId.startsWith("bio-"))`)
 - [ ] Combine all category nodes and edges
 - [ ] Update layout function (use generic or specific layout)
+- [ ] **Add export positions functionality** (see Section 4.6.1):
+  - [ ] Add `onExportPositionsReady` prop to component interface
+  - [ ] Add export positions handler and ref
+  - [ ] Add `exportNodePositions` function
+  - [ ] Expose export function via `useEffect` and `onExportPositionsReady`
+  - [ ] Add export button to GraphLegend component
+  - [ ] Add export handler to DegreesContent.tsx
 - [ ] Test thoroughly
 
 ---
@@ -697,6 +847,45 @@ const filteredCourses = courses.filter((course) => course.id.startsWith("bio-"))
 // If your courses have IDs like "biology-101", "biology-102"
 const filteredCourses = courses.filter((course) => course.id.startsWith("biology-"));
 ```
+
+### Issue: Course positioned incorrectly or appearing in wrong category
+
+**Problem**: Overlapping filter patterns cause courses from one category to be caught by another category's filter. This is especially common when multiple categories use similar ID patterns (e.g., both have "upper-div" in their IDs).
+
+**Example Bug**: 
+- Writing course: `"wri-upper-div"`
+- POLI course filter: `n.id.startsWith("poli-") || n.id.includes("upper-div")`
+- Result: `wri-upper-div` gets positioned in both Writing AND POLI sections, causing it to appear far from where it should be.
+
+**Solution**: Make filters more specific by excluding other categories:
+
+```typescript
+// ❌ WRONG - Too broad, catches courses from other categories
+const allPoliCourses = courseNodes.filter((n) => 
+  n.id.startsWith("poli-") || n.id.includes("upper-div")
+);
+// This catches: "poli-upper-div-*" AND "wri-upper-div" ❌
+
+// ✅ CORRECT - Excludes courses from other categories
+const allPoliCourses = courseNodes.filter((n) => 
+  n.id.startsWith("poli-") || (n.id.includes("upper-div") && !n.id.startsWith("wri-"))
+);
+// This catches: "poli-upper-div-*" but NOT "wri-upper-div" ✅
+```
+
+**Best Practice**: When using generic patterns (like "upper-div", "lower-div", "elective"), always exclude other category prefixes:
+
+```typescript
+// Pattern: Include your category OR (generic pattern AND NOT other categories)
+const filteredCourses = courseNodes.filter((n) => 
+  n.id.startsWith("your-prefix-") || 
+  (n.id.includes("generic-pattern") && !n.id.startsWith("other-category-"))
+);
+```
+
+**Where to fix**: Check BOTH places where courses are filtered:
+1. **Layout positioning function** (`getLayoutedElements`) - filters `courseNodes`
+2. **Course creation** (in `useMemo`) - filters `courses` array
 
 ### Issue: Root node not found error
 
@@ -768,9 +957,11 @@ data: {
 - [ ] Format layout button works
 - [ ] Reset positions button works
 - [ ] Reset graph button works (full reset)
+- [ ] **Export positions button works** (logs positions to console and copies to clipboard)
 - [ ] Graph displays correctly in DegreesContent
 - [ ] No console errors
 - [ ] TypeScript compiles without errors
+- [ ] **After manual positioning: Export positions and verify they can be used to set FORMATTED_LAYOUT_POSITIONS**
 
 ---
 

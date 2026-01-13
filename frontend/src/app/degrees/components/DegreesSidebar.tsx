@@ -27,6 +27,7 @@ export default function DegreesSidebar({
     "CS/CSE",
     "COGS",
     "Electrical Engineering",
+    "Political Science",
   ];
 
   const careerPaths: Record<string, { id: string; name: string }[]> = {
@@ -57,6 +58,16 @@ export default function DegreesSidebar({
       { id: "signals-rf", name: "Signals, Communications & RF" },
       { id: "controls-automation", name: "Controls & Automation" },
       { id: "hardware-ic-design", name: "Hardware / IC Design" },
+    ],
+    "Political Science": [
+      { id: "resumes", name: "Resumes" },
+      { id: "alumni", name: "Alumni" },
+      { id: "policy-research-analyst", name: "Policy / Research Analyst" },
+      { id: "legislative-aide-government-staff", name: "Legislative Aide / Government Staff" },
+      { id: "public-administration-nonprofit", name: "Public Administration / Nonprofit Program Coordinator" },
+      { id: "campaign-staff-field-organizer", name: "Campaign Staff / Field Organizer / Campaign Management" },
+      { id: "advocacy-lobbying-government-relations", name: "Advocacy / Lobbying / Government Relations" },
+      { id: "law-pre-law", name: "Law / Pre-Law" },
     ],
   };
 

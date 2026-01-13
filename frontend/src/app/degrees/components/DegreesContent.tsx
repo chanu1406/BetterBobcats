@@ -21,6 +21,9 @@ import MarketResearchCareerPathGraph from "../cogs/careers/market-research/compo
 import HumanResourcesCareerPathGraph from "../cogs/careers/human-resources/components/CareerPathGraph";
 import EEPrerequisiteGraph from "../electrical-engineering/components/PrerequisiteGraph";
 import EEGraphLegend from "../electrical-engineering/components/GraphLegend";
+import PoliticalSciencePrerequisiteGraph from "../political-science/components/PrerequisiteGraph";
+import PoliticalScienceGraphLegend from "../political-science/components/GraphLegend";
+import PolicyResearchAnalystCareerPathGraph from "../political-science/careers/policy-research-analyst/components/CareerPathGraph";
 import PowerSystemsCareerPathGraph from "../electrical-engineering/careers/power-systems/components/CareerPathGraph";
 import EmbeddedSystemsEECareerPathGraph from "../electrical-engineering/careers/embedded-systems/components/CareerPathGraph";
 import EVAutomotiveCareerPathGraph from "../electrical-engineering/careers/ev-automotive/components/CareerPathGraph";
@@ -84,6 +87,15 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
   const resetEEGraphRef = useRef<(() => void) | null>(null);
   const fullResetEEGraphRef = useRef<(() => void) | null>(null);
   
+  // Political Science graph handlers
+  const resetPoliticalScienceGraphRef = useRef<(() => void) | null>(null);
+  const fullResetPoliticalScienceGraphRef = useRef<(() => void) | null>(null);
+  const exportPoliticalSciencePositionsRef = useRef<(() => void) | null>(null);
+  
+  // Policy / Research Analyst career path graph handlers
+  const resetPolicyResearchAnalystGraphRef = useRef<(() => void) | null>(null);
+  const formatPolicyResearchAnalystGraphRef = useRef<(() => void) | null>(null);
+  
   // Power Systems career path graph handlers
   const resetPowerSystemsGraphRef = useRef<(() => void) | null>(null);
   const formatPowerSystemsGraphRef = useRef<(() => void) | null>(null);
@@ -133,6 +145,10 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
   const [formatHumanResourcesReady, setFormatHumanResourcesReady] = useState(false);
   const [resetEEReady, setResetEEReady] = useState(false);
   const [fullResetEEReady, setFullResetEEReady] = useState(false);
+  const [resetPoliticalScienceReady, setResetPoliticalScienceReady] = useState(false);
+  const [fullResetPoliticalScienceReady, setFullResetPoliticalScienceReady] = useState(false);
+  const [resetPolicyResearchAnalystReady, setResetPolicyResearchAnalystReady] = useState(false);
+  const [formatPolicyResearchAnalystReady, setFormatPolicyResearchAnalystReady] = useState(false);
   const [resetPowerSystemsReady, setResetPowerSystemsReady] = useState(false);
   const [formatPowerSystemsReady, setFormatPowerSystemsReady] = useState(false);
   const [resetEmbeddedSystemsEEReady, setResetEmbeddedSystemsEEReady] = useState(false);
@@ -318,6 +334,38 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
       setFullResetEEReady(true);
     });
   });
+
+  const handleResetPoliticalScienceReady = useRef((handler: () => void) => {
+    resetPoliticalScienceGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setResetPoliticalScienceReady(true);
+    });
+  });
+
+  const handleFullResetPoliticalScienceReady = useRef((handler: () => void) => {
+    fullResetPoliticalScienceGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setFullResetPoliticalScienceReady(true);
+    });
+  });
+
+  const handleExportPoliticalSciencePositionsReady = useRef((handler: () => void) => {
+    exportPoliticalSciencePositionsRef.current = handler;
+  });
+
+  const handleResetPolicyResearchAnalystReady = useRef((handler: () => void) => {
+    resetPolicyResearchAnalystGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setResetPolicyResearchAnalystReady(true);
+    });
+  });
+
+  const handleFormatPolicyResearchAnalystReady = useRef((handler: () => void) => {
+    formatPolicyResearchAnalystGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setFormatPolicyResearchAnalystReady(true);
+    });
+  });
   
   const handleResetPowerSystemsReady = useRef((handler: () => void) => {
     resetPowerSystemsGraphRef.current = handler;
@@ -424,6 +472,10 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
       setFormatUXUIReady(false);
       setResetDataAnalystReady(false);
       setFormatDataAnalystReady(false);
+      setResetPoliticalScienceReady(false);
+      setFullResetPoliticalScienceReady(false);
+      setResetPolicyResearchAnalystReady(false);
+      setFormatPolicyResearchAnalystReady(false);
       resetPrerequisiteGraphRef.current = null;
       fullResetPrerequisiteGraphRef.current = null;
       resetCareerPathGraphRef.current = null;
@@ -442,6 +494,10 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
       formatUXUIGraphRef.current = null;
       resetDataAnalystGraphRef.current = null;
       formatDataAnalystGraphRef.current = null;
+      resetPoliticalScienceGraphRef.current = null;
+      fullResetPoliticalScienceGraphRef.current = null;
+      resetPolicyResearchAnalystGraphRef.current = null;
+      formatPolicyResearchAnalystGraphRef.current = null;
     }
   }, [selectedCareerPath, selectedDegree]);
 
@@ -493,6 +549,7 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
       "data-analyst": "Data Analyst (Generalist)",
       "market-research": "Market Research Analyst (Generalist)",
       "human-resources": "Human Resources Specialist (Generalist)",
+      "policy-research-analyst": "Policy / Research Analyst",
       resumes: "Resumes",
       alumni: "Alumni",
     };
@@ -509,6 +566,7 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
       "data-analyst": "Data Analysts transform raw data into actionable insights that drive business decisions. This career path combines statistics, programming (Python/R/SQL), and domain expertise to collect, clean, analyze, visualize, and model data. Students learn statistical inference, hypothesis testing, database systems, data visualization, and experimental design. The path emphasizes both technical analytical skills and business communication—translating complex findings into clear recommendations. Roles include Data Analyst, Business Intelligence Analyst, Analytics Engineer, Marketing Analyst, Product Analyst, and Junior Data Scientist.",
       "market-research": "Market Research Analysts bridge consumer psychology, economic theory, and data analytics to understand market dynamics and inform business strategy. This career path integrates behavioral economics, statistical modeling, and business analytics to predict consumer behavior, analyze competitive landscapes, and forecast market trends. Students learn consumer decision-making, marketing strategy, econometrics, and data visualization. The path emphasizes both quantitative analytical skills and strategic thinking—translating market data into actionable business recommendations. Roles include Market Research Analyst, Consumer Insights Analyst, Business Analyst, Strategic Consultant, Product Marketing Analyst, and Competitive Intelligence Analyst.",
       "human-resources": "Human Resources Specialists manage the employee lifecycle and shape organizational culture by combining psychology, sociology, economics, and data analytics. This career path integrates industrial-organizational psychology, labor economics, and people analytics to optimize talent acquisition, development, retention, and organizational effectiveness. Students learn workplace behavior, compensation strategy, DEI principles, leadership development, and HR technology. The path emphasizes both interpersonal skills and data-driven decision-making—translating employee insights into strategic HR initiatives. Roles include HR Generalist, Talent Acquisition Specialist, Compensation Analyst, HR Business Partner, People Analytics Specialist, and Organizational Development Consultant.",
+      "policy-research-analyst": "Policy / Research Analysts conduct research, analyze data, and provide evidence-based recommendations to inform public policy decisions. This career path combines political science, statistics, economics, and research methods to evaluate policy effectiveness, assess program outcomes, and support evidence-based policymaking. Students learn quantitative analysis, research design, statistical modeling, and policy evaluation techniques. The path emphasizes both analytical rigor and clear communication—translating complex research findings into actionable policy recommendations. Roles include Policy Analyst, Research Analyst, Program Evaluator, Policy Researcher, and Data Analyst in government, think tanks, and nonprofit organizations.",
     };
 
     // Handle special sections (Resumes, Alumni)
@@ -1565,6 +1623,70 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
       );
     }
 
+    // Show Policy / Research Analyst career path with graph
+    if (selectedCareerPath === "policy-research-analyst") {
+      return (
+        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-10 text-center">
+              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+                {careerPathNames[selectedCareerPath]} - {selectedDegree}
+              </h2>
+              <p className="text-black mb-5">
+                Career pathway information and recommended courses
+              </p>
+              {careerDescriptions[selectedCareerPath] && (
+                <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+                  {careerDescriptions[selectedCareerPath]}
+                </p>
+              )}
+            </div>
+            
+            {/* Format and Reset buttons */}
+            <div className="mb-6 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  if (formatPolicyResearchAnalystReady && formatPolicyResearchAnalystGraphRef.current) {
+                    formatPolicyResearchAnalystGraphRef.current();
+                  }
+                }}
+                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                  formatPolicyResearchAnalystReady && formatPolicyResearchAnalystGraphRef.current
+                    ? "text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+                }`}
+                title={formatPolicyResearchAnalystReady && formatPolicyResearchAnalystGraphRef.current ? "Format graph to prevent overlap" : "Waiting for format handler..."}
+              >
+                Format Graph
+              </button>
+              <button
+                onClick={() => {
+                  if (resetPolicyResearchAnalystReady && resetPolicyResearchAnalystGraphRef.current) {
+                    resetPolicyResearchAnalystGraphRef.current();
+                  }
+                }}
+                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                  resetPolicyResearchAnalystReady && resetPolicyResearchAnalystGraphRef.current
+                    ? "text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+                }`}
+                title={resetPolicyResearchAnalystReady && resetPolicyResearchAnalystGraphRef.current ? "Reset career path graph view" : "Waiting for reset handler..."}
+              >
+                Reset Graph
+              </button>
+            </div>
+            
+            <div className="mb-10">
+              <PolicyResearchAnalystCareerPathGraph 
+                onResetReady={handleResetPolicyResearchAnalystReady.current}
+                onFormatReady={handleFormatPolicyResearchAnalystReady.current}
+              />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     // Default career path view (for other careers)
     return (
       <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
@@ -1770,6 +1892,76 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
           <div className="mt-16">
             <h3 className="text-2xl md:text-3xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-8 text-center">
               Electrical Engineering Alumni
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, index) => (
+                <div
+                  key={index}
+                  className="bg-card border border-border rounded-lg p-6 animate-pulse"
+                >
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-16 h-16 bg-muted rounded-full"></div>
+                    <div className="flex-1">
+                      <div className="h-4 bg-muted rounded w-3/4 mb-2"></div>
+                      <div className="h-3 bg-muted rounded w-1/2"></div>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="h-3 bg-muted rounded w-full"></div>
+                    <div className="h-3 bg-muted rounded w-5/6"></div>
+                    <div className="h-3 bg-muted rounded w-4/6"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+  // Show Political Science degree overview if selected
+  if (selectedDegree === "Political Science") {
+    return (
+      <div className="flex-1 p-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-10 text-center">
+            <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+              Political Science
+            </h2>
+            <p className="text-base text-black max-w-3xl mx-auto mb-5 leading-relaxed">
+              Political Science is the study of government, political processes, political behavior, and public policy. The major combines strong foundations in political theory, comparative politics, international relations, and American politics with analytical and research skills. Students learn to think critically about power, governance, and political systems while developing skills in data analysis, research methods, and policy evaluation.
+            </p>
+            <p className="text-black mb-5">
+              Prerequisite graph showing course requirements and progression
+            </p>
+            <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+              This page shows the full Political Science academic foundation at UC Merced. Use the graph below to understand how core courses connect and what depends on what.
+            </p>
+          </div>
+          <div className="mb-8">
+            <PoliticalScienceGraphLegend 
+              onFormatLayoutClick={() => setUseFormattedLayout(!useFormattedLayout)}
+              useFormattedLayout={useFormattedLayout}
+              onResetClick={resetPoliticalScienceReady ? resetPoliticalScienceGraphRef.current || undefined : undefined}
+              onFullResetClick={fullResetPoliticalScienceReady ? fullResetPoliticalScienceGraphRef.current || undefined : undefined}
+              onExportPositionsClick={exportPoliticalSciencePositionsRef.current || undefined}
+            />
+          </div>
+          <div className="mb-10">
+            <PoliticalSciencePrerequisiteGraph 
+              useFormattedLayoutExternal={useFormattedLayout}
+              onLayoutChange={setUseFormattedLayout}
+              onResetReady={handleResetPoliticalScienceReady.current}
+              onFullResetReady={handleFullResetPoliticalScienceReady.current}
+              onExportPositionsReady={handleExportPoliticalSciencePositionsReady.current}
+            />
+          </div>
+          
+          {/* Political Science Alumni Section */}
+          <div className="mt-16">
+            <h3 className="text-2xl md:text-3xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-8 text-center">
+              Political Science Alumni
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(6)].map((_, index) => (
