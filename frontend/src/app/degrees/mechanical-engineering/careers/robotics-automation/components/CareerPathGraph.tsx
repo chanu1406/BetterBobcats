@@ -1,0 +1,578 @@
+"use client";
+
+/**
+ * CareerPathGraph Component
+ * Interactive React Flow graph visualization for Robotics / Automation / Mechatronics Engineer career path
+ * Used on: Robotics / Automation / Mechatronics Engineer career path page
+ */
+
+import { useState, useCallback, useRef, useEffect, useMemo } from "react";
+import ReactFlow, {
+  Node,
+  Edge,
+  Background,
+  Controls,
+  ReactFlowProvider,
+  ReactFlowInstance,
+  NodeChange,
+  applyNodeChanges,
+  Handle,
+  Position,
+} from "reactflow";
+import "reactflow/dist/style.css";
+import { TierCourse, CareerPathConfig } from "@/types/careerPath";
+import { roboticsAutomationCareerPathConfig } from "../data/careerPathConfig";
+
+interface CareerPathGraphProps {
+  onResetReady?: (resetFn: () => void) => void;
+  onFormatReady?: (formatFn: () => void) => void;
+}
+
+// Custom root node component for Robotics / Automation / Mechatronics Engineer career path
+function RoboticsAutomationRootNode({ data }: { data: { label: string } }) {
+  return (
+    <div className="w-40 h-40 rounded-full border-4 border-primary bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center shadow-xl relative">
+      <Handle type="source" position={Position.Bottom} className="!bg-primary" />
+      <div className="text-lg font-bold text-primary text-center px-4">
+        {data.label}
+      </div>
+    </div>
+  );
+}
+
+// Custom tier node component - circular shape with emoji, expandable
+function TierNode({ data }: { data: { label: string; emoji?: string; isExpanded?: boolean; onToggle?: () => void } }) {
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (data.onToggle) {
+      data.onToggle();
+    }
+  };
+
+  return (
+    <div
+      className={`w-24 h-24 rounded-full border-2 ${
+        data.isExpanded
+          ? "border-primary bg-primary/15 border-solid"
+          : "border-primary/50 bg-primary/5 border-dashed"
+      } flex items-center justify-center shadow-md relative cursor-pointer hover:bg-primary/10 transition-colors`}
+      onClick={handleClick}
+    >
+      <Handle type="target" position={Position.Top} />
+      <Handle type="source" position={Position.Bottom} />
+      <div className="text-[10px] font-semibold text-primary text-center px-2 flex flex-col items-center gap-0.5">
+        {data.emoji && <span className="text-2xl" style={{ fontFamily: 'Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji, sans-serif' }}>{data.emoji}</span>}
+        <span className="leading-tight break-words">{data.label}</span>
+      </div>
+    </div>
+  );
+}
+
+// Custom course node component - rectangular shape with course code and name
+function CourseNode({ data }: { data: { course: TierCourse } }) {
+  const { course } = data;
+  return (
+    <div className="min-w-[180px] max-w-[200px] rounded-lg border-2 border-slate-300 bg-white shadow-sm hover:shadow-md transition-shadow px-3 py-2 relative cursor-pointer">
+      <Handle type="target" position={Position.Top} />
+      <div className="flex flex-col gap-1">
+        <div className="font-bold text-sm text-slate-800">{course.code}</div>
+        <div className="text-xs text-slate-600 line-clamp-2">{course.name}</div>
+      </div>
+    </div>
+  );
+}
+
+// Define nodeTypes outside component to avoid React Flow warning
+const nodeTypes = {
+  root: RoboticsAutomationRootNode,
+  tier: TierNode,
+  course: CourseNode,
+};
+
+export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerPathGraphProps) {
+  const careerPathConfig = roboticsAutomationCareerPathConfig;
+  const [expandedTiers, setExpandedTiers] = useState<Set<string>>(new Set());
+  const [nodePositions, setNodePositions] = useState<Record<string, { x: number; y: number }>>({});
+  const [isDragging, setIsDragging] = useState(false);
+  const [nodesState, setNodesState] = useState<Node[]>([]);
+  const [edgesState, setEdgesState] = useState<Edge[]>([]);
+  const [isFormatted, setIsFormatted] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState<TierCourse | null>(null);
+  const reactFlowInstance = useRef<ReactFlowInstance | null>(null);
+
+  // Toggle tier expansion
+  const toggleTier = useCallback((tierId: string) => {
+    setExpandedTiers((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(tierId)) {
+        newSet.delete(tierId);
+      } else {
+        newSet.add(tierId);
+      }
+      return newSet;
+    });
+  }, []);
+
+  // Handle course click - expand course card
+  const handleCourseClick = useCallback((course: TierCourse) => {
+    setSelectedCourse(course);
+  }, []);
+
+  // Handle closing expanded course card
+  const handleCloseCourseCard = useCallback(() => {
+    setSelectedCourse(null);
+  }, []);
+
+  // Handle node click from React Flow
+  const onNodeClick = useCallback((_event: React.MouseEvent, node: Node) => {
+    if (node.type === "course" && node.data?.course) {
+      handleCourseClick(node.data.course);
+    }
+  }, [handleCourseClick]);
+
+  // Create nodes and edges using useMemo
+  const { nodes: graphNodes, edges: graphEdges } = useMemo(() => {
+    // Create root node
+    const rootNode: Node = {
+      id: "robotics-automation-root",
+      type: "root",
+      data: { label: careerPathConfig.rootLabel },
+      position: nodePositions["robotics-automation-root"] || { x: 0, y: 40 },
+    };
+
+    // Create tier nodes
+    const tierSpacing = isFormatted ? 600 : 400;
+    const tierStartX = -((careerPathConfig.categories.length - 1) * tierSpacing) / 2;
+    const tierY = 220;
+
+    const tierNodes: Node[] = careerPathConfig.categories.map((category, index) => {
+      const defaultPosition = {
+        x: tierStartX + index * tierSpacing,
+        y: tierY,
+      };
+      
+      return {
+        id: category.id,
+        type: "tier",
+        data: {
+          label: category.label,
+          emoji: category.emoji,
+          isExpanded: expandedTiers.has(category.id),
+          onToggle: () => toggleTier(category.id),
+        },
+        position: nodePositions[category.id] || defaultPosition,
+      };
+    });
+
+    // Create edges from root to each tier
+    const tierEdges: Edge[] = tierNodes.map((tierNode) => ({
+      id: `robotics-automation-root-${tierNode.id}`,
+      source: "robotics-automation-root",
+      target: tierNode.id,
+      type: "smoothstep",
+      animated: false,
+      style: { stroke: "#94a3b8", strokeWidth: 2 },
+    }));
+
+    // Helper function to get tier number from tier ID
+    const getTierNumber = (tierId: string): number => {
+      const match = tierId.match(/tier-(\d+)/);
+      return match ? parseInt(match[1], 10) : 0;
+    };
+
+    // Create course nodes for expanded tiers
+    const courseNodes: Node[] = [];
+    const courseEdges: Edge[] = [];
+    
+    tierNodes.forEach((tierNode) => {
+      if (expandedTiers.has(tierNode.id)) {
+        const tierNumber = getTierNumber(tierNode.id);
+        const tierCourses = careerPathConfig.courses.filter(
+          (course) => course.tier === tierNumber
+        );
+
+        // Layout courses in a grid below the tier node
+        const coursesPerRow = isFormatted ? 2 : 3;
+        const courseSpacing = isFormatted ? 300 : 220;
+        const rowSpacing = isFormatted ? 120 : 100;
+        const courseStartY = tierNode.position.y + 150;
+        
+        tierCourses.forEach((course, courseIndex) => {
+          const row = Math.floor(courseIndex / coursesPerRow);
+          const col = courseIndex % coursesPerRow;
+          
+          const coursesInRow = Math.min(coursesPerRow, tierCourses.length - row * coursesPerRow);
+          const centerOffset = ((coursesInRow - 1) * courseSpacing) / 2;
+          const courseOffsetX = (col * courseSpacing) - centerOffset;
+          const courseX = tierNode.position.x + courseOffsetX;
+          const courseY = courseStartY + row * rowSpacing;
+          
+          const courseNodeId = `course-${course.id}`;
+          courseNodes.push({
+            id: courseNodeId,
+            type: "course",
+            data: { course },
+            position: nodePositions[courseNodeId] || {
+              x: courseX,
+              y: courseY,
+            },
+          });
+
+          // Create edge from tier to course
+          courseEdges.push({
+            id: `${tierNode.id}-${courseNodeId}`,
+            source: tierNode.id,
+            target: courseNodeId,
+            type: "smoothstep",
+            animated: false,
+            style: { stroke: "#cbd5e1", strokeWidth: 1.5 },
+          });
+        });
+      }
+    });
+
+    return {
+      nodes: [rootNode, ...tierNodes, ...courseNodes],
+      edges: [...tierEdges, ...courseEdges],
+    };
+  }, [careerPathConfig, expandedTiers, nodePositions, toggleTier, isFormatted]);
+
+  // Handle node drag start
+  const onNodeDragStart = useCallback(() => {
+    setIsDragging(true);
+  }, []);
+
+  // Handle node drag stop
+  const onNodeDragStop = useCallback((_event: React.MouseEvent, node: Node) => {
+    setIsDragging(false);
+    setNodePositions((prev) => ({
+      ...prev,
+      [node.id]: node.position,
+    }));
+  }, []);
+
+  // Handle node changes
+  const onNodesChange = useCallback((changes: NodeChange[]) => {
+    setNodesState((nds) => applyNodeChanges(changes, nds));
+    
+    changes.forEach((change) => {
+      if (change.type === "position" && !change.dragging && change.position && change.id) {
+        setNodePositions((prev) => ({
+          ...prev,
+          [change.id]: { x: change.position!.x, y: change.position!.y },
+        }));
+      }
+    });
+  }, []);
+
+  // Sync nodesState and edgesState
+  useEffect(() => {
+    if (!isDragging) {
+      setNodesState(graphNodes);
+      setEdgesState(graphEdges);
+    }
+  }, [graphNodes, graphEdges, isDragging]);
+
+  // Initialize nodesState
+  useEffect(() => {
+    if (nodesState.length === 0 && graphNodes.length > 0) {
+      setNodesState(graphNodes);
+      setEdgesState(graphEdges);
+    }
+  }, [graphNodes, graphEdges, nodesState.length]);
+
+  const displayNodes = isDragging ? nodesState : graphNodes;
+  const displayEdges = isDragging ? edgesState : graphEdges;
+
+  // Handle React Flow instance initialization
+  const onInit = useCallback((instance: ReactFlowInstance) => {
+    reactFlowInstance.current = instance;
+  }, []);
+
+  // Reset function
+  const handleReset = useCallback(() => {
+    setExpandedTiers(new Set());
+    setNodePositions({});
+    setIsDragging(false);
+    setIsFormatted(false);
+    setSelectedCourse(null);
+    
+    setTimeout(() => {
+      if (reactFlowInstance.current) {
+        reactFlowInstance.current.fitView({ padding: 0.1, maxZoom: 1.5 });
+      }
+    }, 100);
+  }, []);
+
+  // Format function
+  const handleFormat = useCallback(() => {
+    const newPositions: Record<string, { x: number; y: number }> = {};
+    
+    newPositions["robotics-automation-root"] = { x: 0, y: 40 };
+    
+    const tierSpacing = 600;
+    const tierStartX = -((careerPathConfig.categories.length - 1) * tierSpacing) / 2;
+    const tierY = 220;
+    
+    const getTierNumber = (tierId: string): number => {
+      const match = tierId.match(/tier-(\d+)/);
+      return match ? parseInt(match[1], 10) : 0;
+    };
+    
+    careerPathConfig.categories.forEach((category, index) => {
+      const tierNodeId = category.id;
+      const tierX = tierStartX + index * tierSpacing;
+      newPositions[tierNodeId] = { x: tierX, y: tierY };
+      
+      if (expandedTiers.has(tierNodeId)) {
+        const tierNumber = getTierNumber(tierNodeId);
+        const tierCourses = careerPathConfig.courses.filter(
+          (course) => course.tier === tierNumber
+        );
+        
+        const coursesPerRow = 2;
+        const courseSpacing = 300;
+        const rowSpacing = 120;
+        const courseStartY = tierY + 150;
+        
+        tierCourses.forEach((course, courseIndex) => {
+          const row = Math.floor(courseIndex / coursesPerRow);
+          const col = courseIndex % coursesPerRow;
+          const coursesInRow = Math.min(coursesPerRow, tierCourses.length - row * coursesPerRow);
+          const centerOffset = ((coursesInRow - 1) * courseSpacing) / 2;
+          const courseOffsetX = (col * courseSpacing) - centerOffset;
+          const courseX = tierX + courseOffsetX;
+          const courseY = courseStartY + row * rowSpacing;
+          
+          const courseNodeId = `course-${course.id}`;
+          newPositions[courseNodeId] = { x: courseX, y: courseY };
+        });
+      }
+    });
+    
+    setNodePositions(newPositions);
+    setIsFormatted(true);
+    setIsDragging(false);
+    
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          if (reactFlowInstance.current) {
+            const instance = reactFlowInstance.current;
+            
+            const rootNode: Node = {
+              id: "robotics-automation-root",
+              type: "root",
+              data: { label: careerPathConfig.rootLabel },
+              position: newPositions["robotics-automation-root"],
+            };
+            
+            const tierNodes: Node[] = careerPathConfig.categories.map((category, index) => ({
+              id: category.id,
+              type: "tier",
+              data: {
+                label: category.label,
+                emoji: category.emoji,
+                isExpanded: expandedTiers.has(category.id),
+                onToggle: () => toggleTier(category.id),
+              },
+              position: newPositions[category.id],
+            }));
+            
+            const courseNodes: Node[] = [];
+            tierNodes.forEach((tierNode) => {
+              if (expandedTiers.has(tierNode.id)) {
+                const tierNumber = getTierNumber(tierNode.id);
+                const tierCourses = careerPathConfig.courses.filter(
+                  (course) => course.tier === tierNumber
+                );
+                
+                tierCourses.forEach((course) => {
+                  const courseNodeId = `course-${course.id}`;
+                  if (newPositions[courseNodeId]) {
+                    courseNodes.push({
+                      id: courseNodeId,
+                      type: "course",
+                      data: { course },
+                      position: newPositions[courseNodeId],
+                    });
+                  }
+                });
+              }
+            });
+            
+            const allNodes = [rootNode, ...tierNodes, ...courseNodes];
+            instance.setNodes(allNodes);
+            
+            setTimeout(() => {
+              instance.fitView({ padding: 0.2, maxZoom: 1.5 });
+            }, 50);
+          }
+        });
+      });
+    });
+  }, [careerPathConfig, expandedTiers, toggleTier]);
+
+  // Expose reset handler
+  useEffect(() => {
+    if (!onResetReady) return;
+    const rafId = requestAnimationFrame(() => {
+      onResetReady(handleReset);
+    });
+    return () => cancelAnimationFrame(rafId);
+  }, [onResetReady, handleReset]);
+
+  // Expose format handler
+  useEffect(() => {
+    if (!onFormatReady) return;
+    const rafId = requestAnimationFrame(() => {
+      onFormatReady(handleFormat);
+    });
+    return () => cancelAnimationFrame(rafId);
+  }, [onFormatReady, handleFormat]);
+
+  // Handle ESC key
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && selectedCourse) {
+        handleCloseCourseCard();
+      }
+    };
+
+    if (selectedCourse) {
+      window.addEventListener("keydown", handleKeyDown);
+      return () => window.removeEventListener("keydown", handleKeyDown);
+    }
+  }, [selectedCourse, handleCloseCourseCard]);
+
+  return (
+    <div className="w-full border border-border/40 rounded-lg overflow-hidden relative pt-6">
+      <div className="w-full h-[800px] relative [&_.react-flow__background]:opacity-30">
+        <ReactFlowProvider>
+          <ReactFlow
+            nodes={displayNodes}
+            edges={displayEdges}
+            nodeTypes={nodeTypes}
+            onNodesChange={onNodesChange}
+            onNodeDragStart={onNodeDragStart}
+            onNodeDragStop={onNodeDragStop}
+            onNodeClick={onNodeClick}
+            onInit={onInit}
+            nodesDraggable={true}
+            fitView={!isDragging}
+            fitViewOptions={{ padding: 0.1, maxZoom: 1.5 }}
+            attributionPosition="bottom-left"
+          >
+            <Background variant={"lines" as any} color="#e2e8f0" gap={16} />
+            <Controls />
+          </ReactFlow>
+        </ReactFlowProvider>
+      </div>
+
+      {/* Course Detail Card Modal */}
+      {selectedCourse && (
+        <div
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+          onClick={handleCloseCourseCard}
+        >
+          <div
+            className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-6">
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <h3 className="text-2xl font-bold text-slate-900">
+                    {selectedCourse.code}
+                  </h3>
+                  <p className="text-lg text-slate-700 mt-1">
+                    {selectedCourse.name}
+                  </p>
+                </div>
+                <button
+                  onClick={handleCloseCourseCard}
+                  className="text-slate-400 hover:text-slate-600 transition-colors"
+                  aria-label="Close"
+                >
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path d="M6 18L18 6M6 6l12 12"></path>
+                  </svg>
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <h4 className="font-semibold text-slate-900 mb-2">
+                    Description
+                  </h4>
+                  <p className="text-slate-700">{selectedCourse.description}</p>
+                </div>
+
+                {selectedCourse.expandedInfo?.learningOutcomes && (
+                  <div>
+                    <h4 className="font-semibold text-slate-900 mb-2">
+                      Learning Outcomes
+                    </h4>
+                    <ul className="list-disc list-inside space-y-1 text-slate-700">
+                      {selectedCourse.expandedInfo.learningOutcomes.map(
+                        (outcome, index) => (
+                          <li key={index}>{outcome}</li>
+                        )
+                      )}
+                    </ul>
+                  </div>
+                )}
+
+                {selectedCourse.expandedInfo?.topics && (
+                  <div>
+                    <h4 className="font-semibold text-slate-900 mb-2">
+                      Key Topics
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedCourse.expandedInfo.topics.map((topic, index) => (
+                        <span
+                          key={index}
+                          className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm"
+                        >
+                          {topic}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {selectedCourse.expandedInfo?.careerRelevance && (
+                  <div>
+                    <h4 className="font-semibold text-slate-900 mb-2">
+                      Career Relevance
+                    </h4>
+                    <p className="text-slate-700">
+                      {selectedCourse.expandedInfo.careerRelevance}
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              <div className="mt-6 flex justify-end">
+                <button
+                  onClick={handleCloseCourseCard}
+                  className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

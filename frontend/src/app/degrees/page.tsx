@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DegreesHeader from "./components/DegreesHeader";
 import DegreesSidebar from "./components/DegreesSidebar";
 import DegreesContent from "./components/DegreesContent";
@@ -15,12 +15,22 @@ export default function DegreesPage() {
   const [selectedDegree, setSelectedDegree] = useState<string | null>(null);
   const [selectedCareerPath, setSelectedCareerPath] = useState<string | null>(null);
 
+  // Debug: Log state changes
+  useEffect(() => {
+    console.log("📊 State updated:", { selectedDegree, selectedCareerPath });
+  }, [selectedDegree, selectedCareerPath]);
+
   const handleDegreeSelect = (degree: string) => {
+    console.log("🏫 handleDegreeSelect called:", degree, "current:", selectedDegree);
     setSelectedDegree(degree);
-    setSelectedCareerPath(null); // Reset career path when selecting a new degree
+    // Only reset career path when selecting a DIFFERENT degree
+    if (degree !== selectedDegree) {
+      setSelectedCareerPath(null);
+    }
   };
 
   const handleCareerPathSelect = (careerPath: string) => {
+    console.log("🎓 handleCareerPathSelect called:", careerPath, "current:", selectedCareerPath);
     setSelectedCareerPath(careerPath);
   };
 
@@ -35,6 +45,7 @@ export default function DegreesPage() {
           onCareerPathSelect={handleCareerPathSelect}
         />
         <DegreesContent 
+          key={`${selectedDegree}-${selectedCareerPath}`}
           selectedDegree={selectedDegree}
           selectedCareerPath={selectedCareerPath}
         />
