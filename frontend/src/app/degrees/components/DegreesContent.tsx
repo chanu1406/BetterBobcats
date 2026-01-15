@@ -24,6 +24,8 @@ import EEGraphLegend from "../electrical-engineering/components/GraphLegend";
 import PoliticalSciencePrerequisiteGraph from "../political-science/components/PrerequisiteGraph";
 import PoliticalScienceGraphLegend from "../political-science/components/GraphLegend";
 import PolicyResearchAnalystCareerPathGraph from "../political-science/careers/policy-research-analyst/components/CareerPathGraph";
+import LegislativeAideGovernmentStaffCareerPathGraph from "../political-science/careers/legislative-aide-government-staff/components/CareerPathGraph";
+import PublicAdministrationNonprofitProgramCoordinatorCareerPathGraph from "../political-science/careers/public-administration-nonprofit-program-coordinator/components/CareerPathGraph";
 import PowerSystemsCareerPathGraph from "../electrical-engineering/careers/power-systems/components/CareerPathGraph";
 import EmbeddedSystemsEECareerPathGraph from "../electrical-engineering/careers/embedded-systems/components/CareerPathGraph";
 import EVAutomotiveCareerPathGraph from "../electrical-engineering/careers/ev-automotive/components/CareerPathGraph";
@@ -96,6 +98,14 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
   const resetPolicyResearchAnalystGraphRef = useRef<(() => void) | null>(null);
   const formatPolicyResearchAnalystGraphRef = useRef<(() => void) | null>(null);
   
+  // Legislative Aide / Government Staff career path graph handlers
+  const resetLegislativeAideGovernmentStaffGraphRef = useRef<(() => void) | null>(null);
+  const formatLegislativeAideGovernmentStaffGraphRef = useRef<(() => void) | null>(null);
+  
+  // Public Administration / Nonprofit Program Coordinator career path graph handlers
+  const resetPublicAdministrationNonprofitProgramCoordinatorGraphRef = useRef<(() => void) | null>(null);
+  const formatPublicAdministrationNonprofitProgramCoordinatorGraphRef = useRef<(() => void) | null>(null);
+  
   // Power Systems career path graph handlers
   const resetPowerSystemsGraphRef = useRef<(() => void) | null>(null);
   const formatPowerSystemsGraphRef = useRef<(() => void) | null>(null);
@@ -149,6 +159,10 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
   const [fullResetPoliticalScienceReady, setFullResetPoliticalScienceReady] = useState(false);
   const [resetPolicyResearchAnalystReady, setResetPolicyResearchAnalystReady] = useState(false);
   const [formatPolicyResearchAnalystReady, setFormatPolicyResearchAnalystReady] = useState(false);
+  const [resetLegislativeAideGovernmentStaffReady, setResetLegislativeAideGovernmentStaffReady] = useState(false);
+  const [formatLegislativeAideGovernmentStaffReady, setFormatLegislativeAideGovernmentStaffReady] = useState(false);
+  const [resetPublicAdministrationNonprofitProgramCoordinatorReady, setResetPublicAdministrationNonprofitProgramCoordinatorReady] = useState(false);
+  const [formatPublicAdministrationNonprofitProgramCoordinatorReady, setFormatPublicAdministrationNonprofitProgramCoordinatorReady] = useState(false);
   const [resetPowerSystemsReady, setResetPowerSystemsReady] = useState(false);
   const [formatPowerSystemsReady, setFormatPowerSystemsReady] = useState(false);
   const [resetEmbeddedSystemsEEReady, setResetEmbeddedSystemsEEReady] = useState(false);
@@ -366,6 +380,34 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
       setFormatPolicyResearchAnalystReady(true);
     });
   });
+
+  const handleResetLegislativeAideGovernmentStaffReady = useRef((handler: () => void) => {
+    resetLegislativeAideGovernmentStaffGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setResetLegislativeAideGovernmentStaffReady(true);
+    });
+  });
+
+  const handleFormatLegislativeAideGovernmentStaffReady = useRef((handler: () => void) => {
+    formatLegislativeAideGovernmentStaffGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setFormatLegislativeAideGovernmentStaffReady(true);
+    });
+  });
+
+  const handleResetPublicAdministrationNonprofitProgramCoordinatorReady = useRef((handler: () => void) => {
+    resetPublicAdministrationNonprofitProgramCoordinatorGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setResetPublicAdministrationNonprofitProgramCoordinatorReady(true);
+    });
+  });
+
+  const handleFormatPublicAdministrationNonprofitProgramCoordinatorReady = useRef((handler: () => void) => {
+    formatPublicAdministrationNonprofitProgramCoordinatorGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setFormatPublicAdministrationNonprofitProgramCoordinatorReady(true);
+    });
+  });
   
   const handleResetPowerSystemsReady = useRef((handler: () => void) => {
     resetPowerSystemsGraphRef.current = handler;
@@ -550,6 +592,8 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
       "market-research": "Market Research Analyst (Generalist)",
       "human-resources": "Human Resources Specialist (Generalist)",
       "policy-research-analyst": "Policy / Research Analyst",
+      "legislative-aide-government-staff": "Legislative Aide / Government Staff",
+      "public-administration-nonprofit-program-coordinator": "Public Administration / Nonprofit Program Coordinator",
       resumes: "Resumes",
       alumni: "Alumni",
     };
@@ -567,6 +611,8 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
       "market-research": "Market Research Analysts bridge consumer psychology, economic theory, and data analytics to understand market dynamics and inform business strategy. This career path integrates behavioral economics, statistical modeling, and business analytics to predict consumer behavior, analyze competitive landscapes, and forecast market trends. Students learn consumer decision-making, marketing strategy, econometrics, and data visualization. The path emphasizes both quantitative analytical skills and strategic thinking—translating market data into actionable business recommendations. Roles include Market Research Analyst, Consumer Insights Analyst, Business Analyst, Strategic Consultant, Product Marketing Analyst, and Competitive Intelligence Analyst.",
       "human-resources": "Human Resources Specialists manage the employee lifecycle and shape organizational culture by combining psychology, sociology, economics, and data analytics. This career path integrates industrial-organizational psychology, labor economics, and people analytics to optimize talent acquisition, development, retention, and organizational effectiveness. Students learn workplace behavior, compensation strategy, DEI principles, leadership development, and HR technology. The path emphasizes both interpersonal skills and data-driven decision-making—translating employee insights into strategic HR initiatives. Roles include HR Generalist, Talent Acquisition Specialist, Compensation Analyst, HR Business Partner, People Analytics Specialist, and Organizational Development Consultant.",
       "policy-research-analyst": "Policy / Research Analysts conduct research, analyze data, and provide evidence-based recommendations to inform public policy decisions. This career path combines political science, statistics, economics, and research methods to evaluate policy effectiveness, assess program outcomes, and support evidence-based policymaking. Students learn quantitative analysis, research design, statistical modeling, and policy evaluation techniques. The path emphasizes both analytical rigor and clear communication—translating complex research findings into actionable policy recommendations. Roles include Policy Analyst, Research Analyst, Program Evaluator, Policy Researcher, and Data Analyst in government, think tanks, and nonprofit organizations.",
+      "legislative-aide-government-staff": "Legislative Aides and Government Staff support elected officials and government agencies by managing constituent services, drafting legislation, conducting research, and coordinating policy implementation. This career path combines political science, public administration, and communication skills to navigate government processes, understand legislative procedures, and serve as a bridge between constituents and policymakers. Students learn about American political institutions, legislative processes, public policy analysis, and government operations. The path emphasizes both practical skills in government operations and strong communication abilities—translating complex policy issues into clear, actionable information. Roles include Legislative Aide, Congressional Staffer, Policy Assistant, Constituent Services Representative, and Government Program Coordinator.",
+      "public-administration-nonprofit-program-coordinator": "Public Administration and Nonprofit Program Coordinators manage programs, coordinate services, and oversee operations in government agencies and nonprofit organizations. This career path combines management principles, public policy analysis, and organizational leadership to design, implement, and evaluate programs that serve communities. Students learn about organizational behavior, program management, grant writing, budgeting, and stakeholder engagement. The path emphasizes both strategic planning and operational execution—translating policy goals into effective programs that deliver measurable outcomes. Roles include Program Coordinator, Nonprofit Manager, Public Administrator, Grant Writer, Community Program Manager, and Service Coordinator.",
     };
 
     // Handle special sections (Resumes, Alumni)
@@ -1680,6 +1726,134 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
               <PolicyResearchAnalystCareerPathGraph 
                 onResetReady={handleResetPolicyResearchAnalystReady.current}
                 onFormatReady={handleFormatPolicyResearchAnalystReady.current}
+              />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Show Legislative Aide / Government Staff career path with graph
+    if (selectedCareerPath === "legislative-aide-government-staff") {
+      return (
+        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-10 text-center">
+              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+                {careerPathNames[selectedCareerPath]} - {selectedDegree}
+              </h2>
+              <p className="text-black mb-5">
+                Career pathway information and recommended courses
+              </p>
+              {careerDescriptions[selectedCareerPath] && (
+                <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+                  {careerDescriptions[selectedCareerPath]}
+                </p>
+              )}
+            </div>
+            
+            {/* Format and Reset buttons */}
+            <div className="mb-6 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  if (formatLegislativeAideGovernmentStaffReady && formatLegislativeAideGovernmentStaffGraphRef.current) {
+                    formatLegislativeAideGovernmentStaffGraphRef.current();
+                  }
+                }}
+                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                  formatLegislativeAideGovernmentStaffReady && formatLegislativeAideGovernmentStaffGraphRef.current
+                    ? "text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+                }`}
+                title={formatLegislativeAideGovernmentStaffReady && formatLegislativeAideGovernmentStaffGraphRef.current ? "Format graph to prevent overlap" : "Waiting for format handler..."}
+              >
+                Format Graph
+              </button>
+              <button
+                onClick={() => {
+                  if (resetLegislativeAideGovernmentStaffReady && resetLegislativeAideGovernmentStaffGraphRef.current) {
+                    resetLegislativeAideGovernmentStaffGraphRef.current();
+                  }
+                }}
+                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                  resetLegislativeAideGovernmentStaffReady && resetLegislativeAideGovernmentStaffGraphRef.current
+                    ? "text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+                }`}
+                title={resetLegislativeAideGovernmentStaffReady && resetLegislativeAideGovernmentStaffGraphRef.current ? "Reset career path graph view" : "Waiting for reset handler..."}
+              >
+                Reset Graph
+              </button>
+            </div>
+            
+            <div className="mb-10">
+              <LegislativeAideGovernmentStaffCareerPathGraph 
+                onResetReady={handleResetLegislativeAideGovernmentStaffReady.current}
+                onFormatReady={handleFormatLegislativeAideGovernmentStaffReady.current}
+              />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Show Public Administration / Nonprofit Program Coordinator career path with graph
+    if (selectedCareerPath === "public-administration-nonprofit-program-coordinator") {
+      return (
+        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-10 text-center">
+              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+                {careerPathNames[selectedCareerPath]} - {selectedDegree}
+              </h2>
+              <p className="text-black mb-5">
+                Career pathway information and recommended courses
+              </p>
+              {careerDescriptions[selectedCareerPath] && (
+                <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+                  {careerDescriptions[selectedCareerPath]}
+                </p>
+              )}
+            </div>
+            
+            {/* Format and Reset buttons */}
+            <div className="mb-6 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  if (formatPublicAdministrationNonprofitProgramCoordinatorReady && formatPublicAdministrationNonprofitProgramCoordinatorGraphRef.current) {
+                    formatPublicAdministrationNonprofitProgramCoordinatorGraphRef.current();
+                  }
+                }}
+                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                  formatPublicAdministrationNonprofitProgramCoordinatorReady && formatPublicAdministrationNonprofitProgramCoordinatorGraphRef.current
+                    ? "text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+                }`}
+                title={formatPublicAdministrationNonprofitProgramCoordinatorReady && formatPublicAdministrationNonprofitProgramCoordinatorGraphRef.current ? "Format graph to prevent overlap" : "Waiting for format handler..."}
+              >
+                Format Graph
+              </button>
+              <button
+                onClick={() => {
+                  if (resetPublicAdministrationNonprofitProgramCoordinatorReady && resetPublicAdministrationNonprofitProgramCoordinatorGraphRef.current) {
+                    resetPublicAdministrationNonprofitProgramCoordinatorGraphRef.current();
+                  }
+                }}
+                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                  resetPublicAdministrationNonprofitProgramCoordinatorReady && resetPublicAdministrationNonprofitProgramCoordinatorGraphRef.current
+                    ? "text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+                }`}
+                title={resetPublicAdministrationNonprofitProgramCoordinatorReady && resetPublicAdministrationNonprofitProgramCoordinatorGraphRef.current ? "Reset career path graph view" : "Waiting for reset handler..."}
+              >
+                Reset Graph
+              </button>
+            </div>
+            
+            <div className="mb-10">
+              <PublicAdministrationNonprofitProgramCoordinatorCareerPathGraph 
+                onResetReady={handleResetPublicAdministrationNonprofitProgramCoordinatorReady.current}
+                onFormatReady={handleFormatPublicAdministrationNonprofitProgramCoordinatorReady.current}
               />
             </div>
           </div>
