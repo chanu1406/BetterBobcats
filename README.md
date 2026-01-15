@@ -222,13 +222,25 @@ User authentication via Supabase Auth is partially implemented but not fully con
 The application uses PostgreSQL via Supabase. Database schema is defined in SQL migration files in `supabase/migrations/`.
 
 ### Key Tables
-- `clubs` - Club information
-- `majors` - Academic majors
+- `clubs` - Club information with active/inactive status
+- `majors` - Academic majors at UC Merced
 - `club_majors` - Many-to-many relationship between clubs and majors
-- `club_tags` - Tags associated with clubs
+- `club_tags` - Tags associated with clubs for categorization
 - `club_major_notes` - Notes about club-major relationships
+- `club_memberships` - Club member management with role-based access (admin, officer, member)
+- `club_invites` - Email-based invitation system for clubs
+- `club_requests` - Club submission and approval workflow
+- `events` - Club event management
+- `platform_admins` - Platform administrator management
+- `email_outbox` - Email queue for asynchronous delivery
 
-See [Database Schema Reference](docs/DATABASE_SCHEMA.md) for complete schema documentation.
+### Security
+- **Row Level Security (RLS)** is extensively implemented across all tables
+- Policies cover SELECT, INSERT, UPDATE, and DELETE operations
+- Role-based access control for club members, officers, and admins
+- Platform admins have full access to all resources
+
+See [Database Schema Reference](docs/DATABASE_SCHEMA.md) for complete schema documentation including all tables, functions, RLS policies, and relationships.
 
 ## 🧪 Development
 
@@ -273,9 +285,7 @@ npm run dev
 
 - Admin authentication uses hardcoded credentials (development only)
 - User authentication not fully implemented
-- Email service not configured
-- Some API endpoints lack proper authentication checks
-- RLS policies only cover SELECT operations (INSERT/UPDATE/DELETE not protected)
+- Email service not configured (email_outbox table exists but not actively used)
 
 See [Tech Stack Report](docs/TECH_STACK_ARCHITECTURE_REPORT.md) for detailed security considerations and recommendations.
 

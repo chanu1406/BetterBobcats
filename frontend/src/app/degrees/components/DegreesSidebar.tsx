@@ -26,6 +26,8 @@ export default function DegreesSidebar({
   const degrees = [
     "CS/CSE",
     "COGS",
+    "Electrical Engineering",
+    "Political Science",
   ];
 
   const careerPaths: Record<string, { id: string; name: string }[]> = {
@@ -46,6 +48,26 @@ export default function DegreesSidebar({
       { id: "data-analyst", name: "Data Analyst (Generalist)" },
       { id: "market-research", name: "Market Research Analyst (Generalist)" },
       { id: "human-resources", name: "Human Resources Specialist (Generalist)" },
+    ],
+    "Electrical Engineering": [
+      { id: "resumes", name: "Resumes" },
+      { id: "alumni", name: "Alumni" },
+      { id: "power-systems", name: "Power Systems & Energy" },
+      { id: "embedded-systems", name: "Embedded Systems & Robotics" },
+      { id: "ev-automotive", name: "Electric Vehicle & Automotive Systems" },
+      { id: "signals-rf", name: "Signals, Communications & RF" },
+      { id: "controls-automation", name: "Controls & Automation" },
+      { id: "hardware-ic-design", name: "Hardware / IC Design" },
+    ],
+    "Political Science": [
+      { id: "resumes", name: "Resumes" },
+      { id: "alumni", name: "Alumni" },
+      { id: "policy-research-analyst", name: "Policy / Research Analyst" },
+      { id: "legislative-aide-government-staff", name: "Legislative Aide / Government Staff" },
+      { id: "public-administration-nonprofit-program-coordinator", name: "Public Administration / Nonprofit Program Coordinator" },
+      { id: "campaign-staff-field-organizer", name: "Campaign Staff / Field Organizer / Campaign Management" },
+      { id: "advocacy-lobbying-government-relations", name: "Advocacy / Lobbying / Government Relations" },
+      { id: "law-pre-law", name: "Law / Pre-Law" },
     ],
   };
 

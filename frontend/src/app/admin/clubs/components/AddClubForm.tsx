@@ -62,8 +62,8 @@ export default function AddClubForm() {
       formDataToSend.append("description", formData.description);
       if (formData.website) formDataToSend.append("website", formData.website);
       if (formData.slug) formDataToSend.append("slug", formData.slug);
-      formDataToSend.append("is_active", formData.is_active.toString());
-      formDataToSend.append("display_order", formData.display_order.toString());
+      formDataToSend.append("is_active", String(formData.is_active ?? true));
+      formDataToSend.append("display_order", String(formData.display_order ?? 0));
 
       const createResponse = await fetch(`${API_BASE_URL}/api/clubs/`, {
         method: "POST",
@@ -236,7 +236,7 @@ export default function AddClubForm() {
                 <ImageUpload
                   label="Club Logo"
                   type="logo"
-                  currentUrl={formData.logo_url}
+                  currentUrl={formData.logo_url ?? null}
                   onUpload={handleLogoUpload}
                   onError={(err) => setError(err)}
                   disabled={isSubmitting}
@@ -247,7 +247,7 @@ export default function AddClubForm() {
                 <ImageUpload
                   label="Club Banner"
                   type="banner"
-                  currentUrl={formData.banner_url}
+                  currentUrl={formData.banner_url ?? null}
                   onUpload={handleBannerUpload}
                   onError={(err) => setError(err)}
                   disabled={isSubmitting}

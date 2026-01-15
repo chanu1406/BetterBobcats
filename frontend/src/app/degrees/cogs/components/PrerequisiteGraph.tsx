@@ -514,7 +514,7 @@ export default function PrerequisiteGraph({ onLayoutChange, useFormattedLayoutEx
         'Writing': 'category-writing',
         'Computer Science': 'category-computer-science',
       };
-      const categoryId = categoryIdMap[category] || `category-${category.toLowerCase().replace(/\s+/g, "-")}`;
+      const categoryId = category ? (categoryIdMap[category] || `category-${category.toLowerCase().replace(/\s+/g, "-")}`) : 'category-unknown';
       const isExpanded = expandedCategories.has(categoryId);
       
       return {
@@ -551,7 +551,7 @@ export default function PrerequisiteGraph({ onLayoutChange, useFormattedLayoutEx
         'Writing': 'category-writing',
         'Computer Science': 'category-computer-science',
       };
-      const categoryId = categoryIdMap[category] || `category-${category.toLowerCase().replace(/\s+/g, "-")}`;
+      const categoryId = category ? (categoryIdMap[category] || `category-${category.toLowerCase().replace(/\s+/g, "-")}`) : 'category-unknown';
       const isExpanded = expandedCategories.has(categoryId);
       
       if (isExpanded) {
@@ -587,7 +587,7 @@ export default function PrerequisiteGraph({ onLayoutChange, useFormattedLayoutEx
                   'Writing': 'category-writing',
                   'Computer Science': 'category-computer-science',
                 };
-                const prereqCategoryId = categoryIdMap[prereqCourse.category] || `category-${prereqCourse.category.toLowerCase().replace(/\s+/g, "-")}`;
+                const prereqCategoryId = prereqCourse.category ? (categoryIdMap[prereqCourse.category] || `category-${prereqCourse.category.toLowerCase().replace(/\s+/g, "-")}`) : 'category-unknown';
                 if (expandedCategories.has(prereqCategoryId)) {
                   courseEdges.push({
                     id: `${prereqId}-${course.id}`,
