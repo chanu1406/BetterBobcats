@@ -30,7 +30,7 @@ export default function EditClubPage() {
             </p>
           </div>
           <Link
-            href="/admin/clubs"
+            href="/admin/clubs/manage"
             className="px-4 py-2 text-muted-foreground hover:text-foreground rounded-lg font-medium hover:bg-muted/50 transition-colors"
           >
             ← Back to Clubs
