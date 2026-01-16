@@ -1,5 +1,5 @@
 /**
- * GraphLegend Component for Electrical Engineering
+ * GraphLegend Component
  * Displays color legend for the four academic years
  * Used on: Degrees page (Electrical Engineering prerequisite graph)
  */
@@ -7,16 +7,12 @@
 interface GraphLegendProps {
   onFormatLayoutClick?: () => void;
   useFormattedLayout?: boolean;
-  onResetPositions?: () => void;
-  onFullReset?: () => void;
+  onResetClick?: () => void;
+  onFullResetClick?: () => void;
+  onExportPositionsClick?: () => void;
 }
 
-export default function GraphLegend({ 
-  onFormatLayoutClick, 
-  useFormattedLayout, 
-  onResetPositions, 
-  onFullReset 
-}: GraphLegendProps) {
+export default function GraphLegend({ onFormatLayoutClick, useFormattedLayout, onResetClick, onFullResetClick, onExportPositionsClick }: GraphLegendProps) {
   const yearColors = [
     { year: 1, label: "First Year", bgColor: "bg-blue-100", borderColor: "border-blue-300" },
     { year: 2, label: "Second Year", bgColor: "bg-green-100", borderColor: "border-green-300" },
@@ -41,29 +37,38 @@ export default function GraphLegend({
           {onFormatLayoutClick && (
             <button
               onClick={() => {
-                if (onFullReset) {
-                  onFullReset();
+                if (onFullResetClick) {
+                  onFullResetClick();
                 } else {
                   console.warn("Reset handler not ready yet");
                 }
               }}
               className={`text-xs transition-colors font-medium ${
-                onFullReset 
+                onFullResetClick 
                   ? "text-destructive hover:text-destructive/80 cursor-pointer" 
                   : "text-muted-foreground/50 cursor-not-allowed opacity-50"
               }`}
-              title={onFullReset ? "Reset entire graph: positions, expanded nodes, and layout" : "Waiting for reset handler..."}
+              title={onFullResetClick ? "Reset entire graph: positions, expanded nodes, and layout" : "Waiting for reset handler..."}
             >
               Reset Graph
             </button>
           )}
-          {onResetPositions && (
+          {onResetClick && (
             <button
-              onClick={onResetPositions}
+              onClick={onResetClick}
               className="text-xs text-muted-foreground hover:text-foreground transition-colors font-medium"
               title="Reset node positions to default layout"
             >
               Reset Positions
+            </button>
+          )}
+          {onExportPositionsClick && (
+            <button
+              onClick={onExportPositionsClick}
+              className="text-xs text-blue-600 hover:text-blue-800 transition-colors font-medium"
+              title="Export current node positions to console and clipboard"
+            >
+              Export Positions
             </button>
           )}
         </div>

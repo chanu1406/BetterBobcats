@@ -1,5 +1,6 @@
 /**
- * Signals, Communications & RF Career Path Data Exports
+ * Signals, Communications & RF Career Path Data
+ * Exports all data related to the Signals, Communications & RF career path
  */
 
 export { signalsRFCareerPathConfig } from "./careerPathConfig";

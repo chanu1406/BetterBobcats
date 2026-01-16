@@ -1,5 +1,6 @@
 /**
- * Power Systems Career Path Data Exports
+ * Power Systems & Energy Career Path Data
+ * Exports all data related to the Power Systems & Energy career path
  */
 
 export { powerSystemsCareerPathConfig } from "./careerPathConfig";

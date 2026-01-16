@@ -1,24 +1,24 @@
 /**
- * Career Path Configuration for Controls & Automation Engineer
+ * Controls & Automation Career Path Configuration
+ * Configures the career path graph visualization
  * 
- * This configuration defines the structure for the Controls & Automation career path graph.
- * It organizes courses into logical categories for the interactive tier-based visualization.
+ * NOTE: This is a placeholder. Configuration will be added later.
  */
 
 import { CareerPathConfig } from "@/types/careerPath";
-import { controlsAutomationTierCourses } from "./tierCourses";
+import { tier1Courses, tier2Courses, tier3Courses } from "./tierCourses";
 
 export const controlsAutomationCareerPathConfig: CareerPathConfig = {
-  rootLabel: "Controls & Automation Engineer",
+  rootLabel: "Controls & Automation",
   categories: [
-    { id: "tier-1", label: "TIER 1: CORE AUTOMATION FOUNDATIONS", emoji: "🟢" },
-    { id: "tier-2", label: "TIER 2: SUPPORTING SKILLS", emoji: "🟡" },
-    { id: "tier-3", label: "TIER 3: PROGRAMMING FOUNDATION", emoji: "🟠" },
+    { id: "tier-1", label: "TIER 1: MUST-TAKE", emoji: "🟢" },
+    { id: "tier-2", label: "TIER 2: PREFERABLE", emoji: "🟡" },
+    { id: "tier-3", label: "TIER 3: OPTIONAL", emoji: "🟠" },
   ],
-  courses: controlsAutomationTierCourses,
+  courses: [...tier1Courses, ...tier2Courses, ...tier3Courses],
   categoryIntros: {
-    "tier-1": "These are the **essential courses** for controls and automation careers. Core knowledge in control theory, signal processing, microcontrollers, and PLC programming that industrial automation companies expect.",
-    "tier-2": "These courses enhance automation expertise with motor drives, power electronics, circuit design, and systems integration - making you versatile in designing complete automation solutions.",
-    "tier-3": "Programming foundation enables control algorithm development, SCADA scripting, and automation utilities beyond basic ladder logic.",
+    "tier-1": "Essential courses for Controls & Automation roles.",
+    "tier-2": "Recommended courses that strengthen your profile.",
+    "tier-3": "Additional courses that may be beneficial.",
   },
 };

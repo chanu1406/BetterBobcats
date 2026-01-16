@@ -1,5 +1,6 @@
 /**
- * Electric Vehicle & Automotive Systems Career Path Data Exports
+ * Electric Vehicle & Automotive Systems Career Path Data
+ * Exports all data related to the Electric Vehicle & Automotive Systems career path
  */
 
 export { evAutomotiveCareerPathConfig } from "./careerPathConfig";

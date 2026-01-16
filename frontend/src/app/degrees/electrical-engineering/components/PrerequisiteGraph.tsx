@@ -1,9 +1,11 @@
 "use client";
 
 /**
- * PrerequisiteGraph Component for Electrical Engineering
+ * PrerequisiteGraph Component
  * Interactive prerequisite graph visualization using React Flow
  * Used on: Degrees page (Electrical Engineering degree overview)
+ * 
+ * NOTE: This is a placeholder implementation. Graph layout will be fully implemented later.
  */
 
 import { useMemo, useState, useCallback, useEffect, useRef } from "react";
@@ -22,12 +24,12 @@ import "reactflow/dist/style.css";
 import { Course } from "@/types/course";
 import { electricalEngineeringCourses } from "../data/courses";
 
-// Custom circular node component for EE root
+// Custom circular node component for Electrical Engineering root
 function RootNode({ data }: { data: { label: string } }) {
   return (
     <div className="w-24 h-24 rounded-full border-2 border-primary bg-primary/10 flex items-center justify-center shadow-lg relative">
       <Handle type="source" position={Position.Bottom} />
-      <div className="text-sm font-bold text-primary text-center px-2">
+      <div className="text-base font-bold text-primary text-center">
         {data.label}
       </div>
     </div>
@@ -114,8 +116,8 @@ function getLayoutedElements(
   }
   
   // Position category nodes at level 1 (below root)
-  const categorySpacing = useFormattedLayout ? 350 : 180;
-  const categoryStartX = -((categoryNodes.length - 1) * categorySpacing) / 2;
+  const categorySpacing = 180;
+  const categoryStartX = categoryNodes.length > 0 ? -((categoryNodes.length - 1) * categorySpacing) / 2 : 0;
   categoryNodes.forEach((node, index) => {
     node.targetPosition = "top" as any;
     node.sourcePosition = "bottom" as any;
@@ -126,191 +128,38 @@ function getLayoutedElements(
     node.position = savedPositions[node.id] || defaultPosition;
   });
 
-  const verticalSpacing = 140;
-  const horizontalSpacing = useFormattedLayout ? 200 : 220;
+  // Position course nodes under their respective categories
+  const courseY = 280;
+  const horizontalSpacing = 220;
 
-  // Position Math courses
-  const mathCategoryNode = categoryNodes.find((n) => n.id === "category-math");
-  if (mathCategoryNode) {
-    const mathCourses = courseNodes.filter((n) => n.id.startsWith("math-"));
-    let currentY = 280;
-
-    mathCourses.forEach((node) => {
-      node.targetPosition = "top" as any;
-      node.sourcePosition = "bottom" as any;
-      const defaultPosition = { x: mathCategoryNode.position.x, y: currentY };
-      node.position = savedPositions[node.id] || defaultPosition;
-      
-      // Increment Y for next course
-      if (node.id === "math-022") {
-        currentY += verticalSpacing;
-        // Next courses (023, 024, 080) will branch horizontally
-        const branchCourses = ["math-023", "math-024", "engr-080"];
-        const branchStartX = mathCategoryNode.position.x - horizontalSpacing;
-        branchCourses.forEach((courseId, idx) => {
-          const branchNode = courseNodes.find((n) => n.id === courseId);
-          if (branchNode) {
-            const defaultPos = { x: branchStartX + idx * horizontalSpacing, y: currentY };
-            branchNode.position = savedPositions[branchNode.id] || defaultPos;
-            branchNode.targetPosition = "top" as any;
-            branchNode.sourcePosition = "bottom" as any;
-          }
-        });
-      } else if (!["math-023", "math-024", "engr-080"].includes(node.id)) {
-        currentY += verticalSpacing;
+  // Group courses by category
+  const coursesByCategory: Record<string, Node[]> = {};
+  courseNodes.forEach((node) => {
+    const course = (node.data as { course?: Course })?.course;
+    if (course && course.category) {
+      const categoryId = `category-${course.category.toLowerCase()}`;
+      if (!coursesByCategory[categoryId]) {
+        coursesByCategory[categoryId] = [];
       }
-    });
-  }
-
-  // Position Chemistry courses
-  const chemCategoryNode = categoryNodes.find((n) => n.id === "category-chemistry");
-  if (chemCategoryNode) {
-    const chemCourses = courseNodes.filter((n) => n.id.startsWith("chem-"));
-    let currentY = 280;
-    
-    chemCourses.forEach((node) => {
-      node.targetPosition = "top" as any;
-      node.sourcePosition = "bottom" as any;
-      const defaultPosition = { x: chemCategoryNode.position.x, y: currentY };
-      node.position = savedPositions[node.id] || defaultPosition;
-      currentY += verticalSpacing;
-    });
-  }
-
-  // Position Physics courses
-  const physicsCategoryNode = categoryNodes.find((n) => n.id === "category-physics");
-  if (physicsCategoryNode) {
-    const physicsCourses = courseNodes.filter((n) => n.id.startsWith("phys-"));
-    let currentY = 280;
-    
-    physicsCourses.forEach((node) => {
-      node.targetPosition = "top" as any;
-      node.sourcePosition = "bottom" as any;
-      const defaultPosition = { x: physicsCategoryNode.position.x, y: currentY };
-      node.position = savedPositions[node.id] || defaultPosition;
-      
-      // Group lab with lecture
-      if (node.id.includes("-008") || node.id.includes("-009")) {
-        if (!node.id.includes("l")) {
-          currentY += verticalSpacing;
-        }
-      }
-    });
-  }
-
-  // Position Writing courses
-  const writingCategoryNode = categoryNodes.find((n) => n.id === "category-writing");
-  if (writingCategoryNode) {
-    const writingCourses = courseNodes.filter((n) => n.id.startsWith("wri-"));
-    let currentY = 280;
-    
-    writingCourses.forEach((node) => {
-      node.targetPosition = "top" as any;
-      node.sourcePosition = "bottom" as any;
-      const defaultPosition = { x: writingCategoryNode.position.x, y: currentY };
-      node.position = savedPositions[node.id] || defaultPosition;
-      currentY += verticalSpacing;
-    });
-  }
-
-  // Position Engineering courses
-  const engrCategoryNode = categoryNodes.find((n) => n.id === "category-engineering");
-  if (engrCategoryNode) {
-    const engrCourses = courseNodes.filter((n) => n.id.startsWith("engr-") && !n.id.includes("080"));
-    let currentY = 280;
-    
-    engrCourses.forEach((node) => {
-      node.targetPosition = "top" as any;
-      node.sourcePosition = "bottom" as any;
-      const defaultPosition = { x: engrCategoryNode.position.x, y: currentY };
-      node.position = savedPositions[node.id] || defaultPosition;
-      currentY += verticalSpacing;
-    });
-  }
-
-  // Position EE courses - complex branching structure
-  const eeCategoryNode = categoryNodes.find((n) => n.id === "category-ee");
-  if (eeCategoryNode) {
-    const eeCourses = courseNodes.filter((n) => n.id.startsWith("ee-"));
-    let currentY = 280;
-    
-    // Level 1: EE-010
-    const ee010 = eeCourses.find((n) => n.id === "ee-010");
-    if (ee010) {
-      ee010.targetPosition = "top" as any;
-      ee010.sourcePosition = "bottom" as any;
-      ee010.position = savedPositions[ee010.id] || { x: eeCategoryNode.position.x, y: currentY };
-      currentY += verticalSpacing;
+      coursesByCategory[categoryId].push(node);
     }
+  });
 
-    // Level 2: EE-020, EE-030
-    const level2 = ["ee-020", "ee-030"];
-    level2.forEach((id, idx) => {
-      const node = eeCourses.find((n) => n.id === id);
-      if (node) {
+  // Position courses under their categories
+  Object.entries(coursesByCategory).forEach(([categoryId, categoryCourses]) => {
+    const categoryNode = categoryNodes.find((n) => n.id === categoryId);
+    if (categoryNode) {
+      const courseStartX = categoryNode.position.x - ((categoryCourses.length - 1) * horizontalSpacing) / 2;
+      categoryCourses.forEach((node, index) => {
         node.targetPosition = "top" as any;
         node.sourcePosition = "bottom" as any;
-        const defaultPos = { x: eeCategoryNode.position.x - horizontalSpacing/2 + idx * horizontalSpacing, y: currentY };
-        node.position = savedPositions[node.id] || defaultPos;
-      }
-    });
-    currentY += verticalSpacing;
-
-    // Level 3: EE-065, EE-120, EE-140
-    const level3 = ["ee-065", "ee-120", "ee-140"];
-    const level3StartX = eeCategoryNode.position.x - horizontalSpacing;
-    level3.forEach((id, idx) => {
-      const node = eeCourses.find((n) => n.id === id);
-      if (node) {
-        node.targetPosition = "top" as any;
-        node.sourcePosition = "bottom" as any;
-        const defaultPos = { x: level3StartX + idx * horizontalSpacing, y: currentY };
-        node.position = savedPositions[node.id] || defaultPos;
-      }
-    });
-    currentY += verticalSpacing;
-
-    // Level 4: EE-100, EE-110, EE-130
-    const level4 = ["ee-100", "ee-110", "ee-130"];
-    const level4StartX = eeCategoryNode.position.x - horizontalSpacing;
-    level4.forEach((id, idx) => {
-      const node = eeCourses.find((n) => n.id === id);
-      if (node) {
-        node.targetPosition = "top" as any;
-        node.sourcePosition = "bottom" as any;
-        const defaultPos = { x: level4StartX + idx * horizontalSpacing, y: currentY };
-        node.position = savedPositions[node.id] || defaultPos;
-      }
-    });
-    currentY += verticalSpacing;
-
-    // Level 5: EE-101, EE-150, EE-160
-    const level5 = ["ee-101", "ee-150", "ee-160"];
-    const level5StartX = eeCategoryNode.position.x - horizontalSpacing;
-    level5.forEach((id, idx) => {
-      const node = eeCourses.find((n) => n.id === id);
-      if (node) {
-        node.targetPosition = "top" as any;
-        node.sourcePosition = "bottom" as any;
-        const defaultPos = { x: level5StartX + idx * horizontalSpacing, y: currentY };
-        node.position = savedPositions[node.id] || defaultPos;
-      }
-    });
-    currentY += verticalSpacing;
-
-    // Level 6: EE-180, EE-181, Electives
-    const level6 = ["ee-180", "ee-181", "ee-elective-1", "ee-elective-2"];
-    const level6StartX = eeCategoryNode.position.x - horizontalSpacing * 1.5;
-    level6.forEach((id, idx) => {
-      const node = eeCourses.find((n) => n.id === id);
-      if (node) {
-        node.targetPosition = "top" as any;
-        node.sourcePosition = "bottom" as any;
-        const defaultPos = { x: level6StartX + idx * horizontalSpacing, y: currentY };
-        node.position = savedPositions[node.id] || defaultPos;
-      }
-    });
-  }
+        node.position = savedPositions[node.id] || {
+          x: courseStartX + index * horizontalSpacing,
+          y: courseY,
+        };
+      });
+    }
+  });
   
   return { nodes, edges };
 }
@@ -320,13 +169,15 @@ interface PrerequisiteGraphProps {
   useFormattedLayoutExternal?: boolean;
   onResetReady?: (resetFn: () => void) => void;
   onFullResetReady?: (resetFn: () => void) => void;
+  onExportPositionsReady?: (exportFn: () => void) => void;
 }
 
 export default function PrerequisiteGraph({ 
   onLayoutChange, 
   useFormattedLayoutExternal, 
   onResetReady, 
-  onFullResetReady 
+  onFullResetReady,
+  onExportPositionsReady
 }: PrerequisiteGraphProps) {
   const courses = electricalEngineeringCourses;
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
@@ -336,7 +187,11 @@ export default function PrerequisiteGraph({
   const [nodesState, setNodesState] = useState<Node[]>([]);
   const [edgesState, setEdgesState] = useState<Edge[]>([]);
   
-  const useFormattedLayout = useFormattedLayoutExternal !== undefined ? useFormattedLayoutExternal : useFormattedLayoutInternal;
+  const hasExpandedCategories = expandedCategories.size > 0;
+  
+  const useFormattedLayout = useFormattedLayoutExternal !== undefined 
+    ? (useFormattedLayoutExternal || hasExpandedCategories)
+    : (useFormattedLayoutInternal || hasExpandedCategories);
   
   const setUseFormattedLayout = (value: boolean) => {
     if (onLayoutChange) {
@@ -345,6 +200,25 @@ export default function PrerequisiteGraph({
       setUseFormattedLayoutInternal(value);
     }
   };
+  
+  useEffect(() => {
+    if (hasExpandedCategories) {
+      if (onLayoutChange && !useFormattedLayoutExternal) {
+        onLayoutChange(true);
+      } else if (!onLayoutChange && !useFormattedLayoutInternal) {
+        setUseFormattedLayoutInternal(true);
+      }
+      setNodePositions((prev) => {
+        const newPositions: Record<string, { x: number; y: number }> = {};
+        Object.keys(prev).forEach((key) => {
+          if (key === "electrical-engineering-root" || key.startsWith("category-")) {
+            newPositions[key] = prev[key];
+          }
+        });
+        return newPositions;
+      });
+    }
+  }, [hasExpandedCategories, useFormattedLayoutExternal, useFormattedLayoutInternal, onLayoutChange]);
 
   const onNodeDragStart = useCallback(() => {
     setIsDragging(true);
@@ -437,14 +311,14 @@ export default function PrerequisiteGraph({
     const rootNode: Node = {
       id: "electrical-engineering-root",
       type: "root",
-      data: { label: "Electrical Engineering" },
+      data: { label: "EE" },
       position: { x: 0, y: 0 },
     };
 
-    // Create category nodes: Math, Chemistry, Physics, Writing, Engineering, EE
-    const categories = ["Math", "Chemistry", "Physics", "Writing", "Engineering", "EE"];
+    // Get unique categories from courses
+    const categories = Array.from(new Set(courses.map(c => c.category).filter(Boolean))) as string[];
     const categoryNodes: Node[] = categories.map((category) => {
-      const categoryId = `category-${category.toLowerCase()}`;
+      const categoryId = `category-${category!.toLowerCase()}`;
       return {
         id: categoryId,
         type: "category",
@@ -467,31 +341,29 @@ export default function PrerequisiteGraph({
       style: { stroke: "#94a3b8", strokeWidth: 2 },
     }));
 
-    // Helper function to create course nodes and edges for a category
-    const createCategoryBranch = (
-      categoryId: string,
-      prefix: string,
-      filterFn?: (course: Course) => boolean
-    ): { nodes: Node[]; edges: Edge[] } => {
-      const isExpanded = expandedCategories.has(categoryId);
-      const courseNodes: Node[] = [];
-      const courseEdges: Edge[] = [];
+    // Create course nodes and edges for each category
+    const allCourseNodes: Node[] = [];
+    const allCourseEdges: Edge[] = [];
 
-      if (isExpanded) {
-        const filteredCourses = courses.filter(filterFn || ((course) => course.id.startsWith(prefix)));
+    categories.forEach((category) => {
+      const categoryId = `category-${category!.toLowerCase()}`;
+      const isCategoryExpanded = expandedCategories.has(categoryId);
+      
+      if (isCategoryExpanded) {
+        const categoryCourses = courses.filter((course) => course.category === category);
         
-        filteredCourses.forEach((course) => {
-          courseNodes.push({
+        categoryCourses.forEach((course) => {
+          allCourseNodes.push({
             id: course.id,
             type: "course",
             data: { course },
             position: { x: 0, y: 0 },
           });
-        });
 
-        filteredCourses.forEach((course) => {
+          // Create edges for prerequisites
           if (course.prerequisites.length === 0) {
-            courseEdges.push({
+            // Course with no prerequisites connects from category
+            allCourseEdges.push({
               id: `${categoryId}-${course.id}`,
               source: categoryId,
               target: course.id,
@@ -500,10 +372,11 @@ export default function PrerequisiteGraph({
               style: { stroke: "#94a3b8", strokeWidth: 2 },
             });
           } else {
+            // Course with prerequisites connects from prerequisite courses
             course.prerequisites.forEach((prereqId) => {
-              // Only create edge if prerequisite is in the same category
-              if (filterFn ? filteredCourses.some((c) => c.id === prereqId) : prereqId.startsWith(prefix)) {
-                courseEdges.push({
+              const prereqCourse = courses.find(c => c.id === prereqId);
+              if (prereqCourse && prereqCourse.category === category) {
+                allCourseEdges.push({
                   id: `${prereqId}-${course.id}`,
                   source: prereqId,
                   target: course.id,
@@ -516,41 +389,20 @@ export default function PrerequisiteGraph({
           }
         });
       }
+    });
 
-      return { nodes: courseNodes, edges: courseEdges };
-    };
-
-    // Create branches for each category
-    const mathBranch = createCategoryBranch("category-math", "math-");
-    const chemBranch = createCategoryBranch("category-chemistry", "chem-");
-    const physicsBranch = createCategoryBranch("category-physics", "phys-");
-    const writingBranch = createCategoryBranch("category-writing", "wri-");
-    const engineeringBranch = createCategoryBranch("category-engineering", "engr-", 
-      (course) => course.id.startsWith("engr-") && !course.id.includes("080"));
-    const eeBranch = createCategoryBranch("category-ee", "ee-");
-
-    // Combine all nodes and edges
+    // Combine all nodes
     const allNodes = [
       rootNode, 
       ...categoryNodes, 
-      ...mathBranch.nodes,
-      ...chemBranch.nodes,
-      ...physicsBranch.nodes,
-      ...writingBranch.nodes,
-      ...engineeringBranch.nodes,
-      ...eeBranch.nodes,
+      ...allCourseNodes
     ];
-    
     const allEdges = [
-      ...categoryEdges,
-      ...mathBranch.edges,
-      ...chemBranch.edges,
-      ...physicsBranch.edges,
-      ...writingBranch.edges,
-      ...engineeringBranch.edges,
-      ...eeBranch.edges,
+      ...categoryEdges, 
+      ...allCourseEdges
     ];
 
+    // Apply layout
     return getLayoutedElements(allNodes, allEdges, useFormattedLayout, nodePositions);
   }, [courses, expandedCategories, useFormattedLayout, nodePositions]);
 
@@ -573,6 +425,52 @@ export default function PrerequisiteGraph({
       setEdgesState(edges);
     }
   }, [nodes, edges, nodesState.length]);
+
+  const displayNodes = isDragging ? nodesState : nodes;
+  const displayEdges = isDragging ? edgesState : edges;
+
+  const exportNodePositions = useCallback(() => {
+    const currentNodes = nodesState.length > 0 ? nodesState : nodes;
+    const positions: Record<string, { x: number; y: number }> = {};
+    
+    currentNodes.forEach((node) => {
+      positions[node.id] = { x: node.position.x, y: node.position.y };
+    });
+
+    const formatted = JSON.stringify(positions, null, 2);
+    
+    console.log("=== NODE POSITIONS ===");
+    console.log(formatted);
+    console.log("=== COPY THE ABOVE JSON ===");
+    
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(formatted).then(() => {
+        console.log("✓ Positions copied to clipboard!");
+      }).catch((err) => {
+        console.warn("Could not copy to clipboard:", err);
+      });
+    }
+    
+    return positions;
+  }, [nodesState, nodes]);
+
+  const exportPositionsRef = useRef<(() => void) | null>(null);
+  exportPositionsRef.current = exportNodePositions;
+
+  useEffect(() => {
+    if (!onExportPositionsReady) return;
+    const rafId = requestAnimationFrame(() => {
+      onExportPositionsReady(() => exportPositionsRef.current?.());
+    });
+    return () => cancelAnimationFrame(rafId);
+  }, [onExportPositionsReady]);
+
+  useEffect(() => {
+    (window as any).exportEENodePositions = exportNodePositions;
+    return () => {
+      delete (window as any).exportEENodePositions;
+    };
+  }, [exportNodePositions]);
 
   const memoizedNodeTypes = useMemo(() => nodeTypes, []);
 
@@ -599,7 +497,7 @@ export default function PrerequisiteGraph({
       </div>
       <div className="w-full px-4 py-2 bg-muted/20 border-t border-border/40">
         <p className="text-xs text-black text-center">
-          Graph reflects typical UC Merced Electrical Engineering progression.
+          Electrical Engineering prerequisite graph. Click category nodes to expand and view courses.
         </p>
       </div>
     </div>
