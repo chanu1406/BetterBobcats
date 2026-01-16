@@ -21,6 +21,8 @@ import MarketResearchCareerPathGraph from "../cogs/careers/market-research/compo
 import HumanResourcesCareerPathGraph from "../cogs/careers/human-resources/components/CareerPathGraph";
 import EEPrerequisiteGraph from "../electrical-engineering/components/PrerequisiteGraph";
 import EEGraphLegend from "../electrical-engineering/components/GraphLegend";
+import MEPrerequisiteGraph from "../mechanical-engineering/components/PrerequisiteGraph";
+import MEGraphLegend from "../mechanical-engineering/components/GraphLegend";
 import PoliticalSciencePrerequisiteGraph from "../political-science/components/PrerequisiteGraph";
 import PoliticalScienceGraphLegend from "../political-science/components/GraphLegend";
 import PolicyResearchAnalystCareerPathGraph from "../political-science/careers/policy-research-analyst/components/CareerPathGraph";
@@ -95,6 +97,10 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
   const resetEEGraphRef = useRef<(() => void) | null>(null);
   const fullResetEEGraphRef = useRef<(() => void) | null>(null);
   
+  // Mechanical Engineering graph handlers
+  const resetMEGraphRef = useRef<(() => void) | null>(null);
+  const fullResetMEGraphRef = useRef<(() => void) | null>(null);
+  
   // Political Science graph handlers
   const resetPoliticalScienceGraphRef = useRef<(() => void) | null>(null);
   const fullResetPoliticalScienceGraphRef = useRef<(() => void) | null>(null);
@@ -165,6 +171,8 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
   const [formatHumanResourcesReady, setFormatHumanResourcesReady] = useState(false);
   const [resetEEReady, setResetEEReady] = useState(false);
   const [fullResetEEReady, setFullResetEEReady] = useState(false);
+  const [resetMEReady, setResetMEReady] = useState(false);
+  const [fullResetMEReady, setFullResetMEReady] = useState(false);
   const [resetPoliticalScienceReady, setResetPoliticalScienceReady] = useState(false);
   const [fullResetPoliticalScienceReady, setFullResetPoliticalScienceReady] = useState(false);
   const [resetPolicyResearchAnalystReady, setResetPolicyResearchAnalystReady] = useState(false);
@@ -358,6 +366,20 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
     fullResetEEGraphRef.current = handler;
     requestAnimationFrame(() => {
       setFullResetEEReady(true);
+    });
+  });
+
+  const handleResetMEReady = useRef((handler: () => void) => {
+    resetMEGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setResetMEReady(true);
+    });
+  });
+
+  const handleFullResetMEReady = useRef((handler: () => void) => {
+    fullResetMEGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setFullResetMEReady(true);
     });
   });
 
@@ -1917,6 +1939,74 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
           </div>
         </div>
       );
+  }
+
+  // Show Mechanical Engineering degree overview if selected
+  if (selectedDegree === "Mechanical Engineering") {
+    return (
+      <div className="flex-1 p-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-10 text-center">
+            <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+              Mechanical Engineering
+            </h2>
+            <p className="text-base text-black max-w-3xl mx-auto mb-5 leading-relaxed">
+              Mechanical Engineering is the study of how mechanical systems are designed, analyzed, and optimized to solve real-world problems. The major combines strong foundations in mathematics, physics, thermodynamics, mechanics, and materials science with hands-on design and manufacturing experience. Students learn to create innovative solutions for energy systems, robotics, aerospace, automotive, and manufacturing industries.
+            </p>
+            <p className="text-black mb-5">
+              Prerequisite graph showing course requirements and progression
+            </p>
+            <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+              This page shows the full Mechanical Engineering academic foundation at UC Merced. Use the graph below to understand how core math, physics, chemistry, and ME courses connect, organized by year with color-coded nodes (Year 1: Blue, Year 2: Green, Year 3: Amber, Year 4: Purple).
+            </p>
+          </div>
+          <div className="mb-8">
+            <MEGraphLegend 
+              onFormatLayoutClick={() => setUseFormattedLayout(!useFormattedLayout)}
+              useFormattedLayout={useFormattedLayout}
+              onResetClick={resetMEReady ? resetMEGraphRef.current || undefined : undefined}
+              onFullResetClick={fullResetMEReady ? fullResetMEGraphRef.current || undefined : undefined}
+            />
+          </div>
+          <div className="mb-10">
+            <MEPrerequisiteGraph 
+              useFormattedLayoutExternal={useFormattedLayout}
+              onLayoutChange={setUseFormattedLayout}
+              onResetReady={handleResetMEReady.current}
+              onFullResetReady={handleFullResetMEReady.current}
+            />
+          </div>
+          
+          {/* ME Alumni Section */}
+          <div className="mt-16">
+            <h3 className="text-2xl md:text-3xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-8 text-center">
+              Mechanical Engineering Alumni
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, index) => (
+                <div
+                  key={index}
+                  className="bg-card border border-border rounded-lg p-6 animate-pulse"
+                >
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-16 h-16 bg-muted rounded-full"></div>
+                    <div className="flex-1">
+                      <div className="h-4 bg-muted rounded w-3/4 mb-2"></div>
+                      <div className="h-3 bg-muted rounded w-1/2"></div>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="h-3 bg-muted rounded w-full"></div>
+                    <div className="h-3 bg-muted rounded w-5/6"></div>
+                    <div className="h-3 bg-muted rounded w-4/6"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   // Show Political Science degree overview if selected
