@@ -516,6 +516,41 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
                   <p className="text-slate-700">{selectedCourse.description}</p>
                 </div>
 
+                {selectedCourse.expandedInfo?.credits && (
+                  <div>
+                    <h4 className="font-semibold text-slate-900 mb-2">
+                      Credits
+                    </h4>
+                    <p className="text-slate-700">{selectedCourse.expandedInfo.credits} units</p>
+                  </div>
+                )}
+
+                {selectedCourse.expandedInfo?.careerRelevance && (
+                  <div>
+                    <h4 className="font-semibold text-slate-900 mb-2">
+                      Career Relevance
+                    </h4>
+                    <p className="text-slate-700">
+                      {selectedCourse.expandedInfo.careerRelevance}
+                    </p>
+                  </div>
+                )}
+
+                {selectedCourse.expandedInfo?.realWorldApplications && (
+                  <div>
+                    <h4 className="font-semibold text-slate-900 mb-2">
+                      Real-World Applications
+                    </h4>
+                    <ul className="list-disc list-inside space-y-1 text-slate-700">
+                      {selectedCourse.expandedInfo.realWorldApplications.map(
+                        (application, index) => (
+                          <li key={index}>{application}</li>
+                        )
+                      )}
+                    </ul>
+                  </div>
+                )}
+
                 {selectedCourse.expandedInfo?.learningOutcomes && (
                   <div>
                     <h4 className="font-semibold text-slate-900 mb-2">
@@ -549,14 +584,66 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
                   </div>
                 )}
 
-                {selectedCourse.expandedInfo?.careerRelevance && (
+                {selectedCourse.expandedInfo?.resources && (
                   <div>
                     <h4 className="font-semibold text-slate-900 mb-2">
-                      Career Relevance
+                      Resources
                     </h4>
-                    <p className="text-slate-700">
-                      {selectedCourse.expandedInfo.careerRelevance}
-                    </p>
+                    <div className="space-y-3">
+                      {selectedCourse.expandedInfo.resources.videos && selectedCourse.expandedInfo.resources.videos.length > 0 && (
+                        <div>
+                          <h5 className="font-medium text-slate-800 mb-1">📹 Videos</h5>
+                          <ul className="space-y-1">
+                            {selectedCourse.expandedInfo.resources.videos.map((video, index) => (
+                              <li key={index}>
+                                <a
+                                  href={video}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-blue-600 hover:text-blue-800 underline text-sm break-all"
+                                >
+                                  {video}
+                                </a>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                      {selectedCourse.expandedInfo.resources.websites && selectedCourse.expandedInfo.resources.websites.length > 0 && (
+                        <div>
+                          <h5 className="font-medium text-slate-800 mb-1">🌐 Websites</h5>
+                          <ul className="space-y-1">
+                            {selectedCourse.expandedInfo.resources.websites.map((website, index) => (
+                              <li key={index}>
+                                <a
+                                  href={website}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-blue-600 hover:text-blue-800 underline text-sm break-all"
+                                >
+                                  {website}
+                                </a>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                      {selectedCourse.expandedInfo.resources.tools && selectedCourse.expandedInfo.resources.tools.length > 0 && (
+                        <div>
+                          <h5 className="font-medium text-slate-800 mb-1">🛠️ Tools</h5>
+                          <div className="flex flex-wrap gap-2">
+                            {selectedCourse.expandedInfo.resources.tools.map((tool, index) => (
+                              <span
+                                key={index}
+                                className="px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-sm"
+                              >
+                                {tool}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )}
               </div>
