@@ -95,6 +95,150 @@ const nodeTypes = {
   course: CourseNode,
 };
 
+// Predefined optimal positions - manually arranged to prevent overlap
+const SAVED_NODE_POSITIONS: Record<string, { x: number; y: number }> = {
+  "mechanical-engineering-root": {
+    "x": 0,
+    "y": 40
+  },
+  "category-math": {
+    "x": -529.413758625561,
+    "y": 160
+  },
+  "category-physics": {
+    "x": -360.00000000000006,
+    "y": 160
+  },
+  "category-chemistry": {
+    "x": -180,
+    "y": 160
+  },
+  "category-writing": {
+    "x": 7.9528946914394965,
+    "y": 160
+  },
+  "category-spark": {
+    "x": 180,
+    "y": 160
+  },
+  "category-engineering": {
+    "x": 367.8696793351311,
+    "y": 158.83447367065338
+  },
+  "category-me": {
+    "x": 549.5275476282925,
+    "y": 158.83447367065338
+  },
+  "math-021": {
+    "x": -671.2427955786429,
+    "y": 268.51835818374747
+  },
+  "math-022": {
+    "x": -672.793857028822,
+    "y": 366.39551390529226
+  },
+  "math-024": {
+    "x": -788.5343165504909,
+    "y": 465.4430459303924
+  },
+  "math-023": {
+    "x": -572.3380395370456,
+    "y": 468.6850717173655
+  },
+  "math-032": {
+    "x": -582.6441550846087,
+    "y": 599.4718793813087
+  },
+  "math-131": {
+    "x": -813.0493844060898,
+    "y": 593.0777491484245
+  },
+  "phys-008": {
+    "x": -415.2837049554038,
+    "y": 276.471252875187
+  },
+  "phys-009": {
+    "x": -377.643735624065,
+    "y": 374.1262873774309
+  },
+  "chem-002": {
+    "x": -179.1163450342845,
+    "y": 273.8144152399915
+  },
+  "wri-010": {
+    "x": -46.833713182921485,
+    "y": 352.4597071886711
+  },
+  "sprk-010": {
+    "x": 74.58926724776063,
+    "y": 272.4706619462686
+  },
+  "engr-091": {
+    "x": 312.77792577235334,
+    "y": 276.5185772454128
+  },
+  "engr-045": {
+    "x": 301.1113570790734,
+    "y": 691.0123642728643
+  },
+  "engr-057": {
+    "x": 94.61033776694808,
+    "y": 725.7169132936552
+  },
+  "engr-120": {
+    "x": 507.3537486311142,
+    "y": 737.7636876813277
+  },
+  "engr-151": {
+    "x": 299.89604469439143,
+    "y": 764.7751452393848
+  },
+  "engr-130": {
+    "x": 312.84724287966674,
+    "y": 449.7023188935582
+  },
+  "engr-065": {
+    "x": 216.7992481480602,
+    "y": 380.61542197310644
+  },
+  "engr-155": {
+    "x": 416.20194536415954,
+    "y": 376.6016758037463
+  },
+  "engr-135": {
+    "x": 169.99941186526996,
+    "y": 543.7366717060164
+  },
+  "engr-193": {
+    "x": 432.11334300738235,
+    "y": 543.3188698258755
+  },
+  "engr-194": {
+    "x": 302.5186840168192,
+    "y": 623.9766198346224
+  },
+  "me-001": {
+    "x": 541.278599256643,
+    "y": 280
+  },
+  "me-021": {
+    "x": 703.278599256643,
+    "y": 418
+  },
+  "me-137": {
+    "x": 893.278599256643,
+    "y": 522
+  },
+  "me-120": {
+    "x": 675.278599256643,
+    "y": 528
+  },
+  "me-140": {
+    "x": 719.278599256643,
+    "y": 630
+  }
+};
+
 // Layout function - position root at top, categories below, courses in hierarchy
 function getLayoutedElements(
   nodes: Node[], 
@@ -160,10 +304,8 @@ function getLayoutedElements(
   const physicsCategoryNode = categoryNodes.find((n) => n.id === "category-physics");
   if (physicsCategoryNode) {
     const physicsCourses = [
-      { id: "phys-008", level: 2, pos: -0.3 },
-      { id: "phys-008l", level: 2, pos: 0.3 },
-      { id: "phys-009", level: 3, pos: -0.3 },
-      { id: "phys-009l", level: 3, pos: 0.3 },
+      { id: "phys-008", level: 2, pos: 0 },
+      { id: "phys-009", level: 3, pos: 0 },
     ];
 
     physicsCourses.forEach((courseInfo) => {
@@ -184,8 +326,7 @@ function getLayoutedElements(
   const chemistryCategoryNode = categoryNodes.find((n) => n.id === "category-chemistry");
   if (chemistryCategoryNode) {
     const chemistryCourses = [
-      { id: "chem-002", level: 2, pos: -0.3 },
-      { id: "chem-002l", level: 2, pos: 0.3 },
+      { id: "chem-002", level: 2, pos: 0 },
     ];
 
     chemistryCourses.forEach((courseInfo) => {
@@ -333,18 +474,20 @@ interface PrerequisiteGraphProps {
   useFormattedLayoutExternal?: boolean;
   onResetReady?: (resetFn: () => void) => void;
   onFullResetReady?: (resetFn: () => void) => void;
+  onExportPositionsReady?: (exportFn: () => void) => void;
 }
 
 export default function PrerequisiteGraph({ 
   onLayoutChange, 
   useFormattedLayoutExternal, 
   onResetReady, 
-  onFullResetReady 
+  onFullResetReady,
+  onExportPositionsReady
 }: PrerequisiteGraphProps) {
   const courses = mechanicalEngineeringCourses;
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
   const [useFormattedLayoutInternal, setUseFormattedLayoutInternal] = useState(false);
-  const [nodePositions, setNodePositions] = useState<Record<string, { x: number; y: number }>>({});
+  const [nodePositions, setNodePositions] = useState<Record<string, { x: number; y: number }>>(SAVED_NODE_POSITIONS);
   const [isDragging, setIsDragging] = useState(false);
   const [nodesState, setNodesState] = useState<Node[]>([]);
   const [edgesState, setEdgesState] = useState<Edge[]>([]);
@@ -618,6 +761,54 @@ export default function PrerequisiteGraph({
       setEdgesState(edges);
     }
   }, [nodes, edges, nodesState.length]);
+
+  // Function to export current node positions
+  const exportNodePositions = useCallback(() => {
+    const currentNodes = nodesState.length > 0 ? nodesState : nodes;
+    const positions: Record<string, { x: number; y: number }> = {};
+    
+    currentNodes.forEach((node) => {
+      positions[node.id] = { x: node.position.x, y: node.position.y };
+    });
+
+    // Format as a JavaScript object that can be easily copied
+    const formatted = JSON.stringify(positions, null, 2);
+    
+    console.log("=== NODE POSITIONS ===");
+    console.log(formatted);
+    console.log("=== COPY THE ABOVE JSON ===");
+    
+    // Also copy to clipboard if possible
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(formatted).then(() => {
+        console.log("✓ Positions copied to clipboard!");
+      }).catch((err) => {
+        console.warn("Could not copy to clipboard:", err);
+      });
+    }
+    
+    return positions;
+  }, [nodesState, nodes]);
+
+  // Expose export function to parent
+  const exportPositionsRef = useRef<(() => void) | null>(null);
+  exportPositionsRef.current = exportNodePositions;
+
+  useEffect(() => {
+    if (!onExportPositionsReady) return;
+    const rafId = requestAnimationFrame(() => {
+      onExportPositionsReady(() => exportPositionsRef.current?.());
+    });
+    return () => cancelAnimationFrame(rafId);
+  }, [onExportPositionsReady]);
+
+  // Also expose to window for console access
+  useEffect(() => {
+    (window as any).exportMENodePositions = exportNodePositions;
+    return () => {
+      delete (window as any).exportMENodePositions;
+    };
+  }, [exportNodePositions]);
 
   // Memoize nodeTypes to prevent React Flow warning
   const memoizedNodeTypes = useMemo(() => nodeTypes, []);
