@@ -26,6 +26,7 @@ export default function DegreesSidebar({
   const degrees = [
     "CS/CSE",
     "COGS",
+    "Data Science and Analytics",
     "Electrical Engineering",
     "Political Science",
   ];
@@ -48,6 +49,10 @@ export default function DegreesSidebar({
       { id: "data-analyst", name: "Data Analyst (Generalist)" },
       { id: "market-research", name: "Market Research Analyst (Generalist)" },
       { id: "human-resources", name: "Human Resources Specialist (Generalist)" },
+    ],
+    "Data Science and Analytics": [
+      { id: "resumes", name: "Resumes" },
+      { id: "alumni", name: "Alumni" },
     ],
     "Electrical Engineering": [
       { id: "resumes", name: "Resumes" },

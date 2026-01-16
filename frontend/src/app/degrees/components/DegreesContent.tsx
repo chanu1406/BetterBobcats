@@ -32,6 +32,7 @@ import EVAutomotiveCareerPathGraph from "../electrical-engineering/careers/ev-au
 import SignalsRFCareerPathGraph from "../electrical-engineering/careers/signals-rf/components/CareerPathGraph";
 import ControlsAutomationCareerPathGraph from "../electrical-engineering/careers/controls-automation/components/CareerPathGraph";
 import HardwareICDesignCareerPathGraph from "../electrical-engineering/careers/hardware-ic-design/components/CareerPathGraph";
+import DataScienceAnalyticsPrerequisiteGraph from "../data-science-analytics/components/PrerequisiteGraph";
 
 interface DegreesContentProps {
   selectedDegree: string | null;
@@ -2093,6 +2094,66 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
         </div>
       );
     }
+
+  // Show Data Science and Analytics degree overview if selected
+  if (selectedDegree === "Data Science and Analytics") {
+    return (
+      <div className="flex-1 p-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-10 text-center">
+            <h1 className="text-4xl md:text-5xl font-sans font-bold text-primary tracking-tight mb-6">
+              Data Science and Analytics
+            </h1>
+            <p className="text-base text-black max-w-4xl mx-auto mb-6 leading-relaxed">
+              Data Science and Analytics combines statistics, computer science, and domain expertise to extract insights from data. The major builds strong foundations in statistical analysis, machine learning, data visualization, and programming while developing critical thinking skills for solving real-world problems with data-driven approaches.
+            </p>
+            <p className="text-base font-semibold text-black max-w-4xl mx-auto mb-6">
+              Prerequisite graph showing course requirements and progression
+            </p>
+            <p className="text-base text-black max-w-4xl mx-auto mb-8 leading-relaxed">
+              This page shows the full Data Science and Analytics academic foundation at UC Merced. Use the graph below to understand how core math, statistics, and data science courses connect, what depends on what, and how early choices affect later flexibility.
+            </p>
+          </div>
+
+          {/* Legend and Controls */}
+          <div className="mb-8 p-6 bg-gray-50 rounded-lg border border-border">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+              <div>
+                <p className="text-sm font-semibold text-black mb-3">Course timing (guidance only)</p>
+                <div className="flex flex-wrap gap-4">
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 rounded-sm" style={{ backgroundColor: "rgba(59,130,246,0.12)", border: "1px solid rgba(59,130,246,0.35)" }}></div>
+                    <span className="text-sm text-black">First Year</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 rounded-sm" style={{ backgroundColor: "rgba(34,197,94,0.12)", border: "1px solid rgba(34,197,94,0.35)" }}></div>
+                    <span className="text-sm text-black">Second Year</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 rounded-sm" style={{ backgroundColor: "rgba(245,158,11,0.12)", border: "1px solid rgba(245,158,11,0.35)" }}></div>
+                    <span className="text-sm text-black">Third Year</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 rounded-sm" style={{ backgroundColor: "rgba(168,85,247,0.12)", border: "1px solid rgba(168,85,247,0.35)" }}></div>
+                    <span className="text-sm text-black">Fourth Year</span>
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-col gap-2 text-right">
+                <a href="#" className="text-primary font-semibold hover:underline">Format Layout (No Overlap)</a>
+                <a href="#" className="text-red-500 font-semibold hover:underline">Reset Graph</a>
+                <a href="#" className="text-gray-500 font-semibold hover:underline">Reset Positions</a>
+              </div>
+            </div>
+          </div>
+
+          <div className="mb-10">
+            <DataScienceAnalyticsPrerequisiteGraph />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Show Political Science degree overview if selected
   if (selectedDegree === "Political Science") {
