@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 interface Club {
   id: string;
@@ -120,6 +121,9 @@ export default function ClubsPage() {
                 className="text-sm font-medium text-primary transition-colors"
               >
                 Clubs
+              </Link>
+              <Link href="/clubs/request">
+                <Button size="sm">Request a Club</Button>
               </Link>
             </div>
           </div>

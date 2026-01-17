@@ -28,6 +28,9 @@ import PoliticalScienceGraphLegend from "../political-science/components/GraphLe
 import PolicyResearchAnalystCareerPathGraph from "../political-science/careers/policy-research-analyst/components/CareerPathGraph";
 import LegislativeAideGovernmentStaffCareerPathGraph from "../political-science/careers/legislative-aide-government-staff/components/CareerPathGraph";
 import PublicAdministrationNonprofitProgramCoordinatorCareerPathGraph from "../political-science/careers/public-administration-nonprofit-program-coordinator/components/CareerPathGraph";
+import CampaignStaffFieldOrganizerCareerPathGraph from "../political-science/careers/campaign-staff-field-organizer-campaign-management/components/CareerPathGraph";
+import AdvocacyLobbyingGovernmentRelationsCareerPathGraph from "../political-science/careers/advocacy-lobbying-government-relations/components/CareerPathGraph";
+import LawPreLawCareerPathGraph from "../political-science/careers/law-pre-law/components/CareerPathGraph";
 import MechanicalDesignCareerPathGraph from "../mechanical-engineering/careers/mechanical-design/components/CareerPathGraph";
 import AerospaceDefenseCareerPathGraph from "../mechanical-engineering/careers/aerospace-defense/components/CareerPathGraph";
 import EnergySustainabilityCareerPathGraph from "../mechanical-engineering/careers/energy-sustainability/components/CareerPathGraph";
@@ -118,6 +121,18 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
   const resetPublicAdministrationNonprofitProgramCoordinatorGraphRef = useRef<(() => void) | null>(null);
   const formatPublicAdministrationNonprofitProgramCoordinatorGraphRef = useRef<(() => void) | null>(null);
   
+  // Campaign Staff / Field Organizer / Campaign Management career path graph handlers
+  const resetCampaignStaffFieldOrganizerGraphRef = useRef<(() => void) | null>(null);
+  const formatCampaignStaffFieldOrganizerGraphRef = useRef<(() => void) | null>(null);
+  
+  // Advocacy / Lobbying / Government Relations career path graph handlers
+  const resetAdvocacyLobbyingGovernmentRelationsGraphRef = useRef<(() => void) | null>(null);
+  const formatAdvocacyLobbyingGovernmentRelationsGraphRef = useRef<(() => void) | null>(null);
+  
+  // Law / Pre-Law career path graph handlers
+  const resetLawPreLawGraphRef = useRef<(() => void) | null>(null);
+  const formatLawPreLawGraphRef = useRef<(() => void) | null>(null);
+  
   // Mechanical Design career path graph handlers
   const resetMechanicalDesignGraphRef = useRef<(() => void) | null>(null);
   const formatMechanicalDesignGraphRef = useRef<(() => void) | null>(null);
@@ -181,6 +196,12 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
   const [formatLegislativeAideGovernmentStaffReady, setFormatLegislativeAideGovernmentStaffReady] = useState(false);
   const [resetPublicAdministrationNonprofitProgramCoordinatorReady, setResetPublicAdministrationNonprofitProgramCoordinatorReady] = useState(false);
   const [formatPublicAdministrationNonprofitProgramCoordinatorReady, setFormatPublicAdministrationNonprofitProgramCoordinatorReady] = useState(false);
+  const [resetCampaignStaffFieldOrganizerReady, setResetCampaignStaffFieldOrganizerReady] = useState(false);
+  const [formatCampaignStaffFieldOrganizerReady, setFormatCampaignStaffFieldOrganizerReady] = useState(false);
+  const [resetAdvocacyLobbyingGovernmentRelationsReady, setResetAdvocacyLobbyingGovernmentRelationsReady] = useState(false);
+  const [formatAdvocacyLobbyingGovernmentRelationsReady, setFormatAdvocacyLobbyingGovernmentRelationsReady] = useState(false);
+  const [resetLawPreLawReady, setResetLawPreLawReady] = useState(false);
+  const [formatLawPreLawReady, setFormatLawPreLawReady] = useState(false);
   const [resetMechanicalDesignReady, setResetMechanicalDesignReady] = useState(false);
   const [formatMechanicalDesignReady, setFormatMechanicalDesignReady] = useState(false);
   const [resetPowerSystemsReady, setResetPowerSystemsReady] = useState(false);

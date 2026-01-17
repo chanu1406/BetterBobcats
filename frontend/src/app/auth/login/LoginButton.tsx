@@ -2,19 +2,24 @@
 
 import { createClient } from "@/lib/supabase/browser";
 
+interface LoginButtonProps {
+  next?: string;
+}
+
 /**
  * Client component for Google OAuth login button
  */
-export default function LoginButton() {
+export default function LoginButton({ next }: LoginButtonProps) {
   const handleLogin = async () => {
     try {
       const supabase = createClient();
       const origin = window.location.origin;
+      const nextUrl = next || "/admin";
       
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${origin}/auth/callback?next=/admin`,
+          redirectTo: `${origin}/auth/callback?next=${encodeURIComponent(nextUrl)}`,
           queryParams: {
             prompt: 'select_account', // Force account selection screen
           },

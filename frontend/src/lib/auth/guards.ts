@@ -5,8 +5,9 @@ import { redirect } from 'next/navigation'
  * Require user to be authenticated
  * Redirects to /auth/login if not logged in
  * Returns the user if authenticated
+ * @param next - Optional redirect URL after login
  */
-export async function requireUser() {
+export async function requireUser(next?: string) {
   const supabase = await createClient()
   const {
     data: { user },
@@ -14,7 +15,10 @@ export async function requireUser() {
   } = await supabase.auth.getUser()
 
   if (error || !user) {
-    redirect('/auth/login')
+    const redirectUrl = next 
+      ? `/auth/login?next=${encodeURIComponent(next)}`
+      : '/auth/login'
+    redirect(redirectUrl)
   }
 
   return user

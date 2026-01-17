@@ -2,8 +2,12 @@
 BetterBobcats Backend API
 FastAPI application providing REST API endpoints for clubs, majors, and platform data
 """
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
+# Load environment variables from .env file
+load_dotenv()
 
 app = FastAPI(
     title="BetterBobcats API",
