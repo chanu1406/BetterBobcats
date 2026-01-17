@@ -1,0 +1,138 @@
+import { TierCourse } from "@/types/careerPath";
+
+export const tier1Courses: TierCourse[] = [
+  {
+    id: "green-env-001",
+    code: "ENV 001",
+    name: "Environmental Science Principles",
+    fullName: "ENV 001: Environmental Science Principles",
+    description: "Ecosystems, climate, and environmental issues foundation.",
+    tier: 1,
+  },
+  {
+    id: "green-dsa-001",
+    code: "DSA 001",
+    name: "Foundations of Data Science & Analytics",
+    fullName: "DSA 001: Foundations of Data Science & Analytics",
+    description: "Data pipelines for environmental and climate datasets.",
+    tier: 1,
+  },
+  {
+    id: "green-stat-010",
+    code: "STAT 010",
+    name: "Probability & Statistics",
+    fullName: "STAT 010: Probability & Statistics",
+    description: "Uncertainty quantification and inference for climate and sustainability modeling.",
+    tier: 1,
+  },
+  {
+    id: "green-econ-001",
+    code: "ECON 001",
+    name: "Introduction to Economics",
+    fullName: "ECON 001: Introduction to Economics",
+    description: "Economic fundamentals for environmental and sustainability analysis.",
+    tier: 1,
+  },
+  {
+    id: "green-math-020",
+    code: "MATH 020",
+    name: "Calculus for Social Sciences",
+    fullName: "MATH 020: Calculus for Social Sciences",
+    description: "Modeling rates of change in systems and sustainability trajectories.",
+    tier: 1,
+  },
+  {
+    id: "green-dsa-101",
+    code: "DSA 101",
+    name: "Machine Learning and Natural Language Processing",
+    fullName: "DSA 101: Machine Learning and Natural Language Processing",
+    description: "Predictive models for climate, energy, and resource optimization.",
+    tier: 1,
+  },
+];
+
+export const tier2Courses: TierCourse[] = [
+  {
+    id: "green-env-100",
+    code: "ENV 100",
+    name: "Climate Change and Global Warming",
+    fullName: "ENV 100: Climate Change and Global Warming",
+    description: "Climate science, impacts, and mitigation strategies for climate analytics.",
+    tier: 2,
+  },
+  {
+    id: "green-env-110",
+    code: "ENV 110",
+    name: "Environmental Policy and Sustainability",
+    fullName: "ENV 110: Environmental Policy and Sustainability",
+    description: "Policy frameworks and sustainable development for impact assessment.",
+    tier: 2,
+  },
+  {
+    id: "green-econ-120",
+    code: "ECON 120",
+    name: "Environmental and Public Policy",
+    fullName: "ECON 120: Environmental and Public Policy",
+    description: "Cost-benefit analysis and environmental valuation for policy decisions.",
+    tier: 2,
+  },
+  {
+    id: "green-dsa-002",
+    code: "DSA 002",
+    name: "Thinking Like a Programmer",
+    fullName: "DSA 002: Thinking Like a Programmer",
+    description: "Automation and scripting for climate and energy data workflows.",
+    tier: 2,
+  },
+  {
+    id: "green-energy-101",
+    code: "ENE 101",
+    name: "Renewable Energy Systems",
+    fullName: "ENE 101: Renewable Energy Systems",
+    description: "Solar, wind, hydro tech and grid integration for energy analytics.",
+    tier: 2,
+  },
+];
+
+export const tier3Courses: TierCourse[] = [
+  {
+    id: "green-env-200",
+    code: "ENV 200",
+    name: "Advanced Environmental Modeling (Grad)",
+    fullName: "ENV 200: Advanced Environmental Modeling",
+    description: "Systems modeling and simulation for complex environmental problems.",
+    tier: 3,
+  },
+  {
+    id: "green-econ-150",
+    code: "ECON 150",
+    name: "Economic Development",
+    fullName: "ECON 150: Economic Development",
+    description: "Development economics and sustainable growth strategies.",
+    tier: 3,
+  },
+  {
+    id: "green-econ-110-adv",
+    code: "ECON 171",
+    name: "Advanced Econometrics",
+    fullName: "ECON 171: Advanced Econometrics",
+    description: "Panel and spatial analysis for environmental impact evaluation.",
+    tier: 3,
+  },
+  {
+    id: "green-circular-economy",
+    code: "ENV 150",
+    name: "Circular Economy and Resource Management",
+    fullName: "ENV 150: Circular Economy and Resource Management",
+    description: "Waste reduction, recycling systems, and resource optimization.",
+    tier: 3,
+  },
+  {
+    id: "green-carbon-tech",
+    code: "TECH 120",
+    name: "Clean Technology and Innovation",
+    fullName: "TECH 120: Clean Technology and Innovation",
+    description: "Emerging green tech, carbon capture, and sustainability innovation.",
+    tier: 3,
+  },
+];

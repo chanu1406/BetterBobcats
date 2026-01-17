@@ -1,0 +1,138 @@
+import { TierCourse } from "@/types/careerPath";
+
+export const tier1Courses: TierCourse[] = [
+  {
+    id: "health-bio-001",
+    code: "BIO 001",
+    name: "General Biology",
+    fullName: "BIO 001: General Biology",
+    description: "Cell biology, genetics, and physiology fundamentals for health data science.",
+    tier: 1,
+  },
+  {
+    id: "health-stat-010",
+    code: "STAT 010",
+    name: "Probability & Statistics",
+    fullName: "STAT 010: Probability & Statistics",
+    description: "Hypothesis testing, inference, and study design for epidemiological analysis.",
+    tier: 1,
+  },
+  {
+    id: "health-dsa-001",
+    code: "DSA 001",
+    name: "Foundations of Data Science & Analytics",
+    fullName: "DSA 001: Foundations of Data Science & Analytics",
+    description: "Data pipelines, cleaning, and visualization for health datasets.",
+    tier: 1,
+  },
+  {
+    id: "health-dsa-101",
+    code: "DSA 101",
+    name: "Machine Learning and Natural Language Processing",
+    fullName: "DSA 101: Machine Learning and Natural Language Processing",
+    description: "Predictive models and text analytics for clinical notes and health records.",
+    tier: 1,
+  },
+  {
+    id: "health-math-020",
+    code: "MATH 020",
+    name: "Calculus for Social Sciences",
+    fullName: "MATH 020: Calculus for Social Sciences",
+    description: "Rate of change and optimization for pharmacokinetics and dosing.",
+    tier: 1,
+  },
+  {
+    id: "health-chem-001",
+    code: "CHEM 001",
+    name: "General Chemistry",
+    fullName: "CHEM 001: General Chemistry",
+    description: "Molecular basis of drugs and biochemistry relevant to biomedical analytics.",
+    tier: 1,
+  },
+];
+
+export const tier2Courses: TierCourse[] = [
+  {
+    id: "health-bio-100",
+    code: "BIO 100",
+    name: "Human Anatomy and Physiology",
+    fullName: "BIO 100: Human Anatomy and Physiology",
+    description: "Detailed body systems; foundation for understanding disease and treatment.",
+    tier: 2,
+  },
+  {
+    id: "health-bio-110",
+    code: "BIO 110",
+    name: "Genetics and Heredity",
+    fullName: "BIO 110: Genetics and Heredity",
+    description: "Genetic factors in disease; context for genomic health analytics.",
+    tier: 2,
+  },
+  {
+    id: "health-epid-050",
+    code: "EPID 050",
+    name: "Introduction to Epidemiology",
+    fullName: "EPID 050: Introduction to Epidemiology",
+    description: "Study design, disease patterns, and outbreak investigation for public health.",
+    tier: 2,
+  },
+  {
+    id: "health-biostat-100",
+    code: "BIOSTAT 100",
+    name: "Biostatistics I",
+    fullName: "BIOSTAT 100: Biostatistics I",
+    description: "Survival analysis, clinical trial design, and medical data methods.",
+    tier: 2,
+  },
+  {
+    id: "health-dsa-002",
+    code: "DSA 002",
+    name: "Thinking Like a Programmer",
+    fullName: "DSA 002: Thinking Like a Programmer",
+    description: "Automation, scripting, and algorithm design for health data workflows.",
+    tier: 2,
+  },
+];
+
+export const tier3Courses: TierCourse[] = [
+  {
+    id: "health-bio-120",
+    code: "BIO 120",
+    name: "Microbiology and Immunology",
+    fullName: "BIO 120: Microbiology and Immunology",
+    description: "Infectious disease and immune response; context for vaccine and treatment analytics.",
+    tier: 3,
+  },
+  {
+    id: "health-epid-100",
+    code: "EPID 100",
+    name: "Epidemiology II: Advanced Methods",
+    fullName: "EPID 100: Epidemiology II: Advanced Methods",
+    description: "Causal inference, confounding, and advanced epidemiological modeling.",
+    tier: 3,
+  },
+  {
+    id: "health-biostat-200",
+    code: "BIOSTAT 200",
+    name: "Biostatistics II (Grad)",
+    fullName: "BIOSTAT 200: Biostatistics II",
+    description: "Advanced regression, longitudinal data, and clinical trial analytics.",
+    tier: 3,
+  },
+  {
+    id: "health-public-health-110",
+    code: "PH 110",
+    name: "Public Health Policy and Management",
+    fullName: "PH 110: Public Health Policy and Management",
+    description: "Health systems, policy impact, and program evaluation frameworks.",
+    tier: 3,
+  },
+  {
+    id: "health-geno-101",
+    code: "GENO 101",
+    name: "Introduction to Genomics",
+    fullName: "GENO 101: Introduction to Genomics",
+    description: "Genomic data analysis for precision medicine and genetic disease research.",
+    tier: 3,
+  },
+];

@@ -1,0 +1,138 @@
+import { TierCourse } from "@/types/careerPath";
+
+export const tier1Courses: TierCourse[] = [
+  {
+    id: "behav-cogs-001",
+    code: "COGS 001",
+    name: "Introduction to Cognitive Science",
+    fullName: "COGS 001: Introduction to Cognitive Science",
+    description: "Foundations of mind, cognition, and brain for behavioral data science work.",
+    tier: 1,
+  },
+  {
+    id: "behav-cogs-101",
+    code: "COGS 101",
+    name: "Mind, Brain, and Computation",
+    fullName: "COGS 101: Mind, Brain, and Computation",
+    description: "Neural networks, computational models, and brain-inspired algorithms.",
+    tier: 1,
+  },
+  {
+    id: "behav-dsa-001",
+    code: "DSA 001",
+    name: "Foundations of Data Science & Analytics",
+    fullName: "DSA 001: Foundations of Data Science & Analytics",
+    description: "Data wrangling, visualization, and fundamentals for behavioral datasets.",
+    tier: 1,
+  },
+  {
+    id: "behav-dsa-101",
+    code: "DSA 101",
+    name: "Machine Learning and Natural Language Processing",
+    fullName: "DSA 101: Machine Learning and Natural Language Processing",
+    description: "Supervised and unsupervised learning; text analysis for behavioral patterns.",
+    tier: 1,
+  },
+  {
+    id: "behav-math-020",
+    code: "MATH 020",
+    name: "Calculus for Social Sciences",
+    fullName: "MATH 020: Calculus for Social Sciences",
+    description: "Optimization and rates of change for behavioral and economic models.",
+    tier: 1,
+  },
+  {
+    id: "behav-stat-010",
+    code: "STAT 010",
+    name: "Probability & Statistics",
+    fullName: "STAT 010: Probability & Statistics",
+    description: "Hypothesis testing, inference, and experimental design for behavioral studies.",
+    tier: 1,
+  },
+];
+
+export const tier2Courses: TierCourse[] = [
+  {
+    id: "behav-cogs-005",
+    code: "COGS 005",
+    name: "Introduction to Language and Linguistics",
+    fullName: "COGS 005: Introduction to Language and Linguistics",
+    description: "Language structure and processing; context for NLP on behavioral data.",
+    tier: 2,
+  },
+  {
+    id: "behav-psyc-050",
+    code: "PSYC 050",
+    name: "Human Perception and Cognition",
+    fullName: "PSYC 050: Human Perception and Cognition",
+    description: "Perceptual and cognitive processes underlying decision-making and behavior.",
+    tier: 2,
+  },
+  {
+    id: "behav-psyc-100",
+    code: "PSYC 100",
+    name: "Research Methods in Psychology",
+    fullName: "PSYC 100: Research Methods in Psychology",
+    description: "Experimental design, measurement, and statistical analysis for behavioral research.",
+    tier: 2,
+  },
+  {
+    id: "behav-neuro-050",
+    code: "NEURO 050",
+    name: "Neuroscience and Behavior",
+    fullName: "NEURO 050: Neuroscience and Behavior",
+    description: "Brain-behavior links; neural basis of learning, memory, decision-making.",
+    tier: 2,
+  },
+  {
+    id: "behav-dsa-002",
+    code: "DSA 002",
+    name: "Thinking Like a Programmer",
+    fullName: "DSA 002: Thinking Like a Programmer",
+    description: "Algorithms, scripting, and automation for data pipelines and analysis.",
+    tier: 2,
+  },
+];
+
+export const tier3Courses: TierCourse[] = [
+  {
+    id: "behav-cogs-013",
+    code: "COGS 013",
+    name: "Scientific Thinking",
+    fullName: "COGS 013: Scientific Thinking",
+    description: "Critical evaluation and research design for behavioral science studies.",
+    tier: 3,
+  },
+  {
+    id: "behav-psyc-140",
+    code: "PSYC 140",
+    name: "Social Psychology",
+    fullName: "PSYC 140: Social Psychology",
+    description: "Group behavior, influence, and social dynamics in behavioral contexts.",
+    tier: 3,
+  },
+  {
+    id: "behav-psyc-160",
+    code: "PSYC 160",
+    name: "Cognitive Development",
+    fullName: "PSYC 160: Cognitive Development",
+    description: "How cognition evolves; useful for modeling behavior across age groups.",
+    tier: 3,
+  },
+  {
+    id: "behav-econ-170",
+    code: "ECON 170",
+    name: "Game Theory",
+    fullName: "ECON 170: Game Theory",
+    description: "Strategic decision-making and behavioral economic patterns.",
+    tier: 3,
+  },
+  {
+    id: "behav-neuro-200",
+    code: "NEURO 200",
+    name: "Advanced Neuroscience (Grad)",
+    fullName: "NEURO 200: Advanced Neuroscience",
+    description: "Deep dive into neural systems for research-grade behavioral modeling.",
+    tier: 3,
+  },
+];

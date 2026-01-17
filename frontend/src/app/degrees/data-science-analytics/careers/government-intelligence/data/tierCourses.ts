@@ -1,0 +1,138 @@
+import { TierCourse } from "@/types/careerPath";
+
+export const tier1Courses: TierCourse[] = [
+  {
+    id: "gov-poli-001",
+    code: "POLI 001",
+    name: "American Government and Politics",
+    fullName: "POLI 001: American Government and Politics",
+    description: "Institutions and processes; context for policy analytics and text mining.",
+    tier: 1,
+  },
+  {
+    id: "gov-dsa-001",
+    code: "DSA 001",
+    name: "Foundations of Data Science & Analytics",
+    fullName: "DSA 001: Foundations of Data Science & Analytics",
+    description: "Data pipelines and visualization for government and policy datasets.",
+    tier: 1,
+  },
+  {
+    id: "gov-dsa-101",
+    code: "DSA 101",
+    name: "Machine Learning and Natural Language Processing",
+    fullName: "DSA 101: Machine Learning and Natural Language Processing",
+    description: "Text analytics for legislation, speeches, and policy documents.",
+    tier: 1,
+  },
+  {
+    id: "gov-stat-010",
+    code: "STAT 010",
+    name: "Probability & Statistics",
+    fullName: "STAT 010: Probability & Statistics",
+    description: "Hypothesis testing and inference for policy evaluation and polling.",
+    tier: 1,
+  },
+  {
+    id: "gov-econ-001",
+    code: "ECON 001",
+    name: "Introduction to Economics",
+    fullName: "ECON 001: Introduction to Economics",
+    description: "Economic fundamentals for policy analysis and cost-benefit studies.",
+    tier: 1,
+  },
+  {
+    id: "gov-math-020",
+    code: "MATH 020",
+    name: "Calculus for Social Sciences",
+    fullName: "MATH 020: Calculus for Social Sciences",
+    description: "Optimization and modeling for policy scenarios.",
+    tier: 1,
+  },
+];
+
+export const tier2Courses: TierCourse[] = [
+  {
+    id: "gov-poli-100",
+    code: "POLI 100",
+    name: "Comparative Politics",
+    fullName: "POLI 100: Comparative Politics",
+    description: "Cross-national policy systems and governance models for international analysis.",
+    tier: 2,
+  },
+  {
+    id: "gov-poli-110",
+    code: "POLI 110",
+    name: "International Relations",
+    fullName: "POLI 110: International Relations",
+    description: "Global politics and diplomacy; context for international policy analytics.",
+    tier: 2,
+  },
+  {
+    id: "gov-econ-110",
+    code: "ECON 110",
+    name: "Econometrics",
+    fullName: "ECON 110: Econometrics",
+    description: "Causal inference and regression for policy impact evaluation.",
+    tier: 2,
+  },
+  {
+    id: "gov-dsa-002",
+    code: "DSA 002",
+    name: "Thinking Like a Programmer",
+    fullName: "DSA 002: Thinking Like a Programmer",
+    description: "Scripting and automation for data pipelines and large-scale text processing.",
+    tier: 2,
+  },
+  {
+    id: "gov-poli-survey",
+    code: "POLI 150",
+    name: "Survey Methods and Applied Research",
+    fullName: "POLI 150: Survey Methods and Applied Research",
+    description: "Survey design, polling, and public opinion research methodologies.",
+    tier: 2,
+  },
+];
+
+export const tier3Courses: TierCourse[] = [
+  {
+    id: "gov-poli-160",
+    code: "POLI 160",
+    name: "Political Theory and Philosophy",
+    fullName: "POLI 160: Political Theory and Philosophy",
+    description: "Philosophical foundations for normative policy analysis.",
+    tier: 3,
+  },
+  {
+    id: "gov-econ-171",
+    code: "ECON 171",
+    name: "Advanced Econometrics",
+    fullName: "ECON 171: Advanced Econometrics",
+    description: "Panel data and time-series methods for longitudinal policy analysis.",
+    tier: 3,
+  },
+  {
+    id: "gov-poli-170",
+    code: "POLI 170",
+    name: "Campaign Strategy and Political Marketing",
+    fullName: "POLI 170: Campaign Strategy and Political Marketing",
+    description: "Political messaging and voter targeting using data analytics.",
+    tier: 3,
+  },
+  {
+    id: "gov-public-admin-100",
+    code: "PA 100",
+    name: "Public Administration",
+    fullName: "PA 100: Public Administration",
+    description: "Government operations and bureaucracy; context for implementation analytics.",
+    tier: 3,
+  },
+  {
+    id: "gov-data-viz",
+    code: "VIZ 100",
+    name: "Data Visualization and Communication",
+    fullName: "VIZ 100: Data Visualization and Communication",
+    description: "Telling stories with policy data for diverse audiences.",
+    tier: 3,
+  },
+];

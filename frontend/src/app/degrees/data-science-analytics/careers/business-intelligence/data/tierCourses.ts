@@ -1,0 +1,138 @@
+import { TierCourse } from "@/types/careerPath";
+
+export const tier1Courses: TierCourse[] = [
+  {
+    id: "bi-econ-005",
+    code: "ECON 005",
+    name: "Introduction to Business and Finance",
+    fullName: "ECON 005: Introduction to Business and Finance",
+    description: "Business fundamentals and financial landscape for analytics roles.",
+    tier: 1,
+  },
+  {
+    id: "bi-dsa-001",
+    code: "DSA 001",
+    name: "Foundations of Data Science & Analytics",
+    fullName: "DSA 001: Foundations of Data Science & Analytics",
+    description: "Data wrangling, visualization, and pipelines for business systems.",
+    tier: 1,
+  },
+  {
+    id: "bi-dsa-101",
+    code: "DSA 101",
+    name: "Machine Learning and Natural Language Processing",
+    fullName: "DSA 101: Machine Learning and Natural Language Processing",
+    description: "Predictive models for customer segmentation, churn, and recommendations.",
+    tier: 1,
+  },
+  {
+    id: "bi-stat-010",
+    code: "STAT 010",
+    name: "Probability & Statistics",
+    fullName: "STAT 010: Probability & Statistics",
+    description: "A/B testing, experimental design, and statistical inference for decisions.",
+    tier: 1,
+  },
+  {
+    id: "bi-econ-050",
+    code: "ECON 050",
+    name: "Business Analytics and Spreadsheets",
+    fullName: "ECON 050: Introduction to Business Analytics and Spreadsheets",
+    description: "Practical BI tools and dashboarding fundamentals.",
+    tier: 1,
+  },
+  {
+    id: "bi-math-020",
+    code: "MATH 020",
+    name: "Calculus for Social Sciences",
+    fullName: "MATH 020: Calculus for Social Sciences",
+    description: "Optimization for pricing, resource allocation, and ROI models.",
+    tier: 1,
+  },
+];
+
+export const tier2Courses: TierCourse[] = [
+  {
+    id: "bi-econ-102",
+    code: "ECON 102",
+    name: "Managerial Economics",
+    fullName: "ECON 102: Managerial Economics",
+    description: "Decision-making, game theory, and strategy for product and marketing analytics.",
+    tier: 2,
+  },
+  {
+    id: "bi-econ-108",
+    code: "ECON 108",
+    name: "Marketing and Consumer Behavior",
+    fullName: "ECON 108: Marketing and Consumer Behavior",
+    description: "Consumer psychology and marketing strategy for behavioral analytics.",
+    tier: 2,
+  },
+  {
+    id: "bi-econ-110",
+    code: "ECON 110",
+    name: "Econometrics",
+    fullName: "ECON 110: Econometrics",
+    description: "Causal inference for A/B tests, campaigns, and treatment effects.",
+    tier: 2,
+  },
+  {
+    id: "bi-dsa-002",
+    code: "DSA 002",
+    name: "Thinking Like a Programmer",
+    fullName: "DSA 002: Thinking Like a Programmer",
+    description: "SQL, automation, and data pipeline engineering for BI systems.",
+    tier: 2,
+  },
+  {
+    id: "bi-cogs-050",
+    code: "COGS 050",
+    name: "Product Design and User Experience",
+    fullName: "COGS 050: Product Design and User Experience",
+    description: "User-centered analytics for product optimization and feature prioritization.",
+    tier: 2,
+  },
+];
+
+export const tier3Courses: TierCourse[] = [
+  {
+    id: "bi-econ-115",
+    code: "ECON 115",
+    name: "Industrial Organization",
+    fullName: "ECON 115: Economics of Industrial Organization",
+    description: "Competitive strategy and market dynamics for business positioning.",
+    tier: 3,
+  },
+  {
+    id: "bi-econ-126",
+    code: "ECON 126",
+    name: "Innovation and Entrepreneurship",
+    fullName: "ECON 126: Economics of Innovation and Entrepreneurship",
+    description: "Startup analytics, growth models, and innovation metrics.",
+    tier: 3,
+  },
+  {
+    id: "bi-econ-171",
+    code: "ECON 171",
+    name: "Advanced Econometrics",
+    fullName: "ECON 171: Advanced Econometrics",
+    description: "Time-series forecasting and cohort analysis for retention and LTV.",
+    tier: 3,
+  },
+  {
+    id: "bi-ml-advanced",
+    code: "CSE 258",
+    name: "Web Mining and Recommender Systems",
+    fullName: "CSE 258: Web Mining and Recommender Systems",
+    description: "Personalization and recommendation algorithms for e-commerce and platforms.",
+    tier: 3,
+  },
+  {
+    id: "bi-strategy",
+    code: "MGT 101",
+    name: "Strategic Management",
+    fullName: "MGT 101: Strategic Management",
+    description: "Business strategy and competitive advantage aligned with analytics.",
+    tier: 3,
+  },
+];
