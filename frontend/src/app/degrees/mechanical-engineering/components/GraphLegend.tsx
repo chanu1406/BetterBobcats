@@ -9,9 +9,10 @@ interface GraphLegendProps {
   useFormattedLayout?: boolean;
   onResetClick?: () => void;
   onFullResetClick?: () => void;
+  onExportPositionsClick?: () => void;
 }
 
-export default function GraphLegend({ onFormatLayoutClick, useFormattedLayout, onResetClick, onFullResetClick }: GraphLegendProps) {
+export default function GraphLegend({ onFormatLayoutClick, useFormattedLayout, onResetClick, onFullResetClick, onExportPositionsClick }: GraphLegendProps) {
   const yearColors = [
     { year: 1, label: "First Year", bgColor: "bg-blue-100", borderColor: "border-blue-300" },
     { year: 2, label: "Second Year", bgColor: "bg-green-100", borderColor: "border-green-300" },
@@ -60,6 +61,15 @@ export default function GraphLegend({ onFormatLayoutClick, useFormattedLayout, o
               title="Reset node positions to default layout"
             >
               Reset Positions
+            </button>
+          )}
+          {onExportPositionsClick && (
+            <button
+              onClick={onExportPositionsClick}
+              className="text-xs text-blue-600 hover:text-blue-800 transition-colors font-medium"
+              title="Export current node positions to console and clipboard"
+            >
+              Export Positions
             </button>
           )}
         </div>

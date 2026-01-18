@@ -103,6 +103,7 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
   // Mechanical Engineering graph handlers
   const resetMEGraphRef = useRef<(() => void) | null>(null);
   const fullResetMEGraphRef = useRef<(() => void) | null>(null);
+  const exportMEPositionsRef = useRef<(() => void) | null>(null);
   
   // Political Science graph handlers
   const resetPoliticalScienceGraphRef = useRef<(() => void) | null>(null);
@@ -402,6 +403,10 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
     requestAnimationFrame(() => {
       setFullResetMEReady(true);
     });
+  });
+
+  const handleExportMEPositionsReady = useRef((handler: () => void) => {
+    exportMEPositionsRef.current = handler;
   });
 
   const handleResetPoliticalScienceReady = useRef((handler: () => void) => {
@@ -1987,6 +1992,7 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
               useFormattedLayout={useFormattedLayout}
               onResetClick={resetMEReady ? resetMEGraphRef.current || undefined : undefined}
               onFullResetClick={fullResetMEReady ? fullResetMEGraphRef.current || undefined : undefined}
+              onExportPositionsClick={exportMEPositionsRef.current || undefined}
             />
           </div>
           <div className="mb-10">
@@ -1995,6 +2001,7 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
               onLayoutChange={setUseFormattedLayout}
               onResetReady={handleResetMEReady.current}
               onFullResetReady={handleFullResetMEReady.current}
+              onExportPositionsReady={handleExportMEPositionsReady.current}
             />
           </div>
           

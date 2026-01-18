@@ -21,19 +21,9 @@ export const mechanicalEngineeringCourses: Course[] = [
   
   {
     id: "phys-008",
-    code: "PHYS 008",
+    code: "PHYS 008 + PHYS 008L",
     name: "Introductory Physics I",
-    fullName: "PHYS 008: Introductory Physics I for Physical Sciences",
-    year: 1,
-    semester: "fall",
-    prerequisites: [],
-    category: "Physics",
-  },
-  {
-    id: "phys-008l",
-    code: "PHYS 008L",
-    name: "Physics I Lab",
-    fullName: "PHYS 008L: Introductory Physics I for Physical Sciences Lab",
+    fullName: "PHYS 008 + PHYS 008L: Introductory Physics I for Physical Sciences",
     year: 1,
     semester: "fall",
     prerequisites: [],
@@ -42,19 +32,9 @@ export const mechanicalEngineeringCourses: Course[] = [
   
   {
     id: "chem-002",
-    code: "CHEM 002",
+    code: "CHEM 002 + CHEM 002L",
     name: "General Chemistry I",
-    fullName: "CHEM 002: General Chemistry I",
-    year: 1,
-    semester: "fall",
-    prerequisites: [],
-    category: "Chemistry",
-  },
-  {
-    id: "chem-002l",
-    code: "CHEM 002L",
-    name: "Chemistry I Lab",
-    fullName: "CHEM 002L: General Chemistry I Lab",
+    fullName: "CHEM 002 + CHEM 002L: General Chemistry I",
     year: 1,
     semester: "fall",
     prerequisites: [],
@@ -98,22 +78,12 @@ export const mechanicalEngineeringCourses: Course[] = [
   
   {
     id: "phys-009",
-    code: "PHYS 009",
+    code: "PHYS 009 + PHYS 009L",
     name: "Introductory Physics II",
-    fullName: "PHYS 009: Introductory Physics II for Physical Sciences",
+    fullName: "PHYS 009 + PHYS 009L: Introductory Physics II for Physical Sciences",
     year: 1,
     semester: "spring",
     prerequisites: ["phys-008", "math-021"],
-    category: "Physics",
-  },
-  {
-    id: "phys-009l",
-    code: "PHYS 009L",
-    name: "Physics II Lab",
-    fullName: "PHYS 009L: Introductory Physics II for Physical Sciences Lab",
-    year: 1,
-    semester: "spring",
-    prerequisites: ["phys-008l"],
     category: "Physics",
   },
   
@@ -216,7 +186,7 @@ export const mechanicalEngineeringCourses: Course[] = [
     fullName: "ENGR 120: Fluid Mechanics",
     year: 2,
     semester: "spring",
-    prerequisites: ["math-024", "engr-057"],
+    prerequisites: ["engr-045", "engr-151", "math-024", "engr-057"],
     category: "Engineering",
   },
   {
@@ -226,7 +196,7 @@ export const mechanicalEngineeringCourses: Course[] = [
     fullName: "ENGR 151: Strength of Materials",
     year: 2,
     semester: "spring",
-    prerequisites: ["engr-057"],
+    prerequisites: ["engr-045", "engr-057"],
     category: "Engineering",
   },
   
@@ -272,7 +242,7 @@ export const mechanicalEngineeringCourses: Course[] = [
     fullName: "ENGR 130: Thermodynamics",
     year: 3,
     semester: "fall",
-    prerequisites: ["math-024", "phys-009"],
+    prerequisites: ["engr-091", "math-024", "phys-009"],
     category: "Engineering",
   },
   
@@ -308,7 +278,7 @@ export const mechanicalEngineeringCourses: Course[] = [
     fullName: "ENGR 065: Circuit Theory",
     year: 3,
     semester: "spring",
-    prerequisites: ["phys-009", "math-024"],
+    prerequisites: ["engr-091", "phys-009", "math-024"],
     category: "Engineering",
   },
   
@@ -319,7 +289,7 @@ export const mechanicalEngineeringCourses: Course[] = [
     fullName: "ME 120: Component Design",
     year: 3,
     semester: "spring",
-    prerequisites: ["engr-151", "math-024"],
+    prerequisites: ["me-021", "engr-151", "math-024"],
     category: "ME Core",
   },
   
@@ -330,7 +300,7 @@ export const mechanicalEngineeringCourses: Course[] = [
     fullName: "ENGR 155: Engineering Economic Analysis",
     year: 3,
     semester: "spring",
-    prerequisites: [],
+    prerequisites: ["engr-091"],
     category: "Engineering",
   },
   
@@ -403,7 +373,7 @@ export const mechanicalEngineeringCourses: Course[] = [
     fullName: "ENGR 194: Engineering Capstone Design II",
     year: 4,
     semester: "spring",
-    prerequisites: ["engr-193"],
+    prerequisites: ["engr-045", "engr-135", "engr-193"],
     category: "Engineering",
   },
   
