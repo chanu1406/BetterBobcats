@@ -16,6 +16,14 @@ export const tier1Courses: TierCourse[] = [
       "Integration of mechanical, electrical, and computer systems. Core foundation for designing intelligent machines and automated systems.",
     tier: 1,
     expandedInfo: {
+      credits: 4,
+      careerRelevance:
+        "Mechatronics is the definition of your job title. You will face problems daily that are not purely mechanical or electrical but the messy interface between them—like debugging why a motor is overheating (mechanical load? or PWM frequency?).",
+      realWorldApplications: [
+        "Designing the gripper mechanism (end-effector) for a pick-and-place robot",
+        "Building a custom test rig with stepper motors to validate a new sensor",
+        "Troubleshooting noise on a signal line causing servo jitter",
+      ],
       learningOutcomes: [
         "Integrate mechanical and electrical systems",
         "Design embedded control systems",
@@ -28,9 +36,17 @@ export const tier1Courses: TierCourse[] = [
         "Control algorithms",
         "Real-time systems",
       ],
-      careerRelevance:
-        "Foundation for all robotics and automation careers - essential for designing integrated mechatronic systems.",
+      resources: {
+        videos: [
+          "https://www.youtube.com/watch?v=Ro_tFvDsw7w", // What is Mechatronics?
+          "https://www.youtube.com/watch?v=09MKYzZmLbM", // H-Bridges & Motor Drivers (Essential Circuitry)
+          "https://www.youtube.com/watch?v=1n_KKpKi9hE", // Introduction to PWM (Pulse Width Modulation)
+        ],
+        websites: [],
+        tools: ["Arduino / STM32", "Multimeters", "Oscilloscopes"],
+      },
     },
+    prerequisites: [],
   },
   {
     id: "me-141",
@@ -41,6 +57,14 @@ export const tier1Courses: TierCourse[] = [
       "Fundamentals of feedback control theory and system dynamics. Critical for designing stable and responsive robotic systems.",
     tier: 1,
     expandedInfo: {
+      credits: 4,
+      careerRelevance:
+        "You cannot make a robot move smoothly without Control Theory. This course teaches you why your robot arm is oscillating instead of stopping, and how to mathematically prove it will remain stable under load.",
+      realWorldApplications: [
+        "Tuning PID gains for a drone's flight controller",
+        "Modeling the mass-spring-damper system of a vehicle suspension",
+        "Designing a cruise control system for an autonomous rover",
+      ],
       learningOutcomes: [
         "Analyze dynamic system behavior",
         "Design PID controllers",
@@ -53,9 +77,17 @@ export const tier1Courses: TierCourse[] = [
         "PID control",
         "Frequency response",
       ],
-      careerRelevance:
-        "Essential for controlling robots, automated machinery, and autonomous systems.",
+      resources: {
+        videos: [
+          "https://www.youtube.com/watch?v=UR0hOmjaHp0", // PID Control - A Brief Introduction (Brian Douglas)
+          "https://www.youtube.com/watch?v=oBc_BHliZ1E", // Understanding The Root Locus
+          "https://www.youtube.com/watch?v=X5rAG4j3hXQ", // Open Loop vs Closed Loop Control
+        ],
+        websites: [],
+        tools: ["MATLAB / Simulink", "Python Control Systems Library"],
+      },
     },
+    prerequisites: [],
   },
   {
     id: "me-146",
@@ -66,6 +98,14 @@ export const tier1Courses: TierCourse[] = [
       "Study of sensors for measurement and actuators for motion control. Key components of any robotic or automated system.",
     tier: 1,
     expandedInfo: {
+      credits: 4,
+      careerRelevance:
+        "A robot is useless if it can't sense the world or move within it. This course moves beyond theory to the hardware reality: selecting the right encoder resolution, understanding torque curves of DC motors, and filtering noisy sensor data.",
+      realWorldApplications: [
+        "Choosing between a stepper and a servo motor for a CNC axis",
+        " Interfacing an IMU (Inertial Measurement Unit) via I2C",
+        "Calibrating a load cell for a robotic weighing station",
+      ],
       learningOutcomes: [
         "Select appropriate sensors for applications",
         "Design actuator systems",
@@ -78,9 +118,17 @@ export const tier1Courses: TierCourse[] = [
         "Motor control",
         "Signal processing",
       ],
-      careerRelevance:
-        "Critical for building robotic systems that sense their environment and execute precise motions.",
+      resources: {
+        videos: [
+          "https://www.youtube.com/watch?v=v28e5x3P8-w", // Rotary Encoders Explained
+          "https://www.youtube.com/watch?v=09MKYzZmLbM", // DC Motors, H-Bridges, and PWM
+          "https://www.youtube.com/watch?v=bkWm0f2Q8GY", // Stepper Motors vs Servo Motors
+        ],
+        websites: [],
+        tools: ["Datasheets (Reading)", "Signal Analyzers"],
+      },
     },
+    prerequisites: [],
   },
   {
     id: "ee-122",
@@ -91,6 +139,14 @@ export const tier1Courses: TierCourse[] = [
       "Electrical engineering perspective on control theory. Complements ME control courses with focus on electronic systems.",
     tier: 1,
     expandedInfo: {
+      credits: 4,
+      careerRelevance:
+        "While ME 141 focuses on moving masses, EE 122 focuses on the signals and circuits. This is crucial for designing the 'inner loop' of control systems, often implemented on the microcontroller or FPGA level.",
+      realWorldApplications: [
+        "Designing a digital filter to remove 60Hz noise from sensor lines",
+        "Implementing a State-Space controller on a microcontroller",
+        "Analyzing the frequency response (Bode Plot) of a servo drive",
+      ],
       learningOutcomes: [
         "Design feedback control systems",
         "Analyze system stability",
@@ -103,9 +159,17 @@ export const tier1Courses: TierCourse[] = [
         "State-space representation",
         "Digital control",
       ],
-      careerRelevance:
-        "Valuable for understanding control from electrical engineering perspective in automation systems.",
+      resources: {
+        videos: [
+          "https://www.youtube.com/watch?v=hpeKrMg-WPQ", // State Space, Part 1: Introduction to State-Space Equations
+          "https://www.youtube.com/watch?v=gh4GkMjgWNs", // Bode Plots by Hand (Complex Frequency Response)
+          "https://www.youtube.com/watch?v=u1pwaSgHUhU", // Discrete Control (Digital Control) Overview
+        ],
+        websites: [],
+        tools: ["MATLAB SISO Tool", "Python Scipy.signal"],
+      },
     },
+    prerequisites: [],
   },
   {
     id: "ee-140",
@@ -116,6 +180,14 @@ export const tier1Courses: TierCourse[] = [
       "Fundamentals of microcontroller programming and embedded systems. Essential for implementing robot control algorithms.",
     tier: 1,
     expandedInfo: {
+      credits: 4,
+      careerRelevance:
+        "Robotics engineers spend 50% of their time writing firmware. You must understand how the processor handles Interrupts (ISRs), Timers, and memory management to write code that reacts fast enough to control a balancing robot.",
+      realWorldApplications: [
+        "Writing an Interrupt Service Routine (ISR) to read encoder pulses",
+        "Configuring hardware timers to generate precise PWM signals",
+        "Optimizing memory usage on a constrained ARM Cortex-M chip",
+      ],
       learningOutcomes: [
         "Program microcontrollers",
         "Design embedded systems",
@@ -128,9 +200,17 @@ export const tier1Courses: TierCourse[] = [
         "Real-time operating systems",
         "Hardware interfaces",
       ],
-      careerRelevance:
-        "Critical skill for programming the brains of robots and automated systems.",
+      resources: {
+        videos: [
+          "https://www.youtube.com/watch?v=HyznrdDSSGM", // How a CPU Works (Ben Eater)
+          "https://www.youtube.com/watch?v=3V9eqykihyw", // Introduction to Embedded Systems Software and Development Environments
+          "https://www.youtube.com/watch?v=Q8eajxcS6Kg", // Interrupts Explained
+        ],
+        websites: [],
+        tools: ["C/C++", "Assembly", "Keil / STM32CubeIDE"],
+      },
     },
+    prerequisites: [],
   },
 ];
 
@@ -145,6 +225,14 @@ export const tier2Courses: TierCourse[] = [
       "Programming fundamentals for electrical systems and embedded applications. Important for implementing control algorithms.",
     tier: 2,
     expandedInfo: {
+      credits: 4,
+      careerRelevance:
+        "Python is great for AI, but C/C++ runs the robot's motors. This course teaches the low-level pointer manipulation and memory management required to write 'bare metal' code that doesn't crash.",
+      realWorldApplications: [
+        "Manipulating registers using bitwise operators",
+        "Managing dynamic memory allocation in a long-running system",
+        "Interfacing C code with Python via serial communication",
+      ],
       learningOutcomes: [
         "Program in C/C++ for embedded systems",
         "Implement control algorithms",
@@ -157,9 +245,17 @@ export const tier2Courses: TierCourse[] = [
         "Hardware interfaces",
         "Algorithm implementation",
       ],
-      careerRelevance:
-        "Essential programming skills for developing robotic control software and automation systems.",
+      resources: {
+        videos: [
+          "https://www.youtube.com/watch?v=zwszcHSmb9g", // Pointers in C/C++ Explained
+          "https://www.youtube.com/watch?v=_60rmniBmPQ", // Bitwise Operators in C (Essential for Registers)
+          "https://www.youtube.com/watch?v=3lQXJ-Wl8g8", // Memory Layout of C Programs
+        ],
+        websites: [],
+        tools: ["Visual Studio Code", "GCC Compiler"],
+      },
     },
+    prerequisites: [],
   },
   {
     id: "ee-060",
@@ -170,6 +266,14 @@ export const tier2Courses: TierCourse[] = [
       "Digital logic design and circuit fundamentals. Important for understanding embedded system hardware.",
     tier: 2,
     expandedInfo: {
+      credits: 4,
+      careerRelevance:
+        "Deeply understanding logic gates helps you debug hardware glitches and design efficient state machines for safety systems (e.g., 'If E-Stop is pressed OR sensor fails, stop motor').",
+      realWorldApplications: [
+        "Designing a hardware safety interlock circuit",
+        "Using Karnaugh maps to simplify logic for an FPGA",
+        "Understanding how an ADC (Analog to Digital Converter) actually works",
+      ],
       learningOutcomes: [
         "Design digital circuits",
         "Understand logic gates",
@@ -182,9 +286,17 @@ export const tier2Courses: TierCourse[] = [
         "Sequential circuits",
         "State machines",
       ],
-      careerRelevance:
-        "Valuable for designing custom hardware and understanding microcontroller internals.",
+      resources: {
+        videos: [
+          "https://www.youtube.com/watch?v=gI-qXk7XojA", // Logic Gates, Truth Tables, Boolean Algebra
+          "https://www.youtube.com/watch?v=-aQ0xCvT9fw", // SR Latch & Flip Flops
+          "https://www.youtube.com/watch?v=RO5alU6PpWA", // Karnaugh Maps (K-Maps)
+        ],
+        websites: [],
+        tools: ["Logisim", "Verilog/VHDL (Intro)"],
+      },
     },
+    prerequisites: [],
   },
   {
     id: "ee-185",
@@ -195,6 +307,14 @@ export const tier2Courses: TierCourse[] = [
       "Design and application of measurement systems. Important for sensor integration and data acquisition in robotics.",
     tier: 2,
     expandedInfo: {
+      credits: 4,
+      careerRelevance:
+        "In automation, data is king. You need to know how to amplify a tiny voltage from a strain gauge and read it into a computer without noise destroying the signal. This is the difference between a reliable robot and a jittery one.",
+      realWorldApplications: [
+        "Designing an Op-Amp circuit to buffer a sensor signal",
+        "Setting up a Data Acquisition (DAQ) card for vibration analysis",
+        "Calculating the uncertainty budget for a test measurement",
+      ],
       learningOutcomes: [
         "Design data acquisition systems",
         "Select appropriate sensors",
@@ -207,9 +327,17 @@ export const tier2Courses: TierCourse[] = [
         "Sensor calibration",
         "Measurement systems",
       ],
-      careerRelevance:
-        "Critical for integrating sensors and measuring robot performance in industrial applications.",
+      resources: {
+        videos: [
+          "https://www.youtube.com/watch?v=7FYHt5XviKc", // Op-Amp Basics (Operational Amplifiers)
+          "https://www.youtube.com/watch?v=2TOZQ-AcI30", // Intro to Data Acquisition
+          "https://www.youtube.com/watch?v=McAOvFUX2sA", // Wheatstone Bridges (Used in Strain Gauges)
+        ],
+        websites: [],
+        tools: ["LabVIEW", "Oscilloscopes", "Signal Generators"],
+      },
     },
+    prerequisites: [],
   },
   {
     id: "me-144",
@@ -220,6 +348,14 @@ export const tier2Courses: TierCourse[] = [
       "Analysis of systems with multiple moving parts. Essential for understanding robot kinematics and dynamics.",
     tier: 2,
     expandedInfo: {
+      credits: 4,
+      careerRelevance:
+        "This is the math behind the movement. To tell a robotic arm to 'move to coordinate (X,Y,Z)', you need Inverse Kinematics. This course teaches you the matrices and physics required to program robotic motion.",
+      realWorldApplications: [
+        "Calculating the Jacobian matrix for a 6-axis robot arm",
+        "Simulating the dynamics of a walking robot",
+        "Solving the Inverse Kinematics for a pick-and-place operation",
+      ],
       learningOutcomes: [
         "Model robot kinematics",
         "Analyze multi-body systems",
@@ -232,9 +368,17 @@ export const tier2Courses: TierCourse[] = [
         "Robot manipulators",
         "Motion planning",
       ],
-      careerRelevance:
-        "Important for designing robot arms, mobile robots, and complex automated machinery.",
+      resources: {
+        videos: [
+          "https://www.youtube.com/watch?v=VjsuCTsVbRI", // Forward and Inverse Kinematics Explained
+          "https://www.youtube.com/watch?v=OsZa8j5O8tM", // Modern Robotics: Degrees of Freedom
+          "https://www.youtube.com/watch?v=68hX06D9c9Q", // The Jacobian Matrix in Robotics
+        ],
+        websites: [],
+        tools: ["MATLAB Robotics Toolbox", "ROS (Robot Operating System)"],
+      },
     },
+    prerequisites: [],
   },
 ];
 
@@ -249,6 +393,14 @@ export const tier3Courses: TierCourse[] = [
       "Design and programming of autonomous robotic vehicles. Cutting-edge applications of robotics and automation.",
     tier: 3,
     expandedInfo: {
+      credits: 4,
+      careerRelevance:
+        "If you want to work on self-driving cars or AMR (Autonomous Mobile Robots) in warehouses, this is the course. It moves beyond basic control to 'Intelligence'—mapping, localization, and decision making.",
+      realWorldApplications: [
+        "Implementing SLAM (Simultaneous Localization and Mapping) on a rover",
+        "Using A* algorithm for path planning around obstacles",
+        "Fusing Lidar and Odometer data with a Kalman Filter",
+      ],
       learningOutcomes: [
         "Design autonomous navigation systems",
         "Implement computer vision algorithms",
@@ -261,9 +413,17 @@ export const tier3Courses: TierCourse[] = [
         "Path planning",
         "Sensor fusion",
       ],
-      careerRelevance:
-        "Direct application to autonomous vehicle industry and mobile robotics development.",
+      resources: {
+        videos: [
+          "https://www.youtube.com/watch?v=CaLfN6EU9tY", // SLAM Explained (Simultaneous Localization and Mapping)
+          "https://www.youtube.com/watch?v=mC1NfQ112gI", // Kalman Filter Explained
+          "https://www.youtube.com/watch?v=-L-WgKMFuhE", // A* Pathfinding Visualization
+        ],
+        websites: [],
+        tools: ["ROS 2", "Gazebo Simulator", "OpenCV"],
+      },
     },
+    prerequisites: [],
   },
   {
     id: "ee-101",
@@ -274,6 +434,14 @@ export const tier3Courses: TierCourse[] = [
       "Design and analysis of analog and digital electronic circuits. Useful for custom hardware development.",
     tier: 3,
     expandedInfo: {
+      credits: 4,
+      careerRelevance:
+        "Sometimes off-the-shelf drivers aren't enough. Understanding transistor-level design allows you to build custom motor drivers, high-power switching circuits, and robust power supplies for your robots.",
+      realWorldApplications: [
+        "Designing a MOSFET bridge to drive a high-current motor",
+        "Building a voltage regulator circuit for a battery-powered drone",
+        "Analyzing signal integrity on high-speed communication lines",
+      ],
       learningOutcomes: [
         "Design analog circuits",
         "Analyze circuit behavior",
@@ -286,9 +454,17 @@ export const tier3Courses: TierCourse[] = [
         "Filters",
         "Signal processing",
       ],
-      careerRelevance:
-        "Valuable for designing custom electronics for robots and developing specialized hardware interfaces.",
+      resources: {
+        videos: [
+          "https://www.youtube.com/watch?v=7ukDKVHxpBc", // Transistors Explained (MOSFETs)
+          "https://www.youtube.com/watch?v=CIGjActDeoM", // Power Supply Design (Buck Converters)
+          "https://www.youtube.com/watch?v=w8Dq8blTmSA", // EEVblog: OpAmp Tutorial
+        ],
+        websites: [],
+        tools: ["SPICE Simulation (LTSpice)", "Altium / KiCad"],
+      },
     },
+    prerequisites: [],
   },
   {
     id: "ae-172",
@@ -299,6 +475,14 @@ export const tier3Courses: TierCourse[] = [
       "Advanced dynamics and control principles from aerospace engineering. Applicable to flying robots, drones, and advanced motion control.",
     tier: 3,
     expandedInfo: {
+      credits: 4,
+      careerRelevance:
+        "Robotics isn't just on the ground. This course applies 6-DOF dynamics to drones and UAVs. Even if you don't fly, the advanced MIMO (Multi-Input Multi-Output) control concepts are applicable to complex manipulator arms.",
+      realWorldApplications: [
+        "Stabilizing a quadcopter using IMU feedback",
+        "Modeling the aerodynamics of a VTOL (Vertical Take-Off) drone",
+        "Designing an autopilot for waypoint navigation",
+      ],
       learningOutcomes: [
         "Analyze 6-DOF dynamics",
         "Design flight control systems",
@@ -311,8 +495,16 @@ export const tier3Courses: TierCourse[] = [
         "Autopilot design",
         "Advanced control systems",
       ],
-      careerRelevance:
-        "Highly relevant for aerial robotics, drone development, and advanced control system design.",
+      resources: {
+        videos: [
+          "https://www.youtube.com/watch?v=N_H7aX1rZ88", // Flight Dynamics: Equations of Motion
+          "https://www.youtube.com/watch?v=Yf-qCq-3RFA", // Drone Control Physics Explained
+          "https://www.youtube.com/watch?v=qtK7C8qD-tU", // Understanding 6 Degrees of Freedom
+        ],
+        websites: [],
+        tools: ["ArduPilot", "PX4", "MATLAB Aerospace Blockset"],
+      },
     },
+    prerequisites: [],
   },
 ];

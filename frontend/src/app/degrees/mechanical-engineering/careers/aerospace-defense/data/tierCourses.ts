@@ -238,111 +238,228 @@ export const tier1Courses: TierCourse[] = [
 
 export const tier2Courses: TierCourse[] = [
   {
-    id: "ee-185",
-    code: "EE 185",
-    name: "Introduction to Control Systems",
-    fullName: "EE 185: Introduction to Control Systems",
-    description: "Feedback control principles, stability analysis, and controller design for aerospace systems.",
+    id: "ae-174",
+    code: "AE 174",
+    name: "Aeroelasticity",
+    fullName: "AE 174: Aeroelasticity",
+    description:
+      "Examination of interactions between aerodynamic forces and elastic structures, including flutter, divergence, and dynamic fluid–structure coupling relevant to aircraft and spacecraft components.",
     tier: 2,
     expandedInfo: {
       credits: 4,
-      careerRelevance: "Control systems are essential for autopilots, guidance systems, and flight stability augmentation in aircraft and spacecraft.",
+      careerRelevance:
+        "Aeroelastic phenomena must be predicted and mitigated in high-performance and lightweight aerospace platforms to prevent catastrophic instability during flight. Engineers in advanced aerospace and defense roles analyze flutter margins and design stiffness distributions for wings, control surfaces, and space deployables.",
       realWorldApplications: [
-        "Designing autopilot systems for unmanned aerial vehicles",
-        "Implementing thrust vector control for rockets",
-        "Stabilizing spacecraft attitude control systems"
+        "Predicting and avoiding flutter in long-span UAV wings during high-speed cruise",
+        "Designing flexible spacecraft solar arrays to withstand inertial and aerodynamic loads",
+        "Balancing stiffness and mass in fighter jet control surfaces to meet maneuverability specs",
       ],
       learningOutcomes: [
-        "Analyze system stability using transfer functions and root locus",
-        "Design PID and lead-lag compensators for control systems",
-        "Model and simulate feedback control systems"
+        "Model fundamental aeroelastic interactions between aerodynamic forces and structural deformation",
+        "Identify, predict, and mitigate flutter and divergence in flexible aerospace systems",
+        "Link dynamic structural response to aerodynamic load changes under varying flight conditions",
       ],
       resources: {
         videos: [
-          "https://www.youtube.com/watch?v=oBc_BHxw78s",
-          "https://www.youtube.com/watch?v=lBC1nEq0_nk",
-          "https://www.youtube.com/watch?v=Pi7l8mMjYVE"
+          "https://www.youtube.com/watch?v=1ZGQTc-NTF4", // Aeroelasticity Lecture (Duke) :contentReference[oaicite:0]{index=0}
+          "https://www.youtube.com/watch?v=UNWOgIuqhgA", // Intro to Flutter :contentReference[oaicite:1]{index=1}
+          "https://www.youtube.com/watch?v=g4xz8-wCyP0", // Intro to Aeroelasticity (basics) :contentReference[oaicite:2]{index=2}
         ],
         websites: [
-          "https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/",
-          "https://www.controleng.com/",
-          "https://www.mathworks.com/solutions/control-systems.html"
+          "https://en.wikipedia.org/wiki/Aeroelasticity", // Overview and key concepts :contentReference[oaicite:3]{index=3}
+          "https://www.aiaa.org/", // AIAA professional resources
+          "https://www.nasa.gov/aeroelasticity", // NASA aeroelastic research
         ],
-        tools: ["MATLAB Control System Toolbox", "Simulink", "Python Control"]
-      }
-    }
-  }
+        tools: ["ANSYS (Fluid–Structure Interaction)", "NASTRAN (structural dynamics)", "MATLAB (dynamic simulation)"],
+      },
+    },
+  },
+  {
+    id: "me-145",
+    code: "ME 145",
+    name: "Lagrange Dynamics",
+    fullName: "ME 145: Lagrange Dynamics",
+    description:
+      "Advanced dynamics course emphasizing Lagrangian and energy-based methods for deriving equations of motion of complex mechanical systems, multi-body spacecraft, and constrained mechanisms.",
+    tier: 2,
+    expandedInfo: {
+      credits: 4,
+      careerRelevance:
+        "High-end aerospace/defense careers require modeling of multi-body system dynamics for spacecraft attitude control, robotic manipulators, and deployable systems. Lagrangian methods are industry standard for deriving equations of motion under constraints and for integration with control design.",
+      realWorldApplications: [
+        "Modeling satellite attitude control systems with reaction wheels and control moment gyros",
+        "Simulating robotic arm dynamics for space servicing missions",
+        "Analyzing constrained deployable mechanisms on launch vehicles",
+      ],
+      learningOutcomes: [
+        "Apply Lagrangian mechanics to derive equations of motion for mechanical systems",
+        "Model constrained multi-body dynamics and generalized coordinates",
+        "Simulate dynamic responses using computational tools",
+      ],
+      resources: {
+        videos: [
+          "https://www.youtube.com/watch?v=9M1l3zx1vw0", // Classical mechanics intro with Lagrangian focus :contentReference[oaicite:4]{index=4}
+          "https://www.youtube.com/watch?v=9r-r1joUSp0", // Lagrangian equations & effective potential :contentReference[oaicite:5]{index=5}
+          "https://www.youtube.com/playlist?list=PLTMo3nrl2KWay7NUQJUc4pUw574oG2ktH", // Lagrangian dynamics playlist :contentReference[oaicite:6]{index=6}
+        ],
+        websites: [
+          "https://ocw.mit.edu/courses/2-003sc-engineering-dynamics-fall-2011/lecture-notes/", // MIT OCW dynamics resource
+          "https://www.aiaa.org/", // AIAA engineering society
+          "https://www.nasa.gov/ames/multibody-dynamics", // NASA multibody dynamics research
+        ],
+        tools: ["MATLAB (symbolic dynamics)", "Simscape Multibody", "MapleSim"],
+      },
+    },
+  },
+  {
+    id: "me-140",
+    code: "ME 140",
+    name: "Vibration and Control",
+    fullName: "ME 140: Vibration and Control",
+    description:
+      "Mechanical vibration analysis and control strategies, focusing on modal behavior, resonance, and damping relevant to aerospace structural integrity and rotating machinery.",
+    tier: 2,
+    expandedInfo: {
+      credits: 4,
+      careerRelevance:
+        "Aerospace engineers must assess and mitigate vibration in structures, engines, and appendages to ensure reliability and comfort. Knowledge of vibration control enables careers in structural dynamics analysis, rotorcraft design, and aerospace test & evaluation.",
+      realWorldApplications: [
+        "Designing isolation systems for avionics bays in fighter aircraft",
+        "Modeling rotor imbalance and vibration damping in jet engines",
+        "Applying active vibration control to satellite appendages",
+      ],
+      learningOutcomes: [
+        "Analyze natural frequencies and mode shapes of mechanical systems",
+        "Design passive and active vibration control strategies",
+        "Predict resonance and fatigue issues under dynamic loads",
+      ],
+      resources: {
+        videos: [
+          "https://www.youtube.com/watch?v=2YzCs9IDsUU", // Mechanical Vibrations Lecture 1 :contentReference[oaicite:7]{index=7}
+          "https://www.youtube.com/playlist?list=PLMXj6GKKnHI6Lftj7CXr9WusMkXi5s9yH", // Mechanical Vibrations playlist :contentReference[oaicite:8]{index=8}
+          "https://www.youtube.com/playlist?list=PLP1OdTlavJNvcBTfOPLCfxMGr75xqkstW", // Intro to vibrations series :contentReference[oaicite:9]{index=9}
+        ],
+        websites: [
+          "https://ocw.mit.edu/courses/2-003-structural-dynamics-and-control-spring-2014/", // MIT OCW structural dynamics
+          "https://www.aiaa.org/", // Aerospace professional society
+          "https://www.nasa.gov/", // NASA research context
+        ],
+        tools: ["ANSYS Modal Analysis", "MATLAB (dynamic simulation)", "LabVIEW (data acquisition)"],
+      },
+    },
+  },
+  {
+    id: "ee-122",
+    code: "EE 122",
+    name: "Introduction to Control Systems",
+    fullName: "EE 122: Introduction to Control Systems",
+    description:
+      "Fundamentals of feedback control theory, time- and frequency-domain design methods with applications to aerospace flight control, guidance, and stability augmentation.",
+    tier: 2,
+    expandedInfo: {
+      credits: 4,
+      careerRelevance:
+        "Control systems are core to autopilot design, guidance algorithms, and stability management in aerospace/defense platforms. Flight control engineers apply these principles for high-performance system tuning and robust controller implementation.",
+      realWorldApplications: [
+        "Designing autopilot control loops for UAV flight stabilization",
+        "Evaluating stability margins in aircraft pitch control systems",
+        "Implementing state-space controllers for satellite attitude control",
+      ],
+      learningOutcomes: [
+        "Design and analyze time- and frequency-domain feedback systems",
+        "Evaluate stability using root locus and Bode plots",
+        "Implement PID and state feedback controllers",
+      ],
+      resources: {
+        videos: [
+          "https://www.youtube.com/playlist?list=PLUMWjy5jgHK3j74Z5Tq6Tso1fSfVWZC8L", // Control Systems Lectures playlist :contentReference[oaicite:10]{index=10}
+          "https://www.youtube.com/watch?v=H5xpbth5G2g", // PID controller explained
+          "https://www.youtube.com/watch?v=G3i3xO3xOKs", // Intro to control systems
+        ],
+        websites: [
+          "https://ocw.mit.edu/courses/6-302-feedback-systems-spring-2007/", // MIT OCW feedback systems
+          "https://www.aiaa.org/", // AIAA engineering society
+          "https://www.nasa.gov/ames/control-systems", // NASA control systems insights
+        ],
+        tools: ["MATLAB/Simulink (control design)", "LabVIEW", "Python control libraries"],
+      },
+    },
+  },
 ];
 
 export const tier3Courses: TierCourse[] = [
   {
-    id: "ae-171",
-    code: "AE 171",
-    name: "Aerospace Structures and Materials",
-    fullName: "AE 171: Aerospace Structures and Materials",
-    description: "Advanced study of aerospace structural design and material selection.",
+    id: "ee-115",
+    code: "EE 115",
+    name: "Electromagnetics and Applications",
+    fullName: "EE 115: Electromagnetics and Applications",
+    description:
+      "Electromagnetic theory and its application to aerospace systems such as radar, antenna design, and electromagnetic compatibility in avionics.",
     tier: 3,
     expandedInfo: {
       credits: 4,
-      careerRelevance: "Understanding aerospace structures is valuable for specialized roles in structural analysis and materials engineering.",
+      careerRelevance:
+        "Electromagnetics underpin radar, communications, and RF systems in defense/aerospace engineering, particularly for avionics and sensor design. Professionals in high-end roles must ensure EMI/EMC compliance and optimize RF system performance.",
       realWorldApplications: [
-        "Analyzing composite materials for aircraft components",
-        "Evaluating structural integrity of aerospace vehicles",
-        "Selecting materials for extreme aerospace environments"
+        "Designing aircraft communication and navigation antennas",
+        "Predicting radar cross section effects for defense systems",
+        "Ensuring electromagnetic compatibility for avionics suites",
       ],
       learningOutcomes: [
-        "Analyze stress and strain in aerospace structures",
-        "Select appropriate materials for aerospace applications",
-        "Design lightweight structures for flight vehicles"
+        "Understand Maxwell’s equations and wave propagation fundamentals",
+        "Analyze antenna radiation patterns",
+        "Evaluate EMI/EMC in complex aerospace systems",
       ],
       resources: {
         videos: [
-          "https://www.youtube.com/watch?v=lGjtqxOgHf0",
-          "https://www.youtube.com/watch?v=3kFqaoSVjwU",
-          "https://www.youtube.com/watch?v=ZKqrMhIB8bk"
+          "https://www.youtube.com/watch?v=tvZvD6Nm3Dg", // Electromagnetics basics
+          "https://www.youtube.com/watch?v=zqnMOr2Rb3E", // Antenna theory intro
+          "https://www.youtube.com/watch?v=H_O88_Yi6iU", // EM waves explained
         ],
         websites: [
-          "https://ocw.mit.edu/courses/aeronautics-and-astronautics/",
-          "https://www.nasa.gov/ames/structures-materials",
-          "https://www.aiaa.org/"
+          "https://ocw.mit.edu/courses/6-02-introduction-to-electrical-engineering-and-computer-science/", // EM fundamentals
+          "https://www.aiaa.org/", // Aerospace society
+          "https://www.nasa.gov/ames/emc", // NASA EM compatibility research
         ],
-        tools: ["ANSYS", "ABAQUS", "NASTRAN"]
-      }
-    }
+        tools: ["CST Microwave Studio", "HFSS", "MATLAB"],
+      },
+    },
   },
   {
-    id: "ee-005",
-    code: "EE 005",
-    name: "Introduction to Electrical Engineering",
-    fullName: "EE 005: Introduction to Electrical Engineering",
-    description: "Basic electrical engineering concepts useful for understanding avionics and electrical systems.",
+    id: "ee-185",
+    code: "EE 185",
+    name: "Instrumentation",
+    fullName: "EE 185: Instrumentation",
+    description:
+      "Design and application of measurement systems and sensors for aerospace testing, diagnostics, and flight data acquisition.",
     tier: 3,
     expandedInfo: {
       credits: 4,
-      careerRelevance: "Basic electrical knowledge helps aerospace engineers interface with avionics and electrical subsystems.",
+      careerRelevance:
+        "Instrumentation skills are vital for aerospace flight test engineering, system health monitoring, and certification testing. Engineers select sensors and develop acquisition systems for real-time data used in performance validation.",
       realWorldApplications: [
-        "Understanding aircraft electrical power distribution",
-        "Working with avionics and sensor systems",
-        "Troubleshooting electrical issues in aerospace systems"
+        "Selecting inertial measurement units for spacecraft navigation",
+        "Configuring strain gauge setups for structural load tests",
+        "Developing telemetry systems for rocket flights",
       ],
       learningOutcomes: [
-        "Understand basic circuit analysis and design",
-        "Apply Ohm's law and Kirchhoff's laws",
-        "Analyze AC and DC circuits"
+        "Choose and characterize sensors for aerospace applications",
+        "Design data acquisition and signal conditioning systems",
+        "Analyze measurement uncertainty and noise",
       ],
       resources: {
         videos: [
-          "https://www.youtube.com/watch?v=mc979OhitAg",
-          "https://www.youtube.com/watch?v=fwjXkEaJILo",
-          "https://www.youtube.com/watch?v=7w8LMc8q_jk"
+          "https://www.youtube.com/watch?v=Z9sQzWZ3cUw", // Instrumentation basics
+          "https://www.youtube.com/watch?v=VTaRrhN_Y6s", // Sensor selection in engineering
+          "https://www.youtube.com/watch?v=UYdZ_VMtU7g", // DAQ systems intro
         ],
         websites: [
-          "https://www.allaboutcircuits.com/",
-          "https://www.electronics-tutorials.ws/",
-          "https://learn.sparkfun.com/"
+          "https://ocw.mit.edu/courses/6-131-feedback-systems-principles-and-applications-spring-2005/", // MIT OCW systems context
+          "https://www.aiaa.org/", // Aerospace
+          "https://www.nasa.gov/ames/instrumentation", // NASA instrumentation research
         ],
-        tools: ["Multimeter", "Oscilloscope", "Circuit Simulation Software"]
-      }
-    }
-  }
+        tools: ["LabVIEW (DAQ)", "NI hardware", "MATLAB"],
+      },
+    },
+  },
 ];
