@@ -1,12 +1,1887 @@
 /**
  * Hardware / IC Design Tier Courses Data
  * Course recommendations organized by tier for Hardware / IC Design career path
- * 
- * NOTE: This is a placeholder. Course data will be added later.
  */
 
 import { TierCourse } from "@/types/careerPath";
 
-export const tier1Courses: TierCourse[] = [];
-export const tier2Courses: TierCourse[] = [];
-export const tier3Courses: TierCourse[] = [];
+export const tier1Courses: TierCourse[] = [
+  {
+  "id": "ee-101",
+  "code": "EE 101",
+  "name": "Electronic Circuit Design I",
+  "fullName": "EE 101: Electronic Circuit Design I",
+  "description": "Foundational course covering analysis and design of diode, bipolar junction transistor (BJT), and field-effect transistor (FET) circuits. Bridges analog and digital circuit fundamentals essential for hardware design careers.",
+  "tier": 1,
+  "expandedInfo": {
+    "credits": 4,
+    "careerRelevance": "Electronic Circuit Design I is critical for Analog & Digital Hardware Design careers because it establishes the semiconductor device physics and circuit analysis fundamentals required for all advanced work. Understanding diode operation, BJT biasing, and FET switching behavior forms the foundation for designing amplifiers, power supplies, digital logic gates, and mixed-signal systems that power consumer electronics, automotive systems, and industrial equipment. This course teaches how to translate theoretical concepts into practical circuit implementations using both analog and digital approaches.",
+    "realWorldApplications": [
+      "Power supply design using diode rectifiers and BJT regulators for consumer electronics (phones, laptops, IoT devices)",
+      "Amplifier circuit design for audio systems, sensor signal conditioning, and biomedical instrumentation",
+      "Digital logic gates using MOSFET switching for microcontroller and FPGA interface circuits",
+      "Automotive circuit design including battery management, LED drivers, and motor control circuits",
+      "Sensor interface circuits combining analog amplification with digital signal conditioning",
+      "RFID and wireless communication front-end circuits using transistor amplifiers and oscillators"
+    ],
+    "learningOutcomes": [
+      "Apply Kirchhoff's voltage and current laws to systematically analyze multi-node circuits",
+      "Analyze and design diode circuits including rectifiers, clamps, and voltage regulators",
+      "Understand BJT operation in cutoff, active, and saturation modes; design biasing networks",
+      "Understand FET operation (JFETs and MOSFETs) and apply to switching and amplification circuits",
+      "Design amplifier operating points and frequency response for given specifications",
+      "Use computer-aided design (CAD) tools for circuit simulation and validation",
+      "Understand the relationship between analog continuous-signal circuits and digital discrete-logic applications",
+      "Troubleshoot circuits using theoretical analysis, simulation, and measurement techniques"
+    ],
+    "resources": {
+      "videos": [
+        "https://www.youtube.com/watch?v=IjtQVATW5Ks",
+        "https://www.youtube.com/watch?v=fIvZen2tq_w",
+        "https://www.youtube.com/watch?v=wNiXUZIHQLw",
+        "https://www.youtube.com/watch?v=-VwPSDQmdjM",
+        "https://www.youtube.com/watch?v=AwRJsze_9m4",
+        "https://www.youtube.com/watch?v=pFIDki4OFBg",
+        "https://www.youtube.com/watch?v=G0iSEDyJKDo",
+        "https://www.youtube.com/watch?v=7jiKULI0iB4"
+      ],
+      "websites": [
+        "https://www.circuitlab.com",
+        "https://www.allaboutcircuits.com/video-tutorials/analog-and-digital-electronics/",
+        "https://learn.sparkfun.com/tutorials/transistors/all",
+        "https://www.analog.com/en/design-center/design-tools-and-calculators/ltspice-simulator.html",
+        "https://www.ni.com/en/shop/electronic-test-instrumentation/application-software-for-electronic-test-and-instrumentation-category.html",
+        "https://www.falstad.com/circuit/"
+      ],
+      "tools": [
+        "LTspice (free SPICE simulator)",
+        "CircuitLab (web-based simulator)",
+        "Multisim (professional educational tool)",
+        "Falstad Circuit Simulator (interactive applet)",
+        "MATLAB/Simulink (for advanced analysis)",
+        "Oscilloscope (for measuring real circuits)",
+        "Multimeter (voltage, current, resistance measurement)",
+        "Breadboard (for prototyping circuits)"
+      ]
+    }
+  }
+}
+,
+  {
+  "id": "course-EE102",
+  "code": "EE 102",
+  "name": "Signal Processing and Linear Systems",
+  "fullName": "EE 102: Signal Processing and Linear Systems",
+  "description": "Foundational course bridging analog circuit design and digital signal processing. Covers continuous and discrete-time signal analysis, linear systems characterization, Fourier methods, and filtering techniques essential for mixed-signal hardware design and embedded DSP applications.",
+  "tier": 1,
+  "expandedInfo": {
+    "credits": 4,
+    "careerRelevance": "EE 102 is critical for Analog & Digital Hardware Design as it provides the mathematical and conceptual foundation for both domains. In analog circuits, frequency response analysis, Bode plots, and filter design directly apply to op-amp circuits and ADC signal conditioning. In digital circuits, discrete-time system analysis, difference equations, and digital filter implementation are essential for FPGA/DSP programming. This course bridges analog-to-digital conversion, enabling you to design the complete signal path from sensor to digital processor and back.",
+    "realWorldApplications": [
+      "Designing RC and op-amp based analog filters for sensor signal conditioning",
+      "Calculating anti-aliasing filter specifications for ADC interfaces",
+      "Implementing digital filters (FIR/IIR) in FPGA or DSP processors using difference equations",
+      "Analyzing frequency response of audio circuits and amplifiers using Bode plots",
+      "Mixed-signal system design: sampling, filtering, quantization in embedded systems",
+      "Noise filtering in instrumentation and measurement circuits",
+      "Modulation/demodulation circuits for wireless communications",
+      "Real-time signal processing in microcontroller-based audio and sensor applications"
+    ],
+    "learningOutcomes": [
+      "Analyze continuous-time signals using Fourier series and transform techniques",
+      "Characterize linear time-invariant (LTI) systems via impulse response and frequency response",
+      "Apply convolution integral to compute system output for arbitrary inputs",
+      "Design and analyze passive and active analog filters using Bode plots and pole-zero analysis",
+      "Convert analog signals to discrete signals using sampling theorem and Nyquist criteria",
+      "Design digital filters (FIR and IIR) and analyze stability using z-transform",
+      "Understand and implement anti-aliasing and reconstruction filters for ADC/DAC chains",
+      "Apply Laplace and z-transforms for system analysis and transfer function derivation",
+      "Connect analog and digital domains in practical mixed-signal hardware applications"
+    ],
+    "resources": {
+      "videos": [
+        "https://www.youtube.com/watch?v=5ijn9RPFA9I",
+        "https://www.youtube.com/watch?v=Lh4w8-g7AgM",
+        "https://www.youtube.com/watch?v=Ga8Lu8sWlAk",
+        "https://www.youtube.com/watch?v=Nh1yFKbiqa0",
+        "https://www.youtube.com/watch?v=5SMsRApsrQQ",
+        "https://www.youtube.com/watch?v=kCbC43poW-4",
+        "https://www.youtube.com/watch?v=8zbBJkw5KsM",
+        "https://www.youtube.com/watch?v=P_JOAbqeQXA",
+        "https://www.youtube.com/watch?v=cIH5o7wYNzs",
+        "https://www.youtube.com/watch?v=GSmyUB3pGOc",
+        "https://www.youtube.com/watch?v=spUNpyF58BY",
+        "https://www.youtube.com/watch?v=QmgJmh2I3Fw",
+        "https://www.youtube.com/watch?v=D1WF9YKqf3o",
+        "https://www.youtube.com/watch?v=p_gLEDYLUeU",
+        "https://www.youtube.com/watch?v=U1vIVzZDcHA",
+        "https://www.youtube.com/watch?v=sfysqi6WxVQ",
+        "https://www.youtube.com/watch?v=VQlkm_Y6iLs",
+        "https://www.youtube.com/watch?v=cGDXJFeh_8g",
+        "https://www.youtube.com/watch?v=n_VQm_Y6iLs",
+        "https://www.youtube.com/watch?v=mo1-dL9lD0Y",
+        "https://www.youtube.com/watch?v=utFVj6uW95o",
+        "https://www.youtube.com/watch?v=x5167UicReM",
+        "https://www.youtube.com/watch?v=FWCYm5fi8zM",
+        "https://www.youtube.com/watch?v=I0rDMj6QXfk"
+      ],
+      "websites": [
+        "https://ocw.mit.edu/courses/6-003-signals-and-systems-fall-2011/",
+        "https://dspguide.com/",
+        "https://www.dsprelated.com/",
+        "https://en.wikipedia.org/wiki/Fourier_transform",
+        "https://en.wikipedia.org/wiki/Linear_time-invariant_system"
+      ],
+      "tools": [
+        "MATLAB/Simulink (for signal analysis, filter design, Bode plots)",
+        "Python with NumPy/SciPy (FFT, signal processing, system simulation)",
+        "LTspice (analog circuit simulation and frequency response analysis)",
+        "GNU Octave (free MATLAB alternative)",
+        "Analog Discovery 3 (real-world filter measurement and frequency sweeps)",
+        "Function generator and oscilloscope (for experimental validation)"
+      ]
+    }
+  }
+}
+,
+  {
+  "id": "ee-105",
+  "code": "EE 105",
+  "name": "Semiconductor Devices",
+  "fullName": "EE 105: Semiconductor Devices",
+  "description": "Fundamental course on the physics and operation of semiconductor devices including diodes, BJTs, and MOSFETs. Emphasizes the connection between semiconductor material properties and device behavior for both analog signal processing and digital logic applications.",
+  "tier": 1,
+  "expandedInfo": {
+    "credits": 4,
+    "careerRelevance": "Semiconductor Devices is essential for Analog & Digital Hardware Design careers because it provides the physical foundation for understanding how transistors and diodes actually work at the quantum and device level. This knowledge bridges the gap between circuit design (EE 101) and advanced design courses—enabling engineers to make informed decisions about device selection, understand device limitations, and optimize designs for performance, power, and reliability. In analog design, understanding semiconductor physics is critical for predicting amplifier behavior, noise characteristics, and frequency response. In digital design, device physics fundamentals explain switching speed limitations, power dissipation mechanisms, and how to push devices to their performance limits in microcontrollers and ASICs.",
+    "realWorldApplications": [
+      "Selecting optimal transistor types (BJT vs MOSFET) for power amplifiers, LED drivers, and motor control circuits",
+      "Designing low-noise amplifier front-ends for wireless receivers and sensor interfaces by understanding BJT noise sources",
+      "Optimizing MOSFET gate drive circuits in switching power supplies and DC-DC converters for efficiency",
+      "Power electronics applications: designing high-current switches using power MOSFETs and IGBTs with thermal management",
+      "Understanding device parasitics (capacitance, inductance) to predict high-frequency circuit behavior and crosstalk in digital ICs",
+      "Reverse engineering and failure analysis of semiconductor devices in reliability and manufacturing engineering",
+      "IC design decisions: device sizing, threshold voltage tuning, and process variation impact on circuit performance"
+    ],
+    "learningOutcomes": [
+      "Understand the band structure of semiconductors and the role of doping (n-type and p-type) in creating charge carriers",
+      "Analyze p-n junction diodes: forward and reverse bias operation, I-V characteristics, and depletion region physics",
+      "Explain BJT structure, operation modes (cutoff, active, saturation), and current gain mechanisms",
+      "Explain MOSFET structure, threshold voltage, enhancement vs. depletion modes, and I-V characteristics",
+      "Compare BJT and MOSFET operation: current-controlled vs. voltage-controlled behavior and switching characteristics",
+      "Understand device parasitics including junction capacitance, transit time, and frequency limitations",
+      "Predict device behavior using energy band diagrams and understand the physics behind electrical characteristics",
+      "Apply device knowledge to circuit design decisions and understand why device parameters matter for hardware performance"
+    ],
+    "resources": {
+      "videos": [
+        "https://www.youtube.com/watch?v=gK3mWLoKdiQ",
+        "https://www.youtube.com/watch?v=PcU5GjcufLc",
+        "https://www.youtube.com/watch?v=hrpPKCDLRN0",
+        "https://www.youtube.com/watch?v=USrY0JspDEg",
+        "https://www.youtube.com/watch?v=a0xoqozu29k",
+        "https://www.youtube.com/watch?v=qNnTQTUyS1E",
+        "https://www.youtube.com/watch?v=wGhmfr-k4AQ",
+        "https://www.youtube.com/watch?v=ThNW0EqOH7U",
+        "https://www.youtube.com/watch?v=VcYjueOklFc",
+        "https://www.youtube.com/watch?v=l0tu3HfyNNg"
+      ],
+      "websites": [
+        "https://www.allaboutcircuits.com/video-tutorials/semiconductor-materials-and-devices/",
+        "https://phys.libretexts.org/Bookshelves/University_Physics/University_Physics_III_-_Optics_and_Modern_Physics/09%3A_The_Nucleus/9.08%3A_Semiconductor_Devices",
+        "https://learn.sparkfun.com/tutorials/transistors/all",
+        "https://www.allaboutcircuits.com/technical-articles/a-review-on-power-semiconductor-devices/"
+      ],
+      "tools": [
+        "SPICE simulators (LTspice, CircuitLab) for I-V characteristic plotting",
+        "TCAD simulation software: Synopsys Sentaurus, Silvaco ATLAS (industry standard for device physics simulation)",
+        "Charon: Open-source TCAD code from Sandia National Laboratories",
+        "Oscilloscope and multimeter (experimental device characterization)",
+        "Curve tracer (measuring complete I-V characteristics of diodes and transistors)",
+        "Python with PySpice for device model extraction",
+        "Datasheet analysis tools and SPICE model viewers"
+      ]
+    }
+  }
+}
+,
+  {
+  "id": "course-EE111",
+  "code": "EE 111",
+  "name": "Electronic Circuit Design II",
+  "fullName": "EE 111: Electronic Circuit Design II",
+  "description": "Advanced analog circuit design course focusing on operational amplifiers, feedback systems, stability analysis, and practical implementation. Bridges circuit theory with real-world design considerations including non-ideal component behavior, noise management, and mixed-signal integration essential for hardware design.",
+  "tier": 1,
+  "expandedInfo": {
+    "credits": 4,
+    "careerRelevance": "EE 111 is critical for Analog & Digital Hardware Design as it teaches the fundamental design of op-amp circuits—the core building blocks in virtually all analog systems. This course emphasizes feedback and stability, which are essential for designing circuits that actually work in practice rather than on paper. For analog designers, op-amp circuits form the interface between sensors and processors. For digital hardware designers, understanding op-amp performance (noise, settling time, frequency response) is necessary when designing ADC/DAC interfaces and signal conditioning. The course bridges theoretical knowledge with practical aspects like PSRR, slew rate, and layout considerations—skills that directly impact product success.",
+    "realWorldApplications": [
+      "Designing precision instrumentation amplifiers for sensor data acquisition with high gain and low noise",
+      "Implementing buffer circuits for impedance matching between high-impedance sources and ADC inputs",
+      "Creating stable feedback systems for power supplies, regulators, and control circuits",
+      "Designing multistage amplifiers for weak signal detection in medical or industrial equipment",
+      "Building anti-aliasing filters using active op-amp topologies for proper ADC signal conditioning",
+      "Implementing output stages (push-pull) for driving speakers, motors, or high-current loads",
+      "Analyzing frequency response and compensating unstable circuits to prevent oscillation",
+      "PCB layout and noise management for low-noise analog front-ends in high-resolution data converters",
+      "Transimpedance amplifier design for photodiode and current-sensing applications",
+      "Designing complete analog signal chains: sensor → buffer → gain → filter → ADC"
+    ],
+    "learningOutcomes": [
+      "Understand operational amplifier architecture, internal stages, and performance limitations",
+      "Design stable feedback circuits using negative feedback and frequency compensation techniques",
+      "Analyze multistage amplifier performance, including gain calculation, bandwidth trade-offs, and noise accumulation",
+      "Evaluate frequency response using Bode plots and determine stability margins (gain/phase margin)",
+      "Account for non-ideal op-amp behavior: finite gain, slew rate, offset voltage, PSRR, and settling time",
+      "Implement proper frequency compensation (dominant pole, Miller compensation) to stabilize circuits",
+      "Design impedance-matched buffer circuits and understand virtual short/virtual ground concepts",
+      "Evaluate common-mode voltage range limitations and select appropriate op-amp topologies",
+      "Design output stages (push-pull) for high current and power delivery applications",
+      "Apply practical design techniques: component selection, PCB layout, power supply decoupling, and noise management",
+      "Use simulation tools (SPICE) and measurement techniques to verify circuit performance"
+    ],
+    "resources": {
+      "videos": [
+        "https://www.youtube.com/watch?v=Jexhr5NIHog",
+        "https://www.youtube.com/watch?v=OSCKBmkrH_g",
+        "https://www.youtube.com/watch?v=0muVEGz5wZE",
+        "https://www.youtube.com/watch?v=EOZyofNXWXc",
+        "https://www.youtube.com/watch?v=uEpiNnUBOE8",
+        "https://www.youtube.com/watch?v=gtJPeh3HvHU",
+        "https://www.youtube.com/watch?v=T_L2J0SMq8k",
+        "https://www.youtube.com/watch?v=ScONCdsdxYk",
+        "https://www.youtube.com/watch?v=KpBgf6ydplc",
+        "https://www.youtube.com/watch?v=BlYeeXsylhk",
+        "https://www.youtube.com/watch?v=MxPgGPAY4uk",
+        "https://www.youtube.com/watch?v=6QBkObdq4yo",
+        "https://www.youtube.com/watch?v=R_KMatNBTkw",
+        "https://www.youtube.com/watch?v=XS128aMHaug",
+        "https://www.youtube.com/watch?v=u4PC-cg9qYM",
+        "https://www.youtube.com/watch?v=ZrAwelmMQGw",
+        "https://www.youtube.com/watch?v=Ye7bTlfxOqY",
+        "https://www.youtube.com/watch?v=LDe3ZJ16HxQ",
+        "https://www.youtube.com/watch?v=Ga8Lu8sWlAk",
+        "https://www.youtube.com/watch?v=vZFkPeDa1H8",
+        "https://www.youtube.com/watch?v=BLVzuuqAlZs",
+        "https://www.youtube.com/watch?v=ilP6B2mR0Os",
+        "https://www.youtube.com/watch?v=PF4fSRwPk5I",
+        "https://www.youtube.com/watch?v=RB5-HsAhbkE",
+        "https://www.youtube.com/watch?v=H_kOryRMBEg",
+        "https://www.youtube.com/watch?v=Upom1IOVidk",
+        "https://www.youtube.com/watch?v=TBpOOVmnJos",
+        "https://www.youtube.com/watch?v=jo_WdkSSePY",
+        "https://www.youtube.com/watch?v=q54BCcpkwPw",
+        "https://www.youtube.com/watch?v=xgTqjjBrfHQ",
+        "https://www.youtube.com/watch?v=B1bUwA80W6U",
+        "https://www.youtube.com/watch?v=dr73ZqR_6-M",
+        "https://www.youtube.com/watch?v=wzF7uRlh6nA",
+        "https://www.youtube.com/watch?v=MwxyNmW--70",
+        "https://www.youtube.com/watch?v=6HR6k7On6o0",
+        "https://www.youtube.com/watch?v=l0tu3HfyNNg",
+        "https://www.youtube.com/watch?v=lCfComd-MLg",
+        "https://www.youtube.com/watch?v=v3F4XDyXSeI",
+        "https://www.youtube.com/watch?v=9UYXzstco60",
+        "https://www.youtube.com/watch?v=C9Hse91r5sA",
+        "https://www.youtube.com/watch?v=NVvcwXdAgbg",
+        "https://www.youtube.com/watch?v=eyDMdhYH20Y"
+      ],
+      "websites": [
+        "https://www.allaboutcircuits.com/textbook/semiconductors/chpt-8-operational-amplifiers/",
+        "https://www.analog.com/en/resources/analog-dialogue/",
+        "https://www.ti.com/en-us/training-centers/precision-labs/op-amps",
+        "https://electronics.stackexchange.com/questions/tagged/operational-amplifier",
+        "https://datasheets.maximintegrated.com/en/ds/OPA2134.pdf",
+        "https://www.edn.com/design/analog/"
+      ],
+      "tools": [
+        "LTspice (circuit simulation with op-amp models)",
+        "MATLAB/Simulink (frequency response analysis, Bode plots)",
+        "Python with NumPy/SciPy/Matplotlib (signal analysis and plotting)",
+        "Analog Discovery 2/3 (frequency sweep, PSRR measurement, scope)",
+        "Oscilloscope (waveform capture, settling time, slew rate measurement)",
+        "Function generator (frequency sweep for frequency response characterization)",
+        "Multimeter with precision (offset voltage, DC gain measurement)",
+        "PCB layout software: KiCAD, Altium, Eagle (ground plane design, trace routing)"
+      ]
+    }
+  }
+}
+,
+  {
+  "id": "ee-115",
+  "code": "EE 115",
+  "name": "Electromagnetics and Applications",
+  "fullName": "EE 115: Electromagnetics and Applications",
+  "description": "Comprehensive course covering Maxwell's equations, vector analysis, electrostatics, magnetostatics, electromagnetic waves, and practical applications in antenna design, transmission lines, and circuit-level EMI/EMC. Bridges electromagnetic field theory to real-world hardware design challenges.",
+  "tier": 1,
+  "expandedInfo": {
+    "credits": 4,
+    "careerRelevance": "Electromagnetics and Applications is critical for Analog & Digital Hardware Design careers because it provides the field-theory foundation necessary to understand signal integrity, EMI/EMC compliance, antenna design, and high-frequency circuit behavior. Modern hardware operates increasingly at frequencies where electromagnetic effects dominate—from GHz-range switching circuits to RF communication systems. Understanding Maxwell's equations and electromagnetic wave propagation directly enables engineers to design efficient antennas, optimize PCB layouts for signal integrity, predict crosstalk and EMI problems, and ensure designs meet regulatory compliance (FCC, CISPR). In analog design, proper impedance matching and transmission line knowledge prevent signal degradation. In digital design, understanding electromagnetic propagation is essential for high-speed digital circuits, power distribution networks, and EMI mitigation. This course transforms engineers from treating EMI as an afterthought to designing for electromagnetic performance from the start.",
+    "realWorldApplications": [
+      "PCB layout and signal integrity: Understanding transmission lines, impedance matching, and crosstalk to ensure high-speed digital signals reach their destinations undistorted",
+      "Antenna design for wireless systems: RF/5G communication devices, IoT modules, and wireless power transfer using antenna theory and electromagnetic wave propagation principles",
+      "EMI/EMC compliance testing and design: Predicting electromagnetic emissions from circuits and designing filtering/shielding to meet FCC and CISPR standards",
+      "Power distribution networks (PDNs): Using transmission line theory to minimize voltage droop and high-frequency oscillations in multi-layer PCBs",
+      "Microwave and RF circuit design: Designing matching networks, filters, couplers, and amplifiers using S-parameters and transmission line transformers",
+      "Wireless power transfer and near-field coupling: Designing inductive and capacitive coupling circuits using electromagnetic field theory",
+      "High-speed digital interconnects: Managing signal reflections, impedance discontinuities, and differential pair routing in LVDS, CML, and high-speed digital designs",
+      "Transformer and inductor design: Optimizing magnetic device efficiency and minimizing core losses using electromagnetic field analysis"
+    ],
+    "learningOutcomes": [
+      "Master vector calculus operations (gradient, divergence, curl) and apply them to Maxwell's equations in integral and differential forms",
+      "Understand electrostatics: Coulomb's law, Gauss's law, electric fields, boundary conditions, and electrostatic potential",
+      "Understand magnetostatics: Ampere's law, magnetic fields, boundary conditions, and magnetic flux",
+      "Apply Faraday's law of induction: understand how changing magnetic fields create electric fields and vice versa",
+      "Derive and explain electromagnetic wave propagation: wave equations, plane waves, polarization, and energy transport (Poynting vector)",
+      "Analyze transmission lines: characteristic impedance, reflection coefficients, standing waves, Smith chart usage, and impedance matching techniques",
+      "Design and analyze antennas: dipole radiators, radiation patterns, directivity, gain, and practical antenna applications",
+      "Apply electromagnetics to real-world problems: EMI prediction, signal integrity analysis, impedance matching for maximum power transfer, and PCB design principles",
+      "Use electromagnetic simulation software (HFSS, CST) for field visualization and antenna/circuit optimization"
+    ],
+    "resources": {
+      "videos": [
+        "https://www.youtube.com/watch?v=KDIaKOW8BRQ",
+        "https://www.youtube.com/watch?v=ooqAddBUmfs",
+        "https://www.youtube.com/watch?v=mOEFTX9DAEw",
+        "https://www.youtube.com/watch?v=-P3ahHEmLA0",
+        "https://www.youtube.com/watch?v=XAKAlNH9dDw",
+        "https://www.youtube.com/watch?v=CoJxhoL7ORY",
+        "https://www.youtube.com/watch?v=ZaXm6wau-jc",
+        "https://www.youtube.com/watch?v=KXTeM7KGx0s",
+        "https://www.youtube.com/watch?v=lKXW7DRyyro",
+        "https://www.youtube.com/watch?v=HptFSdSBSMM",
+        "https://www.youtube.com/watch?v=ArFZz-tv3EA",
+        "https://www.youtube.com/watch?v=9sycWURnCYM",
+        "https://www.youtube.com/watch?v=axUcybeamIk"
+      ],
+      "websites": [
+        "https://www.keysight.com/used/us/en/knowledge/guides/maxwells-equation",
+        "https://interferencetechnology.com/antenna-fundamentals/",
+        "https://phys.libretexts.org/Courses/Kettering_University/Electricity_and_Magnetism_with_Applications_to_Amateur_Radio_and_Wireless_Technology",
+        "https://www.microwaves101.com/encyclopedias/maxwell-s-equations",
+        "https://www.linkedin.com/posts/anilgupta102_maxwellsequations-rfengineering-electromagnetics-activity-7355571522570240001-DQw9"
+      ],
+      "tools": [
+        "ANSYS HFSS (High-Frequency Structure Simulator) - industry-standard 3D EM field simulation for antenna and RF circuit design",
+        "CST Studio Suite - comprehensive electromagnetic simulation for antennas, transmission lines, and EMI/EMC",
+        "ADS (Advanced Design System) - microwave/RF circuit design with electromagnetic components",
+        "AWR Microwave Office - transmission line simulation and Smith chart-based circuit design",
+        "MATLAB/Simulink with antenna and RF toolboxes for EM simulation",
+        "Python with electromagnetic libraries (MEEP, Pyqwt) for custom simulations",
+        "LTspice with S-parameter models for circuit-level transmission line analysis",
+        "Smith chart software and online calculators for impedance matching design",
+        "PCB design tools with EM field solvers (Altium, KiCad with EM plugins)",
+        "Network analyzer (for measuring S-parameters and antenna characteristics)",
+        "Field probe equipment (E-field, H-field, and EM wave measurement)"
+      ]
+    }
+  }
+}
+,
+  {
+  "id": "course-EE185",
+  "code": "EE 185",
+  "name": "Instrumentation",
+  "fullName": "EE 185: Instrumentation",
+  "description": "Comprehensive course on measurement systems and data acquisition. Covers transducer types, signal conditioning, measurement techniques, data acquisition systems, calibration, and practical laboratory skills. Essential for designing systems that interface with physical quantities through sensors.",
+  "tier": 1,
+  "expandedInfo": {
+    "credits": 4,
+    "careerRelevance": "EE 185 is critical for Analog & Digital Hardware Design as it teaches how to connect the physical world to electronic systems. Every hardware design must eventually interface with real-world quantities (temperature, pressure, force, current, voltage) through sensors and transducers. This course provides the complete signal path understanding: from sensor selection and transducer design, through signal conditioning and amplification, to ADC interfaces and data acquisition. For analog designers, it covers precision measurement circuits and noise management. For digital designers, it explains ADC interfacing and multi-channel synchronization. Additionally, this course teaches practical lab skills (oscilloscopes, multimeters, function generators) that are essential for validating any hardware design in the lab.",
+    "realWorldApplications": [
+      "Designing temperature measurement systems using RTDs or thermocouples with proper signal conditioning",
+      "Implementing pressure measurement using strain gauge transducers and Wheatstone bridge circuits",
+      "Creating multi-sensor data acquisition systems with synchronized analog-to-digital conversion",
+      "Interfacing low-level sensor outputs (millivolts) to ADC inputs using precision amplifiers",
+      "Validating circuit performance using oscilloscopes and function generators",
+      "Implementing noise rejection through proper grounding, shielding, and filtering",
+      "Calibrating measurement systems to ensure accuracy and reduce systematic error",
+      "Connecting current sensors to measurement systems with proper transimpedance amplification",
+      "Designing closed-loop control systems with real-time sensor feedback",
+      "Implementing data logging and monitoring systems for long-term measurements",
+      "Troubleshooting measurement system failures in production environments"
+    ],
+    "learningOutcomes": [
+      "Describe complete instrumentation system architecture from physical quantity to digital data",
+      "Select appropriate transducers (temperature, pressure, strain, force) for specific applications",
+      "Design signal conditioning circuits to amplify and scale sensor outputs for ADC input ranges",
+      "Apply Wheatstone bridge circuits for precision measurement of small resistance changes",
+      "Operate oscilloscopes to measure voltage, frequency, and analyze waveforms",
+      "Use digital multimeters with proper range selection for accurate DC/AC measurements",
+      "Generate test signals using function generators for circuit characterization",
+      "Understand analog-to-digital conversion principles and sampling theorem",
+      "Design and implement multi-channel data acquisition systems with proper synchronization",
+      "Quantify measurement error, accuracy, precision, and repeatability",
+      "Apply sensor calibration techniques to reduce systematic error",
+      "Implement grounding and shielding strategies to minimize noise in measurement systems",
+      "Identify and mitigate sources of electromagnetic interference (EMI)",
+      "Interface analog sensors directly to microcontroller or ADC inputs",
+      "Validate hardware performance through proper measurement and characterization",
+      "Evaluate measurement system uncertainty and determine system adequacy for applications"
+    ],
+    "resources": {
+      "videos": [
+        "https://www.youtube.com/watch?v=lfuJ6cLIfZ0",
+        "https://www.youtube.com/watch?v=Nwwga-TA3WI",
+        "https://www.youtube.com/watch?v=Sub2f_FnT-s",
+        "https://www.youtube.com/watch?v=mtIMJRdLsLM",
+        "https://www.youtube.com/watch?v=bfw_So5cCp4",
+        "https://www.youtube.com/watch?v=2ESEV5zv7O8",
+        "https://www.youtube.com/watch?v=ltpkxY7UmFk",
+        "https://www.youtube.com/watch?v=vwBwJOnYOwE",
+        "https://www.youtube.com/watch?v=QgcVzk2WB_k",
+        "https://www.youtube.com/watch?v=7xeriqPQyhQ",
+        "https://www.youtube.com/watch?v=5tUPwq0vsKI",
+        "https://www.youtube.com/watch?v=J2ulD-bPTS4",
+        "https://www.youtube.com/watch?v=L0uW1NHYdDQ",
+        "https://www.youtube.com/watch?v=B6Gvy1frRhg",
+        "https://www.youtube.com/watch?v=JyvDnXS4x8g",
+        "https://www.youtube.com/watch?v=GjmM6KKhgp0",
+        "https://www.youtube.com/watch?v=Sd_mBIq4kC0",
+        "https://www.youtube.com/watch?v=nIPguCP_DUs",
+        "https://www.youtube.com/watch?v=9jEExVfdtK4",
+        "https://dewesoft.com/blog/how-to-measure-current-using-current-sensors",
+        "https://www.youtube.com/watch?v=OQMnjaMSKn8",
+        "https://learn.sparkfun.com/tutorials/how-to-use-an-oscilloscope/all",
+        "https://www.youtube.com/watch?v=0CGtO-W8L7Y",
+        "https://www.youtube.com/watch?v=GX0WpYuAIpQ",
+        "https://www.youtube.com/watch?v=125mB_saqKI8",
+        "https://www.youtube.com/watch?v=p89h9oS2jXk",
+        "https://www.youtube.com/watch?v=rFcJk5QCT5s",
+        "https://www.youtube.com/watch?v=j5GaBCPQ4Bc",
+        "https://www.youtube.com/watch?v=FH9XzssLfHc",
+        "https://www.youtube.com/watch?v=4lAyzRxsbDc",
+        "https://www.youtube.com/watch?v=2XOhYYCZciQ",
+        "https://www.youtube.com/watch?v=Zink6v6TXk4",
+        "https://www.youtube.com/watch?v=meIMFGT2K4E",
+        "https://www.youtube.com/watch?v=n23k7ogxg8g",
+        "https://www.youtube.com/watch?v=n_lZCIA25aI",
+        "https://www.youtube.com/watch?v=3W7ImfRGvYk",
+        "https://www.youtube.com/watch?v=GksJ9YCZNTc",
+        "https://www.youtube.com/watch?v=2Ted-Mu2IUw",
+        "https://www.youtube.com/watch?v=uX-SQw8pwKo",
+        "https://www.youtube.com/watch?v=yEHHufzHIIM",
+        "https://www.youtube.com/watch?v=WdxQ1kfOEO0",
+        "https://www.youtube.com/watch?v=uWQhNBJSZDU",
+        "https://www.youtube.com/watch?v=tEctVtkFHO0",
+        "https://www.youtube.com/watch?v=kcU-nT9jcSs",
+        "https://www.youtube.com/watch?v=pKXPqApOYfk",
+        "https://www.youtube.com/watch?v=i_CPkmV_ZbQ",
+        "https://www.youtube.com/watch?v=DrOb6vd7O08",
+        "https://www.youtube.com/watch?v=1Cl0qNSwplY"
+      ],
+      "websites": [
+        "https://www.analog.com/en/resources/analog-dialogue/",
+        "https://www.ti.com/en-us/training-centers/precision-labs/",
+        "https://www.allaboutcircuits.com/textbook/",
+        "https://www.ni.com/en-us/solutions/daq/",
+        "https://www.ni.com/en-us/innovations/white-papers/06/introduction-to-data-acquisition.html",
+        "https://datasheetspdf.com/",
+        "https://www.oscilloscopemenu.com/",
+        "https://www.keysight.com/"
+      ],
+      "tools": [
+        "Digital Oscilloscope (Tektronix, Keysight, or equivalent) with FFT, cursors, measurements",
+        "Digital Multimeter with high input impedance (>10 MΩ) and true RMS capability",
+        "Function/Arbitrary Waveform Generator (frequency sweeps, multiple waveforms)",
+        "Data Acquisition (DAQ) System (National Instruments, Analog Devices, or equivalent)",
+        "Data Logger with multi-channel recording and USB/network connectivity",
+        "LTspice for circuit simulation and signal conditioning circuit design",
+        "Python with NumPy/Matplotlib/SciPy for data analysis and calibration processing",
+        "Strain gauge measurement kit or pressure transducer trainer",
+        "Thermocouples, RTDs, thermistors for temperature sensor comparison",
+        "Wheatstone bridge circuit trainer or measurement board",
+        "Grounding and shielding kit (shielded cables, ground straps)",
+        "Precision voltage reference standard for calibration"
+      ]
+    }
+  }
+}
+,
+  {
+  "id": "engr-170",
+  "code": "ENGR 170 / ENGR 170L",
+  "name": "Introduction to Electron Microscopy",
+  "fullName": "ENGR 170 / ENGR 170L: Introduction to Electron Microscopy",
+  "description": "Principles and techniques of electron microscopy for materials characterization. Covers scanning electron microscopy (SEM), transmission electron microscopy (TEM), scanning transmission electron microscopy (STEM), sample preparation methods, analytical techniques (EDS, EBSD), and practical applications in semiconductor analysis, materials science, and failure analysis.",
+  "tier": 1,
+  "expandedInfo": {
+    "credits": 3,
+    "careerRelevance": "Introduction to Electron Microscopy is essential for Analog & Digital Hardware Design careers because modern hardware development requires understanding materials at the nanoscale and atomic level. For analog designers, electron microscopy is critical for characterizing semiconductor device quality, analyzing parasitic capacitances and interconnects, and understanding device failure mechanisms. For digital designers, EM techniques enable inspection of microchip geometries, interconnect structures, and defect analysis in high-speed circuits. Engineers who understand electron microscopy can identify manufacturing variations that impact circuit performance, optimize thermal management through microstructure analysis, and troubleshoot reliability issues through failure analysis. In semiconductor manufacturing and IC design, EM expertise is directly applicable to yield improvement, defect root-cause analysis, and validating that fabricated devices meet specifications. The combination of imaging capability (down to atomic scales) and analytical spectroscopy (elemental composition via EDS) makes electron microscopy an indispensable tool for hardware engineers working at the leading edge of device miniaturization and performance optimization.",
+    "realWorldApplications": [
+      "Semiconductor device characterization: Analyzing BJT and MOSFET cross-sections to verify doping profiles, junction depths, and layer thicknesses in IC fabrication",
+      "Interconnect and via inspection: Using SEM to detect defects in multilayer PCB interconnects, solder joints, and wire bonding in microelectronic packaging",
+      "Failure analysis and defect detection: Identifying root causes of circuit failures through cross-sectional SEM analysis and elemental mapping with EDS",
+      "Thermal characterization: Using TEM to analyze heat transport mechanisms and identify thermal bottlenecks in power electronics and high-performance processors",
+      "Material quality assessment: SEM surface analysis for detecting cracks, voids, and surface defects in discrete semiconductor components and die attach",
+      "Nanoparticle and thin-film analysis: TEM characterization of nanoscale structures in emerging devices (GaN, SiC power semiconductors, quantum dots)",
+      "Crystallographic analysis: Using STEM and electron diffraction to study grain boundaries and crystal orientations affecting device performance and reliability",
+      "Contamination and corrosion analysis: EDS elemental mapping to identify unexpected elements affecting semiconductor reliability and long-term performance"
+    ],
+    "learningOutcomes": [
+      "Understand the fundamental physics of electron-material interactions: electron scattering, secondary electrons, backscattered electrons, and characteristic X-rays",
+      "Explain SEM principles: electron source, magnetic lens system, scanning deflection, and image formation with different detector types",
+      "Explain TEM principles: electron gun, electromagnetic lenses, specimen transmission, and bright-field/dark-field imaging modes",
+      "Compare SEM vs TEM vs STEM: advantages, limitations, resolution capabilities, and appropriate applications for each technique",
+      "Master sample preparation techniques: mechanical polishing, ion beam milling, critical point drying, and thin-foil preparation for TEM",
+      "Understand analytical techniques: EDS (elemental composition), EBSD (crystallographic orientation), and EELS (bonding and electronic structure)",
+      "Perform qualitative and quantitative analysis: interpreting SEM/TEM images, generating elemental maps, and extracting quantitative data from micrographs",
+      "Apply electron microscopy to failure analysis: systematic troubleshooting of material defects and device reliability issues",
+      "Operate electron microscopy equipment safely and effectively: vacuum systems, stage alignment, beam calibration, and image acquisition",
+      "Process and analyze EM datasets: image filtering, segmentation, 3D reconstruction, and automated analysis using Python and commercial software"
+    ],
+    "resources": {
+      "videos": [
+        "https://www.youtube.com/watch?v=d7ch1XSmOgI",
+        "https://www.youtube.com/watch?v=sCJxxkeOaGw",
+        "https://www.youtube.com/watch?v=DBiEc8KM1e0",
+        "https://www.youtube.com/watch?v=pLJmr74E_Vc",
+        "https://www.youtube.com/watch?v=KGYJImou7Fo",
+        "https://www.youtube.com/watch?v=e46Bla8ziqE",
+        "https://www.youtube.com/watch?v=5aJU4wH_iKE",
+        "https://www.youtube.com/watch?v=KenMr2ACMVg",
+        "https://www.youtube.com/watch?v=rVT98ywELvE",
+        "https://www.youtube.com/watch?v=V7lDXTdVwlo",
+        "https://www.youtube.com/watch?v=CCNnWr22OKE",
+        "https://www.youtube.com/watch?v=bAkyQFipepg",
+        "https://www.youtube.com/watch?v=vBu9Xzc1TgE",
+        "https://www.youtube.com/watch?v=SdpXFcf_La0",
+        "https://www.youtube.com/watch?v=jMv2BxvSBB0",
+        "https://www.youtube.com/watch?v=xlXEP5yONA0",
+        "https://www.youtube.com/watch?v=oj2DYSYEK_g",
+        "https://www.youtube.com/watch?v=DsHek8VSvgs",
+        "https://www.youtube.com/watch?v=RFqEq1JLPNc",
+        "https://www.youtube.com/watch?v=cjhcKnDYMWs"
+      ],
+      "websites": [
+        "https://www.nanoscience.com/techniques/scanning-electron-microscopy/",
+        "https://www.nanoscience.com/techniques/scanning-transmission-electron-microscopy/",
+        "https://www.thermofisher.com/us/en/home/materials-science/learning-center/applications/sem-tem-difference.html",
+        "https://www.thermofisher.com/us/en/home/electron-microscopy/products/transmission-electron-microscopes/techniques/materials-science-analysis",
+        "https://engineering.purdue.edu/MSE/research/facilities/CharacterizationFacilities/ElectronMicroscopy",
+        "https://www.nrel.gov/materials-science/transmission-electron-microscopy",
+        "https://en.wikipedia.org/wiki/Transmission_electron_microscopy",
+        "https://www.electron-microscopes.com/wp-content/uploads/2023/08/Thermo-Scientific-Scanning-Electron-Microscopy-working-principle"
+      ],
+      "tools": [
+        "Scanning Electron Microscope (SEM) - standard lab/manufacturing equipment for surface analysis",
+        "Transmission Electron Microscope (TEM) - high-resolution atomic-scale imaging (research/advanced labs)",
+        "Focused Ion Beam SEM (FIB-SEM) - enables in-situ sample preparation (cross-sectioning and lamella extraction)",
+        "Energy Dispersive X-ray Spectroscopy (EDS) detector - elemental composition mapping and analysis",
+        "Electron Backscatter Diffraction (EBSD) system - crystallographic orientation and phase analysis",
+        "Electron Energy-Loss Spectroscopy (EELS) - chemical bonding and electronic structure information",
+        "Sample preparation equipment: Polisher, ion beam miller, critical point dryer, sputter coater",
+        "Image analysis software: ImageJ/FIJI (free), Avizo, Image Pro (commercial automated analysis)",
+        "Python libraries: HyperSpy for EM data analysis, OpenCV for image processing, Scipy/NumPy",
+        "Vacuum systems: Diffusion pumps, turbomolecular pumps, residual gas analyzer",
+        "Specimen stage controllers: XY stage, Z-height adjustment, specimen rotation, heating/cooling holders"
+      ]
+    }
+  }
+}
+,
+];
+
+export const tier2Courses: TierCourse[] = [
+  {
+  "id": "course-EE122",
+  "code": "EE 122",
+  "name": "Introduction to Control Systems",
+  "fullName": "EE 122: Introduction to Control Systems",
+  "description": "Comprehensive introduction to control system theory and design. Covers feedback control fundamentals, transfer functions, stability analysis using Bode plots and root locus, PID controller design and tuning, state-space modeling, and practical hardware implementation of analog and digital controllers.",
+  "tier": 2,
+  "expandedInfo": {
+    "credits": 4,
+    "careerRelevance": "EE 122 is essential for Analog & Digital Hardware Design as it provides the theoretical foundation for nearly all feedback systems used in real-world electronics. Every regulator, amplifier with feedback, motor controller, sensor interface, and closed-loop actuator system relies on control theory. For analog designers, understanding transfer functions, Bode plots, and op-amp based controller implementation is critical for designing stable amplifiers and power supplies. For digital designers, this course teaches how to implement controllers on microcontrollers and manage the discrete-time aspects of digital control. The course bridges analog and digital by covering both continuous and discrete implementations. Additionally, practical skills like PID tuning and system identification enable you to validate designs and optimize performance in real hardware—going from theory to working systems.",
+    "realWorldApplications": [
+      "Designing linear voltage regulators with op-amp error amplifiers and feedback networks",
+      "Implementing closed-loop speed control for DC motors using PID controllers",
+      "Creating feedback-stabilized amplifiers to reduce distortion and improve linearity",
+      "Designing temperature control systems with thermistor/RTD feedback and heating/cooling actuators",
+      "Implementing phase-locked loops (PLL) for frequency synchronization in communication systems",
+      "Creating precision analog circuits with feedback networks for low noise and high stability",
+      "Designing programmable gain amplifiers with automatic gain control (AGC)",
+      "Implementing stepper motor positioning systems with feedback and error correction",
+      "Creating adaptive filter systems that adjust cutoff frequency based on signal conditions",
+      "Designing high-frequency switching supplies with feedback control of PWM duty cycle",
+      "Implementing flow control and pressure regulation in industrial systems",
+      "Creating sensor signal conditioning circuits with feedback for temperature compensation"
+    ],
+    "learningOutcomes": [
+      "Explain open-loop vs. closed-loop control systems and their performance tradeoffs",
+      "Derive transfer functions from differential equations using Laplace transform",
+      "Determine system stability from pole/zero locations and characteristic equations",
+      "Construct Bode plots and extract bandwidth, gain margin, and phase margin",
+      "Apply root locus method to analyze controller gain effects on system stability",
+      "Convert differential equations to state-space representation using matrix formulation",
+      "Design PID controllers using Ziegler-Nichols method and other tuning techniques",
+      "Fine-tune controller parameters to meet transient response specifications (settling time, overshoot)",
+      "Implement analog PID controllers using operational amplifiers and passive components",
+      "Program digital PID controllers on microcontrollers with appropriate sampling rates",
+      "Analyze system step response to extract settling time, rise time, and peak overshoot",
+      "Perform system identification from experimental frequency response or step response data",
+      "Integrate sensors, actuators, and controllers into closed-loop feedback systems",
+      "Validate designs through simulation (MATLAB/Simulink) and hardware testing",
+      "Understand and account for practical limitations (saturation, computational delays, sensor noise)",
+      "Select between analog and digital controller implementations based on application requirements"
+    ],
+    "resources": {
+      "videos": [
+        "https://www.youtube.com/watch?v=0mnTByVKqLM",
+        "https://www.youtube.com/watch?v=e0UBMCHCgyw",
+        "https://www.youtube.com/watch?v=Zszj5eU-ipA",
+        "https://www.youtube.com/watch?v=Fer7pC4T1Ss",
+        "https://www.youtube.com/watch?v=RJleGwXorUk",
+        "https://www.youtube.com/watch?v=26YyhaeuBzE",
+        "https://www.youtube.com/watch?v=yf09OrHa520",
+        "https://www.youtube.com/watch?v=oluy7ykrGYg",
+        "https://www.youtube.com/watch?v=CTMHcZMDWYk",
+        "https://www.youtube.com/watch?v=uqjKG32AkC4",
+        "https://www.youtube.com/watch?v=U9CQ3j1tFpc",
+        "https://www.youtube.com/watch?v=ANjIrllQXeQ",
+        "https://www.youtube.com/watch?v=_eh1conN6YM",
+        "https://www.youtube.com/watch?v=tRHesQXGTmk",
+        "https://www.youtube.com/watch?v=mAjEu274zQ4",
+        "https://www.youtube.com/watch?v=Ky8In4J0v4w",
+        "https://www.youtube.com/watch?v=EQ-SXPCCMBg",
+        "https://www.youtube.com/watch?v=YpbsNQqXQjU",
+        "https://www.youtube.com/watch?v=hpeKrMG-WP0",
+        "https://www.youtube.com/watch?v=YWxYNqqHKzI",
+        "https://www.youtube.com/watch?v=axyu_CA3o-I",
+        "https://www.youtube.com/watch?v=X3TOZLJCWiY",
+        "https://www.youtube.com/watch?v=uIeFqmSB_K0",
+        "https://www.youtube.com/watch?v=fP_ENSXURYA",
+        "https://www.youtube.com/watch?v=QMO8cDpjw5U",
+        "https://www.youtube.com/watch?v=3CZQ_A7n4ig",
+        "https://www.youtube.com/watch?v=IB1Ir4oCP5k",
+        "https://www.youtube.com/watch?v=YYxkS1iFdVk",
+        "https://www.youtube.com/watch?v=RWIxRMcWNsA",
+        "https://www.youtube.com/watch?v=o9bqqI0QUsY",
+        "https://www.youtube.com/watch?v=PlVk76qcVyU",
+        "https://www.youtube.com/watch?v=m5WhKFYlqtA",
+        "https://www.youtube.com/watch?v=uNf2tyWUZcg",
+        "https://www.youtube.com/watch?v=OA2TWf8e_0Y",
+        "https://www.youtube.com/watch?v=7BJaOvKj1fg",
+        "https://www.youtube.com/watch?v=MpTkwL3oL38",
+        "https://www.youtube.com/watch?v=IAFSkd12BQU",
+        "https://www.youtube.com/watch?v=xA_I384Dm20",
+        "https://www.youtube.com/watch?v=4IkbxdN0-sg",
+        "https://www.youtube.com/watch?v=T_6Dy0Vax9c",
+        "https://www.youtube.com/watch?v=C7iWAceMVQg",
+        "https://www.youtube.com/watch?v=K7FQSS_iAw0",
+        "https://www.youtube.com/watch?v=NIx_KycgOJM",
+        "https://www.youtube.com/watch?v=YU17L650k3s",
+        "https://www.youtube.com/watch?v=jRvX1Un0ixM",
+        "https://www.youtube.com/watch?v=HXxeaelKVj0",
+        "https://www.youtube.com/watch?v=hdtc9_cdfTY",
+        "https://www.youtube.com/watch?v=TIq62uU5T5I",
+        "https://www.youtube.com/watch?v=advs1QYLFjA",
+        "https://www.youtube.com/watch?v=C9GU_zWlwD8"
+      ],
+      "websites": [
+        "https://www.mathworks.com/products/control.html",
+        "https://www.mathworks.com/help/control/",
+        "https://ctms.engin.umich.edu/CTMS/",
+        "https://www.allaboutcircuits.com/textbook/semiconductors/chpt-16-operational-amplifiers/",
+        "https://www.analog.com/en/resources/analog-dialogue/",
+        "https://faculty.washington.edu/sbrunton/control_bootcamp.html",
+        "https://ocw.mit.edu/courses/16-06-principles-of-automatic-control/",
+        "https://en.wikibooks.org/wiki/Control_Systems/Print_version"
+      ],
+      "tools": [
+        "MATLAB with Control System Toolbox (transfer functions, Bode plots, root locus, step response)",
+        "Simulink for continuous and discrete-time system simulation",
+        "Python with scipy.signal (control system analysis and design)",
+        "LTspice for op-amp based analog controller circuit simulation",
+        "GNU Octave with Control Package (free MATLAB alternative)",
+        "Jupyter notebooks for interactive control system analysis",
+        "Arduino IDE for microcontroller-based digital controller implementation",
+        "Oscilloscope and function generator for measuring frequency response and step response",
+        "Data logger or DAQ system for collecting experimental frequency response data",
+        "MATLAB System Identification Toolbox (for system identification from experimental data)"
+      ]
+    }
+  }
+}
+,
+  {
+  "id": "ee-130",
+  "code": "EE 130",
+  "name": "Electrical Machines",
+  "fullName": "EE 130: Electrical Machines",
+  "description": "Comprehensive study of electric machines including DC motors, AC induction motors, synchronous motors, brushless DC motors, and generators. Covers machine principles, construction, operating modes, control strategies, thermal management, and applications in analog/digital systems and power electronics.",
+  "tier": 2,
+  "expandedInfo": {
+    "credits": 4,
+    "careerRelevance": "Electrical Machines is critical for Analog & Digital Hardware Design careers because modern hardware systems increasingly rely on precise motor control and energy conversion. For analog designers, understanding motor transient behavior, back-EMF dynamics, and thermal effects is essential for designing drive circuits, feedback systems, and protection mechanisms. For digital designers, mastery of motor control algorithms (PWM commutation, field-oriented control, six-step control) enables implementation on microcontrollers, FPGAs, and ASICs. The course bridges the gap between electromagnetic theory and practical power electronics—teaching how to model motors mathematically, simulate their behavior in MATLAB/Simulink, and design controllers that optimize torque, efficiency, and speed regulation. Engineers who understand electrical machines can design more efficient power conversion systems, implement regenerative braking in electric vehicles, troubleshoot motor failures, and optimize thermal management. This knowledge is directly applicable to robotics, electric vehicles, industrial automation, HVAC systems, and any application using motors for motion control. The intersection of motor design, power electronics, and control systems makes this course foundational for modern hardware engineers.",
+    "realWorldApplications": [
+      "DC motor control in robotics: designing PWM controllers for precise speed and torque regulation in robot manipulators and mobile robots",
+      "Electric vehicle propulsion: understanding permanent magnet synchronous motors (PMSMs), field-oriented control (FOC), and regenerative braking systems",
+      "HVAC systems: AC induction motor optimization for pumps, fans, and compressors using variable frequency drives (VFDs) to reduce energy consumption",
+      "Brushless motor design for drones and high-performance applications: optimizing commutation sequences, minimizing vibration, and maximizing efficiency",
+      "Thermal management in motors: predicting hot-spot temperatures, designing cooling systems, and extending motor lifetime through effective heat dissipation",
+      "Industrial automation: multi-motor control systems, synchronized motion control, and fault detection in manufacturing equipment",
+      "Power electronics converter design: designing inverters, DC-DC converters, and gate drive circuits for efficient energy transfer to motors",
+      "Condition monitoring and fault diagnosis: detecting bearing failure, winding insulation breakdown, and abnormal current patterns through motor signature analysis"
+    ],
+    "learningOutcomes": [
+      "Understand fundamental motor principles: electromagnetic torque, Lorentz force, and energy conversion from electrical to mechanical domains",
+      "Analyze DC motor operation: commutation, brush mechanism, back-EMF, and torque-speed characteristics in steady-state and transient conditions",
+      "Explain AC machine fundamentals: three-phase systems, rotating magnetic fields, synchronous speed, and slip in induction motors",
+      "Compare different motor types: DC brushed, brushless DC (BLDC), induction, synchronous, and specialty motors—understanding advantages and limitations",
+      "Design motor control circuits: PWM-based speed control for DC motors, six-step commutation for BLDCs, and field-oriented control (FOC) for AC motors",
+      "Model and simulate motors using MATLAB/Simulink: implement dynamic models, verify control algorithms, and analyze transient response",
+      "Understand and manage thermal behavior: calculate motor losses, design thermal networks, and predict steady-state temperatures",
+      "Apply power electronics principles: design inverters, gate drive circuits, and protective switching for motor drive applications",
+      "Understand motor selection criteria: matching motor type and rating to application requirements (torque, speed, power, efficiency, thermal limits)",
+      "Implement condition monitoring: detect motor faults through vibration, current analysis, and temperature monitoring"
+    ],
+    "resources": {
+      "videos": [
+        "https://www.youtube.com/watch?v=0-YXBxzKx7g",
+        "https://www.youtube.com/watch?v=E9zM07v1vWk",
+        "https://www.youtube.com/watch?v=CWulQ1ZSE3c",
+        "https://www.youtube.com/watch?v=MIJ7nw8jhhQ",
+        "https://www.youtube.com/watch?v=kxMhU6lcQok",
+        "https://www.youtube.com/watch?v=TAtGdziQIoM",
+        "https://www.youtube.com/watch?v=A4JAueEf_PA",
+        "https://www.youtube.com/watch?v=S5xMvHa2F_s",
+        "https://www.youtube.com/watch?v=jOGrBLuCggE",
+        "https://www.youtube.com/watch?v=vMu6DmfKHTs",
+        "https://www.youtube.com/watch?v=Ex8kFy5iLhs",
+        "https://www.youtube.com/watch?v=e0RjBfV_ot8",
+        "https://www.youtube.com/watch?v=yiD5nCfmbV0",
+        "https://www.youtube.com/watch?v=Rq5DT1UJlE4",
+        "https://www.youtube.com/watch?v=Ur-gqLEAna4",
+        "https://www.youtube.com/watch?v=XCzfHDnt6G4",
+        "https://www.youtube.com/watch?v=m-T9sgs9d0k",
+        "https://www.youtube.com/watch?v=I1ncyBwFsJ0",
+        "https://www.mathworks.com/videos/brushless-dc-motors-introduction-1564728874059.html",
+        "https://www.youtube.com/watch?v=47e5VKc1Iy8",
+        "https://www.youtube.com/watch?v=FVQL2YazZDY",
+        "https://www.youtube.com/watch?v=va-XQRQovCk",
+        "https://www.youtube.com/watch?v=D3vR6yxvRhM",
+        "https://www.mathworks.com/videos/develop-field-oriented-control-for-motor-drives-in-simulink-1716233159552.html",
+        "https://www.mathworks.com/videos/simulate-design-and-test-field-weakening-control-design-with-simulink-1636493706639.html",
+        "https://uk.mathworks.com/videos/developing-detailed-motor-model-for-electromagnetic-and-thermal-analysis-1694788202120.html"
+      ],
+      "websites": [
+        "https://www.monolithicpower.com/en/learning/mpscholar/electric-motors/dc-motors/fundamentals",
+        "https://www.monolithicpower.com/en/learning/mpscholar/electric-motors/motor-control-and-drive-electronics/basics-of-motor-contro",
+        "https://www.analog.com/media/en/news-marketing-collateral/solutions-bulletins-brochures/motor-drives-the-fascinating-world-of-electronic-motor-control",
+        "https://www.parvalux.com/us/what-is-the-difference-between-a-dc-and-ac-electric-motor/",
+        "https://www.electricaltechnology.org/2021/01/types-of-electric-motors.html",
+        "https://www.gainesvilleindustrial.com/blog/ac-dc-motors/",
+        "https://www.ti.com/lit/pdf/slyy078",
+        "https://www.mathworks.com/videos/",
+        "https://www.alvaindustries.com/post/tech-torqs-7-how-does-thermal-management-affect-motor-performance"
+      ],
+      "tools": [
+        "MATLAB/Simulink with Simscape Electrical - comprehensive motor modeling, control design, and system-level simulation",
+        "Motor-CAD (Ansys) - dedicated motor design, thermal analysis, and optimization software",
+        "COMSOL Multiphysics - electromagnetic-thermal coupling simulations for detailed motor analysis",
+        "LTspice - circuit-level simulation of power electronics and motor drive circuits",
+        "PSIM (Power Systems Simulator) - fast simulation of power converters and motor drives",
+        "JMAG and Maxwell (Ansys) - finite element analysis (FEA) of motor magnetic fields and performance",
+        "Microcontroller development tools (STM32 Cube IDE, Arduino IDE) - embedded motor control code development",
+        "BLDC motor simulators and online calculators for quick design iterations",
+        "Oscilloscope and current probe - experimental motor characterization and control verification",
+        "Motor performance analyzer - comprehensive motor testing and diagnostics equipment"
+      ]
+    }
+  }
+}
+,
+  {
+  "id": "course-EE131",
+  "code": "EE 131",
+  "name": "Power Electronics",
+  "fullName": "EE 131: Power Electronics",
+  "description": "Comprehensive course on power conversion and switching topologies. Covers DC-DC converters (buck, boost, buck-boost), MOSFET selection and gate driving, switching loss analysis, thermal management, snubber and protection circuits, and practical power supply design for applications ranging from microcontroller supplies to motor control.",
+  "tier": 2,
+  "expandedInfo": {
+    "credits": 4,
+    "careerRelevance": "EE 131 is essential for Analog & Digital Hardware Design as nearly every modern system requires efficient power conversion. Whether designing a microcontroller supply, motor driver, or LED backlighting system, understanding switching topologies, gate drivers, and thermal management is critical. This course teaches how to translate power specifications into practical converter designs using MOSFETs, including proper gate driving, protection circuits, and thermal analysis. For analog designers, this covers the complete power path from raw input to conditioned output—essential for mixed-signal systems. For digital designers, understanding power supply design impacts PCB layout, component placement, and system reliability. The course bridges circuit theory with real manufacturing constraints: parasitic inductance/capacitance effects, thermal derating, and practical component integration.",
+    "realWorldApplications": [
+      "Designing buck regulators for CPU/FPGA core voltage from battery or 5V input",
+      "Implementing boost converters for LED backlighting from low battery voltage",
+      "Creating buck-boost converters for USB power delivery with wide input range",
+      "Designing DC motor speed control with H-bridge drivers and gate isolation",
+      "Implementing POL (point-of-load) converters in distributed power architectures",
+      "Building hot-swap controllers for redundant power supplies",
+      "Designing battery chargers with multiple charging stages and MOSFET control",
+      "Creating resonant converters for high-efficiency MHz-range operation",
+      "Implementing phase-shift isolated converters for soft switching",
+      "Designing transient suppressors and snubber circuits for inductive loads",
+      "Building EMI filters with integrated power stages",
+      "Implementing three-phase motor inverters with PWM and isolated gate drivers",
+      "Creating polyphase converter modules for multi-rail power distribution",
+      "Designing overvoltage and overcurrent protection circuits"
+    ],
+    "learningOutcomes": [
+      "Explain switching topologies and their advantages over linear regulators",
+      "Derive transfer functions for buck, boost, and buck-boost converters",
+      "Calculate converter duty cycle from input/output voltage specifications",
+      "Select inductor and capacitor values based on ripple current/voltage requirements",
+      "Determine MOSFET parameters from datasheets (VDS, VGS, RDS(on), gate charge)",
+      "Calculate conduction and switching losses in power converters",
+      "Design gate driver circuits for isolated and non-isolated applications",
+      "Implement dead-time control in half-bridge and full-bridge configurations",
+      "Analyze switching transients caused by parasitic inductance and capacitance",
+      "Design snubber and clamp circuits to suppress voltage overshoot",
+      "Select heatsinks and estimate junction temperature for thermal management",
+      "Apply derating to passive components at elevated temperatures",
+      "Implement feedback control for output voltage regulation",
+      "Design PWM compensators for stable closed-loop operation",
+      "Integrate power stages into complete system designs",
+      "Layout high-current PCBs with proper return paths and minimal parasitic effects",
+      "Validate converter operation through simulation and hardware testing"
+    ],
+    "resources": {
+      "videos": [
+        "https://www.youtube.com/watch?v=DXyTHhUjxjk",
+        "https://www.youtube.com/watch?v=YeUbmOKi0Q4",
+        "https://www.youtube.com/watch?v=2A5G4lf_0VE",
+        "https://www.youtube.com/watch?v=qJuiuIGfKxU",
+        "https://www.youtube.com/watch?v=gsPN982hmD8",
+        "https://www.youtube.com/watch?v=PgTR7226sHU",
+        "https://www.youtube.com/watch?v=aaH7OGw_npU",
+        "https://www.youtube.com/watch?v=IyiCHMHE5Qg",
+        "https://www.youtube.com/watch?v=UlU3eS2mRoo",
+        "https://www.youtube.com/watch?v=eZ8UJW4lFSk",
+        "https://www.youtube.com/watch?v=zf-pvHysroM",
+        "https://www.youtube.com/watch?v=MS5vd3LomWg",
+        "https://www.youtube.com/watch?v=DTZpX29cASU",
+        "https://www.youtube.com/watch?v=IKdvoYx2GYM",
+        "https://www.youtube.com/watch?v=eau0p9Bpd9I",
+        "https://www.youtube.com/watch?v=mZKTafaF3xc",
+        "https://www.electronicsforu.com/buyers-guides/guide-to-select-power-mosfets",
+        "https://www.microtype.io/blog/selecting-a-mosfet-a-pragmatic-approach",
+        "https://www.youtube.com/watch?v=e19derT5z9A",
+        "https://www.youtube.com/watch?v=K6ovijw4yiU",
+        "https://www.youtube.com/watch?v=sTWn47A2r14",
+        "https://www.youtube.com/watch?v=WjYTIo4s8U0",
+        "https://www.youtube.com/watch?v=iNhTOPeFXLM",
+        "https://www.youtube.com/watch?v=OdTfg-1SYo8",
+        "https://www.youtube.com/watch?v=GxXSU20yqeI",
+        "https://www.youtube.com/watch?v=cr59OJMROxI",
+        "https://www.youtube.com/watch?v=rdDas0-cWzs",
+        "https://www.youtube.com/watch?v=9ZKDyBAEa_k",
+        "https://www.youtube.com/watch?v=Xjr7dFh3lYY",
+        "https://www.youtube.com/watch?v=1L2f9eCT8wM",
+        "https://www.youtube.com/watch?v=iFU6wq-Gxjw",
+        "https://www.youtube.com/watch?v=K-5rk7Oy9Wk",
+        "https://www.youtube.com/watch?v=GGgTmglWg3g",
+        "https://www.youtube.com/watch?v=MJ4nMicTLwU",
+        "http://www.taiwansemi.com/en/blog-igbt-mosfet-gan/"
+      ],
+      "websites": [
+        "https://www.ti.com/en-us/training-centers/precision-labs/power-management/",
+        "https://www.analog.com/en/resources/analog-dialogue/",
+        "https://www.allaboutcircuits.com/textbook/",
+        "https://www.ti.com/en-us/training-centers/precision-labs/",
+        "https://www.onsemi.com/design-resources",
+        "https://www.infineon.com/cms/en/product/power-management-ics/",
+        "https://datasheets.maximintegrated.com/",
+        "https://www.circuitlab.com/"
+      ],
+      "tools": [
+        "LTspice for MOSFET and converter circuit simulation",
+        "MATLAB/Simulink for converter design and control analysis",
+        "Python with scipy/numpy for loss calculations and thermal modeling",
+        "Analog Devices WEBENCH Power Designer (converter design tool)",
+        "TI Fusion Design Center (power supply design tool)",
+        "Keysight ADS for RF/high-frequency power applications",
+        "Oscilloscope with high bandwidth (100+ MHz) for switching waveforms",
+        "Thermal imaging camera for heatsink validation",
+        "Power analyzer for efficiency measurement",
+        "Current probe for switching current waveforms",
+        "PCB design software: KiCAD, Altium, Eagle (power distribution design)",
+        "SPICE models from semiconductor manufacturers",
+        "Heatsink calculator tools and thermal simulation software"
+      ]
+    }
+  }
+}
+,
+  {
+  "id": "ee-140",
+  "code": "EE 140",
+  "name": "Computer and Microcontroller Architecture",
+  "fullName": "EE 140: Computer and Microcontroller Architecture",
+  "description": "Design and implementation of embedded systems and microcontroller architecture. Covers system organization and design, instruction set architecture, assembly language programming, memory management, pipelining, cache design, interrupt handling, and embedded systems principles. Focuses on ARM Cortex-M architecture and practical real-time embedded applications.",
+  "tier": 2,
+  "expandedInfo": {
+    "credits": 4,
+    "careerRelevance": "Computer and Microcontroller Architecture is absolutely critical for Analog & Digital Hardware Design careers because it bridges hardware and software—teaching how digital logic executes instructions and manages data at the microprocessor level. For analog designers, understanding microcontroller architecture enables proper interfacing of analog signal conditioning circuits with digital systems, managing ADC/DAC timing, and optimizing analog performance in mixed-signal applications. For digital designers, mastery of CPU architecture, instruction sets, pipelining, and memory hierarchies is foundational to designing efficient embedded systems, real-time controllers, FPGA implementations, and optimizing performance-critical code. This course teaches how to write assembly language for direct hardware control, understand interrupt handling and priority management for real-time systems, and optimize code for resource-constrained embedded systems. Modern hardware engineers must understand both sides: how to design the circuits that processors execute AND how to write efficient code that leverages hardware capabilities. Knowledge of cache design, memory bus protocols, and instruction execution directly impacts circuit design decisions for power management, thermal characteristics, and system performance. The intersection of hardware design and embedded software makes this course indispensable for designing complete embedded systems.",
+    "realWorldApplications": [
+      "Embedded IoT devices: designing smart sensors with ARM Cortex-M microcontrollers, optimizing power consumption through idle modes and efficient interrupt handling",
+      "Real-time control systems: implementing precise timing-critical firmware for motor control, battery management systems (BMS), and process automation using RTOS concepts",
+      "Audio and signal processing DSP: leveraging ARM NEON SIMD instructions on Cortex-M4/M7 for real-time audio filtering, feature extraction, and signal analysis",
+      "Wireless communication systems: managing WiFi, Bluetooth, and cellular interfaces through interrupt-driven state machines and efficient memory management",
+      "Automotive embedded systems: ECU (engine control unit) design with deterministic timing, fault handling, and communication with safety-critical requirements",
+      "FPGA hardware design: understanding microprocessor architecture principles for designing custom embedded processors on FPGA fabrics",
+      "Debugging and optimization: using GDB, JTAG, and profiling tools to identify bottlenecks, reduce power draw, and meet real-time deadlines",
+      "Multi-core systems: designing synchronization mechanisms, cache coherency strategies, and load-balanced task scheduling across multiple cores"
+    ],
+    "learningOutcomes": [
+      "Understand instruction set architecture (ISA) fundamentals: registers, memory models, addressing modes, and instruction formats for ARM Cortex-M processors",
+      "Write and analyze ARM assembly language code: control flow, function calls, stack management, and optimization for performance and code size",
+      "Explain CPU pipeline stages: fetch, decode, execute, memory access, and write-back stages; understand branch prediction, hazards, and pipeline optimization",
+      "Analyze memory hierarchies: cache design (L1/L2/L3), DRAM organization, cache miss penalties, and memory access optimization techniques",
+      "Understand interrupt handling: exception types, vector tables, priority levels (NVIC), nested interrupts, and real-time response requirements",
+      "Design embedded systems using RTOS concepts: task scheduling, synchronization primitives (mutexes, semaphores), and priority-based multitasking",
+      "Implement memory management: stack vs. heap allocation, fragmentation issues, and embedded memory constraints in resource-limited systems",
+      "Use debugging tools: GDB, OpenOCD, JTAG, and in-circuit debuggers for hardware-level system inspection and code validation",
+      "Optimize code for embedded systems: balancing performance, power consumption, code size, and real-time constraints",
+      "Design hardware-software interfaces: managing peripheral control, DMA (direct memory access), and interrupt-driven device drivers"
+    ],
+    "resources": {
+      "videos": [
+        "https://www.youtube.com/watch?v=15z_vn4H41U",
+        "https://www.youtube.com/watch?v=cMod-Pib8WM",
+        "https://www.youtube.com/watch?v=QUNtFns1O-g",
+        "https://www.youtube.com/watch?v=NrVEIGfnl7U",
+        "https://www.youtube.com/watch?v=jFDMZpkUWCw",
+        "https://www.youtube.com/watch?v=ByllwN8q2ss",
+        "https://www.youtube.com/watch?v=K-BBzcVWwSI",
+        "https://www.youtube.com/watch?v=BSLLDXQTqmM",
+        "https://www.youtube.com/watch?v=IAkj32VPcUE",
+        "https://www.youtube.com/watch?v=1zXDoDDkICQ",
+        "https://www.youtube.com/watch?v=lCBqWe9lpXo",
+        "https://www.youtube.com/watch?v=WCTWmveIhUI",
+        "https://www.youtube.com/watch?v=jys92_j627A",
+        "https://www.youtube.com/watch?v=PEpFP3linS4",
+        "https://www.youtube.com/watch?v=ijuoryTBiZw",
+        "https://www.youtube.com/watch?v=bp3oUUrLyHU",
+        "https://www.youtube.com/watch?v=4C0tJ5Itnvo",
+        "https://www.youtube.com/watch?v=UowtXNKd8PQ",
+        "https://www.youtube.com/watch?v=EDd2262qnuA",
+        "https://www.youtube.com/watch?v=NrKRgfFa5_U",
+        "https://www.youtube.com/watch?v=J656zMtJ6e4",
+        "https://www.youtube.com/watch?v=Yx59nJOqcTg",
+        "https://www.youtube.com/watch?v=_1u7IOnivnM",
+        "https://www.youtube.com/watch?v=DbTnKGSoVd4",
+        "https://www.youtube.com/watch?v=3EVRL1CGMEo",
+        "https://www.youtube.com/watch?v=m4agpY_w2y8"
+      ],
+      "websites": [
+        "https://en.wikipedia.org/wiki/ARM_architecture_family",
+        "https://ahmedgouda.hashnode.dev/arm-architecture-and-instruction-sets",
+        "https://www.allpcb.com/allelectrohub/microcontroller-architectures-and-instruction-sets",
+        "https://www.geeksforgeeks.org/computer-organization-architecture/instruction-sets-of-a-microcontroller/",
+        "https://www.geeksforgeeks.org/computer-organization-architecture/pipelined-architecture-with-its-diagram/",
+        "https://www.geeksforgeeks.org/computer-organization-architecture/memory-hierarchy-design-and-its-characteristics/",
+        "https://www.edn.com/memory-hierarchy-design-part-1-basics-of-memory-hierarchies/",
+        "https://www.cise.ufl.edu/~mssz/CompOrg/CDA-pipe.html",
+        "https://catalog.ucmerced.edu/preview_course_nopop.php?catoid=24&coid=70000"
+      ],
+      "tools": [
+        "ARM Development Studio (ArmDS) - professional ARM compiler, debugger, and optimization tools",
+        "GCC toolchain (arm-none-eabi-gcc) - free compiler for ARM embedded systems",
+        "GDB (GNU Debugger) - remote debugging for microcontrollers and embedded systems",
+        "OpenOCD - open-source on-chip debugger for JTAG/SWD interfaces",
+        "Keil MDK-ARM - commercial IDE with UVISION and optimization tools",
+        "STM32CubeIDE - free IDE for STM32 microcontrollers with integrated debugging",
+        "Segger J-Link - professional JTAG debugger and programmer",
+        "MATLAB/Simulink with Embedded Coder - code generation and real-time simulation",
+        "Qemu - CPU emulator for testing embedded code without hardware",
+        "Perfetto and Linux Trace Toolkit - performance profiling and visualization",
+        "Cmake and Make - build system automation for embedded projects",
+        "Oscilloscope and logic analyzer - hardware validation and timing analysis",
+        "In-circuit programmer/debugger (ST-Link, J-Link, Segger) - hardware interfacing"
+      ]
+    }
+  }
+}
+,
+  {
+  "id": "course-EE150",
+  "code": "EE 150",
+  "name": "Digital Communication",
+  "fullName": "EE 150: Digital Communication",
+  "description": "Comprehensive introduction to digital communication system design and analysis. Covers digital modulation techniques (ASK, FSK, PSK, QAM, OFDM), channel models (AWGN, fading), signal detection, matched filters, error analysis, synchronization methods, and practical implementation using software defined radio platforms.",
+  "tier": 2,
+  "expandedInfo": {
+    "credits": 4,
+    "careerRelevance": "EE 150 is essential for Analog & Digital Hardware Design as modern systems require wireless communication, high-speed serial links, or other digital communication protocols. This course teaches the complete signal chain from modulation through noisy channels to demodulation and detection. For analog designers, it covers mixed-signal front-end design—I/Q modulators, demodulators, automatic gain control, and filtering. For digital designers, it covers DSP algorithms for carrier recovery, timing synchronization, and equalization. Understanding both domains is critical: the course bridges analog RF/baseband circuits with digital signal processing, essential for designing transceivers, receivers, and communication interfaces. Practical skills with software defined radio (USRP, GNU Radio) enable rapid prototyping and validation of communication systems before committing to hardware.",
+    "realWorldApplications": [
+      "Designing Bluetooth/WiFi receivers with QPSK/QAM demodulation",
+      "Implementing 4G/5G modem baseband processing with OFDM",
+      "Creating satellite communication systems with PSK and adaptive modulation",
+      "Building IoT receivers for LoRa, Sigfox, or NB-IoT protocols",
+      "Designing high-speed Ethernet/USB transceiver front-ends with equalization",
+      "Implementing optical coherent receivers with digital signal processing",
+      "Designing I/Q modulator/demodulator circuits for frequency conversion",
+      "Creating automatic gain control (AGC) circuits for receiver signal conditioning",
+      "Implementing matched filter detection for pulse radar systems",
+      "Designing timing synchronization and carrier recovery circuits",
+      "Prototyping communication systems using software defined radio (SDR)",
+      "Implementing adaptive modulation for varying channel conditions",
+      "Designing channel equalizers for multipath fading environments",
+      "Creating software modems for legacy protocols (V.34, ADSL)"
+    ],
+    "learningOutcomes": [
+      "Describe complete digital communication system architecture and signal flow",
+      "Compare digital modulation techniques (ASK, FSK, PSK) for bandwidth, power, complexity tradeoffs",
+      "Design QPSK modulators and demodulators in hardware and software",
+      "Understand higher-order modulation schemes (M-PSK, M-QAM, OFDM)",
+      "Interpret constellation diagrams and relate to modulation parameters",
+      "Apply AWGN and fading channel models to system simulations",
+      "Design matched filter receivers for known signal waveforms",
+      "Calculate optimal detection thresholds from signal and noise statistics",
+      "Analyze bit error rate performance for various modulation schemes",
+      "Implement carrier recovery using phase-locked loops",
+      "Design symbol timing synchronization and recovery algorithms",
+      "Apply zero-crossing and other timing error detection methods",
+      "Understand OFDM multicarrier structure and orthogonality principles",
+      "Design frequency conversion and mixing circuits for modulation/demodulation",
+      "Implement automatic gain control for dynamic signal conditioning",
+      "Prototype communication systems using software defined radio platforms (USRP, PlutoSDR)",
+      "Optimize system performance with adaptive modulation and equalization",
+      "Account for practical analog impairments (phase noise, I/Q imbalance, timing jitter)"
+    ],
+    "resources": {
+      "videos": [
+        "https://www.youtube.com/watch?v=01zv0thaAUw",
+        "https://www.youtube.com/watch?v=96V0cvMgF1A",
+        "https://www.youtube.com/watch?v=o4AGEHROSVQ",
+        "https://www.youtube.com/watch?v=agWIi-t_TqA",
+        "https://www.youtube.com/watch?v=jyXPx2B79kM",
+        "https://www.youtube.com/watch?v=ij760lCUtfw",
+        "https://www.youtube.com/watch?v=USlu5zwxqEA",
+        "https://www.youtube.com/watch?v=vzIk9ungyvc",
+        "https://www.youtube.com/watch?v=XeJYQQd75wQ",
+        "https://www.youtube.com/watch?v=zOziioXnn-k",
+        "https://www.youtube.com/watch?v=qsmYD_6AeIU",
+        "https://www.youtube.com/watch?v=QV-cObaQz2Q",
+        "https://www.youtube.com/watch?v=UnCb5cn4akM",
+        "https://www.youtube.com/watch?v=NGV7_Xk0ZZg",
+        "https://www.youtube.com/watch?v=9rbt-8rNwrk",
+        "https://www.youtube.com/watch?v=ph63V1YLYZE",
+        "https://www.youtube.com/watch?v=ME25ThFjqhQ",
+        "https://www.youtube.com/watch?v=0i7x5V3mahQ",
+        "https://www.youtube.com/watch?v=-qUQrImVZog",
+        "https://www.youtube.com/watch?v=Xzs6-1wkAQU",
+        "https://www.youtube.com/watch?v=HcYFFlsSLrg",
+        "https://www.youtube.com/watch?v=MXy4GxoZaC8",
+        "https://www.youtube.com/watch?v=oRNTIa79Nno",
+        "https://www.youtube.com/watch?v=LCfFhAz6U2E",
+        "https://www.youtube.com/watch?v=_qqGKMM3C0Y",
+        "https://www.youtube.com/watch?v=JlAIWmu_9YQ",
+        "https://www.youtube.com/watch?v=KWeY2yqwVA0",
+        "https://www.youtube.com/watch?v=OAmvNUYxonc",
+        "https://www.youtube.com/watch?v=tXIPQK28aJY",
+        "https://www.youtube.com/watch?v=aUOxVucOBzo",
+        "https://www.youtube.com/watch?v=2c6gTodz8Yg",
+        "https://www.youtube.com/watch?v=8e4Sf6rL3zk",
+        "https://www.youtube.com/playlist?list=PLDp9Jik5WjRs5ismlsqP_Q3JNlWOe-2an"
+      ],
+      "websites": [
+        "https://www.ti.com/en-us/training-centers/",
+        "https://www.analog.com/en/resources/analog-dialogue/",
+        "https://www.allaboutcircuits.com/textbook/",
+        "https://www.ettus.com/kb/detail/sdr-for-beginners/",
+        "https://gnuradio.org/",
+        "https://www.mathworks.com/products/communications.html",
+        "https://ocw.mit.edu/courses/6-02-introduction-to-eecs-ii-digital-communication-systems/",
+        "https://en.wikibooks.org/wiki/Communication_Systems"
+      ],
+      "tools": [
+        "MATLAB with Communications Toolbox (modulation, channel simulation, BER analysis)",
+        "Simulink for system-level simulation and prototyping",
+        "Python with scipy/numpy for signal processing algorithms",
+        "GNU Radio for SDR prototyping and visualization",
+        "Ettus USRP hardware (N200, N210, or X300) for SDR experimentation",
+        "Analog Devices PlutoSDR for embedded SDR applications",
+        "GQRX software defined radio receiver",
+        "MATLAB Comm. System Toolbox for modulation/demodulation",
+        "LTspice for analog front-end circuit simulation",
+        "Oscilloscope with high bandwidth (100+ MHz) for waveform capture",
+        "Spectrum analyzer for frequency domain measurements",
+        "Signal generator for test signal creation",
+        "Python with matplotlib for visualization and analysis"
+      ]
+    }
+  }
+}
+,
+  {
+  "id": "ee-160",
+  "code": "EE 160",
+  "name": "Electric Power Systems",
+  "fullName": "EE 160: Electric Power Systems",
+  "description": "Study of electric power system generation, transmission, and distribution. Covers three-phase AC power fundamentals, power flow analysis, per-unit systems, protective relaying, system stability, voltage and reactive power control, and grid protection devices. Includes practical applications in modern power grids and emerging challenges in renewable energy integration.",
+  "tier": 2,
+  "expandedInfo": {
+    "credits": 4,
+    "careerRelevance": "Electric Power Systems is critical for Analog & Digital Hardware Design careers because modern embedded hardware increasingly interfaces with or depends upon electrical power systems—from IoT sensors powered by microgrids to electric vehicles drawing power from the grid, to data center power management systems. For analog designers, understanding power system protection, voltage regulation, and transient phenomena is essential for designing robust power conditioning circuits, UPS systems, and protection mechanisms. For digital designers, mastery of power flow analysis, protective relaying algorithms, and SCADA system design enables implementation of smart grid controllers and real-time monitoring systems on microcontrollers and FPGAs. This course bridges the gap between circuit-level power electronics and system-level grid operation—teaching how to model large systems mathematically, simulate their behavior using industrial software (ETAP, PowerFactory), and design protection schemes that coordinate across multiple devices. Knowledge of per-unit systems and load flow analysis directly impacts how hardware engineers size components, calculate voltage drops, and ensure system stability. With the rapid transition to renewable energy (solar, wind) and distributed generation, engineers who understand power systems can design more resilient, efficient hardware solutions. The intersection of power systems, control theory, and embedded systems makes this course invaluable for designing complete energy systems.",
+    "realWorldApplications": [
+      "Microgrid design and control: designing local power networks with solar, wind, and battery storage integration for resilient community power systems",
+      "Electric vehicle charging infrastructure: designing smart charging stations with power flow management and grid ancillary service capabilities",
+      "Smart grid and SCADA systems: implementing real-time monitoring and control algorithms for power distribution management and fault detection",
+      "Renewable energy integration: managing variable generation from solar/wind sources through predictive dispatch and frequency control strategies",
+      "Power quality and protection: designing protective relay coordination schemes to isolate faults while maintaining service to healthy portions of the grid",
+      "Industrial power systems: designing efficient power distribution and load-balancing strategies for large manufacturing facilities with motor loads",
+      "Battery energy storage systems (BESS): sizing and controlling battery systems for peak shaving, frequency regulation, and grid support",
+      "Utility grid modernization: implementing distribution automation and demand response systems to optimize power flow and reduce system losses"
+    ],
+    "learningOutcomes": [
+      "Understand three-phase AC power systems: generation, voltages, currents, power factor, and balanced/unbalanced conditions",
+      "Analyze power transmission and distribution systems: component design, voltage drop calculations, and loss analysis",
+      "Master per-unit system normalization: convert actual values to normalized values for simplified system analysis across different voltage levels",
+      "Perform load flow analysis: calculate power flow through transmission networks, bus voltages, and identify system bottlenecks",
+      "Understand system protection: protective relays, circuit breakers, coordination schemes, and fault clearing strategies",
+      "Analyze voltage stability and regulation: reactive power control, voltage support devices (capacitors, reactors), and automatic voltage regulators (AVRs)",
+      "Design protective relaying schemes: overcurrent, distance, differential, and directional relays with proper coordination",
+      "Use power system analysis software: model systems in ETAP or PowerFactory and perform load flow, short circuit, and protection coordination studies",
+      "Understand power system stability: transient stability, frequency control, and system response to disturbances",
+      "Apply knowledge to real-world systems: microgrid design, renewable integration, and smart grid implementation"
+    ],
+    "resources": {
+      "videos": [
+        "https://www.youtube.com/watch?v=SG9RzXrjYnQ",
+        "https://www.youtube.com/watch?v=c9gm_NL7KyE",
+        "https://www.youtube.com/watch?v=qthuFLNSrlg",
+        "https://www.youtube.com/watch?v=9BZ_hSndQyw",
+        "https://www.youtube.com/watch?v=RToXdTYQteo",
+        "https://www.youtube.com/watch?v=PBEtXZ21nkI",
+        "https://www.youtube.com/watch?v=rGfEEjOJLzo",
+        "https://www.youtube.com/watch?v=LAiBuu_nICI",
+        "https://www.youtube.com/watch?v=8ENY6ZKr4c4",
+        "https://www.youtube.com/watch?v=oXG_9yEdL-k",
+        "https://www.youtube.com/watch?v=NnIb3CqLRws",
+        "https://www.youtube.com/watch?v=LBBbshgNxPI",
+        "https://www.youtube.com/watch?v=oj0L7r9QOBI",
+        "https://www.youtube.com/watch?v=JpAm83F5rDU",
+        "https://www.youtube.com/watch?v=rTxiwfTUAo8",
+        "https://www.youtube.com/watch?v=6qc30uaMlio",
+        "https://www.youtube.com/watch?v=Gs7TW428xKE",
+        "https://www.youtube.com/watch?v=ZMMVyS_kI2Y",
+        "https://www.youtube.com/watch?v=miNer-pRIe8",
+        "https://www.youtube.com/watch?v=T6FFlBJjj-A",
+        "https://www.youtube.com/watch?v=Al9KXM-NM-E",
+        "https://www.youtube.com/watch?v=nZAQsw_cJ0Y",
+        "https://www.youtube.com/watch?v=Vfu0MhmP8fo",
+        "https://www.youtube.com/watch?v=-hH23MI4Npc",
+        "https://www.youtube.com/watch?v=4QC9jvaGRyI",
+        "https://www.youtube.com/watch?v=MCqHghu__TI",
+        "https://www.youtube.com/watch?v=HhNrZQjTCLQ"
+      ],
+      "websites": [
+        "https://www.monolithicpower.com/en/learning/mpscholar/ac-power/theory-and-analysis/three-phase-systems-and-applications",
+        "https://www.npcelectric.com/news/a-complete-guide-to-electrical-distribution-equipment-ensuring-safe-and-efficient-power-deliver",
+        "https://www.t-d-services.com/our-services/power-delivery-2/protective-relaying/",
+        "https://arusi.net/substation-protection-devices/",
+        "https://bretselectric.com/blog/understanding-three-phase-power-systems-in-commercial-settings/",
+        "https://www.cedengineering.com/userfiles/Three-Phase%20Power%20Systems-R1.pdf",
+        "https://www.energy.gov/sites/default/files/2023-11/FINAL_CESER%20Electricity%20Grid%20Backgrounder_508.pdf",
+        "https://theengineeringmindset.com/three-phase-power/",
+        "https://www.fluke.com/en-us/learn/blog/power-quality/balanced-three-phase-ac-power",
+        "https://distribution.epri.com/wildfire/public/wildfire-tech-database/fault-energy-reduction/protective-device-comm/"
+      ],
+      "tools": [
+        "ETAP (Operation Technology, Inc.) - industry-leading power system software for steady-state analysis, load flow, protection coordination, arc flash studies",
+        "DigSilent PowerFactory - comprehensive power system analysis including transient stability, RMS-EMT simulations, renewable integration studies",
+        "PSSE (Power Systems Simulator for Engineering) - large-scale transient stability and dynamic simulation tool",
+        "PowerWorld Simulator - simplified interface for power system analysis, load flow, contingency analysis, optimal power flow",
+        "Matlab/Simulink with power systems toolbox - custom simulation and control algorithm development",
+        "PSCAD (Electromagnetic transients) - detailed transient and EMT simulations",
+        "Python with PyPSA (Pypsa) or pandapower - open-source power system analysis and optimization",
+        "SCADA systems and real-time digital simulators (RTDS) - hardware-in-the-loop testing for protection schemes",
+        "Power quality analyzers and oscilloscopes - field measurement and power factor analysis",
+        "Energy management systems (EMS) and distribution management systems (DMS) - real-time grid operation software"
+      ]
+    }
+  }
+}
+,
+  {
+  "id": "course-ENGR120",
+  "code": "ENGR 120",
+  "name": "Fluid Mechanics",
+  "fullName": "ENGR 120: Fluid Mechanics",
+  "description": "Introduction to fluid mechanics fundamentals including fluid properties, fluid statics, continuity and energy equations, laminar and turbulent flow analysis, boundary layers, pressure drop calculations, and applications in pumping systems and thermal management. Emphasis on engineering problem-solving and system design.",
+  "tier": 2,
+  "expandedInfo": {
+    "credits": 4,
+    "careerRelevance": "ENGR 120 is an important supporting course for Analog & Digital Hardware Design, particularly for thermal management aspects of complex electronics. High-power circuits and systems require sophisticated cooling—whether air-cooled with optimized airflow or liquid-cooled with heat exchangers and pumps. This course provides the fundamental understanding of fluid behavior, pressure-flow relationships, and thermal transport necessary to design these critical systems. For hardware designers working with power electronics, high-performance processors, or industrial equipment, understanding fluid mechanics is essential for selecting pumps, sizing pipes, designing cooling channels, and ensuring systems operate reliably within thermal constraints. The course bridges mechanical and electrical engineering, enabling designers to manage the complete system including power delivery, signal integrity, and thermal stability.",
+    "realWorldApplications": [
+      "Designing liquid cooling loops for high-power chips and power supplies",
+      "Selecting and sizing pumps for circulation systems and cooling infrastructure",
+      "Optimizing airflow management in enclosed equipment and data center environments",
+      "Calculating pressure drops through cooling channels and heat exchangers",
+      "Designing heat sinks and thermal interfaces for passive cooling",
+      "System integration: connecting thermal loads to facility-level cooling systems",
+      "Predicting operating points for pump/system combinations using system curves",
+      "Ensuring adequate cooling to prevent thermal shutdown in power-dense applications",
+      "Managing temperature gradients for stable power supply and clock operation",
+      "Evaluating cavitation risk in high-speed pump applications",
+      "Optimizing pipe routing and sizing for minimal pressure loss and energy consumption",
+      "Analyzing boundary layer effects on heat transfer in cooling channels"
+    ],
+    "learningOutcomes": [
+      "Describe fluid properties (viscosity, density, surface tension) and their effects on system behavior",
+      "Determine pressure distribution in static fluids and calculate forces on submerged surfaces",
+      "Apply conservation of mass (continuity equation) and energy (Bernoulli) to flow systems",
+      "Calculate Reynolds number to classify flow regimes (laminar, transitional, turbulent)",
+      "Analyze boundary layer formation and predict shear stress and drag on surfaces",
+      "Calculate pressure drops in piping using Darcy-Weisbach equation and Moody diagram",
+      "Construct system curves from piping layouts and select appropriate pumps",
+      "Interpret pump performance curves and determine operating points for duty conditions",
+      "Analyze cavitation risk and avoid NPSH (net positive suction head) problems",
+      "Understand heat transfer mechanisms (convection) and thermal transport in fluids",
+      "Design heat exchangers and cooling systems for specified thermal loads",
+      "Apply Navier-Stokes equations to understand differential momentum conservation in fluids",
+      "Optimize system design for efficiency, cost, and reliability",
+      "Integrate thermal management into electronic system design"
+    ],
+    "resources": {
+      "videos": [
+        "https://www.youtube.com/watch?v=YK7G6l_K6sA",
+        "https://www.youtube.com/watch?v=7Bj3N1E7vZk",
+        "https://www.youtube.com/watch?v=qkGhfOiwZTk",
+        "https://www.youtube.com/watch?v=VvDJyhYSJv8",
+        "https://www.youtube.com/watch?v=U7-LpEmc0Us",
+        "https://www.youtube.com/watch?v=UObLvqZJHls",
+        "https://www.youtube.com/watch?v=_Y1K1PGvkpg",
+        "https://www.youtube.com/watch?v=aLKTax8C4-4",
+        "https://www.youtube.com/watch?v=mtoHgKdXLJk",
+        "https://www.youtube.com/watch?v=rXpAmNkiHMY",
+        "https://www.youtube.com/watch?v=K8t1D9t0QXY",
+        "https://www.youtube.com/watch?v=5EruBG04AcA",
+        "https://www.youtube.com/watch?v=AeN1L8UpEVI",
+        "https://www.youtube.com/watch?v=WNIbQm8wg2E",
+        "https://www.youtube.com/watch?v=NenlNon6ODw",
+        "https://www.youtube.com/watch?v=R7Fz8q0lOSo",
+        "https://www.youtube.com/watch?v=wk8xrW3KR8w",
+        "https://www.youtube.com/watch?v=Bltcufdi59I",
+        "https://www.youtube.com/watch?v=w_7pb9RN0LI",
+        "https://www.youtube.com/watch?v=6Yxc2Q_jBdU",
+        "https://www.youtube.com/watch?v=R17lyKPF6Y0",
+        "https://www.youtube.com/watch?v=nzNAVW1T_B8",
+        "https://www.youtube.com/watch?v=QlQJgcXhO10",
+        "https://www.youtube.com/watch?v=RqwzfgPNtzc",
+        "https://www.youtube.com/watch?v=cskIry-7-_s",
+        "https://www.youtube.com/watch?v=pWSyrxFJmt4",
+        "https://www.youtube.com/watch?v=NCvYPclQNWM",
+        "https://www.youtube.com/watch?v=WYJ9BsCrifQ",
+        "https://www.youtube.com/watch?v=OyQ3SaU4KKU",
+        "https://www.youtube.com/watch?v=A7dcRxofB94",
+        "https://www.youtube.com/watch?v=lSTQW8evpU0",
+        "https://www.youtube.com/watch?v=wA7OGkpCC5c"
+      ],
+      "websites": [
+        "https://www.allaboutcircuits.com/textbook/",
+        "https://www.coursera.org/learn/fluid-mechanics",
+        "https://ocw.mit.edu/courses/2-06-fluid-mechanics/",
+        "https://catalog.ucmerced.edu/",
+        "https://engineersedge.com/fluid_mechanics/",
+        "https://www.engineersedge.com/heat_transfer/",
+        "https://www.thermopedia.com/",
+        "https://www.piping-designer.com/"
+      ],
+      "tools": [
+        "MATLAB for fluid mechanics calculations and thermal analysis",
+        "Python with numpy/scipy for fluid property calculations",
+        "ANSYS Fluent or OpenFOAM for computational fluid dynamics (CFD)",
+        "Pipe flow software (Pipe Flow Expert, FluidFlow) for system design",
+        "Heat exchanger design software (ENSEQN, Kern method tools)",
+        "Pump selection software (Pump Curve Selector)",
+        "Excel/Spreadsheets for system curve and duty point calculations",
+        "Thermodynamic tables and fluid property databases",
+        "CAD software (SolidWorks, Fusion 360) for geometry and layout",
+        "Thermal simulation tools (ICEPAK, FloTHERM) for system integration",
+        "Laboratory equipment: manometers, pressure gauges, flow meters, thermocouples"
+      ]
+    }
+  }
+}
+,
+  {
+  "id": "engr-130",
+  "code": "ENGR 130",
+  "name": "Thermodynamics",
+  "fullName": "ENGR 130: Thermodynamics",
+  "description": "Fundamentals of equilibrium, temperature, energy, and entropy in thermodynamic systems. Covers the first and second laws of thermodynamics, equations of state, thermodynamic properties, heat transfer modes, thermodynamic cycles, and real-world applications in power generation, refrigeration, and thermal management for hardware systems.",
+  "tier": 2,
+  "expandedInfo": {
+    "credits": 3,
+    "careerRelevance": "Thermodynamics is essential for Analog & Digital Hardware Design careers because modern hardware systems generate significant heat and must manage thermal effects to maintain performance and reliability. For analog designers, understanding heat transfer, temperature effects on component properties, and thermal transients is critical for designing circuits that operate safely across temperature ranges, managing signal integrity in high-temperature environments, and designing effective cooling strategies for power amplifiers and high-current circuits. For digital designers, thermodynamics enables optimization of microprocessor thermal design, power dissipation management in high-speed circuits, designing efficient cooling solutions (fans, heat sinks, liquid cooling), and predicting system performance across environmental conditions. The first and second laws of thermodynamics are fundamental to understanding energy conversion efficiency, which directly impacts battery life in portable devices, power consumption in data centers, and system reliability. Knowledge of thermodynamic cycles enables understanding of refrigeration systems (critical for server cooling), power generation efficiency, and renewable energy integration (solar thermal, etc.). Heat transfer fundamentals enable engineers to calculate temperature rises, design thermal pathways, and select appropriate cooling methods. The intersection of energy efficiency, thermal management, and system reliability makes thermodynamics indispensable for designing complete embedded systems that must operate reliably in demanding thermal environments.",
+    "realWorldApplications": [
+      "Microprocessor thermal design: calculating die temperature, designing heat spreaders and sinks, managing thermal throttling to prevent overheating",
+      "Power electronics cooling: designing cooling systems for MOSFETs, IGBTs, and power converters using natural/forced convection or liquid cooling",
+      "Battery thermal management: maintaining safe operating temperatures in lithium-ion batteries through active/passive cooling and thermal insulation",
+      "Data center infrastructure: designing efficient HVAC systems, free cooling strategies, and hot/cold aisle containment for server thermal management",
+      "Electric vehicle thermal systems: managing motor and power electronics cooling, battery thermal conditioning, and cabin climate control",
+      "Power generation systems: optimizing generator efficiency, designing cooling systems for transformers, and managing waste heat recovery",
+      "Refrigeration and heat pump systems: designing air conditioning and cooling systems for industrial applications using vapor compression cycles",
+      "Renewable energy integration: thermal storage for solar systems, waste heat recovery in combined-cycle power plants"
+    ],
+    "learningOutcomes": [
+      "Understand fundamental thermodynamic concepts: temperature scales, internal energy, enthalpy, and entropy definitions and relationships",
+      "Apply the first law of thermodynamics: energy conservation in open and closed systems with heat and work interactions",
+      "Apply the second law of thermodynamics: entropy production, irreversibility, and direction of natural processes",
+      "Analyze equations of state: ideal gas law, compressibility factor, and when to use steam tables vs. ideal gas approximations",
+      "Use thermodynamic property tables: reading steam tables, phase determination, quality calculations for two-phase mixtures",
+      "Perform heat transfer calculations: conduction (Fourier's law), convection (Newton's law), radiation (Stefan-Boltzmann), and combined modes",
+      "Analyze thermodynamic cycles: Otto, Diesel, Rankine, Brayton, and refrigeration cycles for power and cooling applications",
+      "Calculate cycle efficiency and performance: thermal efficiency, Carnot efficiency limits, coefficient of performance (COP)",
+      "Solve energy balance problems: applying conservation of energy to real-world engineering systems",
+      "Design thermal management solutions: selecting cooling methods, calculating temperature rise, and optimizing system performance"
+    ],
+    "resources": {
+      "videos": [
+        "https://www.youtube.com/watch?v=d8D_D3guvYE",
+        "https://www.youtube.com/watch?v=3QCXVKUi7K8",
+        "https://www.youtube.com/watch?v=O7HwhkYt6YU",
+        "https://www.youtube.com/watch?v=f1OokOgtcqg",
+        "https://www.youtube.com/watch?v=t324Ff_-AMQ",
+        "https://www.youtube.com/watch?v=QBd2zraOe2k",
+        "https://www.youtube.com/watch?v=c-v7WdvGA7U",
+        "https://www.youtube.com/watch?v=BF7PnhZvGHM",
+        "https://www.youtube.com/watch?v=IAsrkA7NteM",
+        "https://www.youtube.com/watch?v=X3cuxQEc2gs",
+        "https://www.youtube.com/watch?v=339OTr9rZX64",
+        "https://www.youtube.com/watch?v=OTGtjp17HdI",
+        "https://www.youtube.com/watch?v=OwcCS1hmJkc",
+        "https://www.youtube.com/watch?v=AwLpST3vlS4",
+        "https://www.youtube.com/watch?v=HZdj2p3i0ww",
+        "https://www.youtube.com/watch?v=kw862Ak1Fyg",
+        "https://www.youtube.com/watch?v=c_N8D9XTzJM",
+        "https://www.youtube.com/watch?v=Wmewd-vv12Y",
+        "https://www.youtube.com/watch?v=TSbIEBLKzsI",
+        "https://www.youtube.com/watch?v=Me60Ti0E_rY",
+        "https://www.youtube.com/watch?v=eLNJAmLnIaU",
+        "https://www.youtube.com/watch?v=HpCvWuvCUoA",
+        "https://www.youtube.com/watch?v=j9Wbgf_K85A",
+        "https://www.youtube.com/watch?v=dwifIPlBePg",
+        "https://www.youtube.com/watch?v=Q8pZllWtEfY",
+        "https://www.youtube.com/watch?v=LOaS1HnEK-o",
+        "https://www.youtube.com/watch?v=zl-D7nlr_NY",
+        "https://www.youtube.com/watch?v=4U-XG7cY7bI",
+        "https://www.youtube.com/watch?v=p6GXJdRUz9E",
+        "https://www.youtube.com/watch?v=eKb_xbADAgA"
+      ],
+      "websites": [
+        "https://www.britannica.com/science/thermodynamics/The-second-law-of-thermodynamics",
+        "https://thermtest.com/heat-transfer-basics",
+        "https://chem.libretexts.org/Bookshelves/Physical_and_Theoretical_Chemistry_Textbook_Maps/Supplemental_Modules_(Physical_and_Theoretical_Chemistry)",
+        "https://en.wikipedia.org/wiki/Laws_of_thermodynamics",
+        "https://sciencenotes.org/heat-transfer-conduction-convection-radiation/",
+        "https://www.worbo.com/understanding-heat-transfer-radiation-conduction-and-convection/",
+        "https://www.chadsprep.com/chads-general-chemistry-videos/3-laws-of-thermodynamics-definition/",
+        "https://www.purdue.edu/freeform/me418/wp-content/uploads/sites/30/2025/09/ME-418-Lec-67-Heat-Transfer.pdf",
+        "https://faculty.ucmerced.edu/gdiaz/courses/Thermo_html.html",
+        "https://answersingenesis.org/physics/the-first-and-second-laws-of-thermodynamics-and-the-origin-of-the-universe/"
+      ],
+      "tools": [
+        "Steam tables (paper or digital): property data for water/steam at various states (superheated, saturated, compressed liquid)",
+        "Engineering equation solver (EES): thermodynamic property calculations and cycle analysis",
+        "NIST RefProp: comprehensive real fluid property database for thermodynamic calculations",
+        "Cycle analysis software: specialized tools for Otto, Diesel, Rankine, Brayton cycle analysis",
+        "MATLAB/Simulink: thermodynamic modeling, cycle simulation, system-level thermal analysis",
+        "Thermal simulation software: ANSYS Fluent, COMSOL (transient and steady-state heat transfer)",
+        "CFD tools: computational fluid dynamics for complex convection analysis",
+        "Python with thermodynamic libraries: CoolProp for properties, custom energy balance calculations",
+        "Calculator tools: online thermodynamic calculators for quick cycle analysis",
+        "Infrared camera: thermal imaging for experimental validation and component monitoring",
+        "Thermocouples and data acquisition: temperature measurement in real systems"
+      ]
+    }
+  }
+}
+,
+  {
+  "id": "course-ENGR135",
+  "code": "ENGR 135",
+  "name": "Heat Transfer",
+  "fullName": "ENGR 135: Heat Transfer",
+  "description": "Thermal fundamentals course covering conduction, convection, and radiation, with engineering applications. For hardware design, it builds the skills needed to estimate junction temperatures, choose cooling strategies (heatsinks/fans/liquid), and design for reliability in power-dense electronics.",
+  "tier": 2,
+  "expandedInfo": {
+    "credits": 4,
+    "careerRelevance": "ENGR 135 is highly relevant to Analog & Digital Hardware Design because thermal constraints often set the true performance limit for amplifiers, regulators, converters, and high-speed digital ICs. It teaches how to model heat flow (thermal resistance networks, transient response), how convection depends on airflow and geometry, and how radiation can matter in sealed/low-flow environments. These skills translate directly into selecting packages, PCB copper/thermal vias, heatsinks, airflow paths, and validating designs against junction temperature limits.",
+    "realWorldApplications": [
+      "Estimating IC junction temperature using thermal resistance networks (junction-to-case, case-to-sink, sink-to-ambient) to prevent thermal runaway",
+      "Designing heatsink + airflow solutions for power MOSFETs/IGBTs, linear regulators, and DC-DC converters",
+      "PCB thermal design: copper pours, thermal vias, and component placement to spread heat and reduce hotspots",
+      "Forced-convection enclosure design: fan selection, intake/exhaust placement, and pressure drop awareness to hit target airflow",
+      "Derating and reliability engineering: connecting temperature to lifetime, capacitor aging, and drift in analog precision circuits",
+      "Validating thermal performance with IR camera measurements and correlating results to simplified models or CFD"
+    ],
+    "learningOutcomes": [
+      "Compute steady-state 1D conduction through composite layers and identify dominant thermal resistances",
+      "Model convection (natural/forced) and understand how flow conditions and geometry affect heat transfer",
+      "Apply radiation concepts (emissivity, view factors at a conceptual level) and know when radiation is non-negligible",
+      "Build thermal resistance networks and estimate component junction temperatures from power dissipation",
+      "Interpret transient thermal behavior conceptually (thermal capacitance/time constants) for pulsed loads",
+      "Translate thermal requirements into design actions: heatsink choice, interface material choice, airflow targets, and PCB heat spreading strategies",
+      "Plan and execute basic thermal validation measurements (thermocouples/RTDs, IR imaging) and compare to predictions"
+    ],
+    "resources": {
+      "videos": [
+        "https://www.youtube.com/watch?v=YK7G6l_K6sA",
+        "https://www.youtube.com/watch?v=7Bj3N1E7vZk",
+        "https://www.youtube.com/watch?v=A7dcRxofB94",
+        "https://www.youtube.com/watch?v=qkGhfOiwZTk",
+        "https://www.youtube.com/watch?v=8ruFVmxf0zs",
+        "https://www.youtube.com/watch?v=Qw17MsBJ_Ho",
+        "https://www.youtube.com/watch?v=wA7OGkpCC5c",
+        "https://www.youtube.com/watch?v=usNPiWawTGw"
+      ],
+      "websites": [
+        "https://ocw.mit.edu/",
+        "https://www.engineeringtoolbox.com/heat-transfer-d_431.html",
+        "https://www.thermopedia.com/"
+      ],
+      "tools": [
+        "ANSYS Icepak or Siemens FloTHERM (electronics-focused CFD/thermal)",
+        "COMSOL Multiphysics (conjugate heat transfer, multiphysics coupling)",
+        "OpenFOAM (CFD for forced convection and enclosure airflow)",
+        "LTspice / SPICE (electro-thermal what-if modeling at a block level)",
+        "Thermal camera (IR) + emissivity-aware measurement workflow",
+        "Thermocouples/RTDs + DAQ (repeatable temperature logging)",
+        "Heatsink selection tools and manufacturer thermal calculators"
+      ]
+    }
+  }
+}
+,
+  {
+  "id": "engr-151",
+  "code": "ENGR 151",
+  "name": "Strength of Materials",
+  "fullName": "ENGR 151: Strength of Materials",
+  "description": "Fundamental concepts of mechanical properties, stress-strain relationships, and failure analysis. Covers tension, compression, shear, bending, and torsion loading on beams and structural members. Includes analysis of deformation, buckling, combined loading, and design of components for structural integrity and hardware reliability.",
+  "tier": 2,
+  "expandedInfo": {
+    "credits": 4,
+    "careerRelevance": "Strength of Materials is essential for Analog & Digital Hardware Design careers because modern hardware must be designed to withstand mechanical stresses while maintaining electrical performance and reliability. For analog designers, understanding material properties and stress analysis is critical for designing mechanical mounting structures, heat dissipation systems, and mechanical interfaces that maintain signal integrity under thermal and mechanical stress. For digital designers, knowledge of structural analysis enables proper design of mechanical enclosures, PCB supports, connector interfaces, and mechanical attachment points that must survive handling, vibration, and environmental stresses without failure. Understanding stress-strain relationships enables engineers to select appropriate materials for different applications (metals, polymers, composites) and optimize weight while maintaining strength. The principles of buckling, deflection, and combined loading are essential for designing rigid structures that won't deform under operational loads. Analysis of shear, bending moments, and torsion enables engineers to calculate stress concentrations around connectors, cable entry points, and mechanical fasteners—critical locations where failures often begin. Knowledge of ductility vs. brittleness, yield points, and ultimate tensile strength enables predictive failure analysis and design for manufacturing. This course teaches how materials deform and fail under loading—directly applicable to designing hardware that survives real-world mechanical and thermal stresses without catastrophic failure.",
+    "realWorldApplications": [
+      "PCB support structure design: calculating deflection and stress in circuit board supports under component weight and vibration",
+      "Connector and cable strain relief design: ensuring mechanical interfaces survive repeated flexing without fracturing conductors or cracking solder joints",
+      "Heat sink and thermal management design: mechanical design of cooling structures with adequate stiffness and deflection limits",
+      "Enclosure design: analyzing stress in aluminum/plastic enclosures due to internal pressure, thermal expansion, or mechanical impacts",
+      "Fastener and threaded insert design: calculating shear and tensile stresses in screws, rivets, and bolts under operational loads",
+      "Vibration resistance: designing mounts and damping systems to reduce mechanical resonance that could damage electronics",
+      "Drop/shock analysis: predicting component survival when dropped or subjected to mechanical impacts during shipping/handling",
+      "Long-term reliability: understanding creep, fatigue, and environmental stress cracking for polymeric and metallic components"
+    ],
+    "learningOutcomes": [
+      "Understand stress and strain definitions: distinguishing between normal stress (tension/compression), shear stress, and their corresponding strains",
+      "Apply Hooke's Law: relating stress to strain using elastic modulus and understanding elastic vs. plastic deformation limits",
+      "Analyze material properties: using stress-strain diagrams to identify yield strength, ultimate tensile strength, and ductility/brittleness",
+      "Perform tension/compression analysis: calculating axial stresses and elongations in members under tensile and compressive loads",
+      "Analyze beam bending: drawing shear force and bending moment diagrams, calculating maximum bending stresses using flexure formula",
+      "Understand beam deflection: calculating deflections and slopes using integration methods and deflection formulas",
+      "Analyze torsion: calculating shear stresses and angles of twist in circular shafts under torque loading",
+      "Predict column buckling: applying Euler's formula to determine critical buckling loads for slender columns",
+      "Analyze combined loading: using Mohr's Circle to find principal stresses and maximum shear stresses in multi-axis loading",
+      "Design structural components: selecting appropriate materials and dimensions to ensure safety and prevent failure under operational loads"
+    ],
+    "resources": {
+      "videos": [
+        "https://www.youtube.com/watch?v=RJcSSco-zDw",
+        "https://www.youtube.com/watch?v=6mz_pNQu83I",
+        "https://www.youtube.com/watch?v=HALbtyDUjp0",
+        "https://www.youtube.com/watch?v=RtkO0HdMD_8",
+        "https://www.youtube.com/watch?v=ZQ_9o0OeTls",
+        "https://www.youtube.com/watch?v=nkynrDINPic",
+        "https://www.youtube.com/watch?v=C-FEVzI8oe8",
+        "https://www.youtube.com/watch?v=Xvg38nlxkOU",
+        "https://www.youtube.com/watch?v=5K27dJqGpf8",
+        "https://www.youtube.com/watch?v=QlnCBxijXC0",
+        "https://www.youtube.com/watch?v=3FNEV6yNUFY",
+        "https://www.youtube.com/watch?v=tS0seqbe_A8",
+        "https://www.youtube.com/watch?v=73_XGJlxpY4",
+        "https://www.youtube.com/watch?v=j6M3Uqxd2Nw",
+        "https://www.youtube.com/watch?v=21G7LA2DcGQ",
+        "https://www.youtube.com/watch?v=ldZsC_WPbbM",
+        "https://www.youtube.com/watch?v=zdvC3_6DlU4",
+        "https://www.youtube.com/watch?v=W0TFZrLLajQ",
+        "https://www.youtube.com/watch?v=L-XVAY05ZQc",
+        "https://www.youtube.com/watch?v=jhgQo-MF7QE",
+        "https://www.youtube.com/watch?v=WSRqJdT2COE",
+        "https://www.youtube.com/watch?v=BZx1bpI57bU",
+        "https://www.youtube.com/watch?v=F-WA5KvrMnE",
+        "https://www.youtube.com/watch?v=HyzUBphwXRI",
+        "https://www.youtube.com/watch?v=2JkflwJbwVE",
+        "https://www.youtube.com/watch?v=cipOKN74jA0",
+        "https://www.youtube.com/watch?v=uImdByB-L4Y",
+        "https://www.youtube.com/watch?v=rs55OWpe-oo",
+        "https://www.youtube.com/watch?v=xlwyLjiIjaY",
+        "https://www.youtube.com/watch?v=r8EalqJDAKA"
+      ],
+      "websites": [
+        "https://www.xometry.com/resources/materials/stress-vs-strain/",
+        "https://www.materion.com/en/insights/blog/stress-strain-concepts-materials-testing",
+        "https://mechanicalc.com/reference/mechanical-properties-of-materials",
+        "https://wp.optics.arizona.edu/optomech/wp-content/uploads/sites/53/2016/10/OPTI_222_W4.pdf",
+        "https://www.usna.edu/NAOE/_files/documents/Courses/EN380/Course_Notes/Ch10_Deformation.pdf",
+        "https://eng.libretexts.org/Courses/California_State_Polytechnic_University_Humboldt/Mechanical_Behavior_of_Material/Chapter_8",
+        "https://fgg-web.fgg.uni-lj.si/~/pmoze/esdep/master/wg06/l0620.htm",
+        "https://ocw.mit.edu/courses/16-001-unified-engineering-materials-and-structures-fall-2021/mit16_001_f21_lec33lec34lec35.pdf",
+        "https://engineeringservicelearning.ucmerced.edu/sites/g/files/ufvvjh826/f/page/documents/engr151lab2manual.pdf",
+        "https://www.fpl.fs.usda.gov/documnts/fplgtr/fplgtr113/ch08.pdf"
+      ],
+      "tools": [
+        "Tensile testing machine: experimental material characterization and stress-strain curve generation",
+        "Universal testing equipment: compression, shear, torsion testing capabilities",
+        "Strain gauges and data acquisition: real-time stress measurement during testing",
+        "Engineering calculators/Excel: stress-strain calculations, beam analysis, Mohr's circle",
+        "MATLAB/Simulink: automated stress analysis and visualization",
+        "FEA software (ANSYS, COMSOL): complex stress distribution analysis under various loading",
+        "Beam analysis software: automated shear and moment diagram generation",
+        "Mohr's Circle software/apps: graphical principal stress determination",
+        "Material property databases: lookup values for E, G, yield strength for common materials",
+        "SOLIDWORKS/CAD with stress analysis: geometry-based stress calculations",
+        "Python with numerical libraries: custom calculations and stress analysis automation",
+        "Micrometer and calipers: physical dimension measurement for area calculations",
+        "Optical microscope: fractography and failure surface analysis"
+      ]
+    }
+  }
+}
+,
+];
+
+export const tier3Courses: TierCourse[] = [
+  {
+  "id": "course-ENGR140",
+  "code": "ENGR 140",
+  "name": "Introduction to Object Oriented Programming",
+  "fullName": "ENGR 140: Introduction to Object Oriented Programming",
+  "description": "Builds practical object-oriented programming (OOP) skills—classes/objects, methods, encapsulation, inheritance, polymorphism, and modular design. For hardware design careers, it supports writing maintainable test tools, simulations, and verification infrastructure (e.g., C++/SystemC models and OOP-style SystemVerilog testbenches).",
+  "tier": 3,
+  "expandedInfo": {
+    "credits": 4,
+    "careerRelevance": "ENGR 140 matters for Analog & Digital Hardware Design because complex hardware work quickly becomes software-heavy: test scripts, lab automation, data processing, firmware-side drivers, and simulation tooling. OOP enables reusable abstractions like Instrument, PowerSupply, Oscilloscope, ADC, Filter, or MotorController objects—making codebases easier to extend as hardware revisions change. It also maps well to modern verification flows where SystemVerilog uses OOP concepts (classes, inheritance, polymorphism) to build modular testbenches and reusable verification components.",
+    "realWorldApplications": [
+      "Building lab automation software where each instrument (scope, DMM, PSU) is modeled as an object with a clean API",
+      "Writing reusable drivers/wrappers for sensors, ADCs/DACs, and communication peripherals in embedded projects",
+      "Creating simulation models of hardware blocks in C++/SystemC using class-based abstractions",
+      "Developing verification/test infrastructure where stimulus generators, monitors, and scoreboards share a common interface and can be swapped via polymorphism",
+      "Organizing DSP/control/power calculations into reusable libraries for design-space exploration and regression testing"
+    ],
+    "learningOutcomes": [
+      "Define classes and create objects to model real-world entities and their behaviors",
+      "Use encapsulation to hide internal state and expose stable public APIs",
+      "Apply inheritance and polymorphism to create extensible designs (e.g., common base interfaces for instruments or devices)",
+      "Write modular code across multiple files/packages and manage dependencies cleanly",
+      "Debug and test OOP code systematically (unit-style testing mindset, reproducible behaviors)",
+      "Use collections/containers to manage groups of objects (e.g., multiple sensors, multiple test cases)",
+      "Handle errors robustly (exceptions or equivalent mechanisms, input validation, fail-safe defaults)"
+    ],
+    "resources": {
+      "videos": [
+        "https://www.youtube.com/watch?v=uQJMQYKqPIU",
+        "https://www.youtube.com/watch?v=rwdOWw8z18Y",
+        "https://www.youtube.com/watch?v=JbGcJ6czlGk",
+        "https://www.youtube.com/watch?v=d85MmjGYhr0",
+        "https://www.youtube.com/watch?v=zqHvN8xpuKY"
+      ],
+      "websites": [
+        "https://docs.oracle.com/javase/tutorial/java/concepts/",
+        "https://isocpp.org/",
+        "https://www.learncpp.com/",
+        "https://www.edaplayground.com/"
+      ],
+      "tools": [
+        "VS Code or Eclipse/IDEA (debugger + refactoring tools for OOP development)",
+        "Git + GitHub (version control for multi-file projects)",
+        "C++ compiler toolchain (clang/gcc) or Java toolchain (depending on course language)",
+        "CMake (if using C++ projects with multiple modules)",
+        "EDA Playground / SystemVerilog simulators (for OOP-style verification practice)",
+        "Unit testing frameworks (GoogleTest for C++, JUnit for Java)"
+      ]
+    }
+  }
+}
+,
+  {
+  "id": "engr-145",
+  "code": "ENGR 145",
+  "name": "Machine Learning for Engineers",
+  "fullName": "ENGR 145: Machine Learning for Engineers",
+  "description": "State-of-the-art machine learning technologies across a range of engineering disciplines. Covers supervised learning (regression, classification, neural networks), unsupervised learning (clustering, dimensionality reduction), deep learning architectures, model evaluation and validation, and practical applications in hardware design, signal processing, and intelligent systems.",
+  "tier": 3,
+  "expandedInfo": {
+    "credits": 4,
+    "careerRelevance": "Machine Learning for Engineers is essential for advanced Analog & Digital Hardware Design careers because intelligent systems and AI-powered hardware are increasingly central to modern electronics. For analog designers, ML enables design optimization (circuit parameter tuning), predictive maintenance modeling, signal prediction and noise reduction, and sensor data interpretation. For digital designers, ML is critical for implementing intelligent systems on microcontrollers and FPGAs, neural network inference acceleration, computer vision on embedded platforms, and anomaly detection for system reliability. Understanding supervised learning enables engineers to build predictive models for hardware performance, power consumption, thermal behavior, and reliability forecasting. Deep learning fundamentals enable implementation of CNNs for image processing on edge devices, audio signal processing, and real-time decision making. Knowledge of model evaluation prevents deploying unreliable models—critical for safety-critical systems (medical devices, automotive). Transfer learning enables rapid development by leveraging existing trained models, reducing development time and computational requirements. This course teaches how to leverage machine learning as a tool for solving real engineering problems—from predictive maintenance and fault detection to autonomous systems and smart hardware that adapts to its environment. Engineers who understand both hardware AND machine learning are uniquely positioned to design next-generation intelligent embedded systems.",
+    "realWorldApplications": [
+      "Predictive maintenance and fault detection: ML models trained on sensor data to detect equipment failures before they occur, enabling preventive maintenance",
+      "Hardware parameter optimization: automated circuit design tuning using regression models to achieve optimal performance-power-area tradeoffs",
+      "Signal processing and noise reduction: neural networks for denoising signals, audio enhancement, and spectrum analysis",
+      "Computer vision for embedded systems: CNN inference on edge devices for object detection, face recognition, and quality inspection",
+      "Thermal management and power prediction: ML models predicting processor temperature and power consumption for dynamic thermal management",
+      "Sensor anomaly detection: identifying faulty sensors or measurement anomalies in IoT sensor networks",
+      "Autonomous systems and robotics: perception and control algorithms for self-driving vehicles, drones, and intelligent robots",
+      "Medical device intelligence: ECG/EEG signal analysis, diagnostic support systems, and patient monitoring using deep learning"
+    ],
+    "learningOutcomes": [
+      "Understand machine learning fundamentals: supervised vs. unsupervised learning, training vs. testing, overfitting and generalization concepts",
+      "Implement supervised learning algorithms: linear regression, logistic regression, decision trees, support vector machines, and neural networks",
+      "Build neural networks: multi-layer perceptrons, forward propagation, backpropagation training, activation functions, and optimization algorithms",
+      "Apply deep learning architectures: convolutional neural networks for image classification, recurrent networks for sequences, and transfer learning techniques",
+      "Understand unsupervised learning: K-means clustering, hierarchical clustering, principal component analysis (PCA), and dimensionality reduction",
+      "Evaluate and validate models: train-test splits, cross-validation, confusion matrices, precision-recall, F1-score, ROC curves, and regularization techniques",
+      "Detect and mitigate overfitting: regularization (L1, L2), dropout, early stopping, and data augmentation strategies",
+      "Implement transfer learning: adapting pretrained models for new tasks with limited data, fine-tuning strategies, and feature extraction",
+      "Use machine learning frameworks: TensorFlow/Keras, PyTorch, scikit-learn for building and training models",
+      "Apply ML to engineering problems: predictive modeling, classification, and optimization for real hardware design and system challenges"
+    ],
+    "resources": {
+      "videos": [
+        "https://www.youtube.com/watch?v=MqOP-mW3V3I",
+        "https://www.youtube.com/watch?v=Mu3POlNoLdc",
+        "https://www.youtube.com/watch?v=zuLQqibqBHw",
+        "https://www.youtube.com/watch?v=i_LwzRVP7bg",
+        "https://www.youtube.com/watch?v=E0Hmnixke2g",
+        "https://www.youtube.com/watch?v=Ilg3gGewQ5U",
+        "https://www.youtube.com/watch?v=-zI1bldB8to",
+        "https://www.youtube.com/watch?v=fGDT63dZcvE",
+        "https://www.youtube.com/watch?v=VMj-3S1tku0",
+        "https://www.youtube.com/watch?v=XrGdKCg3Pfg",
+        "https://www.youtube.com/watch?v=0kYIZE8Gl90",
+        "https://www.youtube.com/watch?v=2xqkSUhmmXU",
+        "https://www.youtube.com/watch?v=vT1JzLTH4G4",
+        "https://www.youtube.com/watch?v=f3g1zGdxptI",
+        "https://www.youtube.com/watch?v=Ro4VUOn6k6Y",
+        "https://www.youtube.com/watch?v=Ezy4hjyXRW8",
+        "https://www.youtube.com/watch?v=uZTHYRM2SDc",
+        "https://www.youtube.com/watch?v=yzG69Zf0U1k",
+        "https://www.youtube.com/watch?v=_JOYVFW96xY",
+        "https://www.youtube.com/watch?v=63k4pZfzkc0",
+        "https://www.youtube.com/watch?v=66YuSR9Qt8A",
+        "https://www.youtube.com/watch?v=cC6DXPsbb8I",
+        "https://www.youtube.com/watch?v=oFMixPMJ6Ko",
+        "https://www.youtube.com/watch?v=fbBp1xX2lqc",
+        "https://www.youtube.com/watch?v=wtmDQf2fnX8",
+        "https://www.youtube.com/watch?v=-HnedeYGTTQ",
+        "https://www.youtube.com/watch?v=nVUyfZ6qe5Q"
+      ],
+      "websites": [
+        "https://en.wikipedia.org/wiki/Supervised_learning",
+        "https://www.geeksforgeeks.org/machine-learning/ml-classification-vs-regression/",
+        "https://encord.com/blog/convolutional-neural-networks-explained/",
+        "https://svitla.com/blog/cnn-for-image-processing/",
+        "https://www.flatworldsolutions.com/data-science/articles/7-applications-of-convolutional-neural-networks.php",
+        "https://www.ibm.com/think/topics/convolutional-neural-networks",
+        "https://scikit-learn.org/stable/modules/neural_networks_supervised.html",
+        "https://www.mathworks.com/discovery/machine-learning-models.html",
+        "https://www.linkedin.com/pulse/artificial-neural-network-model-classification-regression-doug-rose-ucihe",
+        "https://catalog.ucmerced.edu/preview_course_nopop.php?catoid=24&coid=69946"
+      ],
+      "tools": [
+        "TensorFlow/Keras: deep learning framework for neural networks, CNNs, RNNs, and transfer learning implementations",
+        "PyTorch: flexible deep learning framework with dynamic computation graphs, preferred for research and custom architectures",
+        "Scikit-learn: traditional ML algorithms (regression, classification, clustering), preprocessing, model evaluation, and pipeline tools",
+        "Pandas: data manipulation, cleaning, exploratory data analysis, feature engineering",
+        "NumPy: numerical computing, matrix operations, linear algebra for algorithms",
+        "Matplotlib/Seaborn: data visualization for EDA and model performance analysis",
+        "Jupyter Notebook: interactive development environment for prototyping and experimentation",
+        "Google Colab: free cloud-based Jupyter with GPU/TPU access for training",
+        "OpenCV: computer vision library for image processing and feature extraction",
+        "XGBoost/LightGBM: gradient boosting libraries for classification and regression",
+        "Optuna/Hyperopt: hyperparameter optimization frameworks",
+        "TensorBoard: visualization toolkit for training monitoring and debugging",
+        "MLflow: experiment tracking and model registry for reproducibility",
+        "Docker: containerization for model deployment and reproducible environments",
+        "ONNX: open neural network exchange format for model portability"
+      ]
+    }
+  }
+}
+,
+  {
+  "id": "course-ENGR143",
+  "code": "ENGR 143",
+  "name": "Statistical Quality Control",
+  "fullName": "ENGR 143: Statistical Quality Control",
+  "description": "Comprehensive course on statistical quality control and improvement methods. Covers statistical process control (SPC) with control charts, process capability analysis (Cp/Cpk), Design of Experiments (DOE), acceptance sampling, and quality tools (Pareto, Fishbone). Emphasizes practical applications in manufacturing quality, yield optimization, and design validation.",
+  "tier": 3,
+  "expandedInfo": {
+    "credits": 4,
+    "careerRelevance": "ENGR 143 is valuable for Analog & Digital Hardware Design because it bridges design theory with manufacturing reality. In a prototype, tolerance stack-up is invisible; in production (N=10,000), it becomes a yield crisis. This course teaches how to design for manufacturability: setting realistic tolerances using process capability indices, validating designs with Design of Experiments (DOE) before committing to expensive tooling, and monitoring manufacturing processes to ensure consistent quality. For hardware designers moving into full product lifecycle—from design through manufacturing validation and continuous improvement—mastering statistical quality control is essential for delivering reliable, profitable products at scale.",
+    "realWorldApplications": [
+      "Design of Experiments (DOE) to identify which circuit parameters (bias voltages, component tolerances, layout spacing) most affect circuit performance, replacing expensive trial-and-error testing",
+      "Process Capability studies to ensure component suppliers (resistor networks, op-amp offset voltage, oscillator frequency) can meet circuit design specifications",
+      "Control Charts (SPC) monitoring PCB assembly: reflow temperature, component placement accuracy, solder joint quality to catch process drifts before defects",
+      "Tolerance stack-up analysis: predicting how resistor and capacitor tolerance variations combine to meet overall circuit specs with 99.7% confidence",
+      "Acceptance Sampling plans for incoming component inspection: balancing cost vs. risk of bad parts entering production",
+      "Pareto analysis of field failures: identifying which failure modes cause 80% of problems, guiding design improvements",
+      "Root Cause Analysis (Fishbone Diagram) on yield fallout: systematically tracing defects to manufacturing process, design, or supply chain",
+      "Six Sigma / DMAIC projects: systematically reducing defect rates, improving yield from 95% to 99.7% in high-volume production",
+      "Design validation across manufacturing tolerance corners: running DOE to verify circuit specifications hold across worst-case component combinations"
+    ],
+    "learningOutcomes": [
+      "Apply normal distribution and probability concepts to quality control problems",
+      "Construct and interpret control charts (X-bar, R, I-MR, p-charts, c-charts) for process monitoring",
+      "Distinguish between common cause and special cause variation in processes",
+      "Calculate process capability indices (Cp, Cpk) and relate them to defect rates",
+      "Design and execute Design of Experiments (DOE) to optimize processes and identify critical variables",
+      "Conduct ANOVA analysis to evaluate main effects and interactions from experimental data",
+      "Implement acceptance sampling plans using standard tables (ANSI/ASQ Z1.4) and understand AQL/LTPD concepts",
+      "Apply quality tools: Pareto charts for prioritization, Fishbone diagrams for root cause analysis",
+      "Execute Six Sigma DMAIC methodology for systematic process improvement",
+      "Translate design specifications into manufacturing process requirements and tolerances",
+      "Use statistical software (Minitab, JMP, Python) for SPC, DOE, and capability analysis",
+      "Predict yield and defect rates based on process and design specifications",
+      "Make data-driven decisions on design trade-offs, manufacturing trade-offs, and quality investments"
+    ],
+    "resources": {
+      "videos": [
+        "https://www.youtube.com/watch?v=w8zss9ZcNEU",
+        "https://www.youtube.com/watch?v=H3VQQjdxzc4",
+        "https://www.youtube.com/watch?v=Aj7lJLR-7b4",
+        "https://www.youtube.com/watch?v=7xRQUEsU-Sw",
+        "https://www.youtube.com/watch?v=iOJDBpOa3Ko",
+        "https://www.youtube.com/watch?v=vYHXXw-Uupo",
+        "https://www.youtube.com/watch?v=XEQCx7QCzmg",
+        "https://www.youtube.com/watch?v=Soq4aFY8aNc",
+        "https://www.youtube.com/watch?v=OjJZMMBvI90",
+        "https://www.youtube.com/watch?v=obSupUdTjV8",
+        "https://www.youtube.com/watch?v=Xu9Zvn7b1oU",
+        "https://www.youtube.com/watch?v=JblezuiL-fk",
+        "https://www.youtube.com/watch?v=H6St9mCKWuA",
+        "https://www.youtube.com/watch?v=VKcntQG1C88",
+        "https://www.youtube.com/watch?v=x6o0mWR-XpA",
+        "https://www.youtube.com/watch?v=UEuNpRR-dgQ",
+        "https://www.youtube.com/watch?v=HvjuP6XrgHQ",
+        "https://www.youtube.com/watch?v=ZoaUu6iRE64",
+        "https://www.youtube.com/watch?v=cHoYAyYHzB0",
+        "https://www.youtube.com/watch?v=aKTaisrn0Fs",
+        "https://www.youtube.com/playlist?list=PLHm5EVKgoDDQmH4q19yWJWSxrPYS0B56V",
+        "https://www.youtube.com/watch?v=yzhE-B4MGZY",
+        "https://www.youtube.com/watch?v=k3p28VEs3q0",
+        "https://www.youtube.com/watch?v=CmYpqVn3NoI",
+        "https://www.youtube.com/watch?v=6SwSjbtKMRo",
+        "https://www.youtube.com/watch?v=XqUFTHJqByU",
+        "https://www.youtube.com/watch?v=25SZkmfWfyI",
+        "https://www.youtube.com/watch?v=vXaJAGY9uB0",
+        "https://www.youtube.com/watch?v=EqzqIBxDJig",
+        "https://www.youtube.com/watch?v=3maJiifAjvQ",
+        "https://www.youtube.com/watch?v=k3hscyBHIR0",
+        "https://www.youtube.com/watch?v=r8IBN75RX0M",
+        "https://www.youtube.com/watch?v=x4iOpcuV06o",
+        "https://www.youtube.com/watch?v=TfVcP_drj50"
+      ],
+      "websites": [
+        "https://asq.org/quality-resources/statistical-process-control",
+        "https://www.isixsigma.com/",
+        "https://www.itl.nist.gov/div898/handbook/",
+        "https://sixsigmastudyguide.com/",
+        "https://qualityinspection.org/what-is-the-aql/"
+      ],
+      "tools": [
+        "Minitab (industry-standard statistical software for SPC, DOE, capability analysis)",
+        "JMP by SAS (interactive data visualization and statistical analysis)",
+        "Python with scipy/numpy/pandas/matplotlib (open-source statistical computing)",
+        "R language with qcc/DoE.base packages (design of experiments, quality control)",
+        "Excel with Analysis ToolPak (for basic control charts and capability calculations)",
+        "SPICE/ADS Monte Carlo simulation (for circuit yield prediction)",
+        "Acceptance Sampling Calculator tools (ANSI/ASQ Z1.4 standard tables)",
+        "Quality management software (Deskera, Fishbone diagram tools, Pareto chart generators)"
+      ]
+    }
+  }
+}
+,
+  {
+  "id": "engr-180",
+  "code": "ENGR 180",
+  "name": "Spatial Analysis and Modeling",
+  "fullName": "ENGR 180: Spatial Analysis and Modeling",
+  "description": "Principles of geographic information systems (GIS), GPS, and remote sensing as spatial data collection and analysis tools. Covers spatial data types (raster and vector), interpolation methods, spatial analysis techniques, coordinate systems and map projections, and practical applications in environmental modeling, urban planning, infrastructure, and decision-making systems.",
+  "tier": 3,
+  "expandedInfo": {
+    "credits": 4,
+    "careerRelevance": "Spatial Analysis and Modeling is essential for advanced Analog & Digital Hardware Design careers because geospatial data and location-based intelligence increasingly drive modern hardware and systems. For analog designers, understanding GPS/GNSS receiver design, sensor networks with spatial distribution, and geospatial signal processing enables development of location-based electronics and positioning systems. For digital designers, GIS skills enable designing spatial data processing systems, embedded mapping applications, IoT sensor networks with geospatial intelligence, autonomous systems that rely on spatial reasoning, and location-based services on mobile/embedded platforms. Knowledge of coordinate systems and map projections is critical for designing systems that operate across regions with different reference frames. Understanding raster vs. vector data representations informs data storage and processing decisions in embedded systems. Spatial interpolation and modeling techniques enable predictive systems for environmental monitoring, infrastructure management, and resource optimization. Remote sensing integration enables hardware systems that process satellite/aerial imagery for autonomous decision-making. This course teaches how to leverage geographic and spatial data as a fundamental design input—enabling next-generation systems that are inherently location-aware and can adapt their behavior based on spatial context and geospatial analysis.",
+    "realWorldApplications": [
+      "GPS/GNSS hardware design: receiver architecture, antenna design, signal processing for precise positioning and navigation systems",
+      "IoT sensor networks: spatial deployment optimization, geospatial data collection and transmission, location-aware wireless systems",
+      "Autonomous systems and robotics: path planning using spatial models, obstacle detection with geospatial analysis, localization and mapping (SLAM)",
+      "Mobile and embedded mapping: implementing GIS functionality on smartphones/tablets, real-time spatial analysis on edge devices",
+      "Infrastructure monitoring: sensor networks for monitoring power grids, water systems, transportation networks with spatial analysis",
+      "Urban planning and smart cities: spatial analysis for optimal placement of 5G towers, sensors, and infrastructure; traffic pattern analysis",
+      "Environmental monitoring: remote sensing integration for monitoring deforestation, urban expansion, climate change impacts using satellite data",
+      "Location-based services: designing systems that integrate geospatial data for navigation, recommendation systems, and context-aware applications"
+    ],
+    "learningOutcomes": [
+      "Understand GIS fundamentals: components (hardware, software, data), data management, analysis capabilities, and decision support systems",
+      "Work with spatial data types: understanding raster vs. vector data models, coordinate systems, datums, and map projections",
+      "Implement spatial interpolation: mastering IDW, kriging, spline methods for estimating continuous surfaces from discrete point data",
+      "Perform spatial analysis: buffer, clip, intersect, overlay, and spatial join operations on geographic data",
+      "Use GIS software: ArcGIS Pro, QGIS, or equivalent for managing, analyzing, and visualizing geospatial data",
+      "Understand remote sensing: satellite/aerial imagery classification, land use/land cover analysis, and applications in environmental monitoring",
+      "Apply spatial modeling: agent-based modeling, cellular automata, and spatiotemporal simulation for complex system analysis",
+      "Work with coordinate systems: transforming between geographic and projected coordinate systems, datum conversions, and georeference data",
+      "Integrate GPS/positioning data: understanding GNSS principles, accuracy considerations, and integration with GIS for real-world applications",
+      "Design location-aware systems: applying spatial analysis concepts to hardware and embedded systems that operate with geographic context"
+    ],
+    "resources": {
+      "videos": [
+        "https://www.youtube.com/watch?v=AGWbKVp0rWc",
+        "https://www.youtube.com/watch?v=eTLCpEq29gc",
+        "https://www.youtube.com/watch?v=Slf6EftrN8k",
+        "https://www.youtube.com/watch?v=Hau_ZCmN8eU",
+        "https://www.youtube.com/watch?v=vRwvnPVaveA",
+        "https://www.youtube.com/watch?v=-S1y7bFYLnE",
+        "https://www.youtube.com/watch?v=4qHgOyT_DI8",
+        "https://www.youtube.com/watch?v=WAuWXJmxGJw",
+        "https://www.youtube.com/watch?v=KKXj1_ETyKI",
+        "https://www.youtube.com/watch?v=Li0QioWezOI",
+        "https://www.youtube.com/watch?v=6sDI2lULhFs",
+        "https://www.youtube.com/watch?v=aR-PkK8k2us",
+        "https://www.youtube.com/watch?v=OgrY3TgsIpI",
+        "https://www.youtube.com/watch?v=rs4GX-XIc7A",
+        "https://www.youtube.com/watch?v=PzWp_1wKJvw",
+        "https://www.youtube.com/watch?v=Q3XNKXkvW84",
+        "https://www.youtube.com/watch?v=eZWY0hOF_S4",
+        "https://www.youtube.com/watch?v=PICwxT0fTHQ",
+        "https://www.youtube.com/watch?v=dHT0ckOfScU",
+        "https://www.youtube.com/watch?v=kwZZ1YM5TYw",
+        "https://www.youtube.com/watch?v=JgRq7NMcVoY",
+        "https://www.youtube.com/watch?v=NWecUDKWSiU",
+        "https://www.youtube.com/watch?v=pg58Hm-b1uk",
+        "https://www.youtube.com/watch?v=9EvF-zCQ4vI",
+        "https://www.youtube.com/watch?v=nK9VzcDr_G4",
+        "https://www.youtube.com/watch?v=eo-BIKAu8Bc",
+        "https://www.youtube.com/watch?v=jeykRmcNOTU",
+        "https://www.youtube.com/watch?v=Ot6XIz6XCFo"
+      ],
+      "websites": [
+        "https://gisgeography.com/geospatial-vs-gis/",
+        "https://en.wikipedia.org/wiki/Geographic_information_system",
+        "https://guides.library.brandeis.edu/c.php?g=990410&p=7164688",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC2921721/",
+        "https://developers.google.com/earth-engine/guides/interpolation",
+        "https://slcc.pressbooks.pub/maps/chapter/8-5/",
+        "https://docs.qgis.org/latest/en/docs/gentle_gis_introduction/spatial_analysis_interpolation.html",
+        "https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-analyst/kriging.htm",
+        "https://catalog.ucmerced.edu/preview_course_nopop.php?catoid=24&coid=67688",
+        "https://faculty.ucmerced.edu/qguo/Teaching.html"
+      ],
+      "tools": [
+        "ArcGIS Pro: industry-leading GIS software for spatial analysis, mapping, data management, and advanced geoprocessing",
+        "QGIS: open-source GIS alternative with extensive spatial analysis capabilities and Python/R integration",
+        "Google Earth Engine: cloud-based platform for large-scale remote sensing and geospatial data analysis",
+        "Python with GeoPandas/Shapely: programmatic spatial data manipulation and analysis",
+        "R with sf/sp/raster packages: statistical and spatial analysis, visualization, and geostatistics",
+        "PostGIS: spatial database extension for PostgreSQL enabling geographic queries",
+        "GDAL/OGR: geospatial data translation and processing libraries",
+        "NetLogo: agent-based modeling and simulation platform for complex systems",
+        "GRASS GIS: raster/vector processing, spatial analysis, and modeling",
+        "GPS/GNSS receivers: real-world position data collection",
+        "Remote sensing platforms: Landsat, Sentinel-2, USGS Earth Explorer for satellite imagery",
+        "LiDAR processing software: point cloud analysis and elevation model generation",
+        "Kriging/Geostatistics software: specialized interpolation and spatial statistical tools",
+        "Network analysis tools: routing, connectivity, accessibility analysis",
+        "ArcMap/ArcInfo: legacy ArcGIS Desktop products (transitioning to Pro)"
+      ]
+    }
+  }
+}
+,
+];

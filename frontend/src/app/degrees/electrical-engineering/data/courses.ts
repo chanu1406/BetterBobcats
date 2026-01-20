@@ -133,6 +133,16 @@ export const electricalEngineeringCourses: Course[] = [
 
   // Second Year - Spring
   {
+    id: "math-032",
+    code: "MATH 032",
+    name: "Probability and Statistics",
+    fullName: "MATH 032: Probability and Statistics",
+    year: 2,
+    semester: "spring",
+    prerequisites: [],
+    category: "Math",
+  },
+  {
     id: "ee-100",
     code: "EE 100",
     name: "Introduction to Electrical Engineering",

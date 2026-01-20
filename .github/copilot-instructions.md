@@ -172,3 +172,14 @@ When suggesting code:
 
 This platform helps students visualize their academic journey and make informed decisions about their future careers in tech and engineering fields.
 ```
+
+---
+applyTo: '**'
+---
+
+
+WHENEVER I USE THE --C7 FLAG OR --CONTEXT7 GET RELEVANT DOCS USING UR MCP CONTEXT7 TOOL 
+ADN FETCH INFORMATION THAT IS NEEDED
+
+WHENEVER I USE THE --SEQ USE UR SEQUENTIAL THINKING MCP SERVER AND THINK THROUGH THE TASK
+AT HAND FOR ME AND REASON
