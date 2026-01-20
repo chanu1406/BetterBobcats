@@ -53,6 +53,12 @@ export default function DegreesSidebar({
     "Data Science and Analytics": [
       { id: "resumes", name: "Resumes" },
       { id: "alumni", name: "Alumni" },
+      { id: "quantitative-economics", name: "Quantitative Economics & Financial Analytics" },
+      { id: "behavioral-data-science", name: "Behavioral Data Science & Neuro-Computation" },
+      { id: "public-health-informatics", name: "Public Health Informatics & Biostatistics" },
+      { id: "government-intelligence", name: "Government Intelligence & Policy Analytics" },
+      { id: "sustainable-systems", name: "Management of Sustainable Systems (Green Tech)" },
+      { id: "business-intelligence", name: "Business Intelligence & Tech Entrepreneurship" },
     ],
     "Electrical Engineering": [
       { id: "resumes", name: "Resumes" },

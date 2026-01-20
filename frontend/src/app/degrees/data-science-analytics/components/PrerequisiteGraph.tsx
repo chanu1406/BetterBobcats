@@ -19,8 +19,8 @@ import "reactflow/dist/style.css";
 export default function PrerequisiteGraph() {
   const reactFlowWrapper = useRef<any>(null);
   
-  // Start expanded so the graph appears like the reference screenshot
-  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set(["math", "writing", "spark", "data-science", "ethics"]));
+  // Start collapsed - only parent node visible, subjects expand on click
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
 
   // Year-based color system (same palette as other degrees)
   const yearStyles: Record<1 | 2 | 3 | 4, React.CSSProperties> = {
@@ -649,13 +649,13 @@ export default function PrerequisiteGraph() {
     }
   };
 
-  // Reset Graph - reset to default viewport and expand all categories
+  // Reset Graph - reset to default viewport and collapse all categories
   const handleResetGraph = () => {
     if (reactFlowWrapper.current) {
       reactFlowWrapper.current?.fitView?.({ padding: 0.2, duration: 800 });
     }
-    // Reset expanded categories to default
-    setExpandedCategories(new Set(["math", "writing", "spark", "data-science", "ethics"]));
+    // Reset expanded categories to empty (all collapsed)
+    setExpandedCategories(new Set());
   };
 
   return (

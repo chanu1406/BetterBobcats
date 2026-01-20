@@ -33,6 +33,12 @@ import SignalsRFCareerPathGraph from "../electrical-engineering/careers/signals-
 import ControlsAutomationCareerPathGraph from "../electrical-engineering/careers/controls-automation/components/CareerPathGraph";
 import HardwareICDesignCareerPathGraph from "../electrical-engineering/careers/hardware-ic-design/components/CareerPathGraph";
 import DataScienceAnalyticsPrerequisiteGraph from "../data-science-analytics/components/PrerequisiteGraph";
+import QuantitativeEconomicsCareerPathGraph from "../data-science-analytics/careers/quantitative-economics/components/CareerPathGraph";
+import BehavioralDataScienceCareerPathGraph from "../data-science-analytics/careers/behavioral-data-science/components/CareerPathGraph";
+import PublicHealthCareerPathGraph from "../data-science-analytics/careers/public-health-informatics/components/CareerPathGraph";
+import GovernmentIntelligenceCareerPathGraph from "../data-science-analytics/careers/government-intelligence/components/CareerPathGraph";
+import SustainableSystemsCareerPathGraph from "../data-science-analytics/careers/sustainable-systems/components/CareerPathGraph";
+import BusinessIntelligenceCareerPathGraph from "../data-science-analytics/careers/business-intelligence/components/CareerPathGraph";
 
 interface DegreesContentProps {
   selectedDegree: string | null;
@@ -131,6 +137,30 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
   const resetHardwareICDesignGraphRef = useRef<(() => void) | null>(null);
   const formatHardwareICDesignGraphRef = useRef<(() => void) | null>(null);
   
+  // Quantitative Economics career path graph handlers
+  const resetQuantitativeEconomicsGraphRef = useRef<(() => void) | null>(null);
+  const formatQuantitativeEconomicsGraphRef = useRef<(() => void) | null>(null);
+  
+  // Behavioral Data Science career path graph handlers
+  const resetBehavioralDataScienceGraphRef = useRef<(() => void) | null>(null);
+  const formatBehavioralDataScienceGraphRef = useRef<(() => void) | null>(null);
+  
+  // Public Health career path graph handlers
+  const resetPublicHealthGraphRef = useRef<(() => void) | null>(null);
+  const formatPublicHealthGraphRef = useRef<(() => void) | null>(null);
+  
+  // Government Intelligence career path graph handlers
+  const resetGovernmentIntelligenceGraphRef = useRef<(() => void) | null>(null);
+  const formatGovernmentIntelligenceGraphRef = useRef<(() => void) | null>(null);
+  
+  // Sustainable Systems career path graph handlers
+  const resetSustainableSystemsGraphRef = useRef<(() => void) | null>(null);
+  const formatSustainableSystemsGraphRef = useRef<(() => void) | null>(null);
+  
+  // Business Intelligence career path graph handlers
+  const resetBusinessIntelligenceGraphRef = useRef<(() => void) | null>(null);
+  const formatBusinessIntelligenceGraphRef = useRef<(() => void) | null>(null);
+  
   // State to track when handlers are ready (updated in useEffect to avoid render-time updates)
   const [resetPrerequisiteReady, setResetPrerequisiteReady] = useState(false);
   const [fullResetPrerequisiteReady, setFullResetPrerequisiteReady] = useState(false);
@@ -176,6 +206,18 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
   const [formatControlsAutomationReady, setFormatControlsAutomationReady] = useState(false);
   const [resetHardwareICDesignReady, setResetHardwareICDesignReady] = useState(false);
   const [formatHardwareICDesignReady, setFormatHardwareICDesignReady] = useState(false);
+  const [resetQuantitativeEconomicsReady, setResetQuantitativeEconomicsReady] = useState(false);
+  const [formatQuantitativeEconomicsReady, setFormatQuantitativeEconomicsReady] = useState(false);
+  const [resetBehavioralDataScienceReady, setResetBehavioralDataScienceReady] = useState(false);
+  const [formatBehavioralDataScienceReady, setFormatBehavioralDataScienceReady] = useState(false);
+  const [resetPublicHealthReady, setResetPublicHealthReady] = useState(false);
+  const [formatPublicHealthReady, setFormatPublicHealthReady] = useState(false);
+  const [resetGovernmentIntelligenceReady, setResetGovernmentIntelligenceReady] = useState(false);
+  const [formatGovernmentIntelligenceReady, setFormatGovernmentIntelligenceReady] = useState(false);
+  const [resetSustainableSystemsReady, setResetSustainableSystemsReady] = useState(false);
+  const [formatSustainableSystemsReady, setFormatSustainableSystemsReady] = useState(false);
+  const [resetBusinessIntelligenceReady, setResetBusinessIntelligenceReady] = useState(false);
+  const [formatBusinessIntelligenceReady, setFormatBusinessIntelligenceReady] = useState(false);
   
   // Callbacks to register reset handlers from child components
   const handleResetPrerequisiteReady = useRef((handler: () => void) => {
@@ -494,7 +536,89 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
     });
   });
 
-  // Reset readiness flags when switching between pages
+  const handleResetQuantitativeEconomicsReady = useRef((handler: () => void) => {
+    resetQuantitativeEconomicsGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setResetQuantitativeEconomicsReady(true);
+    });
+  });
+
+  const handleFormatQuantitativeEconomicsReady = useRef((handler: () => void) => {
+    formatQuantitativeEconomicsGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setFormatQuantitativeEconomicsReady(true);
+    });
+  });
+
+  const handleResetBehavioralDataScienceReady = useRef((handler: () => void) => {
+    resetBehavioralDataScienceGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setResetBehavioralDataScienceReady(true);
+    });
+  });
+
+  const handleFormatBehavioralDataScienceReady = useRef((handler: () => void) => {
+    formatBehavioralDataScienceGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setFormatBehavioralDataScienceReady(true);
+    });
+  });
+
+  const handleResetPublicHealthReady = useRef((handler: () => void) => {
+    resetPublicHealthGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setResetPublicHealthReady(true);
+    });
+  });
+
+  const handleFormatPublicHealthReady = useRef((handler: () => void) => {
+    formatPublicHealthGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setFormatPublicHealthReady(true);
+    });
+  });
+
+  const handleResetGovernmentIntelligenceReady = useRef((handler: () => void) => {
+    resetGovernmentIntelligenceGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setResetGovernmentIntelligenceReady(true);
+    });
+  });
+
+  const handleFormatGovernmentIntelligenceReady = useRef((handler: () => void) => {
+    formatGovernmentIntelligenceGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setFormatGovernmentIntelligenceReady(true);
+    });
+  });
+
+  const handleResetSustainableSystemsReady = useRef((handler: () => void) => {
+    resetSustainableSystemsGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setResetSustainableSystemsReady(true);
+    });
+  });
+
+  const handleFormatSustainableSystemsReady = useRef((handler: () => void) => {
+    formatSustainableSystemsGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setFormatSustainableSystemsReady(true);
+    });
+  });
+
+  const handleResetBusinessIntelligenceReady = useRef((handler: () => void) => {
+    resetBusinessIntelligenceGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setResetBusinessIntelligenceReady(true);
+    });
+  });
+
+  const handleFormatBusinessIntelligenceReady = useRef((handler: () => void) => {
+    formatBusinessIntelligenceGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setFormatBusinessIntelligenceReady(true);
+    });
+  });
   useEffect(() => {
     if (!selectedCareerPath && !selectedDegree) {
       setResetPrerequisiteReady(false);
@@ -2219,6 +2343,372 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show Quantitative Economics & Financial Analytics career path with graph
+  if (selectedCareerPath === "quantitative-economics") {
+    return (
+      <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-10 text-center">
+            <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+              Quantitative Economics & Financial Analytics - {selectedDegree}
+            </h2>
+            <p className="text-black mb-5">
+              Career pathway information and recommended courses
+            </p>
+            <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+              Quantitative Economics & Financial Analytics combines econometrics, financial modeling, and data science to analyze markets, forecast trends, and support investment decisions. This path prepares you for roles at hedge funds, investment banks, central banks, and fintech firms in quantitative research, algorithmic trading, risk management, and economic policy analysis.
+            </p>
+          </div>
+          
+          <div className="mb-6 flex justify-end gap-3">
+            <button
+              onClick={() => {
+                if (formatQuantitativeEconomicsReady && formatQuantitativeEconomicsGraphRef.current) {
+                  formatQuantitativeEconomicsGraphRef.current();
+                }
+              }}
+              className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                formatQuantitativeEconomicsReady && formatQuantitativeEconomicsGraphRef.current
+                  ? "text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                  : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+              }`}
+              title={formatQuantitativeEconomicsReady && formatQuantitativeEconomicsGraphRef.current ? "Format graph to prevent overlap" : "Waiting for format handler..."}
+            >
+              Format Graph
+            </button>
+            <button
+              onClick={() => {
+                if (resetQuantitativeEconomicsReady && resetQuantitativeEconomicsGraphRef.current) {
+                  resetQuantitativeEconomicsGraphRef.current();
+                }
+              }}
+              className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                resetQuantitativeEconomicsReady && resetQuantitativeEconomicsGraphRef.current
+                  ? "text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                  : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+              }`}
+              title={resetQuantitativeEconomicsReady && resetQuantitativeEconomicsGraphRef.current ? "Reset career path graph view" : "Waiting for reset handler..."}
+            >
+              Reset Graph
+            </button>
+          </div>
+          
+          <div className="mb-10">
+            <QuantitativeEconomicsCareerPathGraph 
+              onResetReady={handleResetQuantitativeEconomicsReady.current}
+              onFormatReady={handleFormatQuantitativeEconomicsReady.current}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show Behavioral Data Science & Neuro-Computation career path with graph
+  if (selectedCareerPath === "behavioral-data-science") {
+    return (
+      <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-10 text-center">
+            <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+              Behavioral Data Science & Neuro-Computation - {selectedDegree}
+            </h2>
+            <p className="text-black mb-5">
+              Career pathway information and recommended courses
+            </p>
+            <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+              Behavioral Data Science & Neuro-Computation applies machine learning and neuroscience to understand human behavior, decision-making, and cognition. This path prepares you for roles at tech companies, research institutions, and neuroscience labs in behavioral analytics, brain-computer interfaces, cognitive modeling, and human-AI interaction.
+            </p>
+          </div>
+          
+          <div className="mb-6 flex justify-end gap-3">
+            <button
+              onClick={() => {
+                if (formatBehavioralDataScienceReady && formatBehavioralDataScienceGraphRef.current) {
+                  formatBehavioralDataScienceGraphRef.current();
+                }
+              }}
+              className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                formatBehavioralDataScienceReady && formatBehavioralDataScienceGraphRef.current
+                  ? "text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                  : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+              }`}
+              title={formatBehavioralDataScienceReady && formatBehavioralDataScienceGraphRef.current ? "Format graph to prevent overlap" : "Waiting for format handler..."}
+            >
+              Format Graph
+            </button>
+            <button
+              onClick={() => {
+                if (resetBehavioralDataScienceReady && resetBehavioralDataScienceGraphRef.current) {
+                  resetBehavioralDataScienceGraphRef.current();
+                }
+              }}
+              className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                resetBehavioralDataScienceReady && resetBehavioralDataScienceGraphRef.current
+                  ? "text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                  : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+              }`}
+              title={resetBehavioralDataScienceReady && resetBehavioralDataScienceGraphRef.current ? "Reset career path graph view" : "Waiting for reset handler..."}
+            >
+              Reset Graph
+            </button>
+          </div>
+          
+          <div className="mb-10">
+            <BehavioralDataScienceCareerPathGraph 
+              onResetReady={handleResetBehavioralDataScienceReady.current}
+              onFormatReady={handleFormatBehavioralDataScienceReady.current}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show Public Health Informatics & Biostatistics career path with graph
+  if (selectedCareerPath === "public-health-informatics") {
+    return (
+      <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-10 text-center">
+            <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+              Public Health Informatics & Biostatistics - {selectedDegree}
+            </h2>
+            <p className="text-black mb-5">
+              Career pathway information and recommended courses
+            </p>
+            <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+              Public Health Informatics & Biostatistics combines epidemiology, biostatistics, and health data science to improve population health outcomes. This path prepares you for roles at public health agencies, hospitals, pharmaceutical companies, and research institutions in epidemiology, clinical research, health analytics, and precision medicine.
+            </p>
+          </div>
+          
+          <div className="mb-6 flex justify-end gap-3">
+            <button
+              onClick={() => {
+                if (formatPublicHealthReady && formatPublicHealthGraphRef.current) {
+                  formatPublicHealthGraphRef.current();
+                }
+              }}
+              className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                formatPublicHealthReady && formatPublicHealthGraphRef.current
+                  ? "text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                  : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+              }`}
+              title={formatPublicHealthReady && formatPublicHealthGraphRef.current ? "Format graph to prevent overlap" : "Waiting for format handler..."}
+            >
+              Format Graph
+            </button>
+            <button
+              onClick={() => {
+                if (resetPublicHealthReady && resetPublicHealthGraphRef.current) {
+                  resetPublicHealthGraphRef.current();
+                }
+              }}
+              className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                resetPublicHealthReady && resetPublicHealthGraphRef.current
+                  ? "text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                  : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+              }`}
+              title={resetPublicHealthReady && resetPublicHealthGraphRef.current ? "Reset career path graph view" : "Waiting for reset handler..."}
+            >
+              Reset Graph
+            </button>
+          </div>
+          
+          <div className="mb-10">
+            <PublicHealthCareerPathGraph 
+              onResetReady={handleResetPublicHealthReady.current}
+              onFormatReady={handleFormatPublicHealthReady.current}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show Government Intelligence & Policy Analytics career path with graph
+  if (selectedCareerPath === "government-intelligence") {
+    return (
+      <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-10 text-center">
+            <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+              Government Intelligence & Policy Analytics - {selectedDegree}
+            </h2>
+            <p className="text-black mb-5">
+              Career pathway information and recommended courses
+            </p>
+            <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+              Government Intelligence & Policy Analytics combines political science, NLP, and econometrics to analyze policy impact, public opinion, and political trends. This path prepares you for roles in government agencies, think tanks, intelligence communities, and political campaigns in policy research, text analytics, and strategic intelligence.
+            </p>
+          </div>
+          
+          <div className="mb-6 flex justify-end gap-3">
+            <button
+              onClick={() => {
+                if (formatGovernmentIntelligenceReady && formatGovernmentIntelligenceGraphRef.current) {
+                  formatGovernmentIntelligenceGraphRef.current();
+                }
+              }}
+              className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                formatGovernmentIntelligenceReady && formatGovernmentIntelligenceGraphRef.current
+                  ? "text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                  : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+              }`}
+              title={formatGovernmentIntelligenceReady && formatGovernmentIntelligenceGraphRef.current ? "Format graph to prevent overlap" : "Waiting for format handler..."}
+            >
+              Format Graph
+            </button>
+            <button
+              onClick={() => {
+                if (resetGovernmentIntelligenceReady && resetGovernmentIntelligenceGraphRef.current) {
+                  resetGovernmentIntelligenceGraphRef.current();
+                }
+              }}
+              className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                resetGovernmentIntelligenceReady && resetGovernmentIntelligenceGraphRef.current
+                  ? "text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                  : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+              }`}
+              title={resetGovernmentIntelligenceReady && resetGovernmentIntelligenceGraphRef.current ? "Reset career path graph view" : "Waiting for reset handler..."}
+            >
+              Reset Graph
+            </button>
+          </div>
+          
+          <div className="mb-10">
+            <GovernmentIntelligenceCareerPathGraph 
+              onResetReady={handleResetGovernmentIntelligenceReady.current}
+              onFormatReady={handleFormatGovernmentIntelligenceReady.current}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show Management of Sustainable Systems (Green Tech) career path with graph
+  if (selectedCareerPath === "sustainable-systems") {
+    return (
+      <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-10 text-center">
+            <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+              Management of Sustainable Systems (Green Tech) - {selectedDegree}
+            </h2>
+            <p className="text-black mb-5">
+              Career pathway information and recommended courses
+            </p>
+            <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+              Management of Sustainable Systems (Green Tech) applies data science to environmental challenges, climate modeling, and renewable energy optimization. This path prepares you for roles at environmental organizations, energy companies, and climate tech startups in sustainability analytics, carbon accounting, and green technology development.
+            </p>
+          </div>
+          
+          <div className="mb-6 flex justify-end gap-3">
+            <button
+              onClick={() => {
+                if (formatSustainableSystemsReady && formatSustainableSystemsGraphRef.current) {
+                  formatSustainableSystemsGraphRef.current();
+                }
+              }}
+              className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                formatSustainableSystemsReady && formatSustainableSystemsGraphRef.current
+                  ? "text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                  : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+              }`}
+              title={formatSustainableSystemsReady && formatSustainableSystemsGraphRef.current ? "Format graph to prevent overlap" : "Waiting for format handler..."}
+            >
+              Format Graph
+            </button>
+            <button
+              onClick={() => {
+                if (resetSustainableSystemsReady && resetSustainableSystemsGraphRef.current) {
+                  resetSustainableSystemsGraphRef.current();
+                }
+              }}
+              className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                resetSustainableSystemsReady && resetSustainableSystemsGraphRef.current
+                  ? "text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                  : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+              }`}
+              title={resetSustainableSystemsReady && resetSustainableSystemsGraphRef.current ? "Reset career path graph view" : "Waiting for reset handler..."}
+            >
+              Reset Graph
+            </button>
+          </div>
+          
+          <div className="mb-10">
+            <SustainableSystemsCareerPathGraph 
+              onResetReady={handleResetSustainableSystemsReady.current}
+              onFormatReady={handleFormatSustainableSystemsReady.current}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show Business Intelligence & Tech Entrepreneurship career path with graph
+  if (selectedCareerPath === "business-intelligence") {
+    return (
+      <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-10 text-center">
+            <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+              Business Intelligence & Tech Entrepreneurship - {selectedDegree}
+            </h2>
+            <p className="text-black mb-5">
+              Career pathway information and recommended courses
+            </p>
+            <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+              Business Intelligence & Tech Entrepreneurship combines business analytics, A/B testing, and machine learning to drive product decisions and startup growth. This path prepares you for roles at tech companies, startups, and consulting firms in product analytics, business intelligence, growth engineering, and data-driven strategy.
+            </p>
+          </div>
+          
+          <div className="mb-6 flex justify-end gap-3">
+            <button
+              onClick={() => {
+                if (formatBusinessIntelligenceReady && formatBusinessIntelligenceGraphRef.current) {
+                  formatBusinessIntelligenceGraphRef.current();
+                }
+              }}
+              className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                formatBusinessIntelligenceReady && formatBusinessIntelligenceGraphRef.current
+                  ? "text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                  : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+              }`}
+              title={formatBusinessIntelligenceReady && formatBusinessIntelligenceGraphRef.current ? "Format graph to prevent overlap" : "Waiting for format handler..."}
+            >
+              Format Graph
+            </button>
+            <button
+              onClick={() => {
+                if (resetBusinessIntelligenceReady && resetBusinessIntelligenceGraphRef.current) {
+                  resetBusinessIntelligenceGraphRef.current();
+                }
+              }}
+              className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                resetBusinessIntelligenceReady && resetBusinessIntelligenceGraphRef.current
+                  ? "text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                  : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+              }`}
+              title={resetBusinessIntelligenceReady && resetBusinessIntelligenceGraphRef.current ? "Reset career path graph view" : "Waiting for reset handler..."}
+            >
+              Reset Graph
+            </button>
+          </div>
+          
+          <div className="mb-10">
+            <BusinessIntelligenceCareerPathGraph 
+              onResetReady={handleResetBusinessIntelligenceReady.current}
+              onFormatReady={handleFormatBusinessIntelligenceReady.current}
+            />
           </div>
         </div>
       </div>
