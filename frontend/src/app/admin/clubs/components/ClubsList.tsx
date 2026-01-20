@@ -405,7 +405,7 @@ export default function ClubsList() {
         onOpenChange={setDeactivateModalOpen}
         onConfirm={handleDeactivate}
         isLoading={
-          selectedClub && actionLoading === `deactivate-${selectedClub.id}`
+          !!(selectedClub && actionLoading === `deactivate-${selectedClub.id}`)
         }
       />
 
@@ -415,7 +415,7 @@ export default function ClubsList() {
         onOpenChange={setReactivateModalOpen}
         onConfirm={handleReactivate}
         isLoading={
-          selectedClub && actionLoading === `reactivate-${selectedClub.id}`
+          !!(selectedClub && actionLoading === `reactivate-${selectedClub.id}`)
         }
       />
 
@@ -425,7 +425,7 @@ export default function ClubsList() {
         onOpenChange={setDeleteModalOpen}
         onConfirm={handleHardDelete}
         isLoading={
-          selectedClub && actionLoading === `delete-${selectedClub.id}`
+          !!(selectedClub && actionLoading === `delete-${selectedClub.id}`)
         }
       />
 

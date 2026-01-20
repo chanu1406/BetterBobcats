@@ -3,6 +3,17 @@
 import { useEffect, useState, useImperativeHandle, forwardRef } from "react";
 import Link from "next/link";
 import type { Major } from "@/types/major";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export interface MajorsListRef {
   refresh: () => void;
@@ -16,6 +27,8 @@ const MajorsList = forwardRef<MajorsListRef>((props, ref) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedMajor, setSelectedMajor] = useState<{ id: string; name: string } | null>(null);
 
   useEffect(() => {
     fetchMajors();
@@ -41,16 +54,20 @@ const MajorsList = forwardRef<MajorsListRef>((props, ref) => {
     }
   };
 
-  const handleDelete = async (majorId: string, majorName: string) => {
-    if (!confirm(`Are you sure you want to delete "${majorName}"? This action cannot be undone. If this major is associated with any clubs, the deletion will fail.`)) {
-      return;
-    }
+  const handleDeleteClick = (majorId: string, majorName: string) => {
+    setSelectedMajor({ id: majorId, name: majorName });
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDelete = async () => {
+    if (!selectedMajor) return;
 
     try {
-      setDeletingId(majorId);
+      setDeletingId(selectedMajor.id);
       setError(null);
+      setDeleteDialogOpen(false);
       const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-      const response = await fetch(`${API_BASE_URL}/api/majors/${majorId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/majors/${selectedMajor.id}`, {
         method: "DELETE",
       });
 
@@ -67,6 +84,7 @@ const MajorsList = forwardRef<MajorsListRef>((props, ref) => {
 
       // Refresh the list after successful deletion
       await fetchMajors();
+      setSelectedMajor(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to delete major");
     } finally {
@@ -153,14 +171,41 @@ const MajorsList = forwardRef<MajorsListRef>((props, ref) => {
                 >
                   Edit
                 </Link>
-                <button
-                  onClick={() => handleDelete(major.id, major.name)}
-                  disabled={deletingId === major.id}
-                  className="px-3 py-1.5 text-sm text-destructive hover:text-destructive hover:bg-destructive/10 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  title={`Delete ${major.name}`}
-                >
-                  {deletingId === major.id ? "Deleting..." : "Delete"}
-                </button>
+                <AlertDialog open={deleteDialogOpen && selectedMajor?.id === major.id} onOpenChange={(open) => {
+                  if (!open) {
+                    setDeleteDialogOpen(false);
+                    setSelectedMajor(null);
+                  }
+                }}>
+                  <AlertDialogTrigger asChild>
+                    <button
+                      onClick={() => handleDeleteClick(major.id, major.name)}
+                      disabled={deletingId === major.id}
+                      className="px-3 py-1.5 text-sm text-destructive hover:text-destructive hover:bg-destructive/10 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      title={`Delete ${major.name}`}
+                    >
+                      {deletingId === major.id ? "Deleting..." : "Delete"}
+                    </button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Delete Major</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Are you sure you want to delete "{selectedMajor?.name}"? This action cannot be undone. If this major is associated with any clubs, the deletion will fail.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={handleDelete}
+                        disabled={deletingId === selectedMajor?.id}
+                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                      >
+                        {deletingId === selectedMajor?.id ? "Deleting..." : "Delete"}
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
             </div>
           ))}

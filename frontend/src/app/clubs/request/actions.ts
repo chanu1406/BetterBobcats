@@ -18,6 +18,7 @@ interface SubmitClubRequestParams {
   logo_url?: string | null;
   banner_url?: string | null;
   tags: string[];
+  is_all_majors?: boolean;
   major_ids: string[];
   major_notes: Record<string, string>;
 }
@@ -89,6 +90,7 @@ export async function submitClubRequest(
         officer_phones: params.officer_phones.filter((p) => p.trim()) || [],
         logo_url: params.logo_url?.trim() || null,
         banner_url: params.banner_url?.trim() || null,
+        is_all_majors: params.is_all_majors || false,
         submitted_by: user.id,
         status: "pending",
       })
@@ -127,8 +129,8 @@ export async function submitClubRequest(
       }
     }
 
-    // Insert majors
-    if (params.major_ids && params.major_ids.length > 0) {
+    // Insert majors (only if not is_all_majors)
+    if (!params.is_all_majors && params.major_ids && params.major_ids.length > 0) {
       const majorInserts = params.major_ids.map((major_id) => ({
         request_id: requestId,
         major_id,
@@ -144,8 +146,8 @@ export async function submitClubRequest(
       }
     }
 
-    // Insert major notes (only non-empty notes)
-    if (params.major_notes && Object.keys(params.major_notes).length > 0) {
+    // Insert major notes (only if not is_all_majors and only non-empty notes)
+    if (!params.is_all_majors && params.major_notes && Object.keys(params.major_notes).length > 0) {
       const noteInserts = Object.entries(params.major_notes)
         .filter(([_, note]) => note && note.trim().length > 0)
         .map(([major_id, note]) => ({
@@ -273,6 +275,7 @@ interface UpdateClubRequestParams {
   officer_emails: string[];
   officer_phones: string[];
   tags: string[];
+  is_all_majors?: boolean;
   major_ids: string[];
   major_notes: Record<string, string>;
 }
@@ -368,6 +371,7 @@ export async function updateClubRequest(
         contact_email: normalizedEmails.contact_email,
         officer_emails: normalizedEmails.officer_emails,
         officer_phones: params.officer_phones.filter((p) => p.trim()) || [],
+        is_all_majors: params.is_all_majors || false,
         updated_at: new Date().toISOString(),
       })
       .eq("id", params.request_id);
@@ -407,13 +411,13 @@ export async function updateClubRequest(
       }
     }
 
-    // Delete existing majors and insert new ones
+    // Delete existing majors and insert new ones (only if not is_all_majors)
     await supabase
       .from("club_request_majors")
       .delete()
       .eq("request_id", params.request_id);
 
-    if (params.major_ids && params.major_ids.length > 0) {
+    if (!params.is_all_majors && params.major_ids && params.major_ids.length > 0) {
       const majorInserts = params.major_ids.map((major_id) => ({
         request_id: params.request_id,
         major_id,
@@ -429,13 +433,13 @@ export async function updateClubRequest(
       }
     }
 
-    // Delete existing major notes and insert new ones
+    // Delete existing major notes and insert new ones (only if not is_all_majors)
     await supabase
       .from("club_request_major_notes")
       .delete()
       .eq("request_id", params.request_id);
 
-    if (params.major_notes && Object.keys(params.major_notes).length > 0) {
+    if (!params.is_all_majors && params.major_notes && Object.keys(params.major_notes).length > 0) {
       const noteInserts = Object.entries(params.major_notes)
         .filter(([_, note]) => note && note.trim().length > 0)
         .map(([major_id, note]) => ({
