@@ -1,9 +1,123 @@
+    Now we are planning how the events work:
+    - We will have a database that stores an event this database will store all events from all clubs and will be used to make a big
+    monthly caleder showing all events posted by all clubs.
 
-Next steps:
-1. in admin dashboard add the ability to invite more officers by email.
-2. create the actual email sending ability so if a club is approved the contact email gets an email with x club has been approved you can access the clubs dashboard at
-then give link. 
-3. If rejected send an email saying thank you for requesting x club on betterbobcats. The reason for rejection is x. Please fix these errors at [club creation link] and submit a new application we would love to have you apart of our platform. 
-4. When a club is approved send an email to officers with a magic link so they can sign into their gmail and access their clubs dashboard. 
+    - What info we want stored:
+        Core fields (must-have)
+
+        id (uuid)
+
+        club_id (uuid, FK → clubs)
+
+        title (text) — “Event Name”
+
+        description (text) — short + long (can be one field v1)
+
+        starts_at (timestamptz)
+
+        ends_at (timestamptz) — optional but strongly recommended (calendar needs duration)
+
+        timezone (text) — optional if you always store timestamptz; still useful for display
+
+        location_name (text) — “COB 120” / “ACS 102”
+
+        location_address (text) — optional for off-campus
+
+        location_type (text) — on_campus | off_campus | online | hybrid
+
+        online_url (text) — Zoom/Meet link (nullable)
 
 
+Audience & filtering (for your “big calendar”)
+
+visibility (text) — public | members_only | unlisted
+
+major_targets (many-to-many) — store via join table:
+
+event_majors(event_id, major_id)
+
+and support “All majors” by either:
+
+no rows = all, OR
+
+a boolean is_all_majors (easier for queries)
+
+tags (optional but high value) — event_tags(event_id, tag) (resume, workshop, social, career, hackathon)
+
+capacity (int) — optional
+
+requires_rsvp (bool)
+
+rsvp_url (text) — Google form / Eventbrite / etc.
+
+Media / presentation (nice-to-have, but worth it)
+
+banner_url (text) — makes calendar/list look legit
+
+thumbnail_url (text) — optional
+
+attachments (later) — link table for flyers/pdf
+
+Control & safety fields (important for moderation + debugging)
+
+status (text) — draft | published | cancelled
+
+cancelled_reason (text) — optional
+
+created_at, updated_at (timestamptz)
+
+created_by (uuid) — auth.uid
+
+updated_by (uuid)
+
+published_at (timestamptz) — optional
+
+Helpful extras (still simple, very practical)
+
+is_featured (bool) — for homepage highlights
+
+contact_email (citext) — who to reach out to
+
+check_in_url / check_in_code (later, for attendance)
+
+“All majors” design choice (pick one)
+Option A (clean queries): is_all_majors boolean
+
+If true, ignore join table
+
+If false, use event_majors
+
+
+Minimal V1: what I’d actually ship first
+
+events
+
+id, club_id
+
+title, description
+
+starts_at, ends_at
+
+location_type, location_name, online_url
+
+visibility (public)
+
+status (published)
+
+banner_url (optional)
+
+is_all_majors (default true)
+
+created_at, created_by, updated_at
+
+event_majors
+
+event_id, major_id (only used when is_all_majors=false)
+            
+That’s enough to build:
+
+big monthly calendar
+
+event detail page
+
+club dashboard “create/edit event”

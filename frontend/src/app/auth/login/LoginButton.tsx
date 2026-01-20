@@ -1,6 +1,7 @@
 "use client";
 
 import { createClient } from "@/lib/supabase/browser";
+import styles from "./login.module.css";
 
 interface LoginButtonProps {
   next?: string;
@@ -37,10 +38,10 @@ export default function LoginButton({ next }: LoginButtonProps) {
   return (
     <button
       onClick={handleLogin}
-      className="w-full px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
+      className={styles["google-login-button"]}
     >
       <svg
-        className="w-5 h-5"
+        className={styles["google-icon"]}
         viewBox="0 0 24 24"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

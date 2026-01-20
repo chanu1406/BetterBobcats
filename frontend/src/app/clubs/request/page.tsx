@@ -31,7 +31,7 @@ export default async function ClubRequestPage() {
   const supabase = await createClient();
   const { data: majors, error: majorsError } = await supabase
     .from("majors")
-    .select("id, name")
+    .select("id, name, created_at")
     .order("name");
 
   if (majorsError) {

@@ -99,7 +99,7 @@ export default async function EditClubRequestPage({ params }: PageProps) {
   // Fetch all majors for the form
   const { data: majors, error: majorsError } = await supabase
     .from("majors")
-    .select("id, name")
+    .select("id, name, created_at")
     .order("name");
 
   if (majorsError) {
@@ -122,6 +122,7 @@ export default async function EditClubRequestPage({ params }: PageProps) {
             officer_emails: requestData.officer_emails || [],
             officer_phones: requestData.officer_phones || [],
             tags,
+            is_all_majors: requestData.is_all_majors || false,
             major_ids: majorIds,
             major_notes: majorNotes,
             logo_url: requestData.logo_url,
