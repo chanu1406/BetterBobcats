@@ -4,6 +4,15 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface Club {
   id: string;
@@ -30,7 +39,7 @@ export default function ClubsPage() {
       try {
         const { data, error } = await supabase
           .from("majors")
-          .select("id, name")
+          .select("id, name, created_at")
           .order("name");
 
         if (error) throw error;
@@ -94,42 +103,6 @@ export default function ClubsPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/8 via-background to-accent/15">
-      {/* Navigation Bar */}
-      <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex justify-between items-center">
-            <Link href="/" className="flex items-center gap-3">
-              <img 
-                src="/BetterBobcatsLogo.svg" 
-                alt="BetterBobcats Logo"
-                className="h-10 w-auto"
-              />
-              <div className="flex items-center gap-2">
-                <h2 className="text-xl font-bold">BetterBobcats</h2>
-                <span className="text-xs text-muted-foreground">UC Merced</span>
-              </div>
-            </Link>
-            <div className="flex gap-6 items-center">
-              <Link
-                href="/degrees"
-                className="text-sm font-medium hover:text-primary transition-colors"
-              >
-                Degrees
-              </Link>
-              <Link
-                href="/clubs"
-                className="text-sm font-medium text-primary transition-colors"
-              >
-                Clubs
-              </Link>
-              <Link href="/clubs/request">
-                <Button size="sm">Request a Club</Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
-
       <div className="max-w-7xl mx-auto px-4 py-12">
         {/* Header */}
         <div className="text-center mb-12">
@@ -149,19 +122,25 @@ export default function ClubsPage() {
           >
             Filter by Major
           </label>
-          <select
-            id="major-select"
-            value={selectedMajor}
-            onChange={(e) => setSelectedMajor(e.target.value)}
-            className="w-full px-4 py-3 border-2 border-primary/20 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-card transition-all"
+          <Select
+            value={selectedMajor || undefined}
+            onValueChange={(value) => setSelectedMajor(value || "")}
           >
-            <option value="">All Majors</option>
-            {majors.map((major) => (
-              <option key={major.id} value={major.id}>
-                {major.name}
-              </option>
-            ))}
-          </select>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="All Majors" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Majors</SelectLabel>
+                <SelectItem value="">All Majors</SelectItem>
+                {majors.map((major) => (
+                  <SelectItem key={major.id} value={major.id}>
+                    {major.name}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Error Message */}

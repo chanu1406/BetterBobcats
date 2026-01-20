@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import LoginButton from "./LoginButton";
+import { LoginCard } from "./LoginCard";
 
 export const metadata = {
   title: "Admin Login - BetterBobcats",
@@ -12,13 +12,13 @@ export const metadata = {
 
 /**
  * Login Page
- * Shows Google OAuth login button
+ * Shows login form with Google OAuth login button
  * Redirects appropriately based on next parameter
  */
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string; next?: string }>;
+  searchParams: Promise<{ error?: string; next?: string; message?: string; email?: string }>;
 }) {
   const supabase = await createClient();
   const {
@@ -29,6 +29,8 @@ export default async function LoginPage({
   const next = params?.next || "/admin";
   const isAdminRoute = next.startsWith("/admin");
   const error = params?.error === 'not_authorized';
+  const message = params?.message;
+  const email = params?.email;
 
   // If user is logged in, handle redirect based on route
   if (user) {
@@ -53,31 +55,8 @@ export default async function LoginPage({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/8 via-background to-accent/15 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <div className="bg-card p-8 rounded-xl border-2 border-primary/20 shadow-xl">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-primary mb-2">
-              {isAdminRoute ? "Admin Login" : "Login"}
-            </h1>
-            <p className="text-muted-foreground">
-              {isAdminRoute 
-                ? "Sign in with Google to access the admin panel"
-                : "Sign in with Google to continue"}
-            </p>
-          </div>
-
-          {error && (
-            <div className="mb-6 bg-destructive/10 border-2 border-destructive/30 text-destructive px-4 py-3 rounded-lg text-sm">
-              {isAdminRoute
-                ? "The account you signed in with does not have admin access. Please try a different account or contact an administrator."
-                : "There was an error signing in. Please try again."}
-            </div>
-          )}
-
-          <LoginButton next={next} />
-        </div>
-      </div>
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
+      <LoginCard next={next} error={error ? 'not_authorized' : undefined} isAdminRoute={isAdminRoute} message={message} prefilledEmail={email} />
     </div>
   );
 }

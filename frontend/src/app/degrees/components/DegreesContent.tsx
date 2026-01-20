@@ -26,6 +26,9 @@ import PoliticalScienceGraphLegend from "../political-science/components/GraphLe
 import PolicyResearchAnalystCareerPathGraph from "../political-science/careers/policy-research-analyst/components/CareerPathGraph";
 import LegislativeAideGovernmentStaffCareerPathGraph from "../political-science/careers/legislative-aide-government-staff/components/CareerPathGraph";
 import PublicAdministrationNonprofitProgramCoordinatorCareerPathGraph from "../political-science/careers/public-administration-nonprofit-program-coordinator/components/CareerPathGraph";
+import CampaignStaffFieldOrganizerCareerPathGraph from "../political-science/careers/campaign-staff-field-organizer-campaign-management/components/CareerPathGraph";
+import AdvocacyLobbyingGovernmentRelationsCareerPathGraph from "../political-science/careers/advocacy-lobbying-government-relations/components/CareerPathGraph";
+import LawPreLawCareerPathGraph from "../political-science/careers/law-pre-law/components/CareerPathGraph";
 import PowerSystemsCareerPathGraph from "../electrical-engineering/careers/power-systems/components/CareerPathGraph";
 import EmbeddedSystemsEECareerPathGraph from "../electrical-engineering/careers/embedded-systems/components/CareerPathGraph";
 import EVAutomotiveCareerPathGraph from "../electrical-engineering/careers/ev-automotive/components/CareerPathGraph";
@@ -106,6 +109,18 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
   const resetPublicAdministrationNonprofitProgramCoordinatorGraphRef = useRef<(() => void) | null>(null);
   const formatPublicAdministrationNonprofitProgramCoordinatorGraphRef = useRef<(() => void) | null>(null);
   
+  // Campaign Staff / Field Organizer / Campaign Management career path graph handlers
+  const resetCampaignStaffFieldOrganizerGraphRef = useRef<(() => void) | null>(null);
+  const formatCampaignStaffFieldOrganizerGraphRef = useRef<(() => void) | null>(null);
+  
+  // Advocacy / Lobbying / Government Relations career path graph handlers
+  const resetAdvocacyLobbyingGovernmentRelationsGraphRef = useRef<(() => void) | null>(null);
+  const formatAdvocacyLobbyingGovernmentRelationsGraphRef = useRef<(() => void) | null>(null);
+  
+  // Law / Pre-Law career path graph handlers
+  const resetLawPreLawGraphRef = useRef<(() => void) | null>(null);
+  const formatLawPreLawGraphRef = useRef<(() => void) | null>(null);
+  
   // Power Systems career path graph handlers
   const resetPowerSystemsGraphRef = useRef<(() => void) | null>(null);
   const formatPowerSystemsGraphRef = useRef<(() => void) | null>(null);
@@ -163,6 +178,12 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
   const [formatLegislativeAideGovernmentStaffReady, setFormatLegislativeAideGovernmentStaffReady] = useState(false);
   const [resetPublicAdministrationNonprofitProgramCoordinatorReady, setResetPublicAdministrationNonprofitProgramCoordinatorReady] = useState(false);
   const [formatPublicAdministrationNonprofitProgramCoordinatorReady, setFormatPublicAdministrationNonprofitProgramCoordinatorReady] = useState(false);
+  const [resetCampaignStaffFieldOrganizerReady, setResetCampaignStaffFieldOrganizerReady] = useState(false);
+  const [formatCampaignStaffFieldOrganizerReady, setFormatCampaignStaffFieldOrganizerReady] = useState(false);
+  const [resetAdvocacyLobbyingGovernmentRelationsReady, setResetAdvocacyLobbyingGovernmentRelationsReady] = useState(false);
+  const [formatAdvocacyLobbyingGovernmentRelationsReady, setFormatAdvocacyLobbyingGovernmentRelationsReady] = useState(false);
+  const [resetLawPreLawReady, setResetLawPreLawReady] = useState(false);
+  const [formatLawPreLawReady, setFormatLawPreLawReady] = useState(false);
   const [resetPowerSystemsReady, setResetPowerSystemsReady] = useState(false);
   const [formatPowerSystemsReady, setFormatPowerSystemsReady] = useState(false);
   const [resetEmbeddedSystemsEEReady, setResetEmbeddedSystemsEEReady] = useState(false);
@@ -401,11 +422,53 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
       setResetPublicAdministrationNonprofitProgramCoordinatorReady(true);
     });
   });
-
+  
   const handleFormatPublicAdministrationNonprofitProgramCoordinatorReady = useRef((handler: () => void) => {
     formatPublicAdministrationNonprofitProgramCoordinatorGraphRef.current = handler;
     requestAnimationFrame(() => {
       setFormatPublicAdministrationNonprofitProgramCoordinatorReady(true);
+    });
+  });
+  
+  const handleResetCampaignStaffFieldOrganizerReady = useRef((handler: () => void) => {
+    resetCampaignStaffFieldOrganizerGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setResetCampaignStaffFieldOrganizerReady(true);
+    });
+  });
+  
+  const handleFormatCampaignStaffFieldOrganizerReady = useRef((handler: () => void) => {
+    formatCampaignStaffFieldOrganizerGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setFormatCampaignStaffFieldOrganizerReady(true);
+    });
+  });
+  
+  const handleResetAdvocacyLobbyingGovernmentRelationsReady = useRef((handler: () => void) => {
+    resetAdvocacyLobbyingGovernmentRelationsGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setResetAdvocacyLobbyingGovernmentRelationsReady(true);
+    });
+  });
+  
+  const handleFormatAdvocacyLobbyingGovernmentRelationsReady = useRef((handler: () => void) => {
+    formatAdvocacyLobbyingGovernmentRelationsGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setFormatAdvocacyLobbyingGovernmentRelationsReady(true);
+    });
+  });
+  
+  const handleResetLawPreLawReady = useRef((handler: () => void) => {
+    resetLawPreLawGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setResetLawPreLawReady(true);
+    });
+  });
+  
+  const handleFormatLawPreLawReady = useRef((handler: () => void) => {
+    formatLawPreLawGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setFormatLawPreLawReady(true);
     });
   });
   
@@ -594,6 +657,9 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
       "policy-research-analyst": "Policy / Research Analyst",
       "legislative-aide-government-staff": "Legislative Aide / Government Staff",
       "public-administration-nonprofit-program-coordinator": "Public Administration / Nonprofit Program Coordinator",
+      "campaign-staff-field-organizer": "Campaign Staff / Field Organizer / Campaign Management",
+      "advocacy-lobbying-government-relations": "Advocacy / Lobbying / Government Relations",
+      "law-pre-law": "Law / Pre-Law",
       resumes: "Resumes",
       alumni: "Alumni",
     };
@@ -1854,6 +1920,198 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
               <PublicAdministrationNonprofitProgramCoordinatorCareerPathGraph 
                 onResetReady={handleResetPublicAdministrationNonprofitProgramCoordinatorReady.current}
                 onFormatReady={handleFormatPublicAdministrationNonprofitProgramCoordinatorReady.current}
+              />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Show Campaign Staff / Field Organizer / Campaign Management career path with graph
+    if (selectedCareerPath === "campaign-staff-field-organizer") {
+      return (
+        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-10 text-center">
+              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+                {careerPathNames[selectedCareerPath]} - {selectedDegree}
+              </h2>
+              <p className="text-black mb-5">
+                Career pathway information and recommended courses
+              </p>
+              {careerDescriptions[selectedCareerPath] && (
+                <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+                  {careerDescriptions[selectedCareerPath]}
+                </p>
+              )}
+            </div>
+            
+            {/* Format and Reset buttons */}
+            <div className="mb-6 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  if (formatCampaignStaffFieldOrganizerReady && formatCampaignStaffFieldOrganizerGraphRef.current) {
+                    formatCampaignStaffFieldOrganizerGraphRef.current();
+                  }
+                }}
+                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                  formatCampaignStaffFieldOrganizerReady && formatCampaignStaffFieldOrganizerGraphRef.current
+                    ? "text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+                }`}
+                title={formatCampaignStaffFieldOrganizerReady && formatCampaignStaffFieldOrganizerGraphRef.current ? "Format graph to prevent overlap" : "Waiting for format handler..."}
+              >
+                Format Graph
+              </button>
+              <button
+                onClick={() => {
+                  if (resetCampaignStaffFieldOrganizerReady && resetCampaignStaffFieldOrganizerGraphRef.current) {
+                    resetCampaignStaffFieldOrganizerGraphRef.current();
+                  }
+                }}
+                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                  resetCampaignStaffFieldOrganizerReady && resetCampaignStaffFieldOrganizerGraphRef.current
+                    ? "text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+                }`}
+                title={resetCampaignStaffFieldOrganizerReady && resetCampaignStaffFieldOrganizerGraphRef.current ? "Reset career path graph view" : "Waiting for reset handler..."}
+              >
+                Reset Graph
+              </button>
+            </div>
+            
+            <div className="mb-10">
+              <CampaignStaffFieldOrganizerCareerPathGraph 
+                onResetReady={handleResetCampaignStaffFieldOrganizerReady.current}
+                onFormatReady={handleFormatCampaignStaffFieldOrganizerReady.current}
+              />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Show Advocacy / Lobbying / Government Relations career path with graph
+    if (selectedCareerPath === "advocacy-lobbying-government-relations") {
+      return (
+        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-10 text-center">
+              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+                {careerPathNames[selectedCareerPath]} - {selectedDegree}
+              </h2>
+              <p className="text-black mb-5">
+                Career pathway information and recommended courses
+              </p>
+              {careerDescriptions[selectedCareerPath] && (
+                <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+                  {careerDescriptions[selectedCareerPath]}
+                </p>
+              )}
+            </div>
+            
+            {/* Format and Reset buttons */}
+            <div className="mb-6 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  if (formatAdvocacyLobbyingGovernmentRelationsReady && formatAdvocacyLobbyingGovernmentRelationsGraphRef.current) {
+                    formatAdvocacyLobbyingGovernmentRelationsGraphRef.current();
+                  }
+                }}
+                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                  formatAdvocacyLobbyingGovernmentRelationsReady && formatAdvocacyLobbyingGovernmentRelationsGraphRef.current
+                    ? "text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+                }`}
+                title={formatAdvocacyLobbyingGovernmentRelationsReady && formatAdvocacyLobbyingGovernmentRelationsGraphRef.current ? "Format graph to prevent overlap" : "Waiting for format handler..."}
+              >
+                Format Graph
+              </button>
+              <button
+                onClick={() => {
+                  if (resetAdvocacyLobbyingGovernmentRelationsReady && resetAdvocacyLobbyingGovernmentRelationsGraphRef.current) {
+                    resetAdvocacyLobbyingGovernmentRelationsGraphRef.current();
+                  }
+                }}
+                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                  resetAdvocacyLobbyingGovernmentRelationsReady && resetAdvocacyLobbyingGovernmentRelationsGraphRef.current
+                    ? "text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+                }`}
+                title={resetAdvocacyLobbyingGovernmentRelationsReady && resetAdvocacyLobbyingGovernmentRelationsGraphRef.current ? "Reset career path graph view" : "Waiting for reset handler..."}
+              >
+                Reset Graph
+              </button>
+            </div>
+            
+            <div className="mb-10">
+              <AdvocacyLobbyingGovernmentRelationsCareerPathGraph 
+                onResetReady={handleResetAdvocacyLobbyingGovernmentRelationsReady.current}
+                onFormatReady={handleFormatAdvocacyLobbyingGovernmentRelationsReady.current}
+              />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Show Law / Pre-Law career path with graph
+    if (selectedCareerPath === "law-pre-law") {
+      return (
+        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-10 text-center">
+              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+                {careerPathNames[selectedCareerPath]} - {selectedDegree}
+              </h2>
+              <p className="text-black mb-5">
+                Career pathway information and recommended courses
+              </p>
+              {careerDescriptions[selectedCareerPath] && (
+                <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+                  {careerDescriptions[selectedCareerPath]}
+                </p>
+              )}
+            </div>
+            
+            {/* Format and Reset buttons */}
+            <div className="mb-6 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  if (formatLawPreLawReady && formatLawPreLawGraphRef.current) {
+                    formatLawPreLawGraphRef.current();
+                  }
+                }}
+                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                  formatLawPreLawReady && formatLawPreLawGraphRef.current
+                    ? "text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+                }`}
+                title={formatLawPreLawReady && formatLawPreLawGraphRef.current ? "Format graph to prevent overlap" : "Waiting for format handler..."}
+              >
+                Format Graph
+              </button>
+              <button
+                onClick={() => {
+                  if (resetLawPreLawReady && resetLawPreLawGraphRef.current) {
+                    resetLawPreLawGraphRef.current();
+                  }
+                }}
+                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
+                  resetLawPreLawReady && resetLawPreLawGraphRef.current
+                    ? "text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
+                }`}
+                title={resetLawPreLawReady && resetLawPreLawGraphRef.current ? "Reset career path graph view" : "Waiting for reset handler..."}
+              >
+                Reset Graph
+              </button>
+            </div>
+            
+            <div className="mb-10">
+              <LawPreLawCareerPathGraph 
+                onResetReady={handleResetLawPreLawReady.current}
+                onFormatReady={handleFormatLawPreLawReady.current}
               />
             </div>
           </div>

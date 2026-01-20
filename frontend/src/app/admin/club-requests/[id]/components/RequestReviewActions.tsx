@@ -54,6 +54,19 @@ export default function RequestReviewActions({
         throw new Error(rpcError.message || "Failed to approve request");
       }
 
+      // Trigger email worker to process pending emails
+      try {
+        await fetch('/api/admin/trigger-email-worker', {
+          method: 'POST',
+          credentials: 'include',
+        });
+        // Fire-and-forget: don't wait for response or show errors
+        // Emails will be processed asynchronously
+      } catch (emailError) {
+        // Silently fail - emails will be processed later
+        console.error('Failed to trigger email worker:', emailError);
+      }
+
       setSuccess("Request approved successfully!");
       
       // Redirect after a short delay
@@ -92,6 +105,19 @@ export default function RequestReviewActions({
 
       if (rpcError) {
         throw new Error(rpcError.message || "Failed to reject request");
+      }
+
+      // Trigger email worker to process pending emails
+      try {
+        await fetch('/api/admin/trigger-email-worker', {
+          method: 'POST',
+          credentials: 'include',
+        });
+        // Fire-and-forget: don't wait for response or show errors
+        // Emails will be processed asynchronously
+      } catch (emailError) {
+        // Silently fail - emails will be processed later
+        console.error('Failed to trigger email worker:', emailError);
       }
 
       setSuccess("Request rejected successfully!");

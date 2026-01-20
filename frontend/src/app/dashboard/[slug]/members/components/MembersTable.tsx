@@ -30,6 +30,14 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -87,6 +95,12 @@ export default function MembersTable({
   const [removeDialogOpen, setRemoveDialogOpen] = useState(false);
   const [removeConfirmText, setRemoveConfirmText] = useState("");
   const [isRemoving, setIsRemoving] = useState(false);
+
+  // Invite member state
+  const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteRole, setInviteRole] = useState<MemberRole>("member");
+  const [isInviting, setIsInviting] = useState(false);
 
   // Load members
   const loadMembers = useCallback(async () => {
@@ -224,6 +238,15 @@ export default function MembersTable({
       return;
     }
 
+    if (member.role === "admin") {
+      addToast({
+        title: "Cannot Remove Admins",
+        description: "Admins cannot be removed. Change their role to officer or member first.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (isDeactivated) {
       addToast({
         title: "Club Deactivated",
@@ -281,6 +304,104 @@ export default function MembersTable({
     }
   };
 
+  // Handle invite member
+  const handleInviteMember = async () => {
+    if (!inviteEmail.trim()) {
+      addToast({
+        title: "Email Required",
+        description: "Please enter an email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(inviteEmail.trim())) {
+      addToast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsInviting(true);
+    setError(null);
+
+    try {
+      // Check if invite already exists (pending)
+      const { data: existingInvite } = await supabase
+        .from("club_invites")
+        .select("id, accepted_at")
+        .eq("club_id", clubId)
+        .eq("email", inviteEmail.trim().toLowerCase())
+        .is("accepted_at", null)
+        .maybeSingle();
+
+      if (existingInvite && !existingInvite.accepted_at) {
+        addToast({
+          title: "Invite Already Sent",
+          description: "An invite has already been sent to this email address.",
+          variant: "destructive",
+        });
+        setIsInviting(false);
+        return;
+      }
+
+      // Create the invite - this will trigger the email automatically
+      const { data: inviteData, error: inviteError } = await supabase
+        .from("club_invites")
+        .insert({
+          club_id: clubId,
+          email: inviteEmail.trim().toLowerCase(),
+          role: inviteRole,
+          created_by: currentUserId,
+        })
+        .select("id")
+        .single();
+
+      if (inviteError) {
+        // Check if it's a duplicate key error
+        if (inviteError.code === "23505" || inviteError.message.includes("duplicate")) {
+          addToast({
+            title: "Invite Already Exists",
+            description: "An invite has already been sent to this email address.",
+            variant: "destructive",
+          });
+        } else {
+          throw new Error(inviteError.message || "Failed to create invite");
+        }
+        return;
+      }
+
+      addToast({
+        title: "Invite Sent",
+        description: `An invitation has been sent to ${inviteEmail.trim()} as ${inviteRole}.`,
+        variant: "success",
+      });
+
+      // Reset form
+      setInviteDialogOpen(false);
+      setInviteEmail("");
+      setInviteRole("member");
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "An unexpected error occurred"
+      );
+      addToast({
+        title: "Error",
+        description:
+          err instanceof Error
+            ? err.message
+            : "Failed to send invite. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsInviting(false);
+    }
+  };
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
       month: "short",
@@ -314,7 +435,7 @@ export default function MembersTable({
         </Alert>
       )}
 
-      {/* Page Size Selector */}
+      {/* Page Size Selector and Invite Button */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Label htmlFor="page-size">Page size:</Label>
@@ -332,6 +453,13 @@ export default function MembersTable({
             </SelectContent>
           </Select>
         </div>
+        <Button
+          onClick={() => setInviteDialogOpen(true)}
+          disabled={isDeactivated}
+          title={isDeactivated ? "Cannot invite members while club is deactivated" : undefined}
+        >
+          Invite Member
+        </Button>
       </div>
 
       {/* Members Table */}
@@ -394,7 +522,16 @@ export default function MembersTable({
                           variant="destructive"
                           size="sm"
                           onClick={() => handleRemoveMember(member)}
-                          disabled={isCurrentUser || isDeactivated}
+                          disabled={
+                            isCurrentUser || 
+                            isDeactivated || 
+                            member.role === "admin"
+                          }
+                          title={
+                            member.role === "admin"
+                              ? "Admins cannot be removed. Change their role first."
+                              : undefined
+                          }
                         >
                           Remove
                         </Button>
@@ -512,6 +649,161 @@ export default function MembersTable({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Invite Member Dialog */}
+      <Dialog open={inviteDialogOpen} onOpenChange={setInviteDialogOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle className="text-2xl">Invite New Member</DialogTitle>
+            <DialogDescription className="text-base">
+              Send an invitation to join your club. They will receive an email with a link to accept the invitation.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-6 py-4">
+            {/* Email Input */}
+            <div className="space-y-2">
+              <Label htmlFor="invite-email" className="text-sm font-semibold">
+                Email Address
+              </Label>
+              <Input
+                id="invite-email"
+                type="email"
+                placeholder="member@example.com"
+                value={inviteEmail}
+                onChange={(e) => setInviteEmail(e.target.value)}
+                disabled={isInviting}
+                required
+                className="h-11"
+              />
+            </div>
+
+            {/* Role Selection */}
+            <div className="space-y-3">
+              <Label className="text-sm font-semibold">Role</Label>
+              <div className="grid gap-3">
+                <button
+                  type="button"
+                  onClick={() => !isInviting && setInviteRole("member")}
+                  disabled={isInviting}
+                  className={`flex items-start gap-3 rounded-lg border-2 p-4 text-left transition-all hover:bg-accent ${
+                    inviteRole === "member"
+                      ? "border-primary bg-accent"
+                      : "border-border"
+                  } ${isInviting ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}
+                >
+                  <div className={`mt-0.5 h-4 w-4 rounded-full border-2 flex items-center justify-center ${
+                    inviteRole === "member"
+                      ? "border-primary"
+                      : "border-muted-foreground"
+                  }`}>
+                    {inviteRole === "member" && (
+                      <div className="h-2 w-2 rounded-full bg-primary" />
+                    )}
+                  </div>
+                  <div className="flex-1 space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold">Member</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      Can participate in club activities and attend events.
+                    </p>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => !isInviting && setInviteRole("officer")}
+                  disabled={isInviting}
+                  className={`flex items-start gap-3 rounded-lg border-2 p-4 text-left transition-all hover:bg-accent ${
+                    inviteRole === "officer"
+                      ? "border-primary bg-accent"
+                      : "border-border"
+                  } ${isInviting ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}
+                >
+                  <div className={`mt-0.5 h-4 w-4 rounded-full border-2 flex items-center justify-center ${
+                    inviteRole === "officer"
+                      ? "border-primary"
+                      : "border-muted-foreground"
+                  }`}>
+                    {inviteRole === "officer" && (
+                      <div className="h-2 w-2 rounded-full bg-primary" />
+                    )}
+                  </div>
+                  <div className="flex-1 space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold">Officer</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      Can help manage the club and create events.
+                    </p>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => !isInviting && setInviteRole("admin")}
+                  disabled={isInviting}
+                  className={`flex items-start gap-3 rounded-lg border-2 p-4 text-left transition-all hover:bg-accent ${
+                    inviteRole === "admin"
+                      ? "border-primary bg-accent"
+                      : "border-border"
+                  } ${isInviting ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}
+                >
+                  <div className={`mt-0.5 h-4 w-4 rounded-full border-2 flex items-center justify-center ${
+                    inviteRole === "admin"
+                      ? "border-primary"
+                      : "border-muted-foreground"
+                  }`}>
+                    {inviteRole === "admin" && (
+                      <div className="h-2 w-2 rounded-full bg-primary" />
+                    )}
+                  </div>
+                  <div className="flex-1 space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold">Admin</span>
+                      <Badge variant="secondary" className="text-xs">
+                        Full Access
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      Has full control over the club, including member management.
+                    </p>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setInviteDialogOpen(false);
+                setInviteEmail("");
+                setInviteRole("member");
+              }}
+              disabled={isInviting}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleInviteMember}
+              disabled={isInviting || !inviteEmail.trim()}
+              className="min-w-[120px]"
+            >
+              {isInviting ? (
+                <>
+                  <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-background border-t-transparent" />
+                  Sending...
+                </>
+              ) : (
+                "Send Invite"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
