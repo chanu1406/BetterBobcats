@@ -48,7 +48,7 @@ export function LoginCard({ next, error, isAdminRoute, message, prefilledEmail }
       try {
         const supabase = createClient();
         const origin = window.location.origin;
-        const nextUrl = next || "/admin";
+        const nextUrl = next || "/dashboard";
 
         const { data, error: signInError } = await supabase.auth.signInWithPassword({
           email: email.trim(),

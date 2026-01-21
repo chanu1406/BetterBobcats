@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createClient } from "@/lib/supabase/browser";
 import { useToast } from "@/components/ui/toast";
 import { Badge } from "@/components/ui/badge";
@@ -12,23 +13,22 @@ import {
   HardDeleteModal,
 } from "./ClubActionModals";
 import ClubDetailsDialog from "./ClubDetailsDialog";
-import type { Club } from "@/types/club";
 import { ChevronDown } from "lucide-react";
+import { fetchAdminClubsList, type AdminClub } from "@/lib/admin";
 
 /**
  * Component to display a list of all clubs with admin actions
+ * Optimized with TanStack Query and Supabase direct queries
  */
 export default function ClubsList() {
-  const [clubs, setClubs] = useState<Club[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
   // Modal states
   const [deactivateModalOpen, setDeactivateModalOpen] = useState(false);
   const [reactivateModalOpen, setReactivateModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
-  const [selectedClub, setSelectedClub] = useState<Club | null>(null);
+  const [selectedClub, setSelectedClub] = useState<AdminClub | null>(null);
 
   // Loading states for actions
   const [actionLoading, setActionLoading] = useState<string | null>(null);
@@ -39,31 +39,36 @@ export default function ClubsList() {
   const { addToast } = useToast();
   const supabase = createClient();
 
-  useEffect(() => {
-    fetchClubs();
-  }, []);
+  // Fetch clubs with TanStack Query
+  const {
+    data: clubs = [],
+    isLoading,
+    error: queryError,
+  } = useQuery({
+    queryKey: ["admin-clubs-list"],
+    queryFn: () => fetchAdminClubsList(100, 0),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
+    refetchOnWindowFocus: true,
+    retry: 1,
+  });
 
-  const fetchClubs = async () => {
-    try {
-      setIsLoading(true);
-      const API_BASE_URL =
-        process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-      const response = await fetch(`${API_BASE_URL}/api/clubs/`);
+  const error = queryError
+    ? queryError instanceof Error
+      ? queryError.message
+      : "Failed to load clubs"
+    : null;
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch clubs");
-      }
-
-      const data = await response.json();
-      setClubs(data);
-      setError(null);
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Failed to load clubs"
-      );
-    } finally {
-      setIsLoading(false);
-    }
+  // Prefetch club details on hover
+  const handleClubHover = (clubId: string) => {
+    queryClient.prefetchQuery({
+      queryKey: ["admin-club-details", clubId],
+      queryFn: async () => {
+        const { fetchAdminClubFullDetails } = await import("@/lib/admin");
+        return fetchAdminClubFullDetails(clubId, 50, 0);
+      },
+      staleTime: 30_000, // 30 seconds
+    });
   };
 
   const handleDeactivate = async () => {
@@ -87,7 +92,8 @@ export default function ClubsList() {
 
       setDeactivateModalOpen(false);
       setSelectedClub(null);
-      await fetchClubs();
+      // Invalidate and refetch clubs list
+      queryClient.invalidateQueries({ queryKey: ["admin-clubs-list"] });
     } catch (err) {
       addToast({
         title: "Error",
@@ -123,7 +129,8 @@ export default function ClubsList() {
 
       setReactivateModalOpen(false);
       setSelectedClub(null);
-      await fetchClubs();
+      // Invalidate and refetch clubs list
+      queryClient.invalidateQueries({ queryKey: ["admin-clubs-list"] });
     } catch (err) {
       addToast({
         title: "Error",
@@ -157,14 +164,12 @@ export default function ClubsList() {
         variant: "success",
       });
 
-      // Remove from UI immediately
-      setClubs((prev) => prev.filter((c) => c.id !== selectedClub.id));
       setDeleteModalOpen(false);
       setSelectedClub(null);
       setDeleteDropdownOpen(null);
 
-      // Refetch to ensure consistency
-      await fetchClubs();
+      // Invalidate and refetch clubs list
+      queryClient.invalidateQueries({ queryKey: ["admin-clubs-list"] });
     } catch (err) {
       addToast({
         title: "Error",
@@ -179,23 +184,23 @@ export default function ClubsList() {
     }
   };
 
-  const openDeactivateModal = (club: Club) => {
+  const openDeactivateModal = (club: AdminClub) => {
     setSelectedClub(club);
     setDeactivateModalOpen(true);
   };
 
-  const openReactivateModal = (club: Club) => {
+  const openReactivateModal = (club: AdminClub) => {
     setSelectedClub(club);
     setReactivateModalOpen(true);
   };
 
-  const openDeleteModal = (club: Club) => {
+  const openDeleteModal = (club: AdminClub) => {
     setSelectedClub(club);
     setDeleteModalOpen(true);
     setDeleteDropdownOpen(null);
   };
 
-  const openDetailsDialog = (club: Club) => {
+  const openDetailsDialog = (club: AdminClub) => {
     setSelectedClub(club);
     setDetailsDialogOpen(true);
   };
@@ -221,7 +226,9 @@ export default function ClubsList() {
           {error}
         </div>
         <button
-          onClick={fetchClubs}
+          onClick={() =>
+            queryClient.invalidateQueries({ queryKey: ["admin-clubs-list"] })
+          }
           className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition-colors"
         >
           Retry
@@ -239,7 +246,9 @@ export default function ClubsList() {
               Existing Clubs ({clubs.length})
             </h2>
             <button
-              onClick={fetchClubs}
+              onClick={() =>
+                queryClient.invalidateQueries({ queryKey: ["admin-clubs-list"] })
+              }
               className="px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition-colors"
             >
               Refresh
@@ -268,6 +277,7 @@ export default function ClubsList() {
                   key={club.id}
                   className="p-6 hover:bg-muted/20 transition-colors cursor-pointer"
                   onClick={() => openDetailsDialog(club)}
+                  onMouseEnter={() => handleClubHover(club.id)}
                 >
                   <div className="flex items-center gap-4">
                     {/* Logo */}

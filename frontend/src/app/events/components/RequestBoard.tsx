@@ -1,13 +1,14 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Plus, Pin, Filter, X, Search } from "lucide-react";
 import { fetchEventRequests } from "@/lib/event-requests";
 import type { EventRequest } from "@/types/event-request";
 import { StickyNote } from "./StickyNote";
 import { CreateRequestDialog } from "./CreateRequestDialog";
-import { EventRequestDrawer } from "./EventRequestDrawer";
+import { RequestDetailsPanel } from "./RequestDetailsPanel";
 import { SignInDialog } from "./SignInDialog";
 import { RequestBoardHeader } from "./RequestBoardHeader";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -39,10 +40,7 @@ interface Major {
 type SortOption = "most-upvoted" | "newest" | "fulfilled";
 
 export function RequestBoard() {
-  const [requests, setRequests] = useState<EventRequest[]>([]);
-  const [allRequests, setAllRequests] = useState<EventRequest[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState<EventRequest | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -54,8 +52,20 @@ export function RequestBoard() {
   const [sortOption, setSortOption] = useState<SortOption>("most-upvoted");
   const [searchQuery, setSearchQuery] = useState("");
 
+  // Fetch event requests with TanStack Query
+  const {
+    data: allRequests = [],
+    isLoading: loading,
+    error,
+  } = useQuery({
+    queryKey: ["event-requests"],
+    queryFn: fetchEventRequests,
+    staleTime: 2 * 60 * 1000, // 2 minutes
+    gcTime: 5 * 60 * 1000, // 5 minutes
+    refetchOnWindowFocus: false,
+  });
+
   useEffect(() => {
-    loadRequests();
     loadMajors();
     checkAuth();
 
@@ -72,8 +82,13 @@ export function RequestBoard() {
     };
   }, []);
 
+  // Invalidate cache helper
+  const invalidateRequests = () => {
+    queryClient.invalidateQueries({ queryKey: ["event-requests"] });
+  };
+
   // Sort and filter requests
-  const sortedAndFilteredRequests = useMemo(() => {
+  const requests = useMemo(() => {
     let filtered = allRequests;
 
     // Filter by major
@@ -119,10 +134,6 @@ export function RequestBoard() {
     return sorted;
   }, [allRequests, selectedMajorIds, searchQuery, sortOption]);
 
-  useEffect(() => {
-    setRequests(sortedAndFilteredRequests);
-  }, [sortedAndFilteredRequests]);
-
   const loadMajors = async () => {
     try {
       const supabase = createClient();
@@ -146,20 +157,6 @@ export function RequestBoard() {
     setIsAuthenticated(!!user);
   };
 
-  const loadRequests = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await fetchEventRequests();
-      setAllRequests(data);
-      // Initial filter will be applied by useEffect
-    } catch (err) {
-      console.error("Error loading requests:", err);
-      setError(err instanceof Error ? err.message : "Failed to load requests");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const toggleMajorFilter = (majorId: string) => {
     setSelectedMajorIds((prev) =>
@@ -187,19 +184,21 @@ export function RequestBoard() {
   };
 
   const handleRequestCreated = () => {
-    loadRequests();
+    invalidateRequests();
     setCreateDialogOpen(false);
   };
 
   const handleRequestDeleted = () => {
-    loadRequests();
+    invalidateRequests();
     setDrawerOpen(false);
   };
 
   if (error) {
     return (
       <div className="mt-8 p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
-        <p className="text-destructive text-sm">{error}</p>
+        <p className="text-destructive text-sm">
+          {error instanceof Error ? error.message : "Failed to load requests"}
+        </p>
       </div>
     );
   }
@@ -465,7 +464,7 @@ export function RequestBoard() {
                           <StickyNote
                             request={request}
                             onClick={() => handleRequestClick(request)}
-                            onVoteToggled={loadRequests}
+                            onVoteToggled={invalidateRequests}
                           />
                         </div>
                       ))}
@@ -485,13 +484,13 @@ export function RequestBoard() {
         onRequestCreated={handleRequestCreated}
       />
 
-      {/* Request Details Drawer */}
-      <EventRequestDrawer
+      {/* Request Details Panel */}
+      <RequestDetailsPanel
         request={selectedRequest}
         open={drawerOpen}
         onOpenChange={setDrawerOpen}
         onRequestDeleted={handleRequestDeleted}
-        onVoteToggled={loadRequests}
+        onVoteToggled={invalidateRequests}
       />
 
       {/* Sign In Dialog */}

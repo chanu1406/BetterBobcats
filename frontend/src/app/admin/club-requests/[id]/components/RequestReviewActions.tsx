@@ -54,17 +54,19 @@ export default function RequestReviewActions({
         throw new Error(rpcError.message || "Failed to approve request");
       }
 
-      // Trigger email worker to process pending emails
+      // Immediately trigger email sending (fire-and-forget)
+      // The emails are already queued in email_outbox by the database trigger/RPC
+      // This processes them immediately instead of waiting for cron
       try {
-        await fetch('/api/admin/trigger-email-worker', {
+        await fetch('/api/send-emails', {
           method: 'POST',
           credentials: 'include',
         });
-        // Fire-and-forget: don't wait for response or show errors
-        // Emails will be processed asynchronously
+        // Don't wait for response or show errors - emails will be sent asynchronously
+        // If this fails, the cron job will pick them up later
       } catch (emailError) {
-        // Silently fail - emails will be processed later
-        console.error('Failed to trigger email worker:', emailError);
+        // Silently fail - emails are queued and will be processed by cron if this fails
+        console.error('Failed to trigger immediate email send:', emailError);
       }
 
       setSuccess("Request approved successfully!");

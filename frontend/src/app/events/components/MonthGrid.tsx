@@ -12,9 +12,10 @@ interface MonthGridProps {
   events: CalendarEvent[];
   onDayClick: (date: Date) => void;
   onEventClick: (event: CalendarEvent) => void;
+  onEventHover?: (event: CalendarEvent) => void;
 }
 
-export function MonthGrid({ currentDate, events, onDayClick, onEventClick }: MonthGridProps) {
+export function MonthGrid({ currentDate, events, onDayClick, onEventClick, onEventHover }: MonthGridProps) {
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(currentDate);
   const calendarStart = startOfWeek(monthStart, { weekStartsOn: 0 });

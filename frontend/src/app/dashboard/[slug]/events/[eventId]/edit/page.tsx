@@ -1,8 +1,33 @@
 import { requireUser } from "@/lib/auth/guards";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createPublicClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
+import { unstable_cache } from "next/cache";
 import EditEventForm from "./components/EditEventForm";
+import { PastEventErrorDialog } from "./components/PastEventErrorDialog";
 import type { Major } from "@/types/major";
+
+/**
+ * Fetch majors list with caching (majors rarely change)
+ * Uses public client without cookies to avoid Next.js cache restrictions
+ */
+const getCachedMajors = unstable_cache(
+  async (): Promise<Major[]> => {
+    const supabase = createPublicClient();
+    const { data: majorsData, error: majorsError } = await supabase
+      .from("majors")
+      .select("id, name, created_at")
+      .order("name", { ascending: true });
+
+    if (majorsError) {
+      console.error("Error fetching majors:", majorsError);
+      return [];
+    }
+
+    return majorsData || [];
+  },
+  ["majors-list"], // cache key
+  { revalidate: 3600 } // 1 hour - majors rarely change
+);
 
 export const metadata = {
   title: "Edit Event - Club Dashboard - BetterBobcats",
@@ -41,13 +66,48 @@ export default async function EditEventPage({
     notFound();
   }
 
-  // Fetch user's membership for this club
-  const { data: membershipData, error: membershipError } = await supabase
-    .from("club_memberships")
-    .select("role")
-    .eq("club_id", clubData.id)
-    .eq("user_id", user.id)
-    .single();
+  // Fetch user's membership and event in parallel
+  const [membershipResult, eventResult] = await Promise.all([
+    supabase
+      .from("club_memberships")
+      .select("role")
+      .eq("club_id", clubData.id)
+      .eq("user_id", user.id)
+      .single(),
+    supabase
+      .from("events")
+      .select(
+        `
+        id,
+        club_id,
+        title,
+        description,
+        starts_at,
+        ends_at,
+        timezone,
+        location_type,
+        location_name,
+        location_address,
+        online_url,
+        visibility,
+        status,
+        banner_url,
+        thumbnail_url,
+        is_all_majors,
+        capacity,
+        requires_rsvp,
+        rsvp_url,
+        is_featured,
+        contact_email
+      `
+      )
+      .eq("id", eventId)
+      .eq("club_id", clubData.id)
+      .single(),
+  ]);
+
+  const { data: membershipData, error: membershipError } = membershipResult;
+  const { data: eventData, error: eventError } = eventResult;
 
   if (membershipError || !membershipData) {
     notFound();
@@ -59,38 +119,6 @@ export default async function EditEventPage({
   if (!isOfficerOrAdmin) {
     notFound();
   }
-
-  // Fetch event
-  const { data: eventData, error: eventError } = await supabase
-    .from("events")
-    .select(
-      `
-      id,
-      club_id,
-      title,
-      description,
-      starts_at,
-      ends_at,
-      timezone,
-      location_type,
-      location_name,
-      location_address,
-      online_url,
-      visibility,
-      status,
-      banner_url,
-      thumbnail_url,
-      is_all_majors,
-      capacity,
-      requires_rsvp,
-      rsvp_url,
-      is_featured,
-      contact_email
-    `
-    )
-    .eq("id", eventId)
-    .eq("club_id", clubData.id)
-    .single();
 
   if (eventError || !eventData) {
     notFound();
@@ -106,49 +134,26 @@ export default async function EditEventPage({
   if (hasPassed) {
     return (
       <div className="min-h-screen bg-background">
-        <div className="container mx-auto px-4 py-12 max-w-4xl">
-          <div className="bg-destructive/10 border border-destructive/30 text-destructive rounded-lg p-6">
-            <h2 className="text-xl font-semibold mb-2">Cannot Edit Past Events</h2>
-            <p className="text-sm">
-              This event has already passed and cannot be edited. You can still view it in the events list.
-            </p>
-            <div className="mt-4">
-              <a
-                href={`/dashboard/${slug}/events`}
-                className="text-sm underline hover:no-underline"
-              >
-                ← Back to Events
-              </a>
-            </div>
-          </div>
-        </div>
+        <PastEventErrorDialog clubSlug={slug} />
       </div>
     );
   }
 
-  // Fetch event majors
-  const { data: majorsData } = await supabase
-    .from("event_majors")
-    .select("major_id")
-    .eq("event_id", eventId);
+  // Fetch event majors, event tags, and majors list in parallel
+  const [majorsResult, tagsResult, majors] = await Promise.all([
+    supabase
+      .from("event_majors")
+      .select("major_id")
+      .eq("event_id", eventId),
+    supabase
+      .from("event_tags")
+      .select("tag")
+      .eq("event_id", eventId),
+    getCachedMajors(), // Use cached majors
+  ]);
 
-  const eventMajorIds = majorsData?.map((m) => m.major_id) || [];
-
-  // Fetch event tags
-  const { data: tagsData } = await supabase
-    .from("event_tags")
-    .select("tag")
-    .eq("event_id", eventId);
-
-  const eventTags = tagsData?.map((t) => t.tag) || [];
-
-  // Fetch majors for the form
-  const { data: majorsListData } = await supabase
-    .from("majors")
-    .select("id, name, created_at")
-    .order("name", { ascending: true });
-
-  const majors: Major[] = majorsListData || [];
+  const eventMajorIds = majorsResult.data?.map((m) => m.major_id) || [];
+  const eventTags = tagsResult.data?.map((t) => t.tag) || [];
 
   return (
     <div className="min-h-screen bg-background">

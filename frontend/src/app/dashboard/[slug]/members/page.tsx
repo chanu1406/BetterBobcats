@@ -105,16 +105,6 @@ export default async function ClubMembersPage({
 
   return (
     <>
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-4xl font-semibold text-foreground mb-2">
-          Members
-        </h1>
-        <p className="text-muted-foreground text-base">
-          View and manage club members
-        </p>
-      </div>
-
       {/* Deactivation Banner */}
       {isDeactivated && (
         <Alert variant="destructive" className="mb-6">
@@ -126,24 +116,13 @@ export default async function ClubMembersPage({
         </Alert>
       )}
 
-      {/* Members Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Club Members</CardTitle>
-          <CardDescription>
-            View and manage club members. You can change roles or remove
-            members.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <MembersTable
-            clubId={clubData.id}
-            clubSlug={clubData.slug}
-            isDeactivated={isDeactivated}
-            currentUserId={user.id}
-          />
-        </CardContent>
-      </Card>
+      {/* Members Table - Component has its own header */}
+      <MembersTable
+        clubId={clubData.id}
+        clubSlug={clubData.slug}
+        isDeactivated={isDeactivated}
+        currentUserId={user.id}
+      />
     </>
   );
 }

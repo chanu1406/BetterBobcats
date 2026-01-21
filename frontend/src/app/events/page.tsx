@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { CalendarHeader } from "./components/CalendarHeader";
 import { FilterPanel } from "./components/FilterPanel";
 import { MonthGrid } from "./components/MonthGrid";
@@ -13,21 +14,18 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Filter } from "lucide-react";
 import {
-  fetchPublicEvents,
   getMonthRange,
-  filterEvents,
   getUniqueTags,
 } from "@/lib/events";
+import { fetchEventsForRange } from "@/lib/events-calendar";
 import type { CalendarEvent, CalendarView, EventFilters } from "@/types/event";
 import { addMonths, subMonths, startOfMonth } from "date-fns";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function EventsPage() {
+  const queryClient = useQueryClient();
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const [view, setView] = useState<CalendarView>("month");
-  const [events, setEvents] = useState<CalendarEvent[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [filters, setFilters] = useState<EventFilters>({
     majors: [],
@@ -69,35 +67,114 @@ export default function EventsPage() {
     }
   }, [currentDate, view]);
 
-  // Fetch events
-  useEffect(() => {
-    async function loadEvents() {
-      setLoading(true);
-      setError(null);
-      try {
-        const fetched = await fetchPublicEvents(dateRange.start, dateRange.end);
-        setEvents(fetched);
-      } catch (err) {
-        console.error("Error loading events:", err);
-        setError(err instanceof Error ? err.message : "Failed to load events");
-      } finally {
-        setLoading(false);
-      }
+  // Create cache key for query
+  const queryKey = useMemo(
+    () => [
+      "events-calendar",
+      dateRange.start.toISOString(),
+      dateRange.end.toISOString(),
+      filters.majors.sort().join(","),
+      filters.tags.sort().join(","),
+      filters.clubs.sort().join(","),
+      filters.locationTypes.sort().join(","),
+      filters.hideCancelled,
+      searchQuery,
+    ],
+    [dateRange, filters, searchQuery]
+  );
+
+  // Fetch events with TanStack Query
+  const {
+    data: events = [],
+    isLoading: loading,
+    error,
+  } = useQuery({
+    queryKey,
+    queryFn: () =>
+      fetchEventsForRange(dateRange.start, dateRange.end, {
+        ...filters,
+        searchQuery,
+      }),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
+    refetchOnWindowFocus: false,
+  });
+
+  // Prefetch adjacent months/weeks
+  const prefetchAdjacentRange = useCallback(() => {
+    let prefetchRange: { start: Date; end: Date };
+    if (view === "month") {
+      const nextMonth = addMonths(currentDate, 1);
+      prefetchRange = getMonthRange(
+        nextMonth.getFullYear(),
+        nextMonth.getMonth()
+      );
+    } else if (view === "week") {
+      const nextWeek = new Date(currentDate);
+      nextWeek.setDate(currentDate.getDate() + 7);
+      const weekStart = new Date(nextWeek);
+      weekStart.setDate(nextWeek.getDate() - nextWeek.getDay());
+      weekStart.setHours(0, 0, 0, 0);
+      const weekEnd = new Date(weekStart);
+      weekEnd.setDate(weekStart.getDate() + 6);
+      weekEnd.setHours(23, 59, 59, 999);
+      prefetchRange = { start: weekStart, end: weekEnd };
+    } else {
+      return; // No prefetch for list view
     }
 
-    loadEvents();
-  }, [dateRange]);
+    const prefetchKey = [
+      "events-calendar",
+      prefetchRange.start.toISOString(),
+      prefetchRange.end.toISOString(),
+      filters.majors.sort().join(","),
+      filters.tags.sort().join(","),
+      filters.clubs.sort().join(","),
+      filters.locationTypes.sort().join(","),
+      filters.hideCancelled,
+      searchQuery,
+    ];
+
+    queryClient.prefetchQuery({
+      queryKey: prefetchKey,
+      queryFn: () =>
+        fetchEventsForRange(prefetchRange.start, prefetchRange.end, {
+          ...filters,
+          searchQuery,
+        }),
+      staleTime: 5 * 60 * 1000,
+    });
+  }, [view, currentDate, filters, searchQuery, queryClient]);
+
+  // Prefetch on mount and when filters change
+  useMemo(() => {
+    prefetchAdjacentRange();
+  }, [prefetchAdjacentRange]);
 
   // Get available tags from events
   const availableTags = useMemo(() => getUniqueTags(events), [events]);
 
-  // Filter events
+  // Events are already filtered server-side, just apply timeOfDay filter
   const filteredEvents = useMemo(() => {
-    return filterEvents(events, {
-      ...filters,
-      searchQuery,
+    if (!filters.timeOfDay || filters.timeOfDay.length === 0) {
+      return events;
+    }
+    return events.filter((event) => {
+      const eventStart = new Date(event.starts_at);
+      const hour = eventStart.getHours();
+      let timeCategory: "morning" | "afternoon" | "evening" | null = null;
+
+      if (hour >= 5 && hour < 12) {
+        timeCategory = "morning";
+      } else if (hour >= 12 && hour < 17) {
+        timeCategory = "afternoon";
+      } else if (hour >= 17 || hour < 5) {
+        timeCategory = "evening";
+      }
+
+      return timeCategory && filters.timeOfDay.includes(timeCategory);
     });
-  }, [events, filters, searchQuery]);
+  }, [events, filters.timeOfDay]);
 
   const handlePrevious = () => {
     if (view === "month") {

@@ -38,8 +38,18 @@ import {
   Image as ImageIcon, 
   Tag,
   Settings,
-  ArrowLeft
+  ArrowLeft,
+  AlertCircle
 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface CreateEventFormProps {
   clubId: string;
@@ -60,6 +70,7 @@ export default function CreateEventForm({
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [showPastDateDialog, setShowPastDateDialog] = useState(false);
 
   // Core fields
   const [title, setTitle] = useState("");
@@ -184,6 +195,14 @@ export default function CreateEventForm({
     const startsAtISO = combineDateTime(startDate, startTime);
     if (!startsAtISO) {
       setError("Invalid start date or time");
+      return;
+    }
+    
+    // Check if the event start time is in the past
+    const now = new Date();
+    const startDateTime = new Date(startsAtISO);
+    if (startDateTime < now) {
+      setShowPastDateDialog(true);
       return;
     }
     
@@ -825,6 +844,33 @@ export default function CreateEventForm({
           </form>
         </CardContent>
       </Card>
+
+      {/* Past Date Error Dialog */}
+      <AlertDialog open={showPastDateDialog} onOpenChange={setShowPastDateDialog}>
+        <AlertDialogContent className="sm:max-w-md">
+          <AlertDialogHeader>
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-destructive/10">
+                <AlertCircle className="h-5 w-5 text-destructive" />
+              </div>
+              <AlertDialogTitle className="text-left">
+                Cannot Create Past Events
+              </AlertDialogTitle>
+            </div>
+            <AlertDialogDescription className="pt-2 text-left">
+              The selected date and time is in the past. Please choose a future date and time for your event.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction
+              onClick={() => setShowPastDateDialog(false)}
+              className="w-full sm:w-auto"
+            >
+              OK
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }

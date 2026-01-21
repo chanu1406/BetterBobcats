@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowUp, CheckCircle2 } from "lucide-react";
-import { fetchClubRelevantRequests, fulfillEventRequest } from "@/lib/event-requests";
+import { fetchClubRelevantRequests } from "@/lib/event-requests";
 import { createClient } from "@/lib/supabase/browser";
 import type { EventRequest } from "@/types/event-request";
 import { useRouter } from "next/navigation";
@@ -20,79 +21,61 @@ export default function ClubRequestsPage({ params }: ClubRequestsPageProps) {
   const router = useRouter();
   const { addToast } = useToast();
   const supabase = createClient();
-
-  const [requests, setRequests] = useState<EventRequest[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [clubId, setClubId] = useState<string | null>(null);
-  const [fulfillingId, setFulfillingId] = useState<string | null>(null);
+  const [slug, setSlug] = useState<string | null>(null);
 
+  // Get slug from params
   useEffect(() => {
-    loadClubAndRequests();
-  }, []);
+    params.then((p) => {
+      setSlug(p.slug);
+    });
+  }, [params]);
 
-  const loadClubAndRequests = async () => {
-    try {
-      setLoading(true);
-      setError(null);
+  // Fetch club ID
+  useEffect(() => {
+    if (!slug) return;
 
-      // Get slug from params
-      const { slug } = await params;
-
-      // Fetch club
+    const fetchClub = async () => {
       const { data: clubData, error: clubError } = await supabase
         .from("clubs")
         .select("id")
         .eq("slug", slug)
         .single();
 
-      if (clubError || !clubData) {
-        throw new Error("Club not found");
+      if (!clubError && clubData) {
+        setClubId(clubData.id);
       }
+    };
 
-      setClubId(clubData.id);
+    fetchClub();
+  }, [slug]);
 
-      // Fetch relevant requests
-      const data = await fetchClubRelevantRequests(clubData.id);
-      setRequests(data);
-    } catch (err) {
-      console.error("Error loading requests:", err);
-      setError(
-        err instanceof Error ? err.message : "Failed to load requests"
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Fetch relevant requests with TanStack Query
+  const {
+    data: requests = [],
+    isLoading: loading,
+    error: queryError,
+  } = useQuery({
+    queryKey: ["club-relevant-requests", clubId],
+    queryFn: () => fetchClubRelevantRequests(clubId!),
+    enabled: !!clubId,
+    staleTime: 1 * 60 * 1000, // 1 minute
+    gcTime: 5 * 60 * 1000, // 5 minutes
+    refetchOnWindowFocus: false,
+    retry: 1,
+  });
 
-  const handleFulfill = async (requestId: string) => {
-    if (!clubId) return;
+  const error = queryError
+    ? queryError instanceof Error
+      ? queryError.message
+      : "Failed to load requests"
+    : null;
 
-    // Get slug from params
-    const { slug } = await params;
-
+  const handleFulfill = (requestId: string) => {
+    if (!slug) return;
     // Navigate to create event page with request pre-filled
-    // We'll pass the request ID as a query parameter
     router.push(`/dashboard/${slug}/events/new?fulfill=${requestId}`);
   };
-
-  if (error) {
-    return (
-      <div className="space-y-4">
-        <Card>
-          <CardHeader>
-            <CardTitle>Error</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-destructive">{error}</p>
-            <Button onClick={loadClubAndRequests} className="mt-4">
-              Retry
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-6">
@@ -150,10 +133,7 @@ export default function ClubRequestsPage({ params }: ClubRequestsPageProps) {
                         {request.vote_count || 0}
                       </span>
                     </div>
-                    <Button
-                      onClick={() => handleFulfill(request.id)}
-                      disabled={fulfillingId === request.id}
-                    >
+                    <Button onClick={() => handleFulfill(request.id)}>
                       <CheckCircle2 className="mr-2 h-4 w-4" />
                       Fulfill
                     </Button>
