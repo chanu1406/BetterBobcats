@@ -11,7 +11,7 @@ export async function GET(request: Request) {
   const code = requestUrl.searchParams.get('code')
   const token = requestUrl.searchParams.get('token')
   const type = requestUrl.searchParams.get('type')
-  const next = requestUrl.searchParams.get('next') || '/admin'
+  const next = requestUrl.searchParams.get('next') || '/dashboard'
   const isAdminRoute = next.startsWith('/admin')
 
   const supabase = await createClient()

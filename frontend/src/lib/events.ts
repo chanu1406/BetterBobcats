@@ -2,8 +2,10 @@
  * Client-side helpers for fetching events
  */
 
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/browser";
 import type { CalendarEvent } from "@/types/event";
+
+const supabase = createClient();
 
 /**
  * Fetch public events for a date range (for global calendar)

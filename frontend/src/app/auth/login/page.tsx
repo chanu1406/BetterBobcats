@@ -26,7 +26,7 @@ export default async function LoginPage({
   } = await supabase.auth.getUser();
 
   const params = await searchParams;
-  const next = params?.next || "/admin";
+  const next = params?.next || "/dashboard";
   const isAdminRoute = next.startsWith("/admin");
   const error = params?.error === 'not_authorized';
   const message = params?.message;

@@ -1,9 +1,33 @@
 import { requireUser } from "@/lib/auth/guards";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createPublicClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
+import { unstable_cache } from "next/cache";
 import CreateEventForm from "./components/CreateEventForm";
 import type { Major } from "@/types/major";
 import { fetchEventRequest } from "@/lib/event-requests";
+
+/**
+ * Fetch majors list with caching (majors rarely change)
+ * Uses public client without cookies to avoid Next.js cache restrictions
+ */
+const getCachedMajors = unstable_cache(
+  async (): Promise<Major[]> => {
+    const supabase = createPublicClient();
+    const { data: majorsData, error: majorsError } = await supabase
+      .from("majors")
+      .select("id, name, created_at")
+      .order("name", { ascending: true });
+
+    if (majorsError) {
+      console.error("Error fetching majors:", majorsError);
+      return [];
+    }
+
+    return majorsData || [];
+  },
+  ["majors-list"], // cache key
+  { revalidate: 3600 } // 1 hour - majors rarely change
+);
 
 export const metadata = {
   title: "Create Event - Club Dashboard - BetterBobcats",
@@ -63,13 +87,8 @@ export default async function CreateEventPage({
     notFound();
   }
 
-  // Fetch majors for the form
-  const { data: majorsData, error: majorsError } = await supabase
-    .from("majors")
-    .select("id, name, created_at")
-    .order("name", { ascending: true });
-
-  const majors: Major[] = majorsData || [];
+  // Fetch majors for the form (cached)
+  const majors = await getCachedMajors();
 
   // Fetch request if fulfilling
   let requestData = null;

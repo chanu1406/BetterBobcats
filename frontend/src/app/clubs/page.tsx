@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase";
+import { useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,93 +13,56 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-interface Club {
-  id: string;
-  name: string;
-  description: string;
-  website: string | null;
-}
-
-interface Major {
-  id: string;
-  name: string;
-}
+import {
+  fetchClubsWithFilters,
+  fetchMajorsList,
+  type BrowseClub,
+} from "@/lib/clubs";
 
 export default function ClubsPage() {
-  const [clubs, setClubs] = useState<Club[]>([]);
-  const [majors, setMajors] = useState<Major[]>([]);
   const [selectedMajor, setSelectedMajor] = useState<string>("");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
-  // Fetch all majors on mount
-  useEffect(() => {
-    async function fetchMajors() {
-      try {
-        const { data, error } = await supabase
-          .from("majors")
-          .select("id, name, created_at")
-          .order("name");
+  // Fetch majors list (cached globally, rarely changes)
+  const {
+    data: majors = [],
+    isLoading: majorsLoading,
+  } = useQuery({
+    queryKey: ["majors-list"],
+    queryFn: fetchMajorsList,
+    staleTime: 10 * 60 * 1000, // 10 minutes - majors rarely change
+    gcTime: 30 * 60 * 1000, // 30 minutes
+    refetchOnWindowFocus: false,
+  });
 
-        if (error) throw error;
-        setMajors(data || []);
-      } catch (err) {
-        console.error("Error fetching majors:", err);
-        setError("Failed to load majors");
-      }
-    }
+  // Fetch clubs with filters (cached per filter combination)
+  const {
+    data: clubs = [],
+    isLoading: clubsLoading,
+    error: clubsError,
+  } = useQuery({
+    queryKey: ["clubs-browse", selectedMajor || "all"],
+    queryFn: () => fetchClubsWithFilters(selectedMajor || null),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
+    refetchOnWindowFocus: false,
+  });
 
-    fetchMajors();
-  }, []);
+  const loading = majorsLoading || clubsLoading;
+  const error = clubsError
+    ? clubsError instanceof Error
+      ? clubsError.message
+      : "Failed to load clubs"
+    : null;
 
-  // Fetch clubs when selected major changes
-  useEffect(() => {
-    async function fetchClubs() {
-      setLoading(true);
-      setError(null);
-
-      try {
-        if (!selectedMajor) {
-          // No major selected - show all clubs
-          const { data, error } = await supabase
-            .from("clubs")
-            .select("id, name, description, website")
-            .order("name");
-
-          if (error) throw error;
-          setClubs(data || []);
-        } else {
-          // Filter by selected major using JOIN query
-          const { data, error } = await supabase
-            .from("clubs")
-            .select(
-              `
-              id,
-              name,
-              description,
-              website,
-              club_majors!inner(
-                major_id
-              )
-            `
-            )
-            .eq("club_majors.major_id", selectedMajor)
-            .order("name");
-
-          if (error) throw error;
-          setClubs(data || []);
-        }
-      } catch (err) {
-        console.error("Error fetching clubs:", err);
-        setError("Failed to load clubs");
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchClubs();
-  }, [selectedMajor]);
+  // Prefetch clubs for popular majors on hover
+  const handleMajorHover = (majorId: string) => {
+    queryClient.prefetchQuery({
+      queryKey: ["clubs-browse", majorId],
+      queryFn: () => fetchClubsWithFilters(majorId),
+      staleTime: 5 * 60 * 1000,
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/8 via-background to-accent/15">
@@ -134,7 +97,11 @@ export default function ClubsPage() {
                 <SelectLabel>Majors</SelectLabel>
                 <SelectItem value="">All Majors</SelectItem>
                 {majors.map((major) => (
-                  <SelectItem key={major.id} value={major.id}>
+                  <SelectItem
+                    key={major.id}
+                    value={major.id}
+                    onMouseEnter={() => handleMajorHover(major.id)}
+                  >
                     {major.name}
                   </SelectItem>
                 ))}
@@ -182,7 +149,7 @@ export default function ClubsPage() {
                       {club.name}
                     </h2>
                     <p className="text-muted-foreground mb-4 leading-relaxed">
-                      {club.description}
+                      {club.description || "No description available."}
                     </p>
                     {club.website && (
                       <a

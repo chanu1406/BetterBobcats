@@ -108,7 +108,7 @@ function WelcomeContent() {
 
           <DialogFooter>
             <Button onClick={handleContinue} variant="outline" className="w-full">
-              Continue to Dashboard
+              {next ? "Continue" : "Continue to Dashboard"}
             </Button>
           </DialogFooter>
         </DialogContent>

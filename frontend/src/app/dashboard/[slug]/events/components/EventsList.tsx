@@ -40,9 +40,10 @@ interface EventsListProps {
   events: Event[];
   clubId: string;
   clubSlug: string;
+  onEventChange?: () => void;
 }
 
-export default function EventsList({ events, clubId, clubSlug }: EventsListProps) {
+export default function EventsList({ events, clubId, clubSlug, onEventChange }: EventsListProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [deletingEventId, setDeletingEventId] = useState<string | null>(null);
@@ -60,14 +61,14 @@ export default function EventsList({ events, clubId, clubSlug }: EventsListProps
       if (result.ok) {
         // Optimistically remove from UI
         setDeletedEventIds((prev) => new Set(prev).add(eventId));
-        // Refresh data by revalidating the route
-        router.refresh();
+        // Notify parent to invalidate cache
+        onEventChange?.();
       } else {
         alert(result.error || "Failed to delete event");
         setDeletingEventId(null);
       }
     });
-  }, [clubId, clubSlug, router]);
+  }, [clubId, clubSlug, router, onEventChange]);
 
 
   // Memoize date formatting to avoid creating Date objects multiple times

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { createClient } from "@/lib/supabase/browser";
 import {
   Card,
@@ -16,162 +17,110 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import type { InviteWithClub } from "@/types/invite";
 import Link from "next/link";
 
+/**
+ * Fetch user invites with club details using resource embedding
+ */
+async function fetchUserInvites(): Promise<InviteWithClub[]> {
+  const supabase = createClient();
+
+  // Check authentication
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError || !user) {
+    throw new Error("Not authenticated");
+  }
+
+  // Try resource embedding first
+  const { data, error } = await supabase
+    .from("club_invites")
+    .select(
+      "id, club_id, role, created_at, accepted_at, clubs:club_id (id, name, slug, logo_url)"
+    )
+    .is("accepted_at", null)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    throw error;
+  }
+
+  if (!data) {
+    return [];
+  }
+
+  // Process joined data
+  return data.map((invite: any) => {
+    const club = invite.clubs
+      ? Array.isArray(invite.clubs)
+        ? invite.clubs[0]
+        : invite.clubs
+      : null;
+
+    return {
+      id: invite.id,
+      club_id: invite.club_id,
+      role: invite.role,
+      created_at: invite.created_at,
+      accepted_at: invite.accepted_at,
+      club: club
+        ? {
+            id: club.id,
+            name: club.name,
+            slug: club.slug,
+            logo_url: club.logo_url,
+          }
+        : undefined,
+    };
+  });
+}
+
 export default function InvitesPage() {
   const router = useRouter();
-  const [invites, setInvites] = useState<InviteWithClub[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [acceptingId, setAcceptingId] = useState<string | null>(null);
+  const queryClient = useQueryClient();
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
+  // Check authentication
   useEffect(() => {
-    // Check authentication and fetch invites
-    const fetchInvites = async () => {
-      try {
-        const supabase = createClient();
-        
-        // Check if user is authenticated
-        const {
-          data: { user },
-          error: authError,
-        } = await supabase.auth.getUser();
+    const checkAuth = async () => {
+      const supabase = createClient();
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
 
-        if (authError || !user) {
-          router.push("/auth/login?next=/invites");
-          return;
-        }
-
-        setLoading(true);
-        setError(null);
-
-        // Strategy A: Try to fetch with join
-        let invitesData: InviteWithClub[] = [];
-        let clubsData: Record<string, any> = {};
-
-        try {
-          const { data, error: joinError } = await supabase
-            .from("club_invites")
-            .select(
-              "id, club_id, role, created_at, accepted_at, clubs:club_id (id, name, slug, logo_url)"
-            )
-            .is("accepted_at", null)
-            .order("created_at", { ascending: false });
-
-          if (joinError) {
-            throw joinError;
-          }
-
-          // Process joined data
-          if (data) {
-            invitesData = data.map((invite: any) => {
-              const club = invite.clubs
-                ? Array.isArray(invite.clubs)
-                  ? invite.clubs[0]
-                  : invite.clubs
-                : null;
-
-              return {
-                id: invite.id,
-                club_id: invite.club_id,
-                role: invite.role,
-                created_at: invite.created_at,
-                accepted_at: invite.accepted_at,
-                club: club
-                  ? {
-                      id: club.id,
-                      name: club.name,
-                      slug: club.slug,
-                      logo_url: club.logo_url,
-                    }
-                  : undefined,
-              };
-            });
-          }
-        } catch (joinErr) {
-          // Strategy B: Fallback - fetch separately
-          console.warn("Join query failed, falling back to separate queries:", joinErr);
-
-          // First, fetch invites
-          const { data: invitesResult, error: invitesError } = await supabase
-            .from("club_invites")
-            .select("id, club_id, role, created_at, accepted_at")
-            .is("accepted_at", null)
-            .order("created_at", { ascending: false });
-
-          if (invitesError) {
-            throw invitesError;
-          }
-
-          if (!invitesResult || invitesResult.length === 0) {
-            setInvites([]);
-            setLoading(false);
-            return;
-          }
-
-          // Extract unique club IDs
-          const clubIds = [
-            ...new Set(invitesResult.map((invite) => invite.club_id)),
-          ];
-
-          // Fetch clubs
-          const { data: clubsResult, error: clubsError } = await supabase
-            .from("clubs")
-            .select("id, name, slug, logo_url")
-            .in("id", clubIds);
-
-          if (clubsError) {
-            console.warn("Failed to fetch clubs:", clubsError);
-            // Continue without club data
-          } else if (clubsResult) {
-            // Create a map for quick lookup
-            clubsData = clubsResult.reduce(
-              (acc, club) => {
-                acc[club.id] = {
-                  id: club.id,
-                  name: club.name,
-                  slug: club.slug,
-                  logo_url: club.logo_url,
-                };
-                return acc;
-              },
-              {} as Record<string, any>
-            );
-          }
-
-          // Merge invites with club data
-          invitesData = invitesResult.map((invite) => ({
-            id: invite.id,
-            club_id: invite.club_id,
-            role: invite.role,
-            created_at: invite.created_at,
-            accepted_at: invite.accepted_at,
-            club: clubsData[invite.club_id],
-          }));
-        }
-
-        setInvites(invitesData);
-      } catch (err) {
-        console.error("Error fetching invites:", err);
-        setError(
-          err instanceof Error
-            ? err.message
-            : "Failed to load invites. Please try again."
-        );
-      } finally {
-        setLoading(false);
+      if (authError || !user) {
+        router.push("/auth/login?next=/invites");
       }
     };
-
-    fetchInvites();
+    checkAuth();
   }, [router]);
 
-  const handleAcceptInvite = async (inviteId: string) => {
-    const supabase = createClient();
-    setAcceptingId(inviteId);
-    setError(null);
-    setSuccessMessage(null);
+  // Fetch invites with TanStack Query
+  const {
+    data: invites = [],
+    isLoading: loading,
+    error: queryError,
+  } = useQuery({
+    queryKey: ["user-invites"],
+    queryFn: fetchUserInvites,
+    staleTime: 2 * 60 * 1000, // 2 minutes
+    gcTime: 5 * 60 * 1000, // 5 minutes
+    refetchOnWindowFocus: false,
+    retry: 1,
+  });
 
-    try {
+  const error = queryError
+    ? queryError instanceof Error
+      ? queryError.message
+      : "Failed to load invites"
+    : null;
+
+  // Accept invite mutation with optimistic updates
+  const acceptInviteMutation = useMutation({
+    mutationFn: async (inviteId: string) => {
+      const supabase = createClient();
       const { data, error: rpcError } = await supabase.rpc(
         "accept_club_invite",
         {
@@ -183,32 +132,52 @@ export default function InvitesPage() {
         throw new Error(rpcError.message || "Failed to accept invite");
       }
 
-      // Get club slug if available for redirect
+      return data;
+    },
+    onMutate: async (inviteId) => {
+      // Cancel outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ["user-invites"] });
+
+      // Snapshot previous value
+      const previousInvites = queryClient.getQueryData<InviteWithClub[]>([
+        "user-invites",
+      ]);
+
+      // Optimistically remove invite
+      queryClient.setQueryData<InviteWithClub[]>(["user-invites"], (old) =>
+        old ? old.filter((inv) => inv.id !== inviteId) : []
+      );
+
+      return { previousInvites };
+    },
+    onError: (err, inviteId, context) => {
+      // Rollback on error
+      if (context?.previousInvites) {
+        queryClient.setQueryData(["user-invites"], context.previousInvites);
+      }
+    },
+    onSuccess: (data, inviteId) => {
+      // Get club slug for redirect
       const acceptedInvite = invites.find((inv) => inv.id === inviteId);
       const clubSlug = acceptedInvite?.club?.slug;
 
-      // Optimistically remove from list
-      setInvites((prev) => prev.filter((inv) => inv.id !== inviteId));
       setSuccessMessage("Invite accepted successfully!");
 
-      // Redirect after a short delay
+      // Invalidate and redirect
+      queryClient.invalidateQueries({ queryKey: ["user-invites"] });
+
       setTimeout(() => {
         if (clubSlug) {
-          // If we have a slug-based dashboard route, use it
           router.push(`/dashboard/${clubSlug}`);
         } else {
-          // Default to /dashboard
           router.push("/dashboard");
         }
       }, 1500);
-    } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : "Failed to accept invite. Please try again."
-      );
-      setAcceptingId(null);
-    }
+    },
+  });
+
+  const handleAcceptInvite = (inviteId: string) => {
+    acceptInviteMutation.mutate(inviteId);
   };
 
   const formatDate = (dateString: string) => {
@@ -372,9 +341,9 @@ export default function InvitesPage() {
                     <div className="flex-shrink-0">
                       <Button
                         onClick={() => handleAcceptInvite(invite.id)}
-                        disabled={acceptingId === invite.id}
+                        disabled={acceptInviteMutation.isPending}
                       >
-                        {acceptingId === invite.id ? "Accepting..." : "Accept"}
+                        {acceptInviteMutation.isPending ? "Accepting..." : "Accept"}
                       </Button>
                     </div>
                   </div>

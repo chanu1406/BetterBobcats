@@ -6,7 +6,8 @@ import { Pin, ArrowUp, Plus } from "lucide-react";
 import type { EventRequest } from "@/types/event-request";
 import { cn } from "@/lib/utils";
 import { useState, useMemo, useRef, useEffect } from "react";
-import { toggleEventRequestVote } from "@/lib/event-requests";
+import { useQueryClient } from "@tanstack/react-query";
+import { toggleEventRequestVote, fetchEventRequestDetails } from "@/lib/event-requests";
 import { createClient } from "@/lib/supabase/browser";
 import { useToast } from "@/components/ui/toast";
 import { SignInDialog } from "./SignInDialog";
@@ -22,14 +23,12 @@ interface StickyNoteProps {
 export function StickyNote({ request, onClick, isEmptyState = false, isCreateNote = false, onVoteToggled }: StickyNoteProps) {
   const { addToast } = useToast();
   const supabase = createClient();
+  const queryClient = useQueryClient();
   const [signInDialogOpen, setSignInDialogOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   // Generate consistent rotation based on request ID for stable positioning
   const rotation = useMemo(() => {
-    if (isEmptyState) return 0;
-    // Use request ID to generate consistent rotation
-    const hash = request.id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    return (hash % 5) - 2; // -2 to +2 degrees
+    return 0; // No rotation/tilt on cards
   }, [request.id, isEmptyState]);
 
   // Small random offset for natural look
@@ -169,7 +168,17 @@ export function StickyNote({ request, onClick, isEmptyState = false, isCreateNot
         transform: `rotate(${rotation}deg) translate(${offsetX}px, ${offsetY}px)`,
         transition: "transform 0.2s ease-out",
       }}
-      onMouseEnter={() => setIsHovered(true)}
+      onMouseEnter={() => {
+        setIsHovered(true);
+        // Prefetch details on hover for instant open
+        if (!isEmptyState && !isCreateNote && request.id) {
+          queryClient.prefetchQuery({
+            queryKey: ["event-request-details", request.id],
+            queryFn: () => fetchEventRequestDetails(request.id),
+            staleTime: 30 * 1000,
+          });
+        }
+      }}
       onMouseLeave={() => {
         setIsHovered(false);
         setIsPressed(false);

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createClient } from "@/lib/supabase/browser";
 import {
   Card,
@@ -13,180 +13,64 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import type { MembershipWithClub } from "@/types/membership";
 import Link from "next/link";
+import { fetchUserDashboardData } from "@/lib/dashboard";
+import { useEffect } from "react";
 
 /**
  * Dashboard Page
- * Shows user's club memberships with fallback fetching strategy
+ * Shows user's club memberships with TanStack Query caching
  */
 export default function DashboardPage() {
   const router = useRouter();
-  const [memberships, setMemberships] = useState<MembershipWithClub[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
+  // Check authentication
   useEffect(() => {
-    const fetchMemberships = async () => {
-      try {
-        const supabase = createClient();
+    const checkAuth = async () => {
+      const supabase = createClient();
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
 
-        // Check if user is authenticated
-        const {
-          data: { user },
-          error: authError,
-        } = await supabase.auth.getUser();
-
-        if (authError || !user) {
-          router.push("/auth/login?next=/dashboard");
-          return;
-        }
-
-        setLoading(true);
-        setError(null);
-
-        // Strategy A: Try to fetch with join
-        let membershipsData: MembershipWithClub[] = [];
-        let clubsData: Record<string, any> = {};
-
-        try {
-          const { data, error: joinError } = await supabase
-            .from("club_memberships")
-            .select(
-              "id, club_id, role, created_at, clubs:club_id (id, name, slug, logo_url, is_active)"
-            )
-            .eq("user_id", user.id)
-            .order("created_at", { ascending: false });
-
-          if (joinError) {
-            throw joinError;
-          }
-
-          // Process joined data
-          if (data) {
-            membershipsData = data.map((membership: any) => {
-              const club = membership.clubs
-                ? Array.isArray(membership.clubs)
-                  ? membership.clubs[0]
-                  : membership.clubs
-                : null;
-
-              return {
-                id: membership.id,
-                club_id: membership.club_id,
-                role: membership.role,
-                created_at: membership.created_at,
-                club: club
-                  ? {
-                      id: club.id,
-                      name: club.name,
-                      slug: club.slug,
-                      logo_url: club.logo_url,
-                      is_active: club.is_active,
-                    }
-                  : {
-                      id: membership.club_id,
-                      name: "Unknown Club",
-                      slug: null,
-                      logo_url: null,
-                      is_active: null,
-                    },
-              };
-            });
-          }
-        } catch (joinErr) {
-          // Strategy B: Fallback - fetch separately
-          console.warn(
-            "Join query failed, falling back to separate queries:",
-            joinErr
-          );
-
-          // First, fetch memberships
-          const { data: membershipsResult, error: membershipsError } =
-            await supabase
-              .from("club_memberships")
-              .select("id, club_id, role, created_at")
-              .eq("user_id", user.id)
-              .order("created_at", { ascending: false });
-
-          if (membershipsError) {
-            throw membershipsError;
-          }
-
-          if (!membershipsResult || membershipsResult.length === 0) {
-            setMemberships([]);
-            setLoading(false);
-            return;
-          }
-
-          // Extract unique club IDs
-          const clubIds = [
-            ...new Set(membershipsResult.map((m) => m.club_id)),
-          ];
-
-          // Fetch clubs with is_active
-          const { data: clubsResult, error: clubsError } = await supabase
-            .from("clubs")
-            .select("id, name, slug, logo_url, is_active")
-            .in("id", clubIds);
-
-          if (clubsError) {
-            console.warn("Failed to fetch clubs:", clubsError);
-            // Continue without club data
-          } else if (clubsResult) {
-            // Create a map for quick lookup
-            clubsData = clubsResult.reduce(
-              (acc, club) => {
-                acc[club.id] = {
-                  id: club.id,
-                  name: club.name,
-                  slug: club.slug,
-                  logo_url: club.logo_url,
-                  is_active: club.is_active,
-                };
-                return acc;
-              },
-              {} as Record<string, any>
-            );
-          }
-
-          // Merge memberships with club data
-          membershipsData = membershipsResult.map((membership) => ({
-            id: membership.id,
-            club_id: membership.club_id,
-            role: membership.role,
-            created_at: membership.created_at,
-            club: clubsData[membership.club_id] || {
-              id: membership.club_id,
-              name: "Unknown Club",
-              slug: null,
-              logo_url: null,
-              is_active: null,
-            },
-          }));
-        }
-
-        setMemberships(membershipsData);
-      } catch (err) {
-        console.error("Error fetching memberships:", err);
-        setError(
-          err instanceof Error
-            ? err.message
-            : "Failed to load memberships. Please try again."
-        );
-      } finally {
-        setLoading(false);
+      if (authError || !user) {
+        router.push("/auth/login?next=/dashboard");
       }
     };
-
-    fetchMemberships();
+    checkAuth();
   }, [router]);
 
+  // Fetch memberships with TanStack Query
+  const {
+    data: memberships = [],
+    isLoading: loading,
+    error,
+  } = useQuery({
+    queryKey: ["user-dashboard"],
+    queryFn: fetchUserDashboardData,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
+    refetchOnWindowFocus: true,
+    retry: 1,
+  });
+
+  // Prefetch club dashboard on hover
+  const handleClubHover = (slug: string | null) => {
+    if (slug) {
+      queryClient.prefetchQuery({
+        queryKey: ["club-dashboard", slug],
+        queryFn: async () => {
+          const { fetchClubDashboardData } = await import("@/lib/dashboard");
+          return fetchClubDashboardData(slug);
+        },
+        staleTime: 5 * 60 * 1000,
+      });
+    }
+  };
+
   const handleRetry = () => {
-    setError(null);
-    setLoading(true);
-    // Trigger re-fetch by reloading
-    window.location.reload();
+    queryClient.invalidateQueries({ queryKey: ["user-dashboard"] });
   };
 
   const getRoleBadge = (role: string) => {
@@ -273,7 +157,9 @@ export default function DashboardPage() {
         {error && (
           <Alert variant="destructive" className="mb-6">
             <AlertDescription>
-              {error}
+              {error instanceof Error
+                ? error.message
+                : "Failed to load memberships. Please try again."}
               <Button
                 variant="outline"
                 size="sm"
@@ -314,6 +200,7 @@ export default function DashboardPage() {
                 <Card
                   key={membership.id}
                   className="hover:shadow-lg transition-shadow"
+                  onMouseEnter={() => handleClubHover(membership.club.slug)}
                 >
                   <CardHeader>
                     <div className="flex items-center gap-4 mb-2">

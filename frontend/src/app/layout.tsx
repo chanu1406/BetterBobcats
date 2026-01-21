@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ToastProvider } from "@/components/ui/toast";
+import { ReactQueryProvider } from "@/lib/react-query";
 import ConditionalNavigation from "./components/ConditionalNavigation";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -19,8 +20,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ConditionalNavigation />
-        <ToastProvider>{children}</ToastProvider>
+        <ReactQueryProvider>
+          <ConditionalNavigation />
+          <ToastProvider>{children}</ToastProvider>
+        </ReactQueryProvider>
       </body>
     </html>
   );
