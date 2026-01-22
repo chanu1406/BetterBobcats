@@ -21,6 +21,8 @@ import MarketResearchCareerPathGraph from "../cogs/careers/market-research/compo
 import HumanResourcesCareerPathGraph from "../cogs/careers/human-resources/components/CareerPathGraph";
 import EEPrerequisiteGraph from "../electrical-engineering/components/PrerequisiteGraph";
 import EEGraphLegend from "../electrical-engineering/components/GraphLegend";
+import MEPrerequisiteGraph from "../mechanical-engineering/components/PrerequisiteGraph";
+import MEGraphLegend from "../mechanical-engineering/components/GraphLegend";
 import PoliticalSciencePrerequisiteGraph from "../political-science/components/PrerequisiteGraph";
 import PoliticalScienceGraphLegend from "../political-science/components/GraphLegend";
 import PolicyResearchAnalystCareerPathGraph from "../political-science/careers/policy-research-analyst/components/CareerPathGraph";
@@ -29,6 +31,12 @@ import PublicAdministrationNonprofitProgramCoordinatorCareerPathGraph from "../p
 import CampaignStaffFieldOrganizerCareerPathGraph from "../political-science/careers/campaign-staff-field-organizer-campaign-management/components/CareerPathGraph";
 import AdvocacyLobbyingGovernmentRelationsCareerPathGraph from "../political-science/careers/advocacy-lobbying-government-relations/components/CareerPathGraph";
 import LawPreLawCareerPathGraph from "../political-science/careers/law-pre-law/components/CareerPathGraph";
+import MechanicalDesignCareerPathGraph from "../mechanical-engineering/careers/mechanical-design/components/CareerPathGraph";
+import AerospaceDefenseCareerPathGraph from "../mechanical-engineering/careers/aerospace-defense/components/CareerPathGraph";
+import EnergySustainabilityCareerPathGraph from "../mechanical-engineering/careers/energy-sustainability/components/CareerPathGraph";
+import RoboticsAutomationCareerPathGraph from "../mechanical-engineering/careers/robotics-automation/components/CareerPathGraph";
+import ManufacturingIndustrialCareerPathGraph from "../mechanical-engineering/careers/manufacturing-industrial/components/CareerPathGraph";
+import AutomotiveEVCareerPathGraph from "../mechanical-engineering/careers/automotive-ev/components/CareerPathGraph";
 import PowerSystemsCareerPathGraph from "../electrical-engineering/careers/power-systems/components/CareerPathGraph";
 import EmbeddedSystemsEECareerPathGraph from "../electrical-engineering/careers/embedded-systems/components/CareerPathGraph";
 import EVAutomotiveCareerPathGraph from "../electrical-engineering/careers/ev-automotive/components/CareerPathGraph";
@@ -92,6 +100,11 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
   const resetEEGraphRef = useRef<(() => void) | null>(null);
   const fullResetEEGraphRef = useRef<(() => void) | null>(null);
   
+  // Mechanical Engineering graph handlers
+  const resetMEGraphRef = useRef<(() => void) | null>(null);
+  const fullResetMEGraphRef = useRef<(() => void) | null>(null);
+  const exportMEPositionsRef = useRef<(() => void) | null>(null);
+  
   // Political Science graph handlers
   const resetPoliticalScienceGraphRef = useRef<(() => void) | null>(null);
   const fullResetPoliticalScienceGraphRef = useRef<(() => void) | null>(null);
@@ -120,6 +133,10 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
   // Law / Pre-Law career path graph handlers
   const resetLawPreLawGraphRef = useRef<(() => void) | null>(null);
   const formatLawPreLawGraphRef = useRef<(() => void) | null>(null);
+  
+  // Mechanical Design career path graph handlers
+  const resetMechanicalDesignGraphRef = useRef<(() => void) | null>(null);
+  const formatMechanicalDesignGraphRef = useRef<(() => void) | null>(null);
   
   // Power Systems career path graph handlers
   const resetPowerSystemsGraphRef = useRef<(() => void) | null>(null);
@@ -170,6 +187,8 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
   const [formatHumanResourcesReady, setFormatHumanResourcesReady] = useState(false);
   const [resetEEReady, setResetEEReady] = useState(false);
   const [fullResetEEReady, setFullResetEEReady] = useState(false);
+  const [resetMEReady, setResetMEReady] = useState(false);
+  const [fullResetMEReady, setFullResetMEReady] = useState(false);
   const [resetPoliticalScienceReady, setResetPoliticalScienceReady] = useState(false);
   const [fullResetPoliticalScienceReady, setFullResetPoliticalScienceReady] = useState(false);
   const [resetPolicyResearchAnalystReady, setResetPolicyResearchAnalystReady] = useState(false);
@@ -184,6 +203,8 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
   const [formatAdvocacyLobbyingGovernmentRelationsReady, setFormatAdvocacyLobbyingGovernmentRelationsReady] = useState(false);
   const [resetLawPreLawReady, setResetLawPreLawReady] = useState(false);
   const [formatLawPreLawReady, setFormatLawPreLawReady] = useState(false);
+  const [resetMechanicalDesignReady, setResetMechanicalDesignReady] = useState(false);
+  const [formatMechanicalDesignReady, setFormatMechanicalDesignReady] = useState(false);
   const [resetPowerSystemsReady, setResetPowerSystemsReady] = useState(false);
   const [formatPowerSystemsReady, setFormatPowerSystemsReady] = useState(false);
   const [resetEmbeddedSystemsEEReady, setResetEmbeddedSystemsEEReady] = useState(false);
@@ -370,6 +391,24 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
     });
   });
 
+  const handleResetMEReady = useRef((handler: () => void) => {
+    resetMEGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setResetMEReady(true);
+    });
+  });
+
+  const handleFullResetMEReady = useRef((handler: () => void) => {
+    fullResetMEGraphRef.current = handler;
+    requestAnimationFrame(() => {
+      setFullResetMEReady(true);
+    });
+  });
+
+  const handleExportMEPositionsReady = useRef((handler: () => void) => {
+    exportMEPositionsRef.current = handler;
+  });
+
   const handleResetPoliticalScienceReady = useRef((handler: () => void) => {
     resetPoliticalScienceGraphRef.current = handler;
     requestAnimationFrame(() => {
@@ -422,7 +461,7 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
       setResetPublicAdministrationNonprofitProgramCoordinatorReady(true);
     });
   });
-  
+
   const handleFormatPublicAdministrationNonprofitProgramCoordinatorReady = useRef((handler: () => void) => {
     formatPublicAdministrationNonprofitProgramCoordinatorGraphRef.current = handler;
     requestAnimationFrame(() => {
@@ -430,45 +469,17 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
     });
   });
   
-  const handleResetCampaignStaffFieldOrganizerReady = useRef((handler: () => void) => {
-    resetCampaignStaffFieldOrganizerGraphRef.current = handler;
+  const handleResetMechanicalDesignReady = useRef((handler: () => void) => {
+    resetMechanicalDesignGraphRef.current = handler;
     requestAnimationFrame(() => {
-      setResetCampaignStaffFieldOrganizerReady(true);
+      setResetMechanicalDesignReady(true);
     });
   });
   
-  const handleFormatCampaignStaffFieldOrganizerReady = useRef((handler: () => void) => {
-    formatCampaignStaffFieldOrganizerGraphRef.current = handler;
+  const handleFormatMechanicalDesignReady = useRef((handler: () => void) => {
+    formatMechanicalDesignGraphRef.current = handler;
     requestAnimationFrame(() => {
-      setFormatCampaignStaffFieldOrganizerReady(true);
-    });
-  });
-  
-  const handleResetAdvocacyLobbyingGovernmentRelationsReady = useRef((handler: () => void) => {
-    resetAdvocacyLobbyingGovernmentRelationsGraphRef.current = handler;
-    requestAnimationFrame(() => {
-      setResetAdvocacyLobbyingGovernmentRelationsReady(true);
-    });
-  });
-  
-  const handleFormatAdvocacyLobbyingGovernmentRelationsReady = useRef((handler: () => void) => {
-    formatAdvocacyLobbyingGovernmentRelationsGraphRef.current = handler;
-    requestAnimationFrame(() => {
-      setFormatAdvocacyLobbyingGovernmentRelationsReady(true);
-    });
-  });
-  
-  const handleResetLawPreLawReady = useRef((handler: () => void) => {
-    resetLawPreLawGraphRef.current = handler;
-    requestAnimationFrame(() => {
-      setResetLawPreLawReady(true);
-    });
-  });
-  
-  const handleFormatLawPreLawReady = useRef((handler: () => void) => {
-    formatLawPreLawGraphRef.current = handler;
-    requestAnimationFrame(() => {
-      setFormatLawPreLawReady(true);
+      setFormatMechanicalDesignReady(true);
     });
   });
   
@@ -657,9 +668,12 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
       "policy-research-analyst": "Policy / Research Analyst",
       "legislative-aide-government-staff": "Legislative Aide / Government Staff",
       "public-administration-nonprofit-program-coordinator": "Public Administration / Nonprofit Program Coordinator",
-      "campaign-staff-field-organizer": "Campaign Staff / Field Organizer / Campaign Management",
-      "advocacy-lobbying-government-relations": "Advocacy / Lobbying / Government Relations",
-      "law-pre-law": "Law / Pre-Law",
+      "mechanical-design": "Mechanical Design Engineer",
+      "aerospace-defense": "Aerospace / Defense Engineer",
+      "energy-sustainability": "Energy Systems / Power / Sustainability Engineer",
+      "robotics-automation": "Robotics / Automation / Mechatronics Engineer",
+      "manufacturing-industrial": "Manufacturing / Industrial Engineer",
+      "automotive-ev": "Automotive / EV / Autonomous Engineer",
       resumes: "Resumes",
       alumni: "Alumni",
     };
@@ -679,6 +693,12 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
       "policy-research-analyst": "Policy / Research Analysts conduct research, analyze data, and provide evidence-based recommendations to inform public policy decisions. This career path combines political science, statistics, economics, and research methods to evaluate policy effectiveness, assess program outcomes, and support evidence-based policymaking. Students learn quantitative analysis, research design, statistical modeling, and policy evaluation techniques. The path emphasizes both analytical rigor and clear communication—translating complex research findings into actionable policy recommendations. Roles include Policy Analyst, Research Analyst, Program Evaluator, Policy Researcher, and Data Analyst in government, think tanks, and nonprofit organizations.",
       "legislative-aide-government-staff": "Legislative Aides and Government Staff support elected officials and government agencies by managing constituent services, drafting legislation, conducting research, and coordinating policy implementation. This career path combines political science, public administration, and communication skills to navigate government processes, understand legislative procedures, and serve as a bridge between constituents and policymakers. Students learn about American political institutions, legislative processes, public policy analysis, and government operations. The path emphasizes both practical skills in government operations and strong communication abilities—translating complex policy issues into clear, actionable information. Roles include Legislative Aide, Congressional Staffer, Policy Assistant, Constituent Services Representative, and Government Program Coordinator.",
       "public-administration-nonprofit-program-coordinator": "Public Administration and Nonprofit Program Coordinators manage programs, coordinate services, and oversee operations in government agencies and nonprofit organizations. This career path combines management principles, public policy analysis, and organizational leadership to design, implement, and evaluate programs that serve communities. Students learn about organizational behavior, program management, grant writing, budgeting, and stakeholder engagement. The path emphasizes both strategic planning and operational execution—translating policy goals into effective programs that deliver measurable outcomes. Roles include Program Coordinator, Nonprofit Manager, Public Administrator, Grant Writer, Community Program Manager, and Service Coordinator.",
+      "mechanical-design": "Mechanical Design Engineers create, analyze, and optimize mechanical systems and products. This career path focuses on CAD, FEA, materials selection, and design for manufacturability. Essential for roles in product design, automotive engineering, consumer products, and industrial equipment. Students learn structural analysis, thermal systems, manufacturing processes, and design optimization. The path emphasizes both creative problem-solving and technical rigor—translating design requirements into functional, manufacturable products.",
+      "aerospace-defense": "Aerospace / Defense Engineers design and develop aircraft, spacecraft, missiles, and defense systems. This career path focuses on aerodynamics, propulsion, flight dynamics, structures, and control systems. Essential for roles in aerospace companies, defense contractors, and government agencies. Students learn advanced fluid mechanics, structural analysis, propulsion systems, and flight control. The path emphasizes both fundamental aerospace principles and advanced computational tools—translating complex physics into safe, high-performance flight vehicles and defense systems. Roles include Aerospace Engineer, Flight Systems Engineer, Propulsion Engineer, Structures Engineer, and Defense Systems Engineer.",
+      "energy-sustainability": "Energy Systems / Power / Sustainability Engineers design and optimize energy conversion, storage, and distribution systems for a sustainable future. This career path focuses on thermodynamics, heat transfer, renewable energy, power electronics, and energy storage. Essential for roles in renewable energy companies, utilities, electric vehicle manufacturers, and sustainable technology firms. Students learn energy conversion principles, thermal system design, electrical machines, battery technologies, and grid integration. The path emphasizes both fundamental energy principles and emerging clean technologies—translating physics and engineering into efficient, sustainable energy solutions. Roles include Energy Engineer, Power Systems Engineer, Sustainability Engineer, Battery Engineer, and Renewable Energy Specialist.",
+      "robotics-automation": "Robotics / Automation / Mechatronics Engineers design, build, and program intelligent machines and automated systems that integrate mechanical, electrical, and software engineering. This career path focuses on control systems, sensors and actuators, embedded systems, machine dynamics, and system integration. Essential for roles in robotics companies, industrial automation, autonomous vehicles, and advanced manufacturing. Students learn mechatronics design, control theory, microcontroller programming, robot kinematics, and sensor fusion. The path emphasizes both hardware-software integration and real-time systems—translating control algorithms into physical robotic systems and automation equipment. Roles include Robotics Engineer, Automation Engineer, Mechatronics Engineer, Controls Engineer, and Embedded Systems Engineer.",
+      "manufacturing-industrial": "Manufacturing / Industrial Engineers optimize production processes, improve quality, and increase efficiency in manufacturing operations. This career path focuses on manufacturing processes, statistical quality control, economic analysis, process optimization, and production systems. Essential for roles in manufacturing companies, supply chain management, operations consulting, and industrial automation. Students learn manufacturing methods, quality assurance techniques, data analysis, cost optimization, and lean/Six Sigma methodologies. The path emphasizes both technical manufacturing knowledge and business acumen—translating engineering principles into efficient, cost-effective production systems. Roles include Manufacturing Engineer, Industrial Engineer, Process Engineer, Quality Engineer, Production Engineer, and Operations Analyst.",
+      "automotive-ev": "Automotive / EV / Autonomous Engineers design and develop next-generation vehicles including electric vehicles, autonomous systems, and advanced automotive technologies. This career path focuses on vehicle dynamics, electric powertrains, power electronics, control systems, and autonomous driving technologies. Essential for roles at automotive OEMs, EV startups like Tesla/Rivian/Lucid, autonomous vehicle companies like Waymo/Cruise, and automotive suppliers. Students learn multi-body dynamics, electric motors and drives, battery systems, aerodynamics, mechatronics, and autonomous vehicle systems. The path emphasizes both mechanical and electrical engineering—translating cutting-edge technology into safe, efficient, and intelligent vehicles. Roles include Automotive Engineer, EV Powertrain Engineer, Autonomous Vehicle Engineer, Battery Systems Engineer, Vehicle Dynamics Engineer, and ADAS Engineer.",
     };
 
     // Handle special sections (Resumes, Alumni)
@@ -1363,788 +1383,383 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
       );
     }
 
-    // Show Power Systems career path with graph
-    if (selectedCareerPath === "power-systems") {
+    // Show Mechanical Design Engineer career path for Mechanical Engineering
+    if (selectedDegree === "Mechanical Engineering" && selectedCareerPath === "mechanical-design") {
       return (
         <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
           <div className="max-w-7xl mx-auto">
             <div className="mb-10 text-center">
               <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
-                Power Systems & Energy - {selectedDegree}
+                Mechanical Design Engineer - {selectedDegree}
               </h2>
               <p className="text-black mb-5">
                 Career pathway information and recommended courses
               </p>
               <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
-                Power Systems & Energy focuses on electrical power generation, transmission, distribution, and renewable energy integration. This career path prepares students for roles in utility companies, grid operators (ISOs), renewable energy firms, and energy infrastructure companies. Key areas include power system analysis, energy conversion, power electronics, and smart grid technologies.
+                Mechanical Design Engineers create, analyze, and optimize mechanical systems and products. Focus on CAD, FEA, materials selection, and design for manufacturability. Essential for roles in product design, automotive engineering, consumer products, and industrial equipment.
               </p>
             </div>
-            
-            {/* Reset and Format buttons for Power Systems career path graph */}
-            <div className="mb-6 flex justify-end gap-3">
-              <button
-                onClick={() => {
-                  if (formatPowerSystemsReady && formatPowerSystemsGraphRef.current) {
-                    formatPowerSystemsGraphRef.current();
-                  }
-                }}
-                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
-                  formatPowerSystemsReady && formatPowerSystemsGraphRef.current
-                    ? "text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
-                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
-                }`}
-                title={formatPowerSystemsReady && formatPowerSystemsGraphRef.current ? "Format graph to prevent overlap" : "Waiting for format handler..."}
-              >
-                Format Graph
-              </button>
-              <button
-                onClick={() => {
-                  if (resetPowerSystemsReady && resetPowerSystemsGraphRef.current) {
-                    resetPowerSystemsGraphRef.current();
-                  }
-                }}
-                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
-                  resetPowerSystemsReady && resetPowerSystemsGraphRef.current
-                    ? "text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
-                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
-                }`}
-                title={resetPowerSystemsReady && resetPowerSystemsGraphRef.current ? "Reset career path graph view" : "Waiting for reset handler..."}
-              >
-                Reset Graph
-              </button>
-            </div>
-            
-            <div className="mb-10">
-              <PowerSystemsCareerPathGraph 
-                onResetReady={handleResetPowerSystemsReady.current}
-                onFormatReady={handleFormatPowerSystemsReady.current}
-              />
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    // Show Embedded Systems & Robotics career path with graph
-    if (selectedCareerPath === "embedded-systems") {
-      return (
-        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
-          <div className="max-w-7xl mx-auto">
-            <div className="mb-10 text-center">
-              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
-                Embedded Systems & Robotics - {selectedDegree}
-              </h2>
-              <p className="text-black mb-5">
-                Career pathway information and recommended courses
-              </p>
-              <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
-                Embedded Systems & Robotics focuses on designing and programming microcontroller-based systems for robotics, IoT devices, autonomous vehicles, and industrial automation. This career path prepares students for roles as embedded software engineers, firmware developers, robotics engineers, and IoT systems developers. Key areas include microcontroller programming, real-time systems, sensor integration, motor control, and autonomous navigation.
-              </p>
-            </div>
-            
-            {/* Reset and Format buttons for Embedded Systems career path graph */}
-            <div className="mb-6 flex justify-end gap-3">
-              <button
-                onClick={() => {
-                  if (formatEmbeddedSystemsEEReady && formatEmbeddedSystemsEEGraphRef.current) {
-                    formatEmbeddedSystemsEEGraphRef.current();
-                  }
-                }}
-                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
-                  formatEmbeddedSystemsEEReady && formatEmbeddedSystemsEEGraphRef.current
-                    ? "text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
-                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
-                }`}
-                title={formatEmbeddedSystemsEEReady && formatEmbeddedSystemsEEGraphRef.current ? "Format graph to prevent overlap" : "Waiting for format handler..."}
-              >
-                Format Graph
-              </button>
-              <button
-                onClick={() => {
-                  if (resetEmbeddedSystemsEEReady && resetEmbeddedSystemsEEGraphRef.current) {
-                    resetEmbeddedSystemsEEGraphRef.current();
-                  }
-                }}
-                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
-                  resetEmbeddedSystemsEEReady && resetEmbeddedSystemsEEGraphRef.current
-                    ? "text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
-                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
-                }`}
-                title={resetEmbeddedSystemsEEReady && resetEmbeddedSystemsEEGraphRef.current ? "Reset career path graph view" : "Waiting for reset handler..."}
-              >
-                Reset Graph
-              </button>
-            </div>
-            
-            <div className="mb-10">
-              <EmbeddedSystemsEECareerPathGraph 
-                onResetReady={handleResetEmbeddedSystemsEEReady.current}
-                onFormatReady={handleFormatEmbeddedSystemsEEReady.current}
-              />
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    // Show Electric Vehicle & Automotive Systems career path with graph
-    if (selectedCareerPath === "ev-automotive") {
-      return (
-        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
-          <div className="max-w-7xl mx-auto">
-            <div className="mb-10 text-center">
-              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
-                Electric Vehicle & Automotive Systems - {selectedDegree}
-              </h2>
-              <p className="text-black mb-5">
-                Career pathway information and recommended courses
-              </p>
-              <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
-                Electric Vehicle & Automotive Systems focuses on designing EV powertrains, battery management systems, motor drives, and vehicle control systems. This career path prepares students for roles at Tesla, Rivian, GM, Ford, Lucid, and automotive suppliers. Key areas include power electronics, electrical machines, battery systems, vehicle dynamics, and embedded control for automotive applications.
-              </p>
-            </div>
-            
-            {/* Reset and Format buttons for EV Automotive career path graph */}
-            <div className="mb-6 flex justify-end gap-3">
-              <button
-                onClick={() => {
-                  if (formatEVAutomotiveReady && formatEVAutomotiveGraphRef.current) {
-                    formatEVAutomotiveGraphRef.current();
-                  }
-                }}
-                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
-                  formatEVAutomotiveReady && formatEVAutomotiveGraphRef.current
-                    ? "text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
-                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
-                }`}
-                title={formatEVAutomotiveReady && formatEVAutomotiveGraphRef.current ? "Format graph to prevent overlap" : "Waiting for format handler..."}
-              >
-                Format Graph
-              </button>
-              <button
-                onClick={() => {
-                  if (resetEVAutomotiveReady && resetEVAutomotiveGraphRef.current) {
-                    resetEVAutomotiveGraphRef.current();
-                  }
-                }}
-                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
-                  resetEVAutomotiveReady && resetEVAutomotiveGraphRef.current
-                    ? "text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
-                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
-                }`}
-                title={resetEVAutomotiveReady && resetEVAutomotiveGraphRef.current ? "Reset career path graph view" : "Waiting for reset handler..."}
-              >
-                Reset Graph
-              </button>
-            </div>
-            
-            <div className="mb-10">
-              <EVAutomotiveCareerPathGraph 
-                onResetReady={handleResetEVAutomotiveReady.current}
-                onFormatReady={handleFormatEVAutomotiveReady.current}
-              />
-            </div>
-          </div>
-        </div>
-      );
-    }
-    
-    // Show Signals, Communications & RF career path with graph
-    if (selectedCareerPath === "signals-rf") {
-      return (
-        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
-          <div className="max-w-7xl mx-auto">
-            <div className="mb-10 text-center">
-              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
-                Signals, Communications & RF - {selectedDegree}
-              </h2>
-              <p className="text-black mb-5">
-                Career pathway information and recommended courses
-              </p>
-              <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
-                Signals, Communications & RF Engineering focuses on designing wireless systems, RF/microwave circuits, signal processing algorithms, and communication protocols. This career path prepares students for roles at Qualcomm, Broadcom, Nokia, Ericsson, SpaceX, and defense contractors. Key areas include digital signal processing, communication theory, RF/microwave engineering, antenna design, and wireless network systems for 5G, satellite, IoT, and radar applications.
-              </p>
-            </div>
-            
-            {/* Reset and Format buttons for Signals RF career path graph */}
-            <div className="mb-6 flex justify-end gap-3">
-              <button
-                onClick={() => {
-                  if (formatSignalsRFReady && formatSignalsRFGraphRef.current) {
-                    formatSignalsRFGraphRef.current();
-                  }
-                }}
-                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
-                  formatSignalsRFReady && formatSignalsRFGraphRef.current
-                    ? "text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
-                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
-                }`}
-                title={formatSignalsRFReady && formatSignalsRFGraphRef.current ? "Format graph to prevent overlap" : "Waiting for format handler..."}
-              >
-                Format Graph
-              </button>
-              <button
-                onClick={() => {
-                  if (resetSignalsRFReady && resetSignalsRFGraphRef.current) {
-                    resetSignalsRFGraphRef.current();
-                  }
-                }}
-                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
-                  resetSignalsRFReady && resetSignalsRFGraphRef.current
-                    ? "text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
-                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
-                }`}
-                title={resetSignalsRFReady && resetSignalsRFGraphRef.current ? "Reset career path graph view" : "Waiting for reset handler..."}
-              >
-                Reset Graph
-              </button>
-            </div>
-            
-            <div className="mb-10">
-              <SignalsRFCareerPathGraph 
-                onResetReady={handleResetSignalsRFReady.current}
-                onFormatReady={handleFormatSignalsRFReady.current}
-              />
-            </div>
-          </div>
-        </div>
-      );
-    }
-    
-    // Show Controls & Automation career path with graph
-    if (selectedCareerPath === "controls-automation") {
-      return (
-        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
-          <div className="max-w-7xl mx-auto">
-            <div className="mb-10 text-center">
-              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
-                Controls & Automation - {selectedDegree}
-              </h2>
-              <p className="text-black mb-5">
-                Career pathway information and recommended courses
-              </p>
-              <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
-                Controls & Automation Engineering focuses on industrial automation, PLC programming, SCADA systems, robotics control, and manufacturing systems. This career path prepares students for roles at Siemens, Rockwell Automation, ABB, Schneider Electric, Honeywell, and manufacturing companies. Key areas include control systems theory, PLC/SCADA, motor drives, microcontrollers, and systems integration for automated manufacturing, process control, and building automation.
-              </p>
-            </div>
-            
-            {/* Reset and Format buttons for Controls Automation career path graph */}
-            <div className="mb-6 flex justify-end gap-3">
-              <button
-                onClick={() => {
-                  if (formatControlsAutomationReady && formatControlsAutomationGraphRef.current) {
-                    formatControlsAutomationGraphRef.current();
-                  }
-                }}
-                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
-                  formatControlsAutomationReady && formatControlsAutomationGraphRef.current
-                    ? "text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
-                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
-                }`}
-                title={formatControlsAutomationReady && formatControlsAutomationGraphRef.current ? "Format graph to prevent overlap" : "Waiting for format handler..."}
-              >
-                Format Graph
-              </button>
-              <button
-                onClick={() => {
-                  if (resetControlsAutomationReady && resetControlsAutomationGraphRef.current) {
-                    resetControlsAutomationGraphRef.current();
-                  }
-                }}
-                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
-                  resetControlsAutomationReady && resetControlsAutomationGraphRef.current
-                    ? "text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
-                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
-                }`}
-                title={resetControlsAutomationReady && resetControlsAutomationGraphRef.current ? "Reset career path graph view" : "Waiting for reset handler..."}
-              >
-                Reset Graph
-              </button>
-            </div>
-            
-            <div className="mb-10">
-              <ControlsAutomationCareerPathGraph 
-                onResetReady={handleResetControlsAutomationReady.current}
-                onFormatReady={handleFormatControlsAutomationReady.current}
-              />
-            </div>
-          </div>
-        </div>
-      );
-    }
-    
-    // Show Hardware / IC Design career path with graph
-    if (selectedCareerPath === "hardware-ic-design") {
-      return (
-        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
-          <div className="max-w-7xl mx-auto">
-            <div className="mb-10 text-center">
-              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
-                Hardware / IC Design - {selectedDegree}
-              </h2>
-              <p className="text-black mb-5">
-                Career pathway information and recommended courses
-              </p>
-              <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
-                Hardware / Computer Engineering & IC Design focuses on digital logic design, computer architecture, analog/RF circuits, VLSI, and ASIC/FPGA development. This career path prepares students for roles at Intel, AMD, NVIDIA, Qualcomm, Broadcom, Apple Silicon, and semiconductor companies. Key areas include digital design, processor architecture, mixed-signal ICs, RF circuits, CMOS design, and hardware verification for chips, SoCs, and custom silicon.
-              </p>
-            </div>
-            
-            {/* Reset and Format buttons for Hardware IC Design career path graph */}
-            <div className="mb-6 flex justify-end gap-3">
-              <button
-                onClick={() => {
-                  if (formatHardwareICDesignReady && formatHardwareICDesignGraphRef.current) {
-                    formatHardwareICDesignGraphRef.current();
-                  }
-                }}
-                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
-                  formatHardwareICDesignReady && formatHardwareICDesignGraphRef.current
-                    ? "text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
-                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
-                }`}
-                title={formatHardwareICDesignReady && formatHardwareICDesignGraphRef.current ? "Format graph to prevent overlap" : "Waiting for format handler..."}
-              >
-                Format Graph
-              </button>
-              <button
-                onClick={() => {
-                  if (resetHardwareICDesignReady && resetHardwareICDesignGraphRef.current) {
-                    resetHardwareICDesignGraphRef.current();
-                  }
-                }}
-                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
-                  resetHardwareICDesignReady && resetHardwareICDesignGraphRef.current
-                    ? "text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
-                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
-                }`}
-                title={resetHardwareICDesignReady && resetHardwareICDesignGraphRef.current ? "Reset career path graph view" : "Waiting for reset handler..."}
-              >
-                Reset Graph
-              </button>
-            </div>
-            
-            <div className="mb-10">
-              <HardwareICDesignCareerPathGraph 
-                onResetReady={handleResetHardwareICDesignReady.current}
-                onFormatReady={handleFormatHardwareICDesignReady.current}
-              />
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    // Show Policy / Research Analyst career path with graph
-    if (selectedCareerPath === "policy-research-analyst") {
-      return (
-        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
-          <div className="max-w-7xl mx-auto">
-            <div className="mb-10 text-center">
-              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
-                {careerPathNames[selectedCareerPath]} - {selectedDegree}
-              </h2>
-              <p className="text-black mb-5">
-                Career pathway information and recommended courses
-              </p>
-              {careerDescriptions[selectedCareerPath] && (
-                <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
-                  {careerDescriptions[selectedCareerPath]}
-                </p>
-              )}
-            </div>
-            
             {/* Format and Reset buttons */}
             <div className="mb-6 flex justify-end gap-3">
               <button
                 onClick={() => {
-                  if (formatPolicyResearchAnalystReady && formatPolicyResearchAnalystGraphRef.current) {
-                    formatPolicyResearchAnalystGraphRef.current();
-                  }
+                  const formatBtn = document.querySelector('[data-mechanical-design-format]') as HTMLButtonElement;
+                  if (formatBtn) formatBtn.click();
                 }}
-                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
-                  formatPolicyResearchAnalystReady && formatPolicyResearchAnalystGraphRef.current
-                    ? "text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
-                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
-                }`}
-                title={formatPolicyResearchAnalystReady && formatPolicyResearchAnalystGraphRef.current ? "Format graph to prevent overlap" : "Waiting for format handler..."}
+                className="text-sm transition-colors font-medium px-4 py-2 rounded-md border text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                title="Format graph to prevent overlap"
               >
                 Format Graph
               </button>
               <button
                 onClick={() => {
-                  if (resetPolicyResearchAnalystReady && resetPolicyResearchAnalystGraphRef.current) {
-                    resetPolicyResearchAnalystGraphRef.current();
-                  }
+                  const resetBtn = document.querySelector('[data-mechanical-design-reset]') as HTMLButtonElement;
+                  if (resetBtn) resetBtn.click();
                 }}
-                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
-                  resetPolicyResearchAnalystReady && resetPolicyResearchAnalystGraphRef.current
-                    ? "text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
-                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
-                }`}
-                title={resetPolicyResearchAnalystReady && resetPolicyResearchAnalystGraphRef.current ? "Reset career path graph view" : "Waiting for reset handler..."}
+                className="text-sm transition-colors font-medium px-4 py-2 rounded-md border text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                title="Reset career path graph view"
               >
                 Reset Graph
               </button>
             </div>
             
             <div className="mb-10">
-              <PolicyResearchAnalystCareerPathGraph 
-                onResetReady={handleResetPolicyResearchAnalystReady.current}
-                onFormatReady={handleFormatPolicyResearchAnalystReady.current}
+              <MechanicalDesignCareerPathGraph 
+                onResetReady={(resetFn) => {
+                  const btn = document.querySelector('[data-mechanical-design-reset]') as HTMLButtonElement;
+                  if (btn) {
+                    btn.onclick = resetFn;
+                  }
+                }}
+                onFormatReady={(formatFn) => {
+                  const btn = document.querySelector('[data-mechanical-design-format]') as HTMLButtonElement;
+                  if (btn) {
+                    btn.onclick = formatFn;
+                  }
+                }}
               />
+              <button data-mechanical-design-format style={{ display: 'none' }}></button>
+              <button data-mechanical-design-reset style={{ display: 'none' }}></button>
             </div>
           </div>
         </div>
       );
     }
 
-    // Show Legislative Aide / Government Staff career path with graph
-    if (selectedCareerPath === "legislative-aide-government-staff") {
+    // Show Aerospace / Defense Engineer career path for Mechanical Engineering
+    if (selectedDegree === "Mechanical Engineering" && selectedCareerPath === "aerospace-defense") {
       return (
         <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
           <div className="max-w-7xl mx-auto">
             <div className="mb-10 text-center">
               <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
-                {careerPathNames[selectedCareerPath]} - {selectedDegree}
+                Aerospace / Defense Engineer - {selectedDegree}
               </h2>
               <p className="text-black mb-5">
                 Career pathway information and recommended courses
               </p>
-              {careerDescriptions[selectedCareerPath] && (
-                <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
-                  {careerDescriptions[selectedCareerPath]}
-                </p>
-              )}
-            </div>
-            
-            {/* Format and Reset buttons */}
-            <div className="mb-6 flex justify-end gap-3">
-              <button
-                onClick={() => {
-                  if (formatLegislativeAideGovernmentStaffReady && formatLegislativeAideGovernmentStaffGraphRef.current) {
-                    formatLegislativeAideGovernmentStaffGraphRef.current();
-                  }
-                }}
-                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
-                  formatLegislativeAideGovernmentStaffReady && formatLegislativeAideGovernmentStaffGraphRef.current
-                    ? "text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
-                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
-                }`}
-                title={formatLegislativeAideGovernmentStaffReady && formatLegislativeAideGovernmentStaffGraphRef.current ? "Format graph to prevent overlap" : "Waiting for format handler..."}
-              >
-                Format Graph
-              </button>
-              <button
-                onClick={() => {
-                  if (resetLegislativeAideGovernmentStaffReady && resetLegislativeAideGovernmentStaffGraphRef.current) {
-                    resetLegislativeAideGovernmentStaffGraphRef.current();
-                  }
-                }}
-                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
-                  resetLegislativeAideGovernmentStaffReady && resetLegislativeAideGovernmentStaffGraphRef.current
-                    ? "text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
-                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
-                }`}
-                title={resetLegislativeAideGovernmentStaffReady && resetLegislativeAideGovernmentStaffGraphRef.current ? "Reset career path graph view" : "Waiting for reset handler..."}
-              >
-                Reset Graph
-              </button>
-            </div>
-            
-            <div className="mb-10">
-              <LegislativeAideGovernmentStaffCareerPathGraph 
-                onResetReady={handleResetLegislativeAideGovernmentStaffReady.current}
-                onFormatReady={handleFormatLegislativeAideGovernmentStaffReady.current}
-              />
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    // Show Public Administration / Nonprofit Program Coordinator career path with graph
-    if (selectedCareerPath === "public-administration-nonprofit-program-coordinator") {
-      return (
-        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
-          <div className="max-w-7xl mx-auto">
-            <div className="mb-10 text-center">
-              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
-                {careerPathNames[selectedCareerPath]} - {selectedDegree}
-              </h2>
-              <p className="text-black mb-5">
-                Career pathway information and recommended courses
-              </p>
-              {careerDescriptions[selectedCareerPath] && (
-                <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
-                  {careerDescriptions[selectedCareerPath]}
-                </p>
-              )}
-            </div>
-            
-            {/* Format and Reset buttons */}
-            <div className="mb-6 flex justify-end gap-3">
-              <button
-                onClick={() => {
-                  if (formatPublicAdministrationNonprofitProgramCoordinatorReady && formatPublicAdministrationNonprofitProgramCoordinatorGraphRef.current) {
-                    formatPublicAdministrationNonprofitProgramCoordinatorGraphRef.current();
-                  }
-                }}
-                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
-                  formatPublicAdministrationNonprofitProgramCoordinatorReady && formatPublicAdministrationNonprofitProgramCoordinatorGraphRef.current
-                    ? "text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
-                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
-                }`}
-                title={formatPublicAdministrationNonprofitProgramCoordinatorReady && formatPublicAdministrationNonprofitProgramCoordinatorGraphRef.current ? "Format graph to prevent overlap" : "Waiting for format handler..."}
-              >
-                Format Graph
-              </button>
-              <button
-                onClick={() => {
-                  if (resetPublicAdministrationNonprofitProgramCoordinatorReady && resetPublicAdministrationNonprofitProgramCoordinatorGraphRef.current) {
-                    resetPublicAdministrationNonprofitProgramCoordinatorGraphRef.current();
-                  }
-                }}
-                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
-                  resetPublicAdministrationNonprofitProgramCoordinatorReady && resetPublicAdministrationNonprofitProgramCoordinatorGraphRef.current
-                    ? "text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
-                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
-                }`}
-                title={resetPublicAdministrationNonprofitProgramCoordinatorReady && resetPublicAdministrationNonprofitProgramCoordinatorGraphRef.current ? "Reset career path graph view" : "Waiting for reset handler..."}
-              >
-                Reset Graph
-              </button>
-            </div>
-            
-            <div className="mb-10">
-              <PublicAdministrationNonprofitProgramCoordinatorCareerPathGraph 
-                onResetReady={handleResetPublicAdministrationNonprofitProgramCoordinatorReady.current}
-                onFormatReady={handleFormatPublicAdministrationNonprofitProgramCoordinatorReady.current}
-              />
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    // Show Campaign Staff / Field Organizer / Campaign Management career path with graph
-    if (selectedCareerPath === "campaign-staff-field-organizer") {
-      return (
-        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
-          <div className="max-w-7xl mx-auto">
-            <div className="mb-10 text-center">
-              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
-                {careerPathNames[selectedCareerPath]} - {selectedDegree}
-              </h2>
-              <p className="text-black mb-5">
-                Career pathway information and recommended courses
-              </p>
-              {careerDescriptions[selectedCareerPath] && (
-                <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
-                  {careerDescriptions[selectedCareerPath]}
-                </p>
-              )}
-            </div>
-            
-            {/* Format and Reset buttons */}
-            <div className="mb-6 flex justify-end gap-3">
-              <button
-                onClick={() => {
-                  if (formatCampaignStaffFieldOrganizerReady && formatCampaignStaffFieldOrganizerGraphRef.current) {
-                    formatCampaignStaffFieldOrganizerGraphRef.current();
-                  }
-                }}
-                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
-                  formatCampaignStaffFieldOrganizerReady && formatCampaignStaffFieldOrganizerGraphRef.current
-                    ? "text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
-                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
-                }`}
-                title={formatCampaignStaffFieldOrganizerReady && formatCampaignStaffFieldOrganizerGraphRef.current ? "Format graph to prevent overlap" : "Waiting for format handler..."}
-              >
-                Format Graph
-              </button>
-              <button
-                onClick={() => {
-                  if (resetCampaignStaffFieldOrganizerReady && resetCampaignStaffFieldOrganizerGraphRef.current) {
-                    resetCampaignStaffFieldOrganizerGraphRef.current();
-                  }
-                }}
-                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
-                  resetCampaignStaffFieldOrganizerReady && resetCampaignStaffFieldOrganizerGraphRef.current
-                    ? "text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
-                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
-                }`}
-                title={resetCampaignStaffFieldOrganizerReady && resetCampaignStaffFieldOrganizerGraphRef.current ? "Reset career path graph view" : "Waiting for reset handler..."}
-              >
-                Reset Graph
-              </button>
-            </div>
-            
-            <div className="mb-10">
-              <CampaignStaffFieldOrganizerCareerPathGraph 
-                onResetReady={handleResetCampaignStaffFieldOrganizerReady.current}
-                onFormatReady={handleFormatCampaignStaffFieldOrganizerReady.current}
-              />
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    // Show Advocacy / Lobbying / Government Relations career path with graph
-    if (selectedCareerPath === "advocacy-lobbying-government-relations") {
-      return (
-        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
-          <div className="max-w-7xl mx-auto">
-            <div className="mb-10 text-center">
-              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
-                {careerPathNames[selectedCareerPath]} - {selectedDegree}
-              </h2>
-              <p className="text-black mb-5">
-                Career pathway information and recommended courses
-              </p>
-              {careerDescriptions[selectedCareerPath] && (
-                <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
-                  {careerDescriptions[selectedCareerPath]}
-                </p>
-              )}
-            </div>
-            
-            {/* Format and Reset buttons */}
-            <div className="mb-6 flex justify-end gap-3">
-              <button
-                onClick={() => {
-                  if (formatAdvocacyLobbyingGovernmentRelationsReady && formatAdvocacyLobbyingGovernmentRelationsGraphRef.current) {
-                    formatAdvocacyLobbyingGovernmentRelationsGraphRef.current();
-                  }
-                }}
-                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
-                  formatAdvocacyLobbyingGovernmentRelationsReady && formatAdvocacyLobbyingGovernmentRelationsGraphRef.current
-                    ? "text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
-                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
-                }`}
-                title={formatAdvocacyLobbyingGovernmentRelationsReady && formatAdvocacyLobbyingGovernmentRelationsGraphRef.current ? "Format graph to prevent overlap" : "Waiting for format handler..."}
-              >
-                Format Graph
-              </button>
-              <button
-                onClick={() => {
-                  if (resetAdvocacyLobbyingGovernmentRelationsReady && resetAdvocacyLobbyingGovernmentRelationsGraphRef.current) {
-                    resetAdvocacyLobbyingGovernmentRelationsGraphRef.current();
-                  }
-                }}
-                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
-                  resetAdvocacyLobbyingGovernmentRelationsReady && resetAdvocacyLobbyingGovernmentRelationsGraphRef.current
-                    ? "text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
-                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
-                }`}
-                title={resetAdvocacyLobbyingGovernmentRelationsReady && resetAdvocacyLobbyingGovernmentRelationsGraphRef.current ? "Reset career path graph view" : "Waiting for reset handler..."}
-              >
-                Reset Graph
-              </button>
-            </div>
-            
-            <div className="mb-10">
-              <AdvocacyLobbyingGovernmentRelationsCareerPathGraph 
-                onResetReady={handleResetAdvocacyLobbyingGovernmentRelationsReady.current}
-                onFormatReady={handleFormatAdvocacyLobbyingGovernmentRelationsReady.current}
-              />
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    // Show Law / Pre-Law career path with graph
-    if (selectedCareerPath === "law-pre-law") {
-      return (
-        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
-          <div className="max-w-7xl mx-auto">
-            <div className="mb-10 text-center">
-              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
-                {careerPathNames[selectedCareerPath]} - {selectedDegree}
-              </h2>
-              <p className="text-black mb-5">
-                Career pathway information and recommended courses
-              </p>
-              {careerDescriptions[selectedCareerPath] && (
-                <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
-                  {careerDescriptions[selectedCareerPath]}
-                </p>
-              )}
-            </div>
-            
-            {/* Format and Reset buttons */}
-            <div className="mb-6 flex justify-end gap-3">
-              <button
-                onClick={() => {
-                  if (formatLawPreLawReady && formatLawPreLawGraphRef.current) {
-                    formatLawPreLawGraphRef.current();
-                  }
-                }}
-                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
-                  formatLawPreLawReady && formatLawPreLawGraphRef.current
-                    ? "text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
-                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
-                }`}
-                title={formatLawPreLawReady && formatLawPreLawGraphRef.current ? "Format graph to prevent overlap" : "Waiting for format handler..."}
-              >
-                Format Graph
-              </button>
-              <button
-                onClick={() => {
-                  if (resetLawPreLawReady && resetLawPreLawGraphRef.current) {
-                    resetLawPreLawGraphRef.current();
-                  }
-                }}
-                className={`text-sm transition-colors font-medium px-4 py-2 rounded-md border ${
-                  resetLawPreLawReady && resetLawPreLawGraphRef.current
-                    ? "text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
-                    : "text-muted-foreground/50 border-muted-foreground/20 cursor-not-allowed opacity-50"
-                }`}
-                title={resetLawPreLawReady && resetLawPreLawGraphRef.current ? "Reset career path graph view" : "Waiting for reset handler..."}
-              >
-                Reset Graph
-              </button>
-            </div>
-            
-            <div className="mb-10">
-              <LawPreLawCareerPathGraph 
-                onResetReady={handleResetLawPreLawReady.current}
-                onFormatReady={handleFormatLawPreLawReady.current}
-              />
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    // Default career path view (for other careers)
-    return (
-      <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
-        <div className="max-w-5xl mx-auto">
-          <div className="mb-8 text-center">
-            <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
-              {careerPathNames[selectedCareerPath]} - {selectedDegree}
-            </h2>
-            <p className="text-black mb-5">
-              Career pathway information and recommended courses
-            </p>
-            {careerDescriptions[selectedCareerPath] && (
               <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
-                {careerDescriptions[selectedCareerPath]}
+                Aerospace / Defense Engineers design and develop aircraft, spacecraft, missiles, and defense systems. Focus on aerodynamics, propulsion, flight dynamics, structures, and control systems. Essential for roles in aerospace companies, defense contractors, and government agencies.
               </p>
-            )}
-          </div>
-
-          <div className="bg-card border-2 border-primary/20 rounded-xl p-8 shadow-lg">
-            <p className="text-lg text-muted-foreground text-center py-8">
-              Career path content for <span className="font-semibold text-primary">{careerPathNames[selectedCareerPath]}</span> coming soon...
-            </p>
+            </div>
+            {/* Format and Reset buttons */}
+            <div className="mb-6 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  const formatBtn = document.querySelector('[data-aerospace-defense-format]') as HTMLButtonElement;
+                  if (formatBtn) formatBtn.click();
+                }}
+                className="text-sm transition-colors font-medium px-4 py-2 rounded-md border text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                title="Format graph to prevent overlap"
+              >
+                Format Graph
+              </button>
+              <button
+                onClick={() => {
+                  const resetBtn = document.querySelector('[data-aerospace-defense-reset]') as HTMLButtonElement;
+                  if (resetBtn) resetBtn.click();
+                }}
+                className="text-sm transition-colors font-medium px-4 py-2 rounded-md border text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                title="Reset career path graph view"
+              >
+                Reset Graph
+              </button>
+            </div>
+            
+            <div className="mb-10">
+              <AerospaceDefenseCareerPathGraph 
+                onResetReady={(resetFn) => {
+                  const btn = document.querySelector('[data-aerospace-defense-reset]') as HTMLButtonElement;
+                  if (btn) {
+                    btn.onclick = resetFn;
+                  }
+                }}
+                onFormatReady={(formatFn) => {
+                  const btn = document.querySelector('[data-aerospace-defense-format]') as HTMLButtonElement;
+                  if (btn) {
+                    btn.onclick = formatFn;
+                  }
+                }}
+              />
+              <button data-aerospace-defense-format style={{ display: 'none' }}></button>
+              <button data-aerospace-defense-reset style={{ display: 'none' }}></button>
+            </div>
           </div>
         </div>
-      </div>
-    );
+      );
+    }
+
+    // Show Energy Systems / Power / Sustainability Engineer career path for Mechanical Engineering
+    if (selectedDegree === "Mechanical Engineering" && selectedCareerPath === "energy-sustainability") {
+      return (
+        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-10 text-center">
+              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+                Energy Systems / Power / Sustainability Engineer - {selectedDegree}
+              </h2>
+              <p className="text-black mb-5">
+                Career pathway information and recommended courses
+              </p>
+              <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+                Energy Systems / Power / Sustainability Engineers design and optimize energy conversion, storage, and distribution systems for a sustainable future. Focus on thermodynamics, heat transfer, renewable energy, power electronics, and energy storage. Essential for roles in renewable energy companies, utilities, and electric vehicle manufacturers.
+              </p>
+            </div>
+            {/* Format and Reset buttons */}
+            <div className="mb-6 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  const formatBtn = document.querySelector('[data-energy-sustainability-format]') as HTMLButtonElement;
+                  if (formatBtn) formatBtn.click();
+                }}
+                className="text-sm transition-colors font-medium px-4 py-2 rounded-md border text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                title="Format graph to prevent overlap"
+              >
+                Format Graph
+              </button>
+              <button
+                onClick={() => {
+                  const resetBtn = document.querySelector('[data-energy-sustainability-reset]') as HTMLButtonElement;
+                  if (resetBtn) resetBtn.click();
+                }}
+                className="text-sm transition-colors font-medium px-4 py-2 rounded-md border text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                title="Reset career path graph view"
+              >
+                Reset Graph
+              </button>
+            </div>
+            
+            <div className="mb-10">
+              <EnergySustainabilityCareerPathGraph 
+                onResetReady={(resetFn) => {
+                  const btn = document.querySelector('[data-energy-sustainability-reset]') as HTMLButtonElement;
+                  if (btn) {
+                    btn.onclick = resetFn;
+                  }
+                }}
+                onFormatReady={(formatFn) => {
+                  const btn = document.querySelector('[data-energy-sustainability-format]') as HTMLButtonElement;
+                  if (btn) {
+                    btn.onclick = formatFn;
+                  }
+                }}
+              />
+              <button data-energy-sustainability-format style={{ display: 'none' }}></button>
+              <button data-energy-sustainability-reset style={{ display: 'none' }}></button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Show Robotics / Automation / Mechatronics Engineer career path for Mechanical Engineering
+    if (selectedDegree === "Mechanical Engineering" && selectedCareerPath === "robotics-automation") {
+      return (
+        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-10 text-center">
+              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+                Robotics / Automation / Mechatronics Engineer - {selectedDegree}
+              </h2>
+              <p className="text-black mb-5">
+                Career pathway information and recommended courses
+              </p>
+              <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+                Robotics / Automation / Mechatronics Engineers design, build, and program intelligent machines and automated systems. Focus on control systems, sensors and actuators, embedded systems, robot kinematics, and system integration. Essential for roles in robotics companies, industrial automation, autonomous vehicles, and advanced manufacturing.
+              </p>
+            </div>
+            {/* Format and Reset buttons */}
+            <div className="mb-6 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  const formatBtn = document.querySelector('[data-robotics-automation-format]') as HTMLButtonElement;
+                  if (formatBtn) formatBtn.click();
+                }}
+                className="text-sm transition-colors font-medium px-4 py-2 rounded-md border text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                title="Format graph to prevent overlap"
+              >
+                Format Graph
+              </button>
+              <button
+                onClick={() => {
+                  const resetBtn = document.querySelector('[data-robotics-automation-reset]') as HTMLButtonElement;
+                  if (resetBtn) resetBtn.click();
+                }}
+                className="text-sm transition-colors font-medium px-4 py-2 rounded-md border text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                title="Reset career path graph view"
+              >
+                Reset Graph
+              </button>
+            </div>
+            
+            <div className="mb-10">
+              <RoboticsAutomationCareerPathGraph 
+                onResetReady={(resetFn) => {
+                  const btn = document.querySelector('[data-robotics-automation-reset]') as HTMLButtonElement;
+                  if (btn) {
+                    btn.onclick = resetFn;
+                  }
+                }}
+                onFormatReady={(formatFn) => {
+                  const btn = document.querySelector('[data-robotics-automation-format]') as HTMLButtonElement;
+                  if (btn) {
+                    btn.onclick = formatFn;
+                  }
+                }}
+              />
+              <button data-robotics-automation-format style={{ display: 'none' }}></button>
+              <button data-robotics-automation-reset style={{ display: 'none' }}></button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Show Manufacturing / Industrial Engineer career path for Mechanical Engineering
+    if (selectedDegree === "Mechanical Engineering" && selectedCareerPath === "manufacturing-industrial") {
+      return (
+        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-10 text-center">
+              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+                Manufacturing / Industrial Engineer - {selectedDegree}
+              </h2>
+              <p className="text-black mb-5">
+                Career pathway information and recommended courses
+              </p>
+              <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+                Manufacturing / Industrial Engineers optimize production processes, improve quality, and increase efficiency in manufacturing operations. Focus on manufacturing processes, quality control, economic analysis, and lean/Six Sigma methodologies. Essential for roles in manufacturing, supply chain management, and operations consulting.
+              </p>
+            </div>
+            {/* Format and Reset buttons */}
+            <div className="mb-6 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  const formatBtn = document.querySelector('[data-manufacturing-industrial-format]') as HTMLButtonElement;
+                  if (formatBtn) formatBtn.click();
+                }}
+                className="text-sm transition-colors font-medium px-4 py-2 rounded-md border text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                title="Format graph to prevent overlap"
+              >
+                Format Graph
+              </button>
+              <button
+                onClick={() => {
+                  const resetBtn = document.querySelector('[data-manufacturing-industrial-reset]') as HTMLButtonElement;
+                  if (resetBtn) resetBtn.click();
+                }}
+                className="text-sm transition-colors font-medium px-4 py-2 rounded-md border text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                title="Reset career path graph view"
+              >
+                Reset Graph
+              </button>
+            </div>
+            
+            <div className="mb-10">
+              <ManufacturingIndustrialCareerPathGraph 
+                onResetReady={(resetFn) => {
+                  const btn = document.querySelector('[data-manufacturing-industrial-reset]') as HTMLButtonElement;
+                  if (btn) {
+                    btn.onclick = resetFn;
+                  }
+                }}
+                onFormatReady={(formatFn) => {
+                  const btn = document.querySelector('[data-manufacturing-industrial-format]') as HTMLButtonElement;
+                  if (btn) {
+                    btn.onclick = formatFn;
+                  }
+                }}
+              />
+              <button data-manufacturing-industrial-format style={{ display: 'none' }}></button>
+              <button data-manufacturing-industrial-reset style={{ display: 'none' }}></button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Show Automotive / EV / Autonomous Engineer career path for Mechanical Engineering
+    if (selectedDegree === "Mechanical Engineering" && selectedCareerPath === "automotive-ev") {
+      return (
+        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-10 text-center">
+              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+                Automotive / EV / Autonomous Engineer - {selectedDegree}
+              </h2>
+              <p className="text-black mb-5">
+                Career pathway information and recommended courses
+              </p>
+              <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+                Automotive / EV / Autonomous Engineers design next-generation vehicles including electric powertrains, autonomous systems, and advanced automotive technologies. Focus on vehicle dynamics, electric motors and drives, power electronics, control systems, and autonomous driving. Essential for roles at automotive OEMs, EV startups (Tesla, Rivian, Lucid), and autonomous vehicle companies (Waymo, Cruise).
+              </p>
+            </div>
+            {/* Format and Reset buttons */}
+            <div className="mb-6 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  const formatBtn = document.querySelector('[data-automotive-ev-format]') as HTMLButtonElement;
+                  if (formatBtn) formatBtn.click();
+                }}
+                className="text-sm transition-colors font-medium px-4 py-2 rounded-md border text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                title="Format graph to prevent overlap"
+              >
+                Format Graph
+              </button>
+              <button
+                onClick={() => {
+                  const resetBtn = document.querySelector('[data-automotive-ev-reset]') as HTMLButtonElement;
+                  if (resetBtn) resetBtn.click();
+                }}
+                className="text-sm transition-colors font-medium px-4 py-2 rounded-md border text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                title="Reset career path graph view"
+              >
+                Reset Graph
+              </button>
+            </div>
+            
+            <div className="mb-10">
+              <AutomotiveEVCareerPathGraph 
+                onResetReady={(resetFn) => {
+                  const btn = document.querySelector('[data-automotive-ev-reset]') as HTMLButtonElement;
+                  if (btn) {
+                    btn.onclick = resetFn;
+                  }
+                }}
+                onFormatReady={(formatFn) => {
+                  const btn = document.querySelector('[data-automotive-ev-format]') as HTMLButtonElement;
+                  if (btn) {
+                    btn.onclick = formatFn;
+                  }
+                }}
+              />
+              <button data-automotive-ev-format style={{ display: 'none' }}></button>
+              <button data-automotive-ev-reset style={{ display: 'none' }}></button>
+            </div>
+          </div>
+        </div>
+      );
+    }
   }
 
   // Show degree overview if degree selected but no career path
@@ -2350,7 +1965,77 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
           </div>
         </div>
       );
-    }
+  }
+
+  // Show Mechanical Engineering degree overview if selected
+  if (selectedDegree === "Mechanical Engineering") {
+    return (
+      <div className="flex-1 p-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-10 text-center">
+            <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+              Mechanical Engineering
+            </h2>
+            <p className="text-base text-black max-w-3xl mx-auto mb-5 leading-relaxed">
+              Mechanical Engineering is the study of how mechanical systems are designed, analyzed, and optimized to solve real-world problems. The major combines strong foundations in mathematics, physics, thermodynamics, mechanics, and materials science with hands-on design and manufacturing experience. Students learn to create innovative solutions for energy systems, robotics, aerospace, automotive, and manufacturing industries.
+            </p>
+            <p className="text-black mb-5">
+              Prerequisite graph showing course requirements and progression
+            </p>
+            <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+              This page shows the full Mechanical Engineering academic foundation at UC Merced. Use the graph below to understand how core math, physics, chemistry, and ME courses connect, organized by year with color-coded nodes (Year 1: Blue, Year 2: Green, Year 3: Amber, Year 4: Purple).
+            </p>
+          </div>
+          <div className="mb-8">
+            <MEGraphLegend 
+              onFormatLayoutClick={() => setUseFormattedLayout(!useFormattedLayout)}
+              useFormattedLayout={useFormattedLayout}
+              onResetClick={resetMEReady ? resetMEGraphRef.current || undefined : undefined}
+              onFullResetClick={fullResetMEReady ? fullResetMEGraphRef.current || undefined : undefined}
+              onExportPositionsClick={exportMEPositionsRef.current || undefined}
+            />
+          </div>
+          <div className="mb-10">
+            <MEPrerequisiteGraph 
+              useFormattedLayoutExternal={useFormattedLayout}
+              onLayoutChange={setUseFormattedLayout}
+              onResetReady={handleResetMEReady.current}
+              onFullResetReady={handleFullResetMEReady.current}
+              onExportPositionsReady={handleExportMEPositionsReady.current}
+            />
+          </div>
+          
+          {/* ME Alumni Section */}
+          <div className="mt-16">
+            <h3 className="text-2xl md:text-3xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-8 text-center">
+              Mechanical Engineering Alumni
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, index) => (
+                <div
+                  key={index}
+                  className="bg-card border border-border rounded-lg p-6 animate-pulse"
+                >
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-16 h-16 bg-muted rounded-full"></div>
+                    <div className="flex-1">
+                      <div className="h-4 bg-muted rounded w-3/4 mb-2"></div>
+                      <div className="h-3 bg-muted rounded w-1/2"></div>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="h-3 bg-muted rounded w-full"></div>
+                    <div className="h-3 bg-muted rounded w-5/6"></div>
+                    <div className="h-3 bg-muted rounded w-4/6"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Show Political Science degree overview if selected
   if (selectedDegree === "Political Science") {

@@ -7,6 +7,7 @@ import { useState } from "react";
  * DegreesSidebar Component
  * Left sidebar navigation with list of degree programs
  * Used on: Degrees page
+ * Updated: 2026-01-14
  */
 interface DegreesSidebarProps {
   selectedDegree: string | null;
@@ -28,6 +29,7 @@ export default function DegreesSidebar({
     "COGS",
     "Electrical Engineering",
     "Political Science",
+    "Mechanical Engineering",
   ];
 
   const careerPaths: Record<string, { id: string; name: string }[]> = {
@@ -64,10 +66,20 @@ export default function DegreesSidebar({
       { id: "alumni", name: "Alumni" },
       { id: "policy-research-analyst", name: "Policy / Research Analyst" },
       { id: "legislative-aide-government-staff", name: "Legislative Aide / Government Staff" },
-      { id: "public-administration-nonprofit-program-coordinator", name: "Public Administration / Nonprofit Program Coordinator" },
+      { id: "public-administration-nonprofit", name: "Public Administration / Nonprofit Program Coordinator" },
       { id: "campaign-staff-field-organizer", name: "Campaign Staff / Field Organizer / Campaign Management" },
       { id: "advocacy-lobbying-government-relations", name: "Advocacy / Lobbying / Government Relations" },
       { id: "law-pre-law", name: "Law / Pre-Law" },
+    ],
+    "Mechanical Engineering": [
+      { id: "resumes", name: "Resumes" },
+      { id: "alumni", name: "Alumni" },
+      { id: "mechanical-design", name: "Mechanical Design Engineer" },
+      { id: "aerospace-defense", name: "Aerospace / Defense Engineer" },
+      { id: "energy-sustainability", name: "Energy Systems / Power / Sustainability Engineer" },
+      { id: "robotics-automation", name: "Robotics / Automation / Mechatronics Engineer" },
+      { id: "manufacturing-industrial", name: "Manufacturing / Industrial Engineer" },
+      { id: "automotive-ev", name: "Automotive / EV / Autonomous Engineer" },
     ],
   };
 
@@ -81,6 +93,7 @@ export default function DegreesSidebar({
   };
 
   const toggleDegree = (degree: string) => {
+    console.log("Toggling degree:", degree, "Current expanded:", expandedDegrees);
     const newExpanded = new Set(expandedDegrees);
     if (newExpanded.has(degree)) {
       newExpanded.delete(degree);
@@ -88,6 +101,7 @@ export default function DegreesSidebar({
       newExpanded.add(degree);
       onDegreeSelect(degree);
     }
+    console.log("New expanded:", newExpanded);
     setExpandedDegrees(newExpanded);
   };
 
@@ -169,7 +183,10 @@ export default function DegreesSidebar({
                           key={careerPath.id}
                           onClick={(e) => {
                             e.stopPropagation();
+                            console.log("🎯 Career path clicked:", careerPath.id, "for degree:", degree);
+                            onDegreeSelect(degree); // Set the degree first
                             onCareerPathSelect(careerPath.id);
+                            console.log("🎯 After calling handlers");
                           }}
                           className={`w-full text-left px-4 py-2.5 transition-colors border border-border/50 rounded-md font-sans font-medium tracking-tight text-sm ${
                             isCareerSelected

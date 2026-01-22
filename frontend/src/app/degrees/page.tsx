@@ -18,7 +18,10 @@ export default function DegreesPage() {
 
   const handleDegreeSelect = (degree: string) => {
     setSelectedDegree(degree);
-    setSelectedCareerPath(null); // Reset career path when selecting a new degree
+    // Only reset career path when selecting a DIFFERENT degree
+    if (degree !== selectedDegree) {
+      setSelectedCareerPath(null);
+    }
   };
 
   const handleCareerPathSelect = (careerPath: string) => {
@@ -35,6 +38,7 @@ export default function DegreesPage() {
           onCareerPathSelect={handleCareerPathSelect}
         />
         <DegreesContent 
+          key={`${selectedDegree}-${selectedCareerPath}`}
           selectedDegree={selectedDegree}
           selectedCareerPath={selectedCareerPath}
         />
