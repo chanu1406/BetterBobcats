@@ -468,106 +468,214 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
         </ReactFlowProvider>
       </div>
       
-      {/* Expanded Course Card Overlay */}
+      {/* Course Detail Card Modal */}
       {selectedCourse && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
           onClick={handleCloseCourseCard}
         >
-          <div 
-            className="bg-white rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto relative"
+          <div
+            className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Close button */}
-            <button
-              onClick={handleCloseCourseCard}
-              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors"
-              aria-label="Close"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-
             <div className="p-6">
-              {/* Course header */}
-              <div className="mb-6">
-                <div className="inline-block px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-semibold mb-3">
-                  {selectedCourse.code}
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <h3 className="text-2xl font-bold text-slate-900">
+                    {selectedCourse.code}
+                  </h3>
+                  <p className="text-lg text-slate-700 mt-1">
+                    {selectedCourse.name}
+                  </p>
                 </div>
-                <h3 className="text-2xl font-bold text-slate-900 mb-2">
-                  {selectedCourse.name}
-                </h3>
-                <p className="text-slate-600">{selectedCourse.fullName}</p>
+                <button
+                  onClick={handleCloseCourseCard}
+                  className="text-slate-400 hover:text-slate-600 transition-colors"
+                  aria-label="Close"
+                >
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path d="M6 18L18 6M6 6l12 12"></path>
+                  </svg>
+                </button>
               </div>
 
-              {/* Description */}
-              {selectedCourse.description && (
-                <div className="mb-6">
-                  <h4 className="text-sm font-semibold text-slate-800 mb-2 uppercase tracking-wide">
+              <div className="space-y-4">
+                <div>
+                  <h4 className="font-semibold text-slate-900 mb-2">
                     Description
                   </h4>
                   <p className="text-slate-700">{selectedCourse.description}</p>
                 </div>
-              )}
+                {selectedCourse.expandedInfo?.credits && (
+                  <div>
+                    <h4 className="font-semibold text-slate-900 mb-2">
+                      Credits
+                    </h4>
+                    <p className="text-slate-700">{selectedCourse.expandedInfo.credits} units</p>
+                  </div>
+                )}
 
-              {/* Expanded Information */}
-              {selectedCourse.expandedInfo && (
-                <div className="space-y-6">
-                  {selectedCourse.expandedInfo.credits && (
-                    <div>
-                      <h4 className="text-sm font-semibold text-slate-800 mb-2 uppercase tracking-wide">
-                        Credits
-                      </h4>
-                      <p className="text-slate-700">{selectedCourse.expandedInfo.credits} units</p>
-                    </div>
-                  )}
+                {selectedCourse.expandedInfo?.prerequisites && (
+                  <div>
+                    <h4 className="font-semibold text-slate-900 mb-2">
+                      Prerequisites
+                    </h4>
+                    <p className="text-slate-700">
+                      {selectedCourse.expandedInfo.prerequisites}
+                    </p>
+                  </div>
+                )}
 
-                  {selectedCourse.expandedInfo.prerequisites && (
-                    <div>
-                      <h4 className="text-sm font-semibold text-slate-800 mb-2 uppercase tracking-wide">
-                        Prerequisites
-                      </h4>
-                      <p className="text-slate-700">{selectedCourse.expandedInfo.prerequisites}</p>
-                    </div>
-                  )}
+                {selectedCourse.expandedInfo?.careerRelevance && (
+                  <div>
+                    <h4 className="font-semibold text-slate-900 mb-2">
+                      Career Relevance
+                    </h4>
+                    <p className="text-slate-700">
+                      {selectedCourse.expandedInfo.careerRelevance}
+                    </p>
+                  </div>
+                )}
 
-                  {selectedCourse.expandedInfo.learningOutcomes && selectedCourse.expandedInfo.learningOutcomes.length > 0 && (
-                    <div>
-                      <h4 className="text-sm font-semibold text-slate-800 mb-2 uppercase tracking-wide">
-                        Learning Outcomes
-                      </h4>
-                      <ul className="list-disc list-inside space-y-1 text-slate-700">
-                        {selectedCourse.expandedInfo.learningOutcomes.map((outcome, index) => (
+                {selectedCourse.expandedInfo?.realWorldApplications && (
+                  <div>
+                    <h4 className="font-semibold text-slate-900 mb-2">
+                      Real-World Applications
+                    </h4>
+                    <ul className="list-disc list-inside space-y-1 text-slate-700">
+                      {selectedCourse.expandedInfo.realWorldApplications.map(
+                        (application, index) => (
+                          <li key={index}>{application}</li>
+                        )
+                      )}
+                    </ul>
+                  </div>
+                )}
+
+                {selectedCourse.expandedInfo?.learningOutcomes && (
+                  <div>
+                    <h4 className="font-semibold text-slate-900 mb-2">
+                      Learning Outcomes
+                    </h4>
+                    <ul className="list-disc list-inside space-y-1 text-slate-700">
+                      {selectedCourse.expandedInfo.learningOutcomes.map(
+                        (outcome, index) => (
                           <li key={index}>{outcome}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
+                        )
+                      )}
+                    </ul>
+                  </div>
+                )}
 
-                  {selectedCourse.expandedInfo.topics && selectedCourse.expandedInfo.topics.length > 0 && (
-                    <div>
-                      <h4 className="text-sm font-semibold text-slate-800 mb-2 uppercase tracking-wide">
-                        Topics Covered
-                      </h4>
-                      <ul className="list-disc list-inside space-y-1 text-slate-700">
-                        {selectedCourse.expandedInfo.topics.map((topic, index) => (
-                          <li key={index}>{topic}</li>
-                        ))}
-                      </ul>
+                {selectedCourse.expandedInfo?.topics && (
+                  <div>
+                    <h4 className="font-semibold text-slate-900 mb-2">
+                      Key Topics
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedCourse.expandedInfo.topics.map((topic, index) => (
+                        <span
+                          key={index}
+                          className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm"
+                        >
+                          {topic}
+                        </span>
+                      ))}
                     </div>
-                  )}
+                  </div>
+                )}
 
-                  {selectedCourse.expandedInfo.additionalNotes && (
-                    <div>
-                      <h4 className="text-sm font-semibold text-slate-800 mb-2 uppercase tracking-wide">
-                        Additional Notes
-                      </h4>
-                      <p className="text-slate-700">{selectedCourse.expandedInfo.additionalNotes}</p>
+                {selectedCourse.expandedInfo?.resources && (
+                  <div>
+                    <h4 className="font-semibold text-slate-900 mb-2">
+                      Resources
+                    </h4>
+                    <div className="space-y-3">
+                      {selectedCourse.expandedInfo.resources.videos && selectedCourse.expandedInfo.resources.videos.length > 0 && (
+                        <div>
+                          <h5 className="font-medium text-slate-800 mb-1">📹 Videos</h5>
+                          <ul className="space-y-1">
+                            {selectedCourse.expandedInfo.resources.videos.map((video, index) => (
+                              <li key={index}>
+                                <a
+                                  href={video}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-blue-600 hover:text-blue-800 underline text-sm break-all"
+                                >
+                                  {video}
+                                </a>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                      {selectedCourse.expandedInfo.resources.websites && selectedCourse.expandedInfo.resources.websites.length > 0 && (
+                        <div>
+                          <h5 className="font-medium text-slate-800 mb-1">🌐 Websites</h5>
+                          <ul className="space-y-1">
+                            {selectedCourse.expandedInfo.resources.websites.map((website, index) => (
+                              <li key={index}>
+                                <a
+                                  href={website}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-blue-600 hover:text-blue-800 underline text-sm break-all"
+                                >
+                                  {website}
+                                </a>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                      {selectedCourse.expandedInfo.resources.tools && selectedCourse.expandedInfo.resources.tools.length > 0 && (
+                        <div>
+                          <h5 className="font-medium text-slate-800 mb-1">🛠️ Tools</h5>
+                          <div className="flex flex-wrap gap-2">
+                            {selectedCourse.expandedInfo.resources.tools.map((tool, index) => (
+                              <span
+                                key={index}
+                                className="px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-sm"
+                              >
+                                {tool}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              )}
+                  </div>
+                )}
+
+                {selectedCourse.expandedInfo?.additionalNotes && (
+                  <div>
+                    <h4 className="font-semibold text-slate-900 mb-2">
+                      Additional Information
+                    </h4>
+                    <p className="text-slate-700">
+                      {selectedCourse.expandedInfo.additionalNotes}
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              <div className="mt-6 flex justify-end">
+                <button
+                  onClick={handleCloseCourseCard}
+                  className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+                >
+                  Close
+                </button>
+              </div>
             </div>
           </div>
         </div>
