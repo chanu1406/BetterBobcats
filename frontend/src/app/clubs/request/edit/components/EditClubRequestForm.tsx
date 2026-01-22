@@ -19,6 +19,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import type { Major } from "@/types/major";
 
@@ -33,6 +35,7 @@ interface EditClubRequestFormProps {
     officer_emails: string[];
     officer_phones: string[];
     tags: string[];
+    is_all_majors?: boolean;
     major_ids: string[];
     major_notes: Record<string, string>;
     logo_url: string | null;
@@ -84,6 +87,9 @@ export default function EditClubRequestForm({
   );
 
   // Majors
+  const [isAllMajors, setIsAllMajors] = useState(
+    initialData.is_all_majors || false
+  );
   const [selectedMajorIds, setSelectedMajorIds] = useState<Set<string>>(
     new Set(initialData.major_ids)
   );
@@ -181,8 +187,9 @@ export default function EditClubRequestForm({
           officer_emails: normalizedEmails.officer_emails,
           officer_phones: officerPhones.filter((p) => p.trim()),
           tags: tags.filter((t) => t.trim()),
-          major_ids: Array.from(selectedMajorIds),
-          major_notes: majorNotes,
+          is_all_majors: isAllMajors,
+          major_ids: isAllMajors ? [] : Array.from(selectedMajorIds),
+          major_notes: isAllMajors ? {} : majorNotes,
         });
 
         if (!result.ok) {
@@ -694,7 +701,39 @@ export default function EditClubRequestForm({
               <label className="block text-sm font-medium text-foreground mb-2">
                 Related Majors (optional)
               </label>
-              <div className="space-y-3 max-h-64 overflow-y-auto border rounded-lg p-4">
+              
+              {/* All Majors Checkbox */}
+              <div className="mb-4 p-4 border rounded-lg bg-muted/50">
+                <div className="flex items-center space-x-3">
+                  <Checkbox
+                    id="all-majors"
+                    checked={isAllMajors}
+                    onCheckedChange={(checked) => {
+                      setIsAllMajors(checked === true);
+                      if (checked === true) {
+                        // Clear selected majors when "All Majors" is checked
+                        setSelectedMajorIds(new Set());
+                        setMajorNotes({});
+                      }
+                    }}
+                    disabled={isPending}
+                  />
+                  <Label
+                    htmlFor="all-majors"
+                    className="text-sm font-medium text-foreground cursor-pointer flex-1"
+                  >
+                    <div>
+                      <div className="font-semibold">Open to All Majors</div>
+                      <div className="text-xs text-muted-foreground mt-0.5">
+                        Check this if your club is open to students from all majors (e.g., social clubs, general interest clubs)
+                      </div>
+                    </div>
+                  </Label>
+                </div>
+              </div>
+
+              {/* Majors List */}
+              <div className={`space-y-3 max-h-64 overflow-y-auto border rounded-lg p-4 ${isAllMajors ? 'opacity-50 pointer-events-none' : ''}`}>
                 {majors.map((major) => (
                   <div key={major.id} className="space-y-2">
                     <div className="flex items-center space-x-2">
@@ -703,7 +742,7 @@ export default function EditClubRequestForm({
                         id={`major-${major.id}`}
                         checked={selectedMajorIds.has(major.id)}
                         onChange={() => handleMajorToggle(major.id)}
-                        disabled={isPending}
+                        disabled={isPending || isAllMajors}
                         className="w-4 h-4 text-primary border-border rounded focus:ring-primary/20"
                       />
                       <label
@@ -713,7 +752,7 @@ export default function EditClubRequestForm({
                         {major.name}
                       </label>
                     </div>
-                    {selectedMajorIds.has(major.id) && (
+                    {selectedMajorIds.has(major.id) && !isAllMajors && (
                       <div className="ml-6">
                         <Textarea
                           placeholder="Optional note for this major..."

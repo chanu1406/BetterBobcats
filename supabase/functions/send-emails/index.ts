@@ -226,6 +226,15 @@ function renderEmailTemplate(
     case "club_officer_invite":
       return renderClubOfficerInvite(payload);
 
+    case "club_member_invite":
+      return renderClubMemberInvite(payload);
+
+    case "event_request_fulfilled_creator":
+      return renderEventRequestFulfilledCreator(payload);
+
+    case "event_request_fulfilled_upvoter":
+      return renderEventRequestFulfilledUpvoter(payload);
+
     default:
       throw new Error(`Unknown email template: ${template}`);
   }
@@ -239,8 +248,10 @@ function renderClubApprovedContact(payload: {
   club_slug: string;
   club_id: string;
   dashboard_url: string;
+  contact_email?: string;
 }): { subject: string; html: string; text: string } {
   const subject = `Your club "${payload.club_name}" has been approved!`;
+  // Build dashboard URL: dashboard_url/club_slug
   const dashboardLink = `${payload.dashboard_url}/${payload.club_slug}`;
 
   const html = `
@@ -261,6 +272,8 @@ function renderClubApprovedContact(payload: {
           dashboardLink
         )}" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">Access Club Dashboard</a>
       </p>
+      <p>Or copy and paste this link into your browser:</p>
+      <p style="color: #666; font-size: 14px; word-break: break-all;">${escapeHtml(dashboardLink)}</p>
       <p>If you have any questions, please don't hesitate to reach out.</p>
       <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
       <p style="color: #666; font-size: 14px;">BetterBobcats Team</p>
@@ -396,6 +409,249 @@ Accept your invitation here:
 ${payload.invite_url}
 
 If you didn't expect this invitation, you can safely ignore this email.
+
+BetterBobcats Team
+  `.trim();
+
+  return { subject, html, text };
+}
+
+/**
+ * Render club member invite email (for admin-invited members)
+ */
+function renderClubMemberInvite(payload: {
+  club_name: string;
+  club_slug: string;
+  club_id: string;
+  role: string;
+  invite_url: string;
+}): { subject: string; html: string; text: string } {
+  const roleDisplay = payload.role === "admin" ? "an admin" : payload.role === "officer" ? "an officer" : "a member";
+  const roleCapitalized = payload.role.charAt(0).toUpperCase() + payload.role.slice(1);
+  const subject = `You've been invited to join ${payload.club_name} as ${roleDisplay}`;
+
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+      <h1 style="color: #2563eb;">Club Invitation</h1>
+      <p>You've been invited to join <strong>${escapeHtml(
+        payload.club_name
+      )}</strong> as ${roleDisplay} on BetterBobcats!</p>
+      <p>As ${roleDisplay}, you'll be able to:</p>
+      <ul style="margin: 20px 0; padding-left: 20px;">
+        ${payload.role === "admin" 
+          ? "<li>Manage club settings and members</li><li>Create and manage events</li><li>Invite new members</li><li>Full administrative access</li>"
+          : payload.role === "officer"
+          ? "<li>Help manage the club</li><li>Create and manage events</li><li>Engage with members</li>"
+          : "<li>Participate in club activities</li><li>Attend events</li><li>Connect with other members</li>"
+        }
+      </ul>
+      <p style="margin: 30px 0;">
+        <a href="${escapeHtml(
+          payload.invite_url
+        )}" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">Accept Invitation</a>
+      </p>
+      <p>Or copy and paste this link into your browser:</p>
+      <p style="color: #666; font-size: 14px; word-break: break-all;">${escapeHtml(
+        payload.invite_url
+      )}</p>
+      <p>If you didn't expect this invitation, you can safely ignore this email.</p>
+      <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
+      <p style="color: #666; font-size: 14px;">BetterBobcats Team</p>
+    </body>
+    </html>
+  `;
+
+  const text = `
+Club Invitation
+
+You've been invited to join "${payload.club_name}" as ${roleDisplay} on BetterBobcats!
+
+As ${roleDisplay}, you'll be able to:
+${payload.role === "admin" 
+  ? "- Manage club settings and members\n- Create and manage events\n- Invite new members\n- Full administrative access"
+  : payload.role === "officer"
+  ? "- Help manage the club\n- Create and manage events\n- Engage with members"
+  : "- Participate in club activities\n- Attend events\n- Connect with other members"
+}
+
+Accept your invitation here:
+${payload.invite_url}
+
+If you didn't expect this invitation, you can safely ignore this email.
+
+BetterBobcats Team
+  `.trim();
+
+  return { subject, html, text };
+}
+
+/**
+ * Render event request fulfilled creator email
+ */
+function renderEventRequestFulfilledCreator(payload: {
+  request_id: string;
+  request_description_snippet: string;
+  event_id: string;
+  event_title: string;
+  club_name: string;
+  club_slug: string;
+  starts_at: string;
+  location_name: string | null;
+  location_type: string;
+  event_url: string;
+}): { subject: string; html: string; text: string } {
+  const subject = `Your event request has been fulfilled: ${payload.event_title}`;
+
+  const locationText = payload.location_name
+    ? payload.location_name
+    : payload.location_type === "online"
+    ? "Online Event"
+    : "Location TBD";
+
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+      <h1 style="color: #2563eb;">Event Request Fulfilled!</h1>
+      <p>Great news! Your event request has been fulfilled by <strong>${escapeHtml(
+        payload.club_name
+      )}</strong>.</p>
+      <div style="background-color: #f0f9ff; border-left: 4px solid #2563eb; padding: 15px; margin: 20px 0;">
+        <p style="margin: 0 0 10px 0;"><strong>Your Request:</strong></p>
+        <p style="margin: 0; color: #666;">${escapeHtml(
+          payload.request_description_snippet
+        )}${payload.request_description_snippet.length >= 200 ? "..." : ""}</p>
+      </div>
+      <h2 style="color: #2563eb; margin-top: 30px;">Event Details</h2>
+      <p><strong>Title:</strong> ${escapeHtml(payload.event_title)}</p>
+      <p><strong>Club:</strong> ${escapeHtml(payload.club_name)}</p>
+      <p><strong>Date & Time:</strong> ${new Date(
+        payload.starts_at
+      ).toLocaleString()}</p>
+      <p><strong>Location:</strong> ${escapeHtml(locationText)}</p>
+      <p style="margin: 30px 0;">
+        <a href="${escapeHtml(
+          payload.event_url
+        )}" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">View Event</a>
+      </p>
+      <p>Thank you for helping make BetterBobcats better!</p>
+      <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
+      <p style="color: #666; font-size: 14px;">BetterBobcats Team</p>
+    </body>
+    </html>
+  `;
+
+  const text = `
+Event Request Fulfilled!
+
+Great news! Your event request has been fulfilled by "${payload.club_name}".
+
+Your Request:
+${payload.request_description_snippet}${payload.request_description_snippet.length >= 200 ? "..." : ""}
+
+Event Details:
+Title: ${payload.event_title}
+Club: ${payload.club_name}
+Date & Time: ${new Date(payload.starts_at).toLocaleString()}
+Location: ${locationText}
+
+View Event: ${payload.event_url}
+
+Thank you for helping make BetterBobcats better!
+
+BetterBobcats Team
+  `.trim();
+
+  return { subject, html, text };
+}
+
+/**
+ * Render event request fulfilled upvoter email
+ */
+function renderEventRequestFulfilledUpvoter(payload: {
+  request_id: string;
+  request_description_snippet: string;
+  event_id: string;
+  event_title: string;
+  club_name: string;
+  club_slug: string;
+  starts_at: string;
+  location_name: string | null;
+  location_type: string;
+  event_url: string;
+}): { subject: string; html: string; text: string } {
+  const subject = `An event you upvoted has been created: ${payload.event_title}`;
+
+  const locationText = payload.location_name
+    ? payload.location_name
+    : payload.location_type === "online"
+    ? "Online Event"
+    : "Location TBD";
+
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+      <h1 style="color: #2563eb;">Event You Upvoted Has Been Created!</h1>
+      <p>Great news! An event request you upvoted has been fulfilled by <strong>${escapeHtml(
+        payload.club_name
+      )}</strong>.</p>
+      <div style="background-color: #f0f9ff; border-left: 4px solid #2563eb; padding: 15px; margin: 20px 0;">
+        <p style="margin: 0 0 10px 0;"><strong>Request You Upvoted:</strong></p>
+        <p style="margin: 0; color: #666;">${escapeHtml(
+          payload.request_description_snippet
+        )}${payload.request_description_snippet.length >= 200 ? "..." : ""}</p>
+      </div>
+      <h2 style="color: #2563eb; margin-top: 30px;">Event Details</h2>
+      <p><strong>Title:</strong> ${escapeHtml(payload.event_title)}</p>
+      <p><strong>Club:</strong> ${escapeHtml(payload.club_name)}</p>
+      <p><strong>Date & Time:</strong> ${new Date(
+        payload.starts_at
+      ).toLocaleString()}</p>
+      <p><strong>Location:</strong> ${escapeHtml(locationText)}</p>
+      <p style="margin: 30px 0;">
+        <a href="${escapeHtml(
+          payload.event_url
+        )}" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">View Event</a>
+      </p>
+      <p>Thank you for your support!</p>
+      <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
+      <p style="color: #666; font-size: 14px;">BetterBobcats Team</p>
+    </body>
+    </html>
+  `;
+
+  const text = `
+Event You Upvoted Has Been Created!
+
+Great news! An event request you upvoted has been fulfilled by "${payload.club_name}".
+
+Request You Upvoted:
+${payload.request_description_snippet}${payload.request_description_snippet.length >= 200 ? "..." : ""}
+
+Event Details:
+Title: ${payload.event_title}
+Club: ${payload.club_name}
+Date & Time: ${new Date(payload.starts_at).toLocaleString()}
+Location: ${locationText}
+
+View Event: ${payload.event_url}
+
+Thank you for your support!
 
 BetterBobcats Team
   `.trim();

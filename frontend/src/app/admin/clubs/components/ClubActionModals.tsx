@@ -155,77 +155,30 @@ export function HardDeleteModal({
   onConfirm,
   isLoading,
 }: HardDeleteModalProps) {
-  const [confirmText, setConfirmText] = useState("");
-  const expectedText = "confirm";
-  const isValid = confirmText.toLowerCase() === expectedText;
-
-  const handleConfirm = () => {
-    if (isValid) {
-      onConfirm();
-      setConfirmText("");
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && isValid && !isLoading) {
-      handleConfirm();
-    }
-  };
-
-  const handleOpenChange = (newOpen: boolean) => {
-    if (!newOpen) {
-      setConfirmText("");
-    }
-    onOpenChange(newOpen);
-  };
-
   if (!club) return null;
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
-        <DialogHeader>
-          <DialogTitle className="text-destructive">
-            Permanently delete club?
-          </DialogTitle>
-          <DialogDescription>
-            This will delete the club and ALL related data (events, tags,
-            majors, invites, memberships). This cannot be undone.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="space-y-4 py-4">
-          <div className="space-y-2">
-            <Label htmlFor="confirm-delete">
-              Type <strong>confirm</strong> to confirm deletion:
-            </Label>
-            <Input
-              id="confirm-delete"
-              value={confirmText}
-              onChange={(e) => setConfirmText(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="confirm"
-              disabled={isLoading}
-              autoFocus
-            />
-          </div>
-        </div>
-        <DialogFooter>
-          <Button
-            variant="outline"
-            onClick={() => handleOpenChange(false)}
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This action cannot be undone. This will permanently delete the club
+            and ALL related data (events, tags, majors, invites, memberships)
+            from our servers.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel disabled={isLoading}>Cancel</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={onConfirm}
             disabled={isLoading}
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="destructive"
-            onClick={handleConfirm}
-            disabled={!isValid || isLoading}
+            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
           >
             {isLoading ? "Deleting..." : "Delete permanently"}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }

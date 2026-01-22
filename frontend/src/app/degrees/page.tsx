@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import DegreesHeader from "./components/DegreesHeader";
+import { useState } from "react";
 import DegreesSidebar from "./components/DegreesSidebar";
 import DegreesContent from "./components/DegreesContent";
 
@@ -10,18 +9,14 @@ import DegreesContent from "./components/DegreesContent";
  * Displays all available degree programs at UC Merced
  * Located at: src/app/degrees/page.tsx
  * URL: http://localhost:3000/degrees
+ * 
+ * Navigation is handled by ConditionalNavigation in the root layout
  */
 export default function DegreesPage() {
   const [selectedDegree, setSelectedDegree] = useState<string | null>(null);
   const [selectedCareerPath, setSelectedCareerPath] = useState<string | null>(null);
 
-  // Debug: Log state changes
-  useEffect(() => {
-    console.log("📊 State updated:", { selectedDegree, selectedCareerPath });
-  }, [selectedDegree, selectedCareerPath]);
-
   const handleDegreeSelect = (degree: string) => {
-    console.log("🏫 handleDegreeSelect called:", degree, "current:", selectedDegree);
     setSelectedDegree(degree);
     // Only reset career path when selecting a DIFFERENT degree
     if (degree !== selectedDegree) {
@@ -30,13 +25,11 @@ export default function DegreesPage() {
   };
 
   const handleCareerPathSelect = (careerPath: string) => {
-    console.log("🎓 handleCareerPathSelect called:", careerPath, "current:", selectedCareerPath);
     setSelectedCareerPath(careerPath);
   };
 
   return (
     <main className="min-h-screen flex flex-col">
-      <DegreesHeader />
       <div className="flex flex-1">
         <DegreesSidebar 
           selectedDegree={selectedDegree}

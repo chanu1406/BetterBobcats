@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 /**
  * Navigation Component
@@ -10,10 +11,24 @@ export default function Navigation() {
       <div className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <h2 className="text-xl font-bold">BetterBobcats</h2>
-            <span className="text-xs text-muted-foreground">UC Merced</span>
+            <Link href="/" className="flex items-center gap-2">
+              <Image
+                src="/BetterBobcatsLogo.svg"
+                alt="BetterBobcats Logo"
+                width={40}
+                height={40}
+                className="h-10 w-auto"
+              />
+              <h2 className="text-xl font-bold">BetterBobcats</h2>
+            </Link>
           </div>
           <div className="flex gap-6 items-center">
+            <Link
+              href="/"
+              className="text-sm font-medium hover:text-primary transition-colors"
+            >
+              Home
+            </Link>
             <Link
               href="/degrees"
               className="text-sm font-medium hover:text-primary transition-colors"
@@ -26,9 +41,18 @@ export default function Navigation() {
             >
               Clubs
             </Link>
-            <button className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:bg-primary/90 transition-colors">
-              Get Started
-            </button>
+            <Link
+              href="/events"
+              className="text-sm font-medium hover:text-primary transition-colors"
+            >
+              Events
+            </Link>
+            <Link
+              href="/dashboard"
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:bg-primary/90 transition-colors"
+            >
+              Dashboard
+            </Link>
           </div>
         </div>
       </div>

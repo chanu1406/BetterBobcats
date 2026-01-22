@@ -31,3 +31,24 @@ export async function createClient() {
     }
   )
 }
+
+/**
+ * Creates a public Supabase client without cookies for use in cached functions.
+ * This is safe for public data that doesn't require authentication.
+ */
+export function createPublicClient() {
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return []
+        },
+        setAll() {
+          // No-op: public client doesn't need to set cookies
+        },
+      },
+    }
+  )
+}
