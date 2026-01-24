@@ -6,43 +6,141 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import dynamic from "next/dynamic";
+import { Skeleton } from "@/components/ui/skeleton";
 import PrerequisiteGraph from "../cs-cse/components/PrerequisiteGraph";
 import GraphLegend from "../cs-cse/components/GraphLegend";
-import CareerPathGraph from "../cs-cse/careers/swe/components/CareerPathGraph";
-import CybersecurityCareerPathGraph from "../cs-cse/careers/cybersecurity/components/CareerPathGraph";
-import MLAICareerPathGraph from "../cs-cse/careers/ml-ai/components/CareerPathGraph";
-import DataScienceCareerPathGraph from "../cs-cse/careers/datascience/components/CareerPathGraph";
-import SystemsInfraCareerPathGraph from "../cs-cse/careers/systems-infra/components/CareerPathGraph";
-import EmbeddedSystemsCareerPathGraph from "../cs-cse/careers/embedded-systems/components/CareerPathGraph";
 import COGSPrerequisiteGraph from "../cogs/components/PrerequisiteGraph";
-import UXUICareerPathGraph from "../cogs/careers/ux-ui/components/CareerPathGraph";
-import DataAnalystCareerPathGraph from "../cogs/careers/data-analyst/components/CareerPathGraph";
-import MarketResearchCareerPathGraph from "../cogs/careers/market-research/components/CareerPathGraph";
-import HumanResourcesCareerPathGraph from "../cogs/careers/human-resources/components/CareerPathGraph";
 import EEPrerequisiteGraph from "../electrical-engineering/components/PrerequisiteGraph";
 import EEGraphLegend from "../electrical-engineering/components/GraphLegend";
 import MEPrerequisiteGraph from "../mechanical-engineering/components/PrerequisiteGraph";
 import MEGraphLegend from "../mechanical-engineering/components/GraphLegend";
 import PoliticalSciencePrerequisiteGraph from "../political-science/components/PrerequisiteGraph";
 import PoliticalScienceGraphLegend from "../political-science/components/GraphLegend";
-import PolicyResearchAnalystCareerPathGraph from "../political-science/careers/policy-research-analyst/components/CareerPathGraph";
-import LegislativeAideGovernmentStaffCareerPathGraph from "../political-science/careers/legislative-aide-government-staff/components/CareerPathGraph";
-import PublicAdministrationNonprofitProgramCoordinatorCareerPathGraph from "../political-science/careers/public-administration-nonprofit-program-coordinator/components/CareerPathGraph";
-import CampaignStaffFieldOrganizerCareerPathGraph from "../political-science/careers/campaign-staff-field-organizer-campaign-management/components/CareerPathGraph";
-import AdvocacyLobbyingGovernmentRelationsCareerPathGraph from "../political-science/careers/advocacy-lobbying-government-relations/components/CareerPathGraph";
-import LawPreLawCareerPathGraph from "../political-science/careers/law-pre-law/components/CareerPathGraph";
-import MechanicalDesignCareerPathGraph from "../mechanical-engineering/careers/mechanical-design/components/CareerPathGraph";
-import AerospaceDefenseCareerPathGraph from "../mechanical-engineering/careers/aerospace-defense/components/CareerPathGraph";
-import EnergySustainabilityCareerPathGraph from "../mechanical-engineering/careers/energy-sustainability/components/CareerPathGraph";
-import RoboticsAutomationCareerPathGraph from "../mechanical-engineering/careers/robotics-automation/components/CareerPathGraph";
-import ManufacturingIndustrialCareerPathGraph from "../mechanical-engineering/careers/manufacturing-industrial/components/CareerPathGraph";
-import AutomotiveEVCareerPathGraph from "../mechanical-engineering/careers/automotive-ev/components/CareerPathGraph";
-import PowerSystemsCareerPathGraph from "../electrical-engineering/careers/power-systems/components/CareerPathGraph";
-import EmbeddedSystemsEECareerPathGraph from "../electrical-engineering/careers/embedded-systems/components/CareerPathGraph";
-import EVAutomotiveCareerPathGraph from "../electrical-engineering/careers/ev-automotive/components/CareerPathGraph";
-import SignalsRFCareerPathGraph from "../electrical-engineering/careers/signals-rf/components/CareerPathGraph";
-import ControlsAutomationCareerPathGraph from "../electrical-engineering/careers/controls-automation/components/CareerPathGraph";
-import HardwareICDesignCareerPathGraph from "../electrical-engineering/careers/hardware-ic-design/components/CareerPathGraph";
+
+function CareerPathGraphLoading() {
+  return (
+    <div className="w-full h-[800px] flex items-center justify-center border border-border/40 rounded-lg overflow-hidden bg-muted/20">
+      <div className="flex flex-col items-center gap-4">
+        <Skeleton className="h-6 w-64" />
+        <Skeleton className="h-[700px] w-full max-w-4xl rounded-lg" />
+      </div>
+    </div>
+  );
+}
+
+const CareerPathGraph = dynamic(
+  () => import("../cs-cse/careers/swe/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const CybersecurityCareerPathGraph = dynamic(
+  () => import("../cs-cse/careers/cybersecurity/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const MLAICareerPathGraph = dynamic(
+  () => import("../cs-cse/careers/ml-ai/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const DataScienceCareerPathGraph = dynamic(
+  () => import("../cs-cse/careers/datascience/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const SystemsInfraCareerPathGraph = dynamic(
+  () => import("../cs-cse/careers/systems-infra/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const EmbeddedSystemsCareerPathGraph = dynamic(
+  () => import("../cs-cse/careers/embedded-systems/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const UXUICareerPathGraph = dynamic(
+  () => import("../cogs/careers/ux-ui/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const DataAnalystCareerPathGraph = dynamic(
+  () => import("../cogs/careers/data-analyst/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const MarketResearchCareerPathGraph = dynamic(
+  () => import("../cogs/careers/market-research/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const HumanResourcesCareerPathGraph = dynamic(
+  () => import("../cogs/careers/human-resources/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const PolicyResearchAnalystCareerPathGraph = dynamic(
+  () => import("../political-science/careers/policy-research-analyst/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const LegislativeAideGovernmentStaffCareerPathGraph = dynamic(
+  () => import("../political-science/careers/legislative-aide-government-staff/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const PublicAdministrationNonprofitProgramCoordinatorCareerPathGraph = dynamic(
+  () => import("../political-science/careers/public-administration-nonprofit-program-coordinator/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const CampaignStaffFieldOrganizerCareerPathGraph = dynamic(
+  () => import("../political-science/careers/campaign-staff-field-organizer-campaign-management/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const AdvocacyLobbyingGovernmentRelationsCareerPathGraph = dynamic(
+  () => import("../political-science/careers/advocacy-lobbying-government-relations/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const LawPreLawCareerPathGraph = dynamic(
+  () => import("../political-science/careers/law-pre-law/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const MechanicalDesignCareerPathGraph = dynamic(
+  () => import("../mechanical-engineering/careers/mechanical-design/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const AerospaceDefenseCareerPathGraph = dynamic(
+  () => import("../mechanical-engineering/careers/aerospace-defense/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const EnergySustainabilityCareerPathGraph = dynamic(
+  () => import("../mechanical-engineering/careers/energy-sustainability/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const RoboticsAutomationCareerPathGraph = dynamic(
+  () => import("../mechanical-engineering/careers/robotics-automation/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const ManufacturingIndustrialCareerPathGraph = dynamic(
+  () => import("../mechanical-engineering/careers/manufacturing-industrial/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const AutomotiveEVCareerPathGraph = dynamic(
+  () => import("../mechanical-engineering/careers/automotive-ev/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const PowerSystemsCareerPathGraph = dynamic(
+  () => import("../electrical-engineering/careers/power-systems/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const EmbeddedSystemsEECareerPathGraph = dynamic(
+  () => import("../electrical-engineering/careers/embedded-systems/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const EVAutomotiveCareerPathGraph = dynamic(
+  () => import("../electrical-engineering/careers/ev-automotive/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const SignalsRFCareerPathGraph = dynamic(
+  () => import("../electrical-engineering/careers/signals-rf/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const ControlsAutomationCareerPathGraph = dynamic(
+  () => import("../electrical-engineering/careers/controls-automation/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const HardwareICDesignCareerPathGraph = dynamic(
+  () => import("../electrical-engineering/careers/hardware-ic-design/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
 
 interface DegreesContentProps {
   selectedDegree: string | null;
@@ -1755,6 +1853,343 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
               />
               <button data-automotive-ev-format style={{ display: 'none' }}></button>
               <button data-automotive-ev-reset style={{ display: 'none' }}></button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // --- Electrical Engineering career paths ---
+    if (selectedDegree === "Electrical Engineering" && selectedCareerPath === "power-systems") {
+      return (
+        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-10 text-center">
+              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+                Power Systems & Energy - {selectedDegree}
+              </h2>
+              <p className="text-black mb-5">
+                Career pathway information and recommended courses
+              </p>
+              <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+                Power Systems & Energy engineers design, analyze, and operate electrical power generation, transmission, and distribution systems. Focus on renewable energy, grid stability, power electronics, and energy storage. Essential for roles in utilities, renewable energy firms, and grid infrastructure.
+              </p>
+            </div>
+            <div className="mb-6 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  const formatBtn = document.querySelector('[data-power-systems-format]') as HTMLButtonElement;
+                  if (formatBtn) formatBtn.click();
+                }}
+                className="text-sm transition-colors font-medium px-4 py-2 rounded-md border text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                title="Format graph to prevent overlap"
+              >
+                Format Graph
+              </button>
+              <button
+                onClick={() => {
+                  const resetBtn = document.querySelector('[data-power-systems-reset]') as HTMLButtonElement;
+                  if (resetBtn) resetBtn.click();
+                }}
+                className="text-sm transition-colors font-medium px-4 py-2 rounded-md border text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                title="Reset career path graph view"
+              >
+                Reset Graph
+              </button>
+            </div>
+            <div className="mb-10">
+              <PowerSystemsCareerPathGraph
+                onResetReady={(resetFn) => {
+                  const btn = document.querySelector('[data-power-systems-reset]') as HTMLButtonElement;
+                  if (btn) btn.onclick = resetFn;
+                }}
+                onFormatReady={(formatFn) => {
+                  const btn = document.querySelector('[data-power-systems-format]') as HTMLButtonElement;
+                  if (btn) btn.onclick = formatFn;
+                }}
+              />
+              <button data-power-systems-format style={{ display: "none" }} />
+              <button data-power-systems-reset style={{ display: "none" }} />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (selectedDegree === "Electrical Engineering" && selectedCareerPath === "embedded-systems") {
+      return (
+        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-10 text-center">
+              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+                Embedded Systems & Robotics - {selectedDegree}
+              </h2>
+              <p className="text-black mb-5">
+                Career pathway information and recommended courses
+              </p>
+              <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+                Embedded Systems & Robotics engineers design and program computing systems integrated into physical devices. Focus on microcontrollers, real-time systems, sensors, and hardware-software co-design. Essential for roles in IoT, robotics, automotive, and consumer electronics.
+              </p>
+            </div>
+            <div className="mb-6 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  const formatBtn = document.querySelector('[data-embedded-systems-ee-format]') as HTMLButtonElement;
+                  if (formatBtn) formatBtn.click();
+                }}
+                className="text-sm transition-colors font-medium px-4 py-2 rounded-md border text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                title="Format graph to prevent overlap"
+              >
+                Format Graph
+              </button>
+              <button
+                onClick={() => {
+                  const resetBtn = document.querySelector('[data-embedded-systems-ee-reset]') as HTMLButtonElement;
+                  if (resetBtn) resetBtn.click();
+                }}
+                className="text-sm transition-colors font-medium px-4 py-2 rounded-md border text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                title="Reset career path graph view"
+              >
+                Reset Graph
+              </button>
+            </div>
+            <div className="mb-10">
+              <EmbeddedSystemsEECareerPathGraph
+                onResetReady={(resetFn) => {
+                  const btn = document.querySelector('[data-embedded-systems-ee-reset]') as HTMLButtonElement;
+                  if (btn) btn.onclick = resetFn;
+                }}
+                onFormatReady={(formatFn) => {
+                  const btn = document.querySelector('[data-embedded-systems-ee-format]') as HTMLButtonElement;
+                  if (btn) btn.onclick = formatFn;
+                }}
+              />
+              <button data-embedded-systems-ee-format style={{ display: "none" }} />
+              <button data-embedded-systems-ee-reset style={{ display: "none" }} />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (selectedDegree === "Electrical Engineering" && selectedCareerPath === "ev-automotive") {
+      return (
+        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-10 text-center">
+              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+                Electric Vehicle & Automotive Systems - {selectedDegree}
+              </h2>
+              <p className="text-black mb-5">
+                Career pathway information and recommended courses
+              </p>
+              <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+                Electric Vehicle & Automotive Systems engineers design powertrains, batteries, and control systems for EVs and hybrid vehicles. Focus on power electronics, motor drives, battery management, and vehicle electrification. Essential for roles at automotive OEMs and EV startups.
+              </p>
+            </div>
+            <div className="mb-6 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  const formatBtn = document.querySelector('[data-ev-automotive-format]') as HTMLButtonElement;
+                  if (formatBtn) formatBtn.click();
+                }}
+                className="text-sm transition-colors font-medium px-4 py-2 rounded-md border text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                title="Format graph to prevent overlap"
+              >
+                Format Graph
+              </button>
+              <button
+                onClick={() => {
+                  const resetBtn = document.querySelector('[data-ev-automotive-reset]') as HTMLButtonElement;
+                  if (resetBtn) resetBtn.click();
+                }}
+                className="text-sm transition-colors font-medium px-4 py-2 rounded-md border text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                title="Reset career path graph view"
+              >
+                Reset Graph
+              </button>
+            </div>
+            <div className="mb-10">
+              <EVAutomotiveCareerPathGraph
+                onResetReady={(resetFn) => {
+                  const btn = document.querySelector('[data-ev-automotive-reset]') as HTMLButtonElement;
+                  if (btn) btn.onclick = resetFn;
+                }}
+                onFormatReady={(formatFn) => {
+                  const btn = document.querySelector('[data-ev-automotive-format]') as HTMLButtonElement;
+                  if (btn) btn.onclick = formatFn;
+                }}
+              />
+              <button data-ev-automotive-format style={{ display: "none" }} />
+              <button data-ev-automotive-reset style={{ display: "none" }} />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (selectedDegree === "Electrical Engineering" && selectedCareerPath === "signals-rf") {
+      return (
+        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-10 text-center">
+              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+                Signals, Communications & RF - {selectedDegree}
+              </h2>
+              <p className="text-black mb-5">
+                Career pathway information and recommended courses
+              </p>
+              <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+                Signals, Communications & RF engineers design and analyze systems for signal processing, wireless communications, and radio frequency applications. Focus on Fourier analysis, modulation, filtering, and RF circuit design. Essential for roles in telecom, defense, and wireless technology.
+              </p>
+            </div>
+            <div className="mb-6 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  const formatBtn = document.querySelector('[data-signals-rf-format]') as HTMLButtonElement;
+                  if (formatBtn) formatBtn.click();
+                }}
+                className="text-sm transition-colors font-medium px-4 py-2 rounded-md border text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                title="Format graph to prevent overlap"
+              >
+                Format Graph
+              </button>
+              <button
+                onClick={() => {
+                  const resetBtn = document.querySelector('[data-signals-rf-reset]') as HTMLButtonElement;
+                  if (resetBtn) resetBtn.click();
+                }}
+                className="text-sm transition-colors font-medium px-4 py-2 rounded-md border text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                title="Reset career path graph view"
+              >
+                Reset Graph
+              </button>
+            </div>
+            <div className="mb-10">
+              <SignalsRFCareerPathGraph
+                onResetReady={(resetFn) => {
+                  const btn = document.querySelector('[data-signals-rf-reset]') as HTMLButtonElement;
+                  if (btn) btn.onclick = resetFn;
+                }}
+                onFormatReady={(formatFn) => {
+                  const btn = document.querySelector('[data-signals-rf-format]') as HTMLButtonElement;
+                  if (btn) btn.onclick = formatFn;
+                }}
+              />
+              <button data-signals-rf-format style={{ display: "none" }} />
+              <button data-signals-rf-reset style={{ display: "none" }} />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (selectedDegree === "Electrical Engineering" && selectedCareerPath === "controls-automation") {
+      return (
+        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-10 text-center">
+              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+                Controls & Automation - {selectedDegree}
+              </h2>
+              <p className="text-black mb-5">
+                Career pathway information and recommended courses
+              </p>
+              <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+                Controls & Automation engineers design feedback systems that regulate dynamic processes. Focus on control theory, state-space analysis, PID tuning, and mechatronics. Essential for roles in manufacturing, robotics, aerospace, and process industries.
+              </p>
+            </div>
+            <div className="mb-6 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  const formatBtn = document.querySelector('[data-controls-automation-format]') as HTMLButtonElement;
+                  if (formatBtn) formatBtn.click();
+                }}
+                className="text-sm transition-colors font-medium px-4 py-2 rounded-md border text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                title="Format graph to prevent overlap"
+              >
+                Format Graph
+              </button>
+              <button
+                onClick={() => {
+                  const resetBtn = document.querySelector('[data-controls-automation-reset]') as HTMLButtonElement;
+                  if (resetBtn) resetBtn.click();
+                }}
+                className="text-sm transition-colors font-medium px-4 py-2 rounded-md border text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                title="Reset career path graph view"
+              >
+                Reset Graph
+              </button>
+            </div>
+            <div className="mb-10">
+              <ControlsAutomationCareerPathGraph
+                onResetReady={(resetFn) => {
+                  const btn = document.querySelector('[data-controls-automation-reset]') as HTMLButtonElement;
+                  if (btn) btn.onclick = resetFn;
+                }}
+                onFormatReady={(formatFn) => {
+                  const btn = document.querySelector('[data-controls-automation-format]') as HTMLButtonElement;
+                  if (btn) btn.onclick = formatFn;
+                }}
+              />
+              <button data-controls-automation-format style={{ display: "none" }} />
+              <button data-controls-automation-reset style={{ display: "none" }} />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (selectedDegree === "Electrical Engineering" && selectedCareerPath === "hardware-ic-design") {
+      return (
+        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-10 text-center">
+              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+                Hardware / IC Design - {selectedDegree}
+              </h2>
+              <p className="text-black mb-5">
+                Career pathway information and recommended courses
+              </p>
+              <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+                Hardware / IC Design engineers design analog and digital integrated circuits, from transistors to full chips. Focus on VLSI, CMOS design, layout, and verification. Essential for roles in semiconductor companies, chip design, and electronics R&D.
+              </p>
+            </div>
+            <div className="mb-6 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  const formatBtn = document.querySelector('[data-hardware-ic-design-format]') as HTMLButtonElement;
+                  if (formatBtn) formatBtn.click();
+                }}
+                className="text-sm transition-colors font-medium px-4 py-2 rounded-md border text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                title="Format graph to prevent overlap"
+              >
+                Format Graph
+              </button>
+              <button
+                onClick={() => {
+                  const resetBtn = document.querySelector('[data-hardware-ic-design-reset]') as HTMLButtonElement;
+                  if (resetBtn) resetBtn.click();
+                }}
+                className="text-sm transition-colors font-medium px-4 py-2 rounded-md border text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                title="Reset career path graph view"
+              >
+                Reset Graph
+              </button>
+            </div>
+            <div className="mb-10">
+              <HardwareICDesignCareerPathGraph
+                onResetReady={(resetFn) => {
+                  const btn = document.querySelector('[data-hardware-ic-design-reset]') as HTMLButtonElement;
+                  if (btn) btn.onclick = resetFn;
+                }}
+                onFormatReady={(formatFn) => {
+                  const btn = document.querySelector('[data-hardware-ic-design-format]') as HTMLButtonElement;
+                  if (btn) btn.onclick = formatFn;
+                }}
+              />
+              <button data-hardware-ic-design-format style={{ display: "none" }} />
+              <button data-hardware-ic-design-reset style={{ display: "none" }} />
             </div>
           </div>
         </div>
