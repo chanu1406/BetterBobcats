@@ -6,35 +6,115 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import dynamic from "next/dynamic";
+import { Skeleton } from "@/components/ui/skeleton";
 import PrerequisiteGraph from "../cs-cse/components/PrerequisiteGraph";
 import GraphLegend from "../cs-cse/components/GraphLegend";
-import CareerPathGraph from "../cs-cse/careers/swe/components/CareerPathGraph";
-import CybersecurityCareerPathGraph from "../cs-cse/careers/cybersecurity/components/CareerPathGraph";
-import MLAICareerPathGraph from "../cs-cse/careers/ml-ai/components/CareerPathGraph";
-import DataScienceCareerPathGraph from "../cs-cse/careers/datascience/components/CareerPathGraph";
-import SystemsInfraCareerPathGraph from "../cs-cse/careers/systems-infra/components/CareerPathGraph";
-import EmbeddedSystemsCareerPathGraph from "../cs-cse/careers/embedded-systems/components/CareerPathGraph";
 import COGSPrerequisiteGraph from "../cogs/components/PrerequisiteGraph";
-import UXUICareerPathGraph from "../cogs/careers/ux-ui/components/CareerPathGraph";
-import DataAnalystCareerPathGraph from "../cogs/careers/data-analyst/components/CareerPathGraph";
-import MarketResearchCareerPathGraph from "../cogs/careers/market-research/components/CareerPathGraph";
-import HumanResourcesCareerPathGraph from "../cogs/careers/human-resources/components/CareerPathGraph";
 import EEPrerequisiteGraph from "../electrical-engineering/components/PrerequisiteGraph";
 import EEGraphLegend from "../electrical-engineering/components/GraphLegend";
 import PoliticalSciencePrerequisiteGraph from "../political-science/components/PrerequisiteGraph";
 import PoliticalScienceGraphLegend from "../political-science/components/GraphLegend";
-import PolicyResearchAnalystCareerPathGraph from "../political-science/careers/policy-research-analyst/components/CareerPathGraph";
-import LegislativeAideGovernmentStaffCareerPathGraph from "../political-science/careers/legislative-aide-government-staff/components/CareerPathGraph";
-import PublicAdministrationNonprofitProgramCoordinatorCareerPathGraph from "../political-science/careers/public-administration-nonprofit-program-coordinator/components/CareerPathGraph";
-import CampaignStaffFieldOrganizerCareerPathGraph from "../political-science/careers/campaign-staff-field-organizer-campaign-management/components/CareerPathGraph";
-import AdvocacyLobbyingGovernmentRelationsCareerPathGraph from "../political-science/careers/advocacy-lobbying-government-relations/components/CareerPathGraph";
-import LawPreLawCareerPathGraph from "../political-science/careers/law-pre-law/components/CareerPathGraph";
-import PowerSystemsCareerPathGraph from "../electrical-engineering/careers/power-systems/components/CareerPathGraph";
-import EmbeddedSystemsEECareerPathGraph from "../electrical-engineering/careers/embedded-systems/components/CareerPathGraph";
-import EVAutomotiveCareerPathGraph from "../electrical-engineering/careers/ev-automotive/components/CareerPathGraph";
-import SignalsRFCareerPathGraph from "../electrical-engineering/careers/signals-rf/components/CareerPathGraph";
-import ControlsAutomationCareerPathGraph from "../electrical-engineering/careers/controls-automation/components/CareerPathGraph";
-import HardwareICDesignCareerPathGraph from "../electrical-engineering/careers/hardware-ic-design/components/CareerPathGraph";
+
+function CareerPathGraphLoading() {
+  return (
+    <div className="w-full h-[800px] flex items-center justify-center border border-border/40 rounded-lg overflow-hidden bg-muted/20">
+      <div className="flex flex-col items-center gap-4">
+        <Skeleton className="h-6 w-64" />
+        <Skeleton className="h-[700px] w-full max-w-4xl rounded-lg" />
+      </div>
+    </div>
+  );
+}
+
+const CareerPathGraph = dynamic(
+  () => import("../cs-cse/careers/swe/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const CybersecurityCareerPathGraph = dynamic(
+  () => import("../cs-cse/careers/cybersecurity/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const MLAICareerPathGraph = dynamic(
+  () => import("../cs-cse/careers/ml-ai/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const DataScienceCareerPathGraph = dynamic(
+  () => import("../cs-cse/careers/datascience/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const SystemsInfraCareerPathGraph = dynamic(
+  () => import("../cs-cse/careers/systems-infra/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const EmbeddedSystemsCareerPathGraph = dynamic(
+  () => import("../cs-cse/careers/embedded-systems/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const UXUICareerPathGraph = dynamic(
+  () => import("../cogs/careers/ux-ui/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const DataAnalystCareerPathGraph = dynamic(
+  () => import("../cogs/careers/data-analyst/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const MarketResearchCareerPathGraph = dynamic(
+  () => import("../cogs/careers/market-research/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const HumanResourcesCareerPathGraph = dynamic(
+  () => import("../cogs/careers/human-resources/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const PowerSystemsCareerPathGraph = dynamic(
+  () => import("../electrical-engineering/careers/power-systems/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const EmbeddedSystemsEECareerPathGraph = dynamic(
+  () => import("../electrical-engineering/careers/embedded-systems/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const EVAutomotiveCareerPathGraph = dynamic(
+  () => import("../electrical-engineering/careers/ev-automotive/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const SignalsRFCareerPathGraph = dynamic(
+  () => import("../electrical-engineering/careers/signals-rf/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const ControlsAutomationCareerPathGraph = dynamic(
+  () => import("../electrical-engineering/careers/controls-automation/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const HardwareICDesignCareerPathGraph = dynamic(
+  () => import("../electrical-engineering/careers/hardware-ic-design/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const PolicyResearchAnalystCareerPathGraph = dynamic(
+  () => import("../political-science/careers/policy-research-analyst/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const LegislativeAideGovernmentStaffCareerPathGraph = dynamic(
+  () => import("../political-science/careers/legislative-aide-government-staff/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const PublicAdministrationNonprofitProgramCoordinatorCareerPathGraph = dynamic(
+  () => import("../political-science/careers/public-administration-nonprofit-program-coordinator/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const CampaignStaffFieldOrganizerCareerPathGraph = dynamic(
+  () => import("../political-science/careers/campaign-staff-field-organizer-campaign-management/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const AdvocacyLobbyingGovernmentRelationsCareerPathGraph = dynamic(
+  () => import("../political-science/careers/advocacy-lobbying-government-relations/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
+const LawPreLawCareerPathGraph = dynamic(
+  () => import("../political-science/careers/law-pre-law/components/CareerPathGraph"),
+  { ssr: false, loading: CareerPathGraphLoading }
+);
 
 interface DegreesContentProps {
   selectedDegree: string | null;
@@ -2307,8 +2387,8 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
             <EEGraphLegend 
               onFormatLayoutClick={() => setUseFormattedLayout(!useFormattedLayout)}
               useFormattedLayout={useFormattedLayout}
-              onResetPositions={resetEEReady ? resetEEGraphRef.current || undefined : undefined}
-              onFullReset={fullResetEEReady ? fullResetEEGraphRef.current || undefined : undefined}
+              onResetClick={resetEEReady ? resetEEGraphRef.current || undefined : undefined}
+              onFullResetClick={fullResetEEReady ? fullResetEEGraphRef.current || undefined : undefined}
             />
           </div>
           <div className="mb-10">
