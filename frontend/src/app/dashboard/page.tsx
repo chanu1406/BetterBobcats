@@ -98,8 +98,7 @@ export default function DashboardPage() {
     } else {
       // Fallback: try /clubs/[slug] or redirect to dashboard with error
       // Since we don't have a slug, we can't navigate to club-specific pages
-      setError(`Club does not have a slug. Cannot navigate to club dashboard.`);
-      console.warn(`Club ${clubId} has no slug, cannot navigate`);
+      console.warn(`Club ${clubId} has no slug, cannot navigate to club dashboard`);
     }
   };
 
