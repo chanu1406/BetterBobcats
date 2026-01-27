@@ -2195,6 +2195,355 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
         </div>
       );
     }
+
+    // --- Political Science career paths ---
+    if (selectedDegree === "Political Science" && selectedCareerPath === "policy-research-analyst") {
+      return (
+        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-10 text-center">
+              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+                {careerPathNames[selectedCareerPath]} - {selectedDegree}
+              </h2>
+              <p className="text-black mb-5">
+                Career pathway information and recommended courses
+              </p>
+              {careerDescriptions[selectedCareerPath] && (
+                <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+                  {careerDescriptions[selectedCareerPath]}
+                </p>
+              )}
+            </div>
+            <div className="mb-6 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  const formatBtn = document.querySelector('[data-policy-research-analyst-format]') as HTMLButtonElement;
+                  if (formatBtn) formatBtn.click();
+                }}
+                className="text-sm transition-colors font-medium px-4 py-2 rounded-md border text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                title="Format graph to prevent overlap"
+              >
+                Format Graph
+              </button>
+              <button
+                onClick={() => {
+                  const resetBtn = document.querySelector('[data-policy-research-analyst-reset]') as HTMLButtonElement;
+                  if (resetBtn) resetBtn.click();
+                }}
+                className="text-sm transition-colors font-medium px-4 py-2 rounded-md border text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                title="Reset career path graph view"
+              >
+                Reset Graph
+              </button>
+            </div>
+            <div className="mb-10">
+              <PolicyResearchAnalystCareerPathGraph
+                onResetReady={(resetFn) => {
+                  const btn = document.querySelector('[data-policy-research-analyst-reset]') as HTMLButtonElement;
+                  if (btn) btn.onclick = resetFn;
+                }}
+                onFormatReady={(formatFn) => {
+                  const btn = document.querySelector('[data-policy-research-analyst-format]') as HTMLButtonElement;
+                  if (btn) btn.onclick = formatFn;
+                }}
+              />
+              <button data-policy-research-analyst-format style={{ display: "none" }} />
+              <button data-policy-research-analyst-reset style={{ display: "none" }} />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (selectedDegree === "Political Science" && selectedCareerPath === "legislative-aide-government-staff") {
+      return (
+        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-10 text-center">
+              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+                {careerPathNames[selectedCareerPath]} - {selectedDegree}
+              </h2>
+              <p className="text-black mb-5">
+                Career pathway information and recommended courses
+              </p>
+              {careerDescriptions[selectedCareerPath] && (
+                <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+                  {careerDescriptions[selectedCareerPath]}
+                </p>
+              )}
+            </div>
+            <div className="mb-6 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  const formatBtn = document.querySelector('[data-legislative-aide-government-staff-format]') as HTMLButtonElement;
+                  if (formatBtn) formatBtn.click();
+                }}
+                className="text-sm transition-colors font-medium px-4 py-2 rounded-md border text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                title="Format graph to prevent overlap"
+              >
+                Format Graph
+              </button>
+              <button
+                onClick={() => {
+                  const resetBtn = document.querySelector('[data-legislative-aide-government-staff-reset]') as HTMLButtonElement;
+                  if (resetBtn) resetBtn.click();
+                }}
+                className="text-sm transition-colors font-medium px-4 py-2 rounded-md border text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                title="Reset career path graph view"
+              >
+                Reset Graph
+              </button>
+            </div>
+            <div className="mb-10">
+              <LegislativeAideGovernmentStaffCareerPathGraph
+                onResetReady={(resetFn) => {
+                  const btn = document.querySelector('[data-legislative-aide-government-staff-reset]') as HTMLButtonElement;
+                  if (btn) btn.onclick = resetFn;
+                }}
+                onFormatReady={(formatFn) => {
+                  const btn = document.querySelector('[data-legislative-aide-government-staff-format]') as HTMLButtonElement;
+                  if (btn) btn.onclick = formatFn;
+                }}
+              />
+              <button data-legislative-aide-government-staff-format style={{ display: "none" }} />
+              <button data-legislative-aide-government-staff-reset style={{ display: "none" }} />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (selectedDegree === "Political Science" && (selectedCareerPath === "public-administration-nonprofit-program-coordinator" || selectedCareerPath === "public-administration-nonprofit")) {
+      return (
+        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-10 text-center">
+              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+                {careerPathNames["public-administration-nonprofit-program-coordinator"] || careerPathNames[selectedCareerPath]} - {selectedDegree}
+              </h2>
+              <p className="text-black mb-5">
+                Career pathway information and recommended courses
+              </p>
+              {(careerDescriptions["public-administration-nonprofit-program-coordinator"] || careerDescriptions[selectedCareerPath]) && (
+                <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+                  {careerDescriptions["public-administration-nonprofit-program-coordinator"] || careerDescriptions[selectedCareerPath]}
+                </p>
+              )}
+            </div>
+            <div className="mb-6 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  const formatBtn = document.querySelector('[data-public-administration-nonprofit-program-coordinator-format]') as HTMLButtonElement;
+                  if (formatBtn) formatBtn.click();
+                }}
+                className="text-sm transition-colors font-medium px-4 py-2 rounded-md border text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                title="Format graph to prevent overlap"
+              >
+                Format Graph
+              </button>
+              <button
+                onClick={() => {
+                  const resetBtn = document.querySelector('[data-public-administration-nonprofit-program-coordinator-reset]') as HTMLButtonElement;
+                  if (resetBtn) resetBtn.click();
+                }}
+                className="text-sm transition-colors font-medium px-4 py-2 rounded-md border text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                title="Reset career path graph view"
+              >
+                Reset Graph
+              </button>
+            </div>
+            <div className="mb-10">
+              <PublicAdministrationNonprofitProgramCoordinatorCareerPathGraph
+                onResetReady={(resetFn) => {
+                  const btn = document.querySelector('[data-public-administration-nonprofit-program-coordinator-reset]') as HTMLButtonElement;
+                  if (btn) btn.onclick = resetFn;
+                }}
+                onFormatReady={(formatFn) => {
+                  const btn = document.querySelector('[data-public-administration-nonprofit-program-coordinator-format]') as HTMLButtonElement;
+                  if (btn) btn.onclick = formatFn;
+                }}
+              />
+              <button data-public-administration-nonprofit-program-coordinator-format style={{ display: "none" }} />
+              <button data-public-administration-nonprofit-program-coordinator-reset style={{ display: "none" }} />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (selectedDegree === "Political Science" && (selectedCareerPath === "campaign-staff-field-organizer-campaign-management" || selectedCareerPath === "campaign-staff-field-organizer")) {
+      return (
+        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-10 text-center">
+              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+                {careerPathNames["campaign-staff-field-organizer-campaign-management"] || careerPathNames[selectedCareerPath]} - {selectedDegree}
+              </h2>
+              <p className="text-black mb-5">
+                Career pathway information and recommended courses
+              </p>
+              {(careerDescriptions["campaign-staff-field-organizer-campaign-management"] || careerDescriptions[selectedCareerPath]) && (
+                <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+                  {careerDescriptions["campaign-staff-field-organizer-campaign-management"] || careerDescriptions[selectedCareerPath]}
+                </p>
+              )}
+            </div>
+            <div className="mb-6 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  const formatBtn = document.querySelector('[data-campaign-staff-field-organizer-campaign-management-format]') as HTMLButtonElement;
+                  if (formatBtn) formatBtn.click();
+                }}
+                className="text-sm transition-colors font-medium px-4 py-2 rounded-md border text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                title="Format graph to prevent overlap"
+              >
+                Format Graph
+              </button>
+              <button
+                onClick={() => {
+                  const resetBtn = document.querySelector('[data-campaign-staff-field-organizer-campaign-management-reset]') as HTMLButtonElement;
+                  if (resetBtn) resetBtn.click();
+                }}
+                className="text-sm transition-colors font-medium px-4 py-2 rounded-md border text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                title="Reset career path graph view"
+              >
+                Reset Graph
+              </button>
+            </div>
+            <div className="mb-10">
+              <CampaignStaffFieldOrganizerCareerPathGraph
+                onResetReady={(resetFn) => {
+                  const btn = document.querySelector('[data-campaign-staff-field-organizer-campaign-management-reset]') as HTMLButtonElement;
+                  if (btn) btn.onclick = resetFn;
+                }}
+                onFormatReady={(formatFn) => {
+                  const btn = document.querySelector('[data-campaign-staff-field-organizer-campaign-management-format]') as HTMLButtonElement;
+                  if (btn) btn.onclick = formatFn;
+                }}
+              />
+              <button data-campaign-staff-field-organizer-campaign-management-format style={{ display: "none" }} />
+              <button data-campaign-staff-field-organizer-campaign-management-reset style={{ display: "none" }} />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (selectedDegree === "Political Science" && selectedCareerPath === "advocacy-lobbying-government-relations") {
+      return (
+        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-10 text-center">
+              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+                {careerPathNames[selectedCareerPath]} - {selectedDegree}
+              </h2>
+              <p className="text-black mb-5">
+                Career pathway information and recommended courses
+              </p>
+              {careerDescriptions[selectedCareerPath] && (
+                <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+                  {careerDescriptions[selectedCareerPath]}
+                </p>
+              )}
+            </div>
+            <div className="mb-6 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  const formatBtn = document.querySelector('[data-advocacy-lobbying-government-relations-format]') as HTMLButtonElement;
+                  if (formatBtn) formatBtn.click();
+                }}
+                className="text-sm transition-colors font-medium px-4 py-2 rounded-md border text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                title="Format graph to prevent overlap"
+              >
+                Format Graph
+              </button>
+              <button
+                onClick={() => {
+                  const resetBtn = document.querySelector('[data-advocacy-lobbying-government-relations-reset]') as HTMLButtonElement;
+                  if (resetBtn) resetBtn.click();
+                }}
+                className="text-sm transition-colors font-medium px-4 py-2 rounded-md border text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                title="Reset career path graph view"
+              >
+                Reset Graph
+              </button>
+            </div>
+            <div className="mb-10">
+              <AdvocacyLobbyingGovernmentRelationsCareerPathGraph
+                onResetReady={(resetFn) => {
+                  const btn = document.querySelector('[data-advocacy-lobbying-government-relations-reset]') as HTMLButtonElement;
+                  if (btn) btn.onclick = resetFn;
+                }}
+                onFormatReady={(formatFn) => {
+                  const btn = document.querySelector('[data-advocacy-lobbying-government-relations-format]') as HTMLButtonElement;
+                  if (btn) btn.onclick = formatFn;
+                }}
+              />
+              <button data-advocacy-lobbying-government-relations-format style={{ display: "none" }} />
+              <button data-advocacy-lobbying-government-relations-reset style={{ display: "none" }} />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (selectedDegree === "Political Science" && selectedCareerPath === "law-pre-law") {
+      return (
+        <div className="flex-1 p-8 bg-gradient-to-br from-background via-primary/5 to-accent/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-10 text-center">
+              <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
+                {careerPathNames[selectedCareerPath]} - {selectedDegree}
+              </h2>
+              <p className="text-black mb-5">
+                Career pathway information and recommended courses
+              </p>
+              {careerDescriptions[selectedCareerPath] && (
+                <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
+                  {careerDescriptions[selectedCareerPath]}
+                </p>
+              )}
+            </div>
+            <div className="mb-6 flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  const formatBtn = document.querySelector('[data-law-pre-law-format]') as HTMLButtonElement;
+                  if (formatBtn) formatBtn.click();
+                }}
+                className="text-sm transition-colors font-medium px-4 py-2 rounded-md border text-primary hover:text-primary/80 border-primary/20 hover:border-primary/40 cursor-pointer bg-primary/5 hover:bg-primary/10"
+                title="Format graph to prevent overlap"
+              >
+                Format Graph
+              </button>
+              <button
+                onClick={() => {
+                  const resetBtn = document.querySelector('[data-law-pre-law-reset]') as HTMLButtonElement;
+                  if (resetBtn) resetBtn.click();
+                }}
+                className="text-sm transition-colors font-medium px-4 py-2 rounded-md border text-destructive hover:text-destructive/80 border-destructive/20 hover:border-destructive/40 cursor-pointer bg-destructive/5 hover:bg-destructive/10"
+                title="Reset career path graph view"
+              >
+                Reset Graph
+              </button>
+            </div>
+            <div className="mb-10">
+              <LawPreLawCareerPathGraph
+                onResetReady={(resetFn) => {
+                  const btn = document.querySelector('[data-law-pre-law-reset]') as HTMLButtonElement;
+                  if (btn) btn.onclick = resetFn;
+                }}
+                onFormatReady={(formatFn) => {
+                  const btn = document.querySelector('[data-law-pre-law-format]') as HTMLButtonElement;
+                  if (btn) btn.onclick = formatFn;
+                }}
+              />
+              <button data-law-pre-law-format style={{ display: "none" }} />
+              <button data-law-pre-law-reset style={{ display: "none" }} />
+            </div>
+          </div>
+        </div>
+      );
+    }
   }
 
   // Show degree overview if degree selected but no career path
