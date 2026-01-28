@@ -86,8 +86,10 @@ export default function ClubsPage() {
             Filter by Major
           </label>
           <Select
-            value={selectedMajor || undefined}
-            onValueChange={(value) => setSelectedMajor(value || "")}
+            value={selectedMajor || "all"}
+            onValueChange={(value) =>
+              setSelectedMajor(value === "all" ? "" : value)
+            }
           >
             <SelectTrigger className="w-full">
               <SelectValue placeholder="All Majors" />
@@ -95,7 +97,7 @@ export default function ClubsPage() {
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Majors</SelectLabel>
-                <SelectItem value="">All Majors</SelectItem>
+                <SelectItem value="all">All Majors</SelectItem>
                 {majors.map((major) => (
                   <SelectItem
                     key={major.id}
@@ -140,42 +142,50 @@ export default function ClubsPage() {
               </div>
             ) : (
               <div className="max-w-5xl mx-auto space-y-6">
-                {clubs.map((club) => (
-                  <div
-                    key={club.id}
-                    className="bg-card p-8 rounded-xl border-2 border-primary/20 hover:border-primary/40 hover:shadow-xl transition-all group"
-                  >
-                    <h2 className="text-2xl font-bold text-primary mb-3 group-hover:text-primary/80 transition-colors">
-                      {club.name}
-                    </h2>
-                    <p className="text-muted-foreground mb-4 leading-relaxed">
-                      {club.description || "No description available."}
-                    </p>
-                    {club.website && (
-                      <a
-                        href={club.website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-6 py-2 bg-accent text-accent-foreground rounded-lg font-medium hover:bg-accent/90 transition-all hover:gap-3"
-                      >
-                        Visit Website
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
+                {clubs.map((club) => {
+                  const Wrapper = club.slug ? Link : "div";
+                  const wrapperProps = club.slug
+                    ? { href: `/clubs/${club.slug}` }
+                    : {};
+                  return (
+                    <Wrapper
+                      key={club.id}
+                      {...wrapperProps}
+                      className={`block bg-card p-8 rounded-xl border-2 border-primary/20 hover:border-primary/40 hover:shadow-xl transition-all group ${club.slug ? "cursor-pointer" : ""}`}
+                    >
+                      <h2 className="text-2xl font-bold text-primary mb-3 group-hover:text-primary/80 transition-colors">
+                        {club.name}
+                      </h2>
+                      <p className="text-muted-foreground mb-4 leading-relaxed">
+                        {club.description || "No description available."}
+                      </p>
+                      {club.website && (
+                        <a
+                          href={club.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="inline-flex items-center gap-2 px-6 py-2 bg-accent text-accent-foreground rounded-lg font-medium hover:bg-accent/90 transition-all hover:gap-3"
                         >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                          />
-                        </svg>
-                      </a>
-                    )}
-                  </div>
-                ))}
+                          Visit Website
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                            />
+                          </svg>
+                        </a>
+                      )}
+                    </Wrapper>
+                  );
+                })}
               </div>
             )}
 
