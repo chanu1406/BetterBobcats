@@ -1,14 +1,24 @@
 # BetterBobcats
 
-An open-source platform for UC Merced students to explore academic programs, discover clubs, and plan their academic journey.
+An open-source platform for UC Merced students to explore academic programs, discover clubs, manage memberships, and plan their academic journey.
 
-## 🚀 Quick Start
+## Features
+
+- **Degrees** — Prerequisite and career-path graphs for CS/CSE, COGS, Electrical Engineering, Political Science, and Mechanical Engineering. Interactive React Flow graphs with course details, tier views, and format/reset controls.
+- **Clubs** — Browse clubs (filter by major), view public club profiles (`/clubs/[slug]`), request new clubs, and track your requests.
+- **Events** — Campus-wide event calendar (month/week/list), filters, and event request board.
+- **Dashboard** — Personalized dashboard of your club memberships, with per-club pages for profile, events, members, and requests. Club officers and admins can manage events and members.
+- **Invites** — Accept club invites via email link (`/invites`).
+- **Auth** — Sign up, log in, password reset, and email verification via Supabase Auth.
+- **Admin** — Platform admins can manage clubs, club requests, majors, and maintenance (login at `/admin/login`).
+
+## Quick Start
 
 ### Prerequisites
 
 - **Node.js** 18+ and npm
 - **Python** 3.11+
-- **Supabase** account and project (for database and storage)
+- **Supabase** project (database, auth, optional storage)
 
 ### Installation
 
@@ -18,281 +28,158 @@ An open-source platform for UC Merced students to explore academic programs, dis
    cd BetterBobcats
    ```
 
-2. **Install all dependencies**
+2. **Install dependencies**
    ```bash
    npm run install:all
    ```
-   
-   This installs both frontend and backend dependencies.
+   This sets up the backend venv and installs frontend npm packages.
 
-3. **Set up environment variables**
+3. **Environment variables**
 
-   Create `backend/.env`:
+   **Backend** `backend/.env`:
    ```env
    SUPABASE_URL=your_supabase_url
    SUPABASE_KEY=your_supabase_anon_key
    SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
    ```
 
-   Create `frontend/.env.local`:
+   **Frontend** `frontend/.env.local`:
    ```env
    NEXT_PUBLIC_API_URL=http://localhost:8000
    NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
    ```
 
-4. **Run database migrations**
+4. **Database migrations**
 
-   Apply migrations from `supabase/migrations/` to your Supabase project.
+   Apply migrations to your Supabase project (e.g. via [Supabase CLI](https://supabase.com/docs/guides/cli)):
+   ```bash
+   npx supabase db push
+   ```
 
-5. **Start the development servers**
+5. **Run development servers**
 
-   Option 1: Use the convenience script
+   **Option A — Recommended (script)**
    ```bash
    ./run-dev.sh
    ```
+   Starts backend and frontend, with `NODE_OPTIONS=--max-old-space-size=4096` for the frontend to avoid memory issues when using the Degrees page.
 
-   Option 2: Use npm scripts
+   **Option B — npm**
    ```bash
    npm run dev
    ```
 
-   Option 3: Run separately
+   **Option C — Separate terminals**
    ```bash
-   # Terminal 1 - Backend
-   npm run dev:backend
-   
-   # Terminal 2 - Frontend
-   npm run dev:frontend
+   npm run dev:backend   # Terminal 1
+   npm run dev:frontend  # Terminal 2
    ```
 
-6. **Access the application**
-   - Frontend: http://localhost:3000
-   - Backend API: http://localhost:8000
-   - API Documentation: http://localhost:8000/docs
+6. **Open the app**
+   - Frontend: http://localhost:3000  
+   - Backend API: http://localhost:8000  
+   - API docs: http://localhost:8000/docs  
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 BetterBobcats/
-├── backend/                 # FastAPI backend
+├── backend/                 # FastAPI API
 │   ├── app/
-│   │   ├── api/            # API route handlers
-│   │   ├── core/           # Core configuration
-│   │   ├── db/             # Database client
-│   │   ├── models/         # Pydantic models
-│   │   ├── utils/          # Utility functions
-│   │   └── main.py         # FastAPI application entry point
-│   ├── docs/               # Backend documentation
-│   ├── requirements.txt    # Python dependencies
-│   └── Dockerfile          # Backend Docker image
+│   │   ├── api/             # Route handlers
+│   │   ├── core/            # Config
+│   │   ├── db/              # DB client
+│   │   ├── models/          # Pydantic models
+│   │   └── utils/
+│   ├── docs/
+│   ├── requirements.txt
+│   └── Dockerfile
 │
-├── frontend/                # Next.js frontend
+├── frontend/                # Next.js App Router
 │   ├── src/
-│   │   ├── app/            # Next.js App Router pages
-│   │   ├── components/     # Shared React components
-│   │   ├── lib/            # Utility libraries
-│   │   └── types/          # TypeScript type definitions
-│   ├── docs/               # Frontend documentation
-│   ├── package.json        # Node.js dependencies
-│   └── Dockerfile          # Frontend Docker image
+│   │   ├── app/             # Routes and pages
+│   │   │   ├── admin/       # Admin UI (clubs, requests, majors)
+│   │   │   ├── auth/        # Login, signup, reset, etc.
+│   │   │   ├── clubs/       # Browse, [slug], request, my-requests
+│   │   │   ├── dashboard/   # User + club dashboards
+│   │   │   ├── degrees/     # Degrees + career graphs
+│   │   │   ├── events/      # Event calendar
+│   │   │   └── invites/     # Invite acceptance
+│   │   ├── components/      # Shared UI
+│   │   ├── lib/             # API, auth, Supabase, etc.
+│   │   └── types/
+│   ├── docs/
+│   ├── package.json
+│   └── Dockerfile
 │
 ├── supabase/
-│   └── migrations/         # Database migration files
+│   ├── migrations/          # SQL migrations
+│   ├── functions/           # Edge functions (e.g. send-emails)
+│   └── config.toml
 │
-├── docs/                    # Project-wide documentation
-│   ├── database            # Database schema reference
-│   └── TECH_STACK_ARCHITECTURE_REPORT.md
-│
-├── docker-compose.yml      # Docker orchestration
-├── package.json            # Root package.json with dev scripts
-└── run-dev.sh              # Development startup script
+├── docs/                    # Project docs
+├── docker-compose.yml
+├── package.json             # Root scripts
+├── run-dev.sh               # Dev startup
+└── run-prod.sh              # Production startup
 ```
 
-## 🛠️ Tech Stack
+## Tech Stack
 
-### Frontend
-- **Framework:** Next.js 15.1.0 (App Router)
-- **UI Library:** React 19.0.0
-- **Styling:** TailwindCSS 3.4.17
-- **UI Components:** shadcn/ui
-- **Visualization:** ReactFlow 11.11.4, dagre 0.8.5
-- **Icons:** lucide-react
-- **Language:** TypeScript 5.7.2
+| Layer        | Technologies |
+|-------------|--------------|
+| **Frontend**| Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS, shadcn/ui, React Flow, TanStack Query, Supabase JS |
+| **Backend** | FastAPI, Python 3.11+, Pydantic, Supabase Python client |
+| **Data**    | PostgreSQL (Supabase), RLS, migrations in `supabase/migrations/` |
+| **Auth**    | Supabase Auth (email/password, Magic Link, etc.) |
 
-### Backend
-- **Framework:** FastAPI 0.115.0
-- **Runtime:** Python 3.11+
-- **Validation:** Pydantic 2.12.0+
-- **Database Client:** Supabase Python client
-- **Code Quality:** Ruff 0.8.0
+## Documentation
 
-### Database & Infrastructure
-- **Database:** PostgreSQL (via Supabase)
-- **Storage:** Supabase Storage
-- **Authentication:** Supabase Auth (partially implemented)
-- **Migrations:** SQL files in `supabase/migrations/`
+| Doc | Description |
+|-----|-------------|
+| [Database Schema](docs/DATABASE_SCHEMA.md) | Tables, RLS, functions |
+| [Performance Optimization Roadmap](docs/PERFORMANCE_OPTIMIZATION_ROADMAP.md) | Optimizations, RPCs, caching, indexes |
+| [Memory Troubleshooting](docs/MEMORY_TROUBLESHOOTING.md) | Dev crashes / OOM when running Degrees |
+| [Email Troubleshooting](docs/EMAIL_TROUBLESHOOTING.md) | Email delivery and templates |
+| [Production Setup](PRODUCTION_SETUP.md) | Supabase, env, deploy |
+| [Frontend Quick Start](frontend/docs/QUICK_START.md) | Frontend setup and conventions |
+| [Frontend Coding Standards](frontend/docs/CODING_STANDARDS.md) | Code style and structure |
+| [Backend Admin Auth](backend/docs/ADMIN_AUTHENTICATION.md) | Admin authentication |
 
-## 📚 Documentation
+## API Overview
 
-### Getting Started
-- [Frontend Quick Start Guide](frontend/docs/QUICK_START.md)
-- [Frontend Coding Standards](frontend/docs/CODING_STANDARDS.md)
-- [Frontend Component Structure](frontend/docs/COMPONENT_STRUCTURE.md)
+- **Clubs:** `GET/POST /api/clubs/`, `GET/PATCH/DELETE /api/clubs/{slug}`, logo/banner uploads  
+- **Majors:** `GET/POST /api/majors/`, `GET/PATCH/DELETE /api/majors/{id}`  
+- **Health:** `GET /`, `GET /health`  
 
-### Architecture & Design
-- [Tech Stack & Architecture Report](docs/TECH_STACK_ARCHITECTURE_REPORT.md)
-- [Database Schema Reference](docs/DATABASE_SCHEMA.md)
-- [Backend Admin Authentication](backend/docs/ADMIN_AUTHENTICATION.md)
+Full interactive docs at **http://localhost:8000/docs** when the backend is running.
 
-### Feature-Specific Documentation
-- [Degrees Page Documentation](frontend/src/app/degrees/docs/DEGREES_PAGE.md)
-- [Career Path Graph Guide](frontend/src/app/degrees/docs/CAREER_PATH_GRAPH_GUIDE.md)
-- [Career Graph Build Guide](frontend/src/app/degrees/cs-cse/CAREER_GRAPH_BUILD_GUIDE.md)
-
-## 🔌 API Endpoints
-
-### Clubs
-- `GET /api/clubs/` - List all clubs
-- `POST /api/clubs/` - Create a new club (admin)
-- `GET /api/clubs/{club_slug}` - Get club by slug
-- `PATCH /api/clubs/{club_slug}` - Update club (admin)
-- `DELETE /api/clubs/{club_slug}` - Delete club (admin)
-- `POST /api/clubs/{club_slug}/upload-logo` - Upload club logo (admin)
-- `POST /api/clubs/{club_slug}/upload-banner` - Upload club banner (admin)
-
-### Majors
-- `GET /api/majors/` - List all majors
-- `GET /api/majors/{major_id}` - Get major by ID
-- `POST /api/majors/` - Create a new major (admin)
-- `PATCH /api/majors/{major_id}` - Update major (admin)
-- `DELETE /api/majors/{major_id}` - Delete major (admin)
-
-### Health
-- `GET /` - Health check
-- `GET /health` - Health check endpoint
-
-Full API documentation available at `/docs` when the backend is running.
-
-## 🐳 Docker Deployment
-
-### Using Docker Compose
-
-1. **Set up environment variables** (see Installation section)
-
-2. **Build and start services**
-   ```bash
-   docker-compose up --build
-   ```
-
-3. **Access services**
-   - Frontend: http://localhost:3000
-   - Backend: http://localhost:8000
-
-### Individual Docker Images
-
-Build backend:
-```bash
-cd backend
-docker build -t betterbobcats-backend .
-```
-
-Build frontend:
-```bash
-cd frontend
-docker build -t betterbobcats-frontend .
-```
-
-## 🔒 Authentication
-
-### Admin Authentication (Development)
-
-Currently uses hardcoded credentials for development:
-- Username: `TheBetterBobcat`
-- Password: `Bobcat1!`
-
-**⚠️ Warning:** This is for development only. Production should use proper authentication with Supabase Auth.
-
-### User Authentication
-
-User authentication via Supabase Auth is partially implemented but not fully configured. See [Tech Stack Report](docs/TECH_STACK_ARCHITECTURE_REPORT.md) for implementation status.
-
-## 🗄️ Database
-
-The application uses PostgreSQL via Supabase. Database schema is defined in SQL migration files in `supabase/migrations/`.
-
-### Key Tables
-- `clubs` - Club information with active/inactive status
-- `majors` - Academic majors at UC Merced
-- `club_majors` - Many-to-many relationship between clubs and majors
-- `club_tags` - Tags associated with clubs for categorization
-- `club_major_notes` - Notes about club-major relationships
-- `club_memberships` - Club member management with role-based access (admin, officer, member)
-- `club_invites` - Email-based invitation system for clubs
-- `club_requests` - Club submission and approval workflow
-- `events` - Club event management
-- `platform_admins` - Platform administrator management
-- `email_outbox` - Email queue for asynchronous delivery
-
-### Security
-- **Row Level Security (RLS)** is extensively implemented across all tables
-- Policies cover SELECT, INSERT, UPDATE, and DELETE operations
-- Role-based access control for club members, officers, and admins
-- Platform admins have full access to all resources
-
-See [Database Schema Reference](docs/DATABASE_SCHEMA.md) for complete schema documentation including all tables, functions, RLS policies, and relationships.
-
-## 🧪 Development
-
-### Backend Development
+## Docker
 
 ```bash
-cd backend
-source venv/bin/activate
-uvicorn app.main:app --reload
+docker-compose up --build
 ```
 
-### Frontend Development
+Frontend: http://localhost:3000 — Backend: http://localhost:8000  
 
-```bash
-cd frontend
-npm run dev
-```
+See `docker-compose.yml` and [Production Setup](PRODUCTION_SETUP.md) for production-focused configuration.
 
-### Code Quality
+## Development
 
-**Backend:**
-- Linting: `ruff check`
-- Formatting: `ruff format`
+- **Backend:** `cd backend && source venv/bin/activate && uvicorn app.main:app --reload --port 8000`  
+- **Frontend:** `cd frontend && npm run dev`  
+- **Linting:** Backend — `ruff check` / `ruff format`; Frontend — `npm run lint`  
 
-**Frontend:**
-- Linting: `npm run lint`
-- Type checking: TypeScript compiler
+## Known Limitations
 
-## 📝 Contributing
+- Admin auth uses credentials defined in backend config (see [Backend Admin Auth](backend/docs/ADMIN_AUTHENTICATION.md)); production should use a proper auth strategy.
+- Email sending depends on Resend (or configured provider) and Supabase Edge Functions; see [Email Troubleshooting](docs/EMAIL_TROUBLESHOOTING.md) and [Production Setup](PRODUCTION_SETUP.md).
 
-1. Create a feature branch from `main`
-2. Make your changes
-3. Test thoroughly
-4. Submit a pull request
-
-### Code Style
-
-- **Frontend:** Follow the [Coding Standards](frontend/docs/CODING_STANDARDS.md)
-- **Backend:** Follow PEP 8, use type hints, format with Ruff
-
-## 🐛 Known Issues & Limitations
-
-- Admin authentication uses hardcoded credentials (development only)
-- User authentication not fully implemented
-- Email service not configured (email_outbox table exists but not actively used)
-
-See [Tech Stack Report](docs/TECH_STACK_ARCHITECTURE_REPORT.md) for detailed security considerations and recommendations.
-
-## 📄 License
+## License
 
 [Add your license here]
 
-## 🙏 Acknowledgments
+---
 
-Built for UC Merced students by UC Merced students.
+Built for UC Merced students.
