@@ -303,10 +303,10 @@ export default function HumanResourcesCareerPathGraph({ onResetReady, onFormatRe
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <h3 className="text-2xl font-bold text-slate-900">
-                    {selectedCourse.code}
+                    {selectedCourse.code || selectedCourse.fullName}
                   </h3>
                   <p className="text-lg text-slate-700 mt-1">
-                    {selectedCourse.name}
+                    {selectedCourse.name || selectedCourse.fullName}
                   </p>
                 </div>
                 <button
@@ -367,7 +367,8 @@ export default function HumanResourcesCareerPathGraph({ onResetReady, onFormatRe
                   </div>
                 )}
 
-                {selectedCourse.expandedInfo?.realWorldApplications && (
+                {selectedCourse.expandedInfo?.realWorldApplications &&
+                  selectedCourse.expandedInfo.realWorldApplications.length > 0 && (
                   <div>
                     <h4 className="font-semibold text-slate-900 mb-2">
                       Real-World Applications
@@ -380,9 +381,10 @@ export default function HumanResourcesCareerPathGraph({ onResetReady, onFormatRe
                       )}
                     </ul>
                   </div>
-                )}
+                  )}
 
-                {selectedCourse.expandedInfo?.learningOutcomes && (
+                {selectedCourse.expandedInfo?.learningOutcomes &&
+                  selectedCourse.expandedInfo.learningOutcomes.length > 0 && (
                   <div>
                     <h4 className="font-semibold text-slate-900 mb-2">
                       Learning Outcomes
@@ -395,9 +397,10 @@ export default function HumanResourcesCareerPathGraph({ onResetReady, onFormatRe
                       )}
                     </ul>
                   </div>
-                )}
+                  )}
 
-                {selectedCourse.expandedInfo?.topics && (
+                {selectedCourse.expandedInfo?.topics &&
+                  selectedCourse.expandedInfo.topics.length > 0 && (
                   <div>
                     <h4 className="font-semibold text-slate-900 mb-2">
                       Key Topics
@@ -413,7 +416,7 @@ export default function HumanResourcesCareerPathGraph({ onResetReady, onFormatRe
                       ))}
                     </div>
                   </div>
-                )}
+                  )}
 
                 {selectedCourse.expandedInfo?.resources && (
                   <div>
@@ -477,6 +480,13 @@ export default function HumanResourcesCareerPathGraph({ onResetReady, onFormatRe
                     </div>
                   </div>
                 )}
+
+                {selectedCourse.expandedInfo?.additionalNotes && (
+                  <div>
+                    <h4 className="font-semibold text-slate-900 mb-2">Additional Information</h4>
+                    <p className="text-slate-700">{selectedCourse.expandedInfo.additionalNotes}</p>
+                  </div>
+                )}
               </div>
 
               <div className="mt-6 flex justify-end">
@@ -491,6 +501,12 @@ export default function HumanResourcesCareerPathGraph({ onResetReady, onFormatRe
           </div>
         </div>
       )}
+
+      <div className="w-full px-4 py-2 bg-muted/20 border-t border-border/40">
+        <p className="text-xs text-black text-center">
+          Career path graph for Human Resources Specialist (Generalist)
+        </p>
+      </div>
     </div>
   );
 }

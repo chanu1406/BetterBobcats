@@ -68,9 +68,9 @@ if [ ! -d "node_modules" ]; then
     npm install
 fi
 
-# Start frontend server
+# Start frontend server (increase Node heap to avoid OOM on degrees/career graphs)
 echo -e "${GREEN}Frontend running on http://localhost:3000${NC}"
-npm run dev &
+NODE_OPTIONS="--max-old-space-size=4096" npm run dev &
 FRONTEND_PID=$!
 
 cd ..

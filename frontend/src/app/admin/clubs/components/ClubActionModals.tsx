@@ -22,10 +22,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import type { Club } from "@/types/club";
+import type { AdminClub } from "@/lib/admin";
 
 interface DeactivateModalProps {
-  club: Club | null;
+  club: AdminClub | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onConfirm: () => void;
@@ -103,7 +103,7 @@ export function DeactivateModal({
 }
 
 interface ReactivateModalProps {
-  club: Club | null;
+  club: AdminClub | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onConfirm: () => void;
@@ -141,7 +141,7 @@ export function ReactivateModal({
 }
 
 interface HardDeleteModalProps {
-  club: Club | null;
+  club: AdminClub | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onConfirm: () => void;

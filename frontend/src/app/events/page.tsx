@@ -216,7 +216,9 @@ export default function EventsPage() {
         <div className="container mx-auto px-4 py-12">
           <div className="text-center">
             <h1 className="text-2xl font-bold mb-4">Error Loading Events</h1>
-            <p className="text-muted-foreground">{error}</p>
+            <p className="text-muted-foreground">
+              {error instanceof Error ? error.message : String(error)}
+            </p>
           </div>
         </div>
       </div>

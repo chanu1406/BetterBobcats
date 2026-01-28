@@ -152,10 +152,10 @@ export async function fetchClubEvents(
     starts_at: string;
     ends_at: string | null;
     location_name: string | null;
-    location_type: string;
+    location_type: "on_campus" | "off_campus" | "online" | "hybrid";
     online_url: string | null;
-    visibility: string;
-    status: string;
+    visibility: "public" | "members_only" | "unlisted";
+    status: "draft" | "published" | "cancelled";
     banner_url: string | null;
     thumbnail_url: string | null;
     created_at: string;
@@ -190,8 +190,24 @@ export async function fetchClubEvents(
     throw error;
   }
 
+  // Type assertion: Supabase returns these as strings, but we know they match the union types
   return {
-    events: data || [],
+    events: (data || []) as Array<{
+      id: string;
+      title: string;
+      description: string | null;
+      starts_at: string;
+      ends_at: string | null;
+      location_name: string | null;
+      location_type: "on_campus" | "off_campus" | "online" | "hybrid";
+      online_url: string | null;
+      visibility: "public" | "members_only" | "unlisted";
+      status: "draft" | "published" | "cancelled";
+      banner_url: string | null;
+      thumbnail_url: string | null;
+      created_at: string;
+      updated_at: string;
+    }>,
     total: count || 0,
   };
 }
