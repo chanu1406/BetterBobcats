@@ -40,6 +40,28 @@ export async function fetchClubsWithFilters(
 }
 
 /**
+ * Fetch a single active club by slug (for public club profile page).
+ * Returns null if not found or inactive.
+ */
+export async function fetchClubBySlug(
+  slug: string
+): Promise<BrowseClub | null> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("clubs")
+    .select("id, name, description, website, slug, logo_url, is_active")
+    .eq("slug", slug)
+    .eq("is_active", true)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Error fetching club by slug:", error);
+    throw error;
+  }
+  return data as BrowseClub | null;
+}
+
+/**
  * Fetch majors list (cached globally)
  */
 export async function fetchMajorsList(): Promise<
