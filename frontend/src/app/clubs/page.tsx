@@ -143,16 +143,8 @@ export default function ClubsPage() {
             ) : (
               <div className="max-w-5xl mx-auto space-y-6">
                 {clubs.map((club) => {
-                  const Wrapper = club.slug ? Link : "div";
-                  const wrapperProps = club.slug
-                    ? { href: `/clubs/${club.slug}` }
-                    : {};
-                  return (
-                    <Wrapper
-                      key={club.id}
-                      {...wrapperProps}
-                      className={`block bg-card p-8 rounded-xl border-2 border-primary/20 hover:border-primary/40 hover:shadow-xl transition-all group ${club.slug ? "cursor-pointer" : ""}`}
-                    >
+                  const cardContent = (
+                    <>
                       <h2 className="text-2xl font-bold text-primary mb-3 group-hover:text-primary/80 transition-colors">
                         {club.name}
                       </h2>
@@ -183,7 +175,21 @@ export default function ClubsPage() {
                           </svg>
                         </a>
                       )}
-                    </Wrapper>
+                    </>
+                  );
+                  const cardClassName = `block bg-card p-8 rounded-xl border-2 border-primary/20 hover:border-primary/40 hover:shadow-xl transition-all group ${club.slug ? "cursor-pointer" : ""}`;
+                  return club.slug ? (
+                    <Link
+                      key={club.id}
+                      href={`/clubs/${club.slug}`}
+                      className={cardClassName}
+                    >
+                      {cardContent}
+                    </Link>
+                  ) : (
+                    <div key={club.id} className={cardClassName}>
+                      {cardContent}
+                    </div>
                   );
                 })}
               </div>
