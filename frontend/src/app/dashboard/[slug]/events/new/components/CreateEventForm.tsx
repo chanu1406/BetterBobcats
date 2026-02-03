@@ -326,6 +326,16 @@ export default function CreateEventForm({
         if (fulfillRequestId && eventId) {
           try {
             await fulfillEventRequest(fulfillRequestId, eventId);
+            // Trigger email worker so creator and upvoters get notified immediately
+            try {
+              await fetch("/api/send-emails", {
+                method: "POST",
+                credentials: "include",
+              });
+            } catch (emailErr) {
+              console.error("Failed to trigger email send:", emailErr);
+              // Emails are queued; cron or a later trigger will process them
+            }
           } catch (err) {
             console.error("Error fulfilling request:", err);
             setError("Event created but failed to link to request. Please try again.");

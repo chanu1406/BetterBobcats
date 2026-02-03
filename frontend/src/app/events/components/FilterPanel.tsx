@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/browser";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -35,6 +35,7 @@ export function FilterPanel({ filters, onFiltersChange, availableTags, isMobile 
   const [clubSearch, setClubSearch] = useState("");
   const [loadingMajors, setLoadingMajors] = useState(true);
   const [loadingClubs, setLoadingClubs] = useState(true);
+  const supabase = createClient();
 
   useEffect(() => {
     // Fetch majors

@@ -1,5 +1,8 @@
-// Supabase Edge Function: send-emails
-// Processes email_outbox table and sends emails via Resend API
+/**
+ * send-emails — Supabase Edge Function
+ * Picks up pending rows from email_outbox, renders template, sends via Resend, then marks sent/failed.
+ * Invoked by POST /api/send-emails (x-worker-secret) or cron.
+ */
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
@@ -185,7 +188,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({
         success: true,
-        processed: emails.length,
+        processed: emailsData.length,
         successful: successCount,
         failed: failureCount,
       }),
