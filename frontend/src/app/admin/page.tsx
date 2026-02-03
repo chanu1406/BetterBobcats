@@ -97,6 +97,11 @@ export default async function AdminDashboardPage() {
                 Maintenance
               </button>
             </Link>
+            <Link href="/admin/events">
+              <button className="w-full px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors text-left">
+                Events & Calendar
+              </button>
+            </Link>
             <button className="px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors text-left">
               Manage Careers
             </button>

@@ -1,10 +1,7 @@
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 
-/**
- * Creates a Supabase client for use in Server Components, Server Actions, and Route Handlers.
- * Uses Next.js cookies for session management.
- */
+/** Supabase client for Server Components / Actions / Route Handlers (uses Next.js cookies). */
 export async function createClient() {
   const cookieStore = await cookies()
 
@@ -32,10 +29,7 @@ export async function createClient() {
   )
 }
 
-/**
- * Creates a public Supabase client without cookies for use in cached functions.
- * This is safe for public data that doesn't require authentication.
- */
+/** Public Supabase client (no cookies); use for cached public data. */
 export function createPublicClient() {
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

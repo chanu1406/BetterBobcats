@@ -10,7 +10,7 @@ An open-source platform for UC Merced students to explore academic programs, dis
 - **Dashboard** — Personalized dashboard of your club memberships, with per-club pages for profile, events, members, and requests. Club officers and admins can manage events and members.
 - **Invites** — Accept club invites via email link (`/invites`).
 - **Auth** — Sign up, log in, password reset, and email verification via Supabase Auth.
-- **Admin** — Platform admins can manage clubs, club requests, majors, and maintenance (login at `/admin/login`).
+- **Admin** — Platform admins can manage clubs, club requests, majors, events & calendar, and maintenance (login at `/admin/login`).
 
 ## Quick Start
 
@@ -99,7 +99,7 @@ BetterBobcats/
 ├── frontend/                # Next.js App Router
 │   ├── src/
 │   │   ├── app/             # Routes and pages
-│   │   │   ├── admin/       # Admin UI (clubs, requests, majors)
+│   │   │   ├── admin/       # Admin UI (clubs, requests, majors, events, maintenance)
 │   │   │   ├── auth/        # Login, signup, reset, etc.
 │   │   │   ├── clubs/       # Browse, [slug], request, my-requests
 │   │   │   ├── dashboard/   # User + club dashboards
@@ -141,7 +141,10 @@ BetterBobcats/
 | [Database Schema](docs/DATABASE_SCHEMA.md) | Tables, RLS, functions |
 | [Performance Optimization Roadmap](docs/PERFORMANCE_OPTIMIZATION_ROADMAP.md) | Optimizations, RPCs, caching, indexes |
 | [Memory Troubleshooting](docs/MEMORY_TROUBLESHOOTING.md) | Dev crashes / OOM when running Degrees |
-| [Email Troubleshooting](docs/EMAIL_TROUBLESHOOTING.md) | Email delivery and templates |
+| [Email Troubleshooting](docs/EMAIL_TROUBLESHOOTING.md) | Email delivery, Resend, outbox |
+| [Docs index](docs/INDEX.md) | Index of docs in `docs/` |
+| [Cleanup changelog](docs/CLEANUP_CHANGELOG.md) | Record of cleanup (unused code, docs, comments) |
+| [CLEAR_EMAIL_OUTBOX.sql](docs/CLEAR_EMAIL_OUTBOX.sql) | SQL to clear pending/failed emails |
 | [Production Setup](PRODUCTION_SETUP.md) | Supabase, env, deploy |
 | [Frontend Quick Start](frontend/docs/QUICK_START.md) | Frontend setup and conventions |
 | [Frontend Coding Standards](frontend/docs/CODING_STANDARDS.md) | Code style and structure |
