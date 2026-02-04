@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { GraduationCap, Users, Calendar, ArrowRight } from "lucide-react";
+import { GraduationCap, Users, Calendar, UserCheck, ArrowRight } from "lucide-react";
 
 /**
  * FeaturesSection Component
@@ -13,6 +13,13 @@ export default function FeaturesSection() {
       icon: GraduationCap,
       href: "/degrees",
       color: "from-blue-500 to-blue-600",
+    },
+    {
+      title: "Professors",
+      description: "Browse professor ratings, reviews, and course difficulty to make informed decisions about your classes",
+      icon: UserCheck,
+      href: "/professors",
+      color: "from-purple-500 to-purple-600",
     },
     {
       title: "Student Clubs",
@@ -47,7 +54,7 @@ export default function FeaturesSection() {
         </div>
 
         {/* Features Grid */}
-        <div className="grid md:grid-cols-3 gap-8 mb-12">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
@@ -60,7 +67,7 @@ export default function FeaturesSection() {
                 <div className={`inline-flex p-4 rounded-xl bg-gradient-to-br ${feature.color} mb-6 text-white shadow-lg group-hover:scale-110 transition-transform duration-300`}>
                   <Icon className="w-6 h-6" />
                 </div>
-                
+
                 {/* Content */}
                 <h3 className="text-2xl font-bold mb-3 text-foreground group-hover:text-primary transition-colors">
                   {feature.title}
@@ -68,7 +75,7 @@ export default function FeaturesSection() {
                 <p className="text-muted-foreground leading-relaxed mb-4">
                   {feature.description}
                 </p>
-                
+
                 {/* Arrow indicator */}
                 <div className="flex items-center text-primary opacity-0 group-hover:opacity-100 transition-opacity">
                   <span className="text-sm font-medium">Learn more</span>
