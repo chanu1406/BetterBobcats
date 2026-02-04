@@ -42,6 +42,12 @@ export default function Navigation() {
               Clubs
             </Link>
             <Link
+              href="/professors"
+              className="text-sm font-medium hover:text-primary transition-colors"
+            >
+              Professors
+            </Link>
+            <Link
               href="/events"
               className="text-sm font-medium hover:text-primary transition-colors"
             >
