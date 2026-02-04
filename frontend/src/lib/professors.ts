@@ -36,7 +36,7 @@ export async function fetchDepartments(): Promise<Department[]> {
 
     if (error) {
         console.error("Error fetching departments:", error);
-        return [];
+        throw new Error(`Failed to fetch departments: ${error.message}`);
     }
 
     return data || [];
@@ -104,7 +104,7 @@ export async function fetchProfessors(options?: {
 
     if (error) {
         console.error("Error fetching professors:", error);
-        return { professors: [], totalCount: 0 };
+        throw new Error(`Failed to fetch professors: ${error.message}`);
     }
 
     return {
