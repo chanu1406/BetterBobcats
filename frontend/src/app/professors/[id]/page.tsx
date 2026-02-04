@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { fetchProfessor } from "@/lib/professors";
+import { fetchCoursesByProfessor, type CourseSummary } from "@/lib/courses";
 
 // Star rating component
 function StarRating({ rating, size = "lg" }: { rating: number | null; size?: "sm" | "md" | "lg" }) {
@@ -30,10 +31,10 @@ function StarRating({ rating, size = "lg" }: { rating: number | null; size?: "sm
                     <svg
                         key={i}
                         className={`${starClasses} ${i < fullStars
+                            ? "text-yellow-400"
+                            : i === fullStars && hasHalf
                                 ? "text-yellow-400"
-                                : i === fullStars && hasHalf
-                                    ? "text-yellow-400"
-                                    : "text-gray-300"
+                                : "text-gray-300"
                             }`}
                         fill="currentColor"
                         viewBox="0 0 20 20"
@@ -61,6 +62,61 @@ function StatBadge({ label, value, color = "gray" }: { label: string; value: str
         <div className={`px-4 py-3 rounded-lg border ${colorClasses}`}>
             <p className="text-xs uppercase tracking-wide opacity-70 mb-1">{label}</p>
             <p className="text-xl font-bold">{value}</p>
+        </div>
+    );
+}
+
+// Courses Taught section component
+function CoursesTaughtSection({ professorId }: { professorId: string }) {
+    const { data: courses = [], isLoading } = useQuery({
+        queryKey: ["professorCourses", professorId],
+        queryFn: () => fetchCoursesByProfessor(professorId),
+        enabled: !!professorId,
+    });
+
+    if (isLoading) {
+        return (
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+                <h2 className="text-xl font-bold text-gray-900 mb-4">Courses Taught</h2>
+                <div className="text-center py-4">
+                    <div className="inline-block animate-spin rounded-full h-6 w-6 border-2 border-blue-500 border-t-transparent"></div>
+                </div>
+            </div>
+        );
+    }
+
+    if (courses.length === 0) {
+        return null; // Don't show section if no courses
+    }
+
+    return (
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">
+                Courses Taught ({courses.length})
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {courses.map((course: CourseSummary) => (
+                    <Link
+                        key={course.id}
+                        href={`/courses/${course.subject_code.toLowerCase()}/${course.id}`}
+                        className="flex items-center justify-between p-3 bg-gray-50 hover:bg-blue-50 rounded-lg border border-gray-200 hover:border-blue-400 transition-all group"
+                    >
+                        <div>
+                            <p className="font-medium text-blue-600 group-hover:text-blue-700">
+                                {course.course_code}
+                            </p>
+                            <p className="text-sm text-gray-600 line-clamp-1">
+                                {course.title}
+                            </p>
+                        </div>
+                        {course.credits && (
+                            <span className="text-xs text-gray-500 bg-white px-2 py-1 rounded">
+                                {course.credits} cr
+                            </span>
+                        )}
+                    </Link>
+                ))}
+            </div>
         </div>
     );
 }
@@ -170,6 +226,9 @@ export default function ProfessorDetailPage() {
                         color="blue"
                     />
                 </div>
+
+                {/* Courses Taught Section */}
+                <CoursesTaughtSection professorId={professorId} />
 
                 {/* Reviews Section */}
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
