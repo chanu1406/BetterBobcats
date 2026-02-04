@@ -43,9 +43,10 @@ async def health():
 
 
 # API Routers
-from app.api import clubs, majors
+from app.api import clubs, majors, professors
 
 # Admin router removed - admin auth now handled via Supabase Auth in Next.js
 # app.include_router(admin.router, prefix="/api/admin", tags=["admin"])
 app.include_router(clubs.router, prefix="/api/clubs", tags=["clubs"])
 app.include_router(majors.router, prefix="/api/majors", tags=["majors"])
+app.include_router(professors.router, prefix="/api/professors", tags=["professors"])
