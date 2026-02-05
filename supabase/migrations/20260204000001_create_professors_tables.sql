@@ -38,22 +38,26 @@ CREATE INDEX IF NOT EXISTS idx_professors_department_name ON public.professors(d
 ALTER TABLE public.departments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.professors ENABLE ROW LEVEL SECURITY;
 
--- Public read access policies
+-- Public read access policies (idempotent: drop if exists)
+DROP POLICY IF EXISTS "Allow public read access on departments" ON public.departments;
 CREATE POLICY "Allow public read access on departments" 
     ON public.departments FOR SELECT 
     USING (true);
 
+DROP POLICY IF EXISTS "Allow public read access on professors" ON public.professors;
 CREATE POLICY "Allow public read access on professors" 
     ON public.professors FOR SELECT 
     USING (true);
 
--- Allow service role full access for data import
+-- Allow service role full access for data import (idempotent)
+DROP POLICY IF EXISTS "Allow service role full access on departments" ON public.departments;
 CREATE POLICY "Allow service role full access on departments"
     ON public.departments FOR ALL
     TO service_role
     USING (true)
     WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Allow service role full access on professors" ON public.professors;
 CREATE POLICY "Allow service role full access on professors"
     ON public.professors FOR ALL
     TO service_role
@@ -84,7 +88,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Trigger to maintain professor counts
+-- Trigger to maintain professor counts (idempotent)
+DROP TRIGGER IF EXISTS trigger_update_department_professor_count ON public.professors;
 CREATE TRIGGER trigger_update_department_professor_count
 AFTER INSERT OR UPDATE OR DELETE ON public.professors
 FOR EACH ROW

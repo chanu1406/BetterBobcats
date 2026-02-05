@@ -143,7 +143,12 @@ export default function DashboardPreview({ className }: DashboardPreviewProps) {
   } | null>(null);
   const [shareUrl, setShareUrl] = useState("");
   const [copied, setCopied] = useState(false);
+  const [shareDialogMounted, setShareDialogMounted] = useState(false);
   const { addToast } = useToast();
+
+  useEffect(() => {
+    setShareDialogMounted(true);
+  }, []);
 
   const shareText =
     "Check out BetterBobcats - your academic hub for UC Merced.";
@@ -311,17 +316,18 @@ export default function DashboardPreview({ className }: DashboardPreviewProps) {
 
       <div className="mb-4 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
         <span className="rounded-full bg-muted px-3 py-1">{dateLabel}</span>
-        <Dialog>
-          <DialogTrigger asChild>
-            <button
-              type="button"
-              className="inline-flex items-center gap-1 rounded-full bg-muted px-3 py-1 transition-colors hover:bg-muted/70 focus-visible:outline focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            >
-              <Share2 className="h-3 w-3" />
-              Share
-            </button>
-          </DialogTrigger>
-          <DialogContent
+        {shareDialogMounted ? (
+          <Dialog>
+            <DialogTrigger asChild>
+              <button
+                type="button"
+                className="inline-flex items-center gap-1 rounded-full bg-muted px-3 py-1 transition-colors hover:bg-muted/70 focus-visible:outline focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              >
+                <Share2 className="h-3 w-3" />
+                Share
+              </button>
+            </DialogTrigger>
+            <DialogContent
             hideClose
             className="w-[560px] max-w-[92vw] rounded-2xl border border-border/70 bg-background p-6 shadow-2xl"
           >
@@ -401,6 +407,16 @@ export default function DashboardPreview({ className }: DashboardPreviewProps) {
             </div>
           </DialogContent>
         </Dialog>
+        ) : (
+          <button
+            type="button"
+            className="inline-flex items-center gap-1 rounded-full bg-muted px-3 py-1 transition-colors hover:bg-muted/70 focus-visible:outline focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            aria-label="Share (loading)"
+          >
+            <Share2 className="h-3 w-3" />
+            Share
+          </button>
+        )}
         <span className="ml-auto flex h-7 w-7 items-center justify-center rounded-full bg-muted">
           <Sparkles className="h-3 w-3 text-primary" />
         </span>

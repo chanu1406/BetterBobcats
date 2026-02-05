@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { notFound } from "next/navigation";
+import ProfileEditorClient from "./components/ProfileEditorClient";
 
 export const metadata = {
   title: "Profile - Club Dashboard - BetterBobcats",
@@ -120,20 +121,7 @@ export default async function ClubProfilePage({
 
       {/* Profile Management */}
       {!isDeactivated && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Club Profile</CardTitle>
-            <CardDescription>
-              Manage your club's profile information, logo, and settings
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground">
-              Profile management features coming soon. You'll be able to update
-              your club's name, description, logo, and other settings here.
-            </p>
-          </CardContent>
-        </Card>
+        <ProfileEditorClient clubId={clubData.id} />
       )}
     </>
   );
