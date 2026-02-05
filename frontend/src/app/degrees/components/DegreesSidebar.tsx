@@ -14,13 +14,16 @@ interface DegreesSidebarProps {
   selectedCareerPath: string | null;
   onDegreeSelect: (degree: string) => void;
   onCareerPathSelect: (careerPath: string) => void;
+  /** Callback after user selects a degree/career (e.g. to close mobile drawer) */
+  onSelectionMade?: () => void;
 }
 
-export default function DegreesSidebar({ 
-  selectedDegree, 
+export default function DegreesSidebar({
+  selectedDegree,
   selectedCareerPath,
-  onDegreeSelect, 
-  onCareerPathSelect 
+  onDegreeSelect,
+  onCareerPathSelect,
+  onSelectionMade,
 }: DegreesSidebarProps) {
   const [expandedDegrees, setExpandedDegrees] = useState<Set<string>>(new Set());
   
@@ -93,15 +96,14 @@ export default function DegreesSidebar({
   };
 
   const toggleDegree = (degree: string) => {
-    console.log("Toggling degree:", degree, "Current expanded:", expandedDegrees);
     const newExpanded = new Set(expandedDegrees);
     if (newExpanded.has(degree)) {
       newExpanded.delete(degree);
     } else {
       newExpanded.add(degree);
       onDegreeSelect(degree);
+      onSelectionMade?.();
     }
-    console.log("New expanded:", newExpanded);
     setExpandedDegrees(newExpanded);
   };
 
@@ -113,7 +115,7 @@ export default function DegreesSidebar({
   const hasCareerPaths = (degree: string) => careerPaths[degree] && careerPaths[degree].length > 0;
 
   return (
-    <aside className="w-72 border-r border-border bg-background sticky top-[64px] h-[calc(100vh-64px)] overflow-y-auto z-10">
+    <aside className="flex-shrink-0 w-72 border-r-2 border-border bg-muted/40 sticky top-[64px] h-[calc(100vh-64px)] overflow-y-auto z-10">
       <div className="p-2">
         <nav className="space-y-1">
           {degrees.map((degree) => {
@@ -156,6 +158,7 @@ export default function DegreesSidebar({
                           onClick={(e) => {
                             e.stopPropagation();
                             onCareerPathSelect(item.id);
+                            onSelectionMade?.();
                           }}
                           className={`w-full text-left px-4 py-2.5 transition-colors border border-border/50 rounded-md font-sans font-medium tracking-tight text-sm ${
                             isItemSelected
@@ -183,10 +186,9 @@ export default function DegreesSidebar({
                           key={careerPath.id}
                           onClick={(e) => {
                             e.stopPropagation();
-                            console.log("🎯 Career path clicked:", careerPath.id, "for degree:", degree);
-                            onDegreeSelect(degree); // Set the degree first
+                            onDegreeSelect(degree);
                             onCareerPathSelect(careerPath.id);
-                            console.log("🎯 After calling handlers");
+                            onSelectionMade?.();
                           }}
                           className={`w-full text-left px-4 py-2.5 transition-colors border border-border/50 rounded-md font-sans font-medium tracking-tight text-sm ${
                             isCareerSelected

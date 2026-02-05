@@ -727,6 +727,9 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
 
           {/* How to Use This Page Section */}
           <div className="max-w-3xl mx-auto">
+            <p className="text-sm text-muted-foreground text-center mb-6">
+              Use the degree list on the left to get started. Select a degree, then a career path to see coursework and graphs.
+            </p>
             <h3 className="text-2xl md:text-3xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-6 text-center">
               How this page works
             </h3>
