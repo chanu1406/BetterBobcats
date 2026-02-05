@@ -51,6 +51,13 @@ export default function FeaturesSection() {
           <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
             BetterBobcats provides all the tools UC Merced students need to make informed decisions about their academic future and campus involvement
           </p>
+          <Link
+            href="/clubs/request"
+            className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+          >
+            Add your organization
+            <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
 
         {/* Features Grid */}
@@ -86,19 +93,6 @@ export default function FeaturesSection() {
           })}
         </div>
 
-        {/* Organization CTA */}
-        <div className="text-center pt-8 border-t border-border">
-          <p className="text-lg text-muted-foreground mb-4">
-            Want to add your organization?
-          </p>
-          <Link
-            href="/clubs/request"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors shadow-lg hover:shadow-xl"
-          >
-            Add it here
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
       </div>
     </section>
   );

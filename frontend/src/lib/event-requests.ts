@@ -7,6 +7,78 @@ import type { EventRequest, EventRequestWithDetails } from "@/types/event-reques
 
 const supabase = createClient();
 
+function isMissingEventRequestsView(error: any): boolean {
+  if (!error) return false;
+  return (
+    error.code === "42P01" ||
+    error.code === "PGRST116" ||
+    error.status === 404 ||
+    `${error.message || ""}`.includes("event_requests_with_counts") ||
+    `${error.message || ""}`.includes("Could not find the table") ||
+    `${error.details || ""}`.includes("event_requests_with_counts")
+  );
+}
+
+async function attachVoteCountsAndTags(
+  requests: EventRequest[]
+): Promise<EventRequest[]> {
+  if (!requests.length) return [];
+
+  const requestIds = requests.map((request) => request.id);
+
+  const [{ data: votes, error: votesError }, { data: tags, error: tagsError }] =
+    await Promise.all([
+      supabase
+        .from("event_request_votes")
+        .select("request_id")
+        .in("request_id", requestIds),
+      supabase
+        .from("event_request_tags")
+        .select("request_id, tag")
+        .in("request_id", requestIds),
+    ]);
+
+  if (votesError) {
+    console.warn("Error fetching event request votes:", votesError);
+  }
+
+  if (tagsError) {
+    console.warn("Error fetching event request tags:", tagsError);
+  }
+
+  const voteCountById = new Map<string, number>();
+  (votes || []).forEach((vote: any) => {
+    voteCountById.set(
+      vote.request_id,
+      (voteCountById.get(vote.request_id) || 0) + 1
+    );
+  });
+
+  const tagsById = new Map<string, string[]>();
+  (tags || []).forEach((tagRow: any) => {
+    const existing = tagsById.get(tagRow.request_id) || [];
+    existing.push(tagRow.tag);
+    tagsById.set(tagRow.request_id, existing);
+  });
+
+  return requests.map((request) => ({
+    ...request,
+    vote_count: voteCountById.get(request.id) || 0,
+    tags: tagsById.get(request.id) || [],
+  }));
+}
+
+function sortByVotesAndCreatedAt(requests: EventRequest[]): EventRequest[] {
+  return [...requests].sort((a, b) => {
+    const votesA = a.vote_count || 0;
+    const votesB = b.vote_count || 0;
+    if (votesB !== votesA) {
+      return votesB - votesA;
+    }
+    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+  });
+}
+
 /**
  * Fetch all open/fulfilled event requests (for public board)
  * OPTIMIZED: Server-side ordering by vote_count, then created_at
@@ -24,26 +96,32 @@ export async function fetchEventRequests(): Promise<EventRequest[]> {
 
     if (error) {
       console.error("Error fetching event requests:", error);
-      // If view doesn't exist, return empty array (migrations not run yet)
-      if (error.code === "42P01" || error.message?.includes("does not exist")) {
-        console.warn("event_requests_with_counts view does not exist. Please run migrations.");
-        return [];
+      if (isMissingEventRequestsView(error)) {
+        console.warn(
+          "event_requests_with_counts view does not exist. Falling back to base tables."
+        );
+        const { data: fallbackData, error: fallbackError } = await supabase
+          .from("event_requests")
+          .select("*")
+          .is("deleted_at", null)
+          .in("status", ["open", "fulfilled"])
+          .order("created_at", { ascending: false });
+
+        if (fallbackError) {
+          throw fallbackError;
+        }
+
+        const hydrated = await attachVoteCountsAndTags(
+          (fallbackData || []) as EventRequest[]
+        );
+        return sortByVotesAndCreatedAt(hydrated);
       }
       throw error;
     }
 
     // Sort by vote_count then created_at (client-side since vote_count is computed)
     // This is still faster than before since we're only sorting, not fetching multiple times
-    const sorted = (data || []).sort((a: any, b: any) => {
-      const votesA = a.vote_count || 0;
-      const votesB = b.vote_count || 0;
-      if (votesB !== votesA) {
-        return votesB - votesA;
-      }
-      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-    });
-
-    return sorted as EventRequest[];
+    return sortByVotesAndCreatedAt(data || []);
   } catch (err) {
     console.error("Error fetching event requests:", err);
     throw err;
@@ -231,25 +309,42 @@ export async function fetchClubRelevantRequests(
 
     if (error) {
       console.error("Error fetching club relevant requests:", error);
-      // If view doesn't exist, return empty array (migrations not run yet)
-      if (error.code === "42P01" || error.message?.includes("does not exist")) {
-        console.warn("event_requests_with_counts view does not exist. Please run migrations.");
-        return [];
+      if (isMissingEventRequestsView(error)) {
+        console.warn(
+          "event_requests_with_counts view does not exist. Falling back to base tables."
+        );
+
+        let fallbackQuery = supabase
+          .from("event_requests")
+          .select("*")
+          .is("deleted_at", null)
+          .eq("status", "open");
+
+        if (majorIds.length > 0) {
+          fallbackQuery = fallbackQuery.or(
+            `is_all_majors.eq.true,major_id.in.(${majorIds.join(",")})`
+          );
+        } else {
+          fallbackQuery = fallbackQuery.eq("is_all_majors", true);
+        }
+
+        const { data: fallbackData, error: fallbackError } = await fallbackQuery
+          .order("created_at", { ascending: false });
+
+        if (fallbackError) {
+          throw fallbackError;
+        }
+
+        const hydrated = await attachVoteCountsAndTags(
+          (fallbackData || []) as EventRequest[]
+        );
+        return sortByVotesAndCreatedAt(hydrated);
       }
       throw error;
     }
 
     // Sort by vote_count client-side since it's a computed field
-    const sorted = (data || []).sort((a: any, b: any) => {
-      const votesA = a.vote_count || 0;
-      const votesB = b.vote_count || 0;
-      if (votesB !== votesA) {
-        return votesB - votesA;
-      }
-      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-    });
-
-    return sorted as EventRequest[];
+    return sortByVotesAndCreatedAt(data || []);
   } catch (err) {
     console.error("Error fetching club relevant requests:", err);
     throw err;
@@ -293,6 +388,28 @@ export async function fetchEventRequest(
       .single();
 
     if (error || !data) {
+      if (isMissingEventRequestsView(error)) {
+        console.warn(
+          "event_requests_with_counts view does not exist. Falling back to base tables."
+        );
+
+        const { data: fallbackData, error: fallbackError } = await supabase
+          .from("event_requests")
+          .select("*")
+          .eq("id", requestId)
+          .single();
+
+        if (fallbackError || !fallbackData) {
+          console.error("Error fetching event request:", fallbackError);
+          return null;
+        }
+
+        const [hydrated] = await attachVoteCountsAndTags([
+          fallbackData as EventRequest,
+        ]);
+        return hydrated || null;
+      }
+
       console.error("Error fetching event request:", error);
       return null;
     }
