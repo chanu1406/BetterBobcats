@@ -229,10 +229,13 @@ export default function ProfileEditorClient({ clubId }: ProfileEditorClientProps
         thumbnail_url: thumbnailUrl || null,
         intro_video_url: introVideoUrl || null,
         how_to_join: howToJoin || null,
-        dues_amount_cents: duesAmountCents
-          ? Math.round(parseFloat(duesAmountCents) * 100)
-          : null,
-        dues_frequency: duesFrequency === "none" ? null : duesFrequency,
+        dues_amount_cents: (() => {
+          if (!duesAmountCents) return null;
+          const cents = Math.round(parseFloat(duesAmountCents) * 100);
+          return Number.isNaN(cents) ? null : cents;
+        })(),
+        dues_frequency:
+          duesFrequency === "none" || !duesFrequency ? null : duesFrequency,
         application_required: applicationRequired,
         application_url: applicationUrl || null,
         commitment_level: commitmentLevel || null,
@@ -251,7 +254,12 @@ export default function ProfileEditorClient({ clubId }: ProfileEditorClientProps
         accessibility_notes: accessibilityNotes || null,
         inclusivity_statement: inclusivityStatement || null,
         code_of_conduct_url: codeOfConductUrl || null,
-        years_active: yearsActive ? parseInt(yearsActive, 10) : null,
+        years_active: yearsActive
+          ? (() => {
+              const n = parseInt(yearsActive, 10);
+              return Number.isNaN(n) ? null : n;
+            })()
+          : null,
         recruiting_status: recruitingStatus || null,
         club_size_range: clubSizeRange || null,
         meeting_frequency: meetingFrequency || null,
@@ -270,7 +278,13 @@ export default function ProfileEditorClient({ clubId }: ProfileEditorClientProps
       if (updateErr) throw updateErr;
       setSuccess("Profile saved.");
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to save profile");
+      const msg =
+        e instanceof Error
+          ? e.message
+          : typeof e === "object" && e !== null && "message" in e
+            ? String((e as { message: unknown }).message)
+            : "Failed to save profile";
+      setError(msg);
     } finally {
       setSaving(false);
     }
@@ -451,27 +465,46 @@ export default function ProfileEditorClient({ clubId }: ProfileEditorClientProps
       )}
 
       {/* Publish toggle */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Publish profile</CardTitle>
-          <CardDescription>
-            When published, your enriched profile (tagline, mission, gallery,
-            officers, etc.) is visible on the public club page. Unpublished
-            profiles show only basic club info.
-          </CardDescription>
+      <Card className={published ? "border-green-300 bg-green-50/50 dark:border-green-800 dark:bg-green-950/30" : "border-amber-300 bg-amber-50/50 dark:border-amber-800 dark:bg-amber-950/30"}>
+        <CardHeader className="pb-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className={`flex h-10 w-10 items-center justify-center rounded-full ${published ? "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300" : "bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300"}`}>
+                {published ? (
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                ) : (
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                  </svg>
+                )}
+              </div>
+              <div>
+                <CardTitle className="text-base">
+                  {published ? "Profile is Live" : "Profile is in Draft Mode"}
+                </CardTitle>
+                <CardDescription className="text-sm mt-0.5">
+                  {published 
+                    ? "Your enriched profile is visible to everyone on the public club page." 
+                    : "Only basic club info is shown. Toggle to publish your full profile."}
+                </CardDescription>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <Switch
+                checked={published}
+                onCheckedChange={(v) => {
+                  setPublished(v);
+                  saveProfile({ published: v });
+                }}
+              />
+              <span className={`text-sm font-semibold px-3 py-1 rounded-full ${published ? "bg-green-200 text-green-800 dark:bg-green-800 dark:text-green-200" : "bg-amber-200 text-amber-800 dark:bg-amber-800 dark:text-amber-200"}`}>
+                {published ? "Published" : "Draft"}
+              </span>
+            </div>
+          </div>
         </CardHeader>
-        <CardContent className="flex items-center gap-4">
-          <Switch
-            checked={published}
-            onCheckedChange={(v) => {
-              setPublished(v);
-              saveProfile({ published: v });
-            }}
-          />
-          <span className="text-sm font-medium">
-            {published ? "Published" : "Draft"}
-          </span>
-        </CardContent>
       </Card>
 
       <Tabs defaultValue="identity" className="w-full">
@@ -552,8 +585,12 @@ export default function ProfileEditorClient({ clubId }: ProfileEditorClientProps
                   type="url"
                   value={thumbnailUrl}
                   onChange={(e) => setThumbnailUrl(e.target.value)}
-                  placeholder="https://..."
+                  placeholder="https://example.com/image.jpg"
                 />
+                <p className="text-xs text-muted-foreground mt-1.5">
+                  Use a full image URL starting with https:// (e.g. from Supabase Storage, Imgur, or your host). 
+                  Relative paths or incomplete URLs will not load. This image is used as the club banner when no admin-set banner exists.
+                </p>
               </div>
               <div>
                 <Label htmlFor="intro_video">Intro video URL</Label>

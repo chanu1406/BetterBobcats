@@ -43,11 +43,46 @@ export default {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
+        /* Status semantic tokens */
+        "status-open": {
+          DEFAULT: "hsl(var(--status-open))",
+          muted: "hsl(var(--status-open-muted))",
+        },
+        "status-planned": {
+          DEFAULT: "hsl(var(--status-planned))",
+          muted: "hsl(var(--status-planned-muted))",
+        },
+        "status-scheduled": {
+          DEFAULT: "hsl(var(--status-scheduled))",
+          muted: "hsl(var(--status-scheduled-muted))",
+        },
+        "status-fulfilled": {
+          DEFAULT: "hsl(var(--status-fulfilled))",
+          muted: "hsl(var(--status-fulfilled-muted))",
+        },
+        "status-neutral": {
+          DEFAULT: "hsl(var(--status-neutral))",
+          muted: "hsl(var(--status-neutral-muted))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      keyframes: {
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
+      },
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
       },
     },
   },

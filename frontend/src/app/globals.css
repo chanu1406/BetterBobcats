@@ -29,6 +29,17 @@
     --input: 210 20% 90%;
     --ring: 210 70% 42%;
     --radius: 0.5rem;
+    /* Status palette (accessible, WCAG-aligned) */
+    --status-open: 217 91% 60%;
+    --status-open-muted: 217 91% 96%;
+    --status-planned: 38 92% 50%;
+    --status-planned-muted: 38 92% 95%;
+    --status-scheduled: 263 70% 58%;
+    --status-scheduled-muted: 263 70% 96%;
+    --status-fulfilled: 142 71% 45%;
+    --status-fulfilled-muted: 142 71% 94%;
+    --status-neutral: 210 15% 55%;
+    --status-neutral-muted: 210 15% 95%;
   }
 
   .dark {
@@ -54,6 +65,17 @@
     --border: 210 30% 25%;
     --input: 210 30% 25%;
     --ring: 210 80% 60%;
+    /* Status palette dark */
+    --status-open: 217 91% 65%;
+    --status-open-muted: 217 50% 22%;
+    --status-planned: 38 92% 55%;
+    --status-planned-muted: 38 40% 22%;
+    --status-scheduled: 263 70% 65%;
+    --status-scheduled-muted: 263 40% 22%;
+    --status-fulfilled: 142 71% 50%;
+    --status-fulfilled-muted: 142 40% 20%;
+    --status-neutral: 210 15% 60%;
+    --status-neutral-muted: 210 20% 18%;
   }
 }
 

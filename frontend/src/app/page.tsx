@@ -1,5 +1,4 @@
 import Hero from "./components/home/Hero";
-import FeaturesSection from "./components/FeaturesSection";
 
 /**
  * Home Page Component
@@ -18,9 +17,8 @@ import FeaturesSection from "./components/FeaturesSection";
  */
 export default function Home() {
   return (
-    <main className="min-h-screen">
+    <main>
       <Hero />
-      <FeaturesSection />
     </main>
   );
 }

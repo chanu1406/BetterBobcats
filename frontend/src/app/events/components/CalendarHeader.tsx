@@ -69,7 +69,7 @@ export function CalendarHeader({
             </div>
 
             {/* Month/Year Display */}
-            <div className="text-xl font-semibold">{monthYear}</div>
+            <div className="text-2xl font-semibold">{monthYear}</div>
 
             {/* View Toggle */}
             <Tabs value={view} onValueChange={(v) => onViewChange(v as CalendarView)}>

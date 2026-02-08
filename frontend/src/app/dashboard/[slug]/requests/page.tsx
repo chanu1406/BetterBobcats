@@ -108,9 +108,9 @@ export default function ClubRequestsPage({ params }: ClubRequestsPageProps) {
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <CardTitle className="text-lg mb-2">
-                      {request.description.length > 100
-                        ? request.description.substring(0, 100) + "..."
-                        : request.description}
+                      {(request.title || request.description).length > 100
+                        ? (request.title || request.description).substring(0, 100) + "..."
+                        : (request.title || request.description)}
                     </CardTitle>
                     <div className="flex flex-wrap gap-2 mt-2">
                       {request.is_all_majors ? (

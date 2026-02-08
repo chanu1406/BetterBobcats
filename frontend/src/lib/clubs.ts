@@ -14,6 +14,38 @@ export interface BrowseClub {
   is_active: boolean;
 }
 
+/** Filter params for browse (sync with URL) */
+export interface ClubsBrowseFilters {
+  majorId?: string | null;
+  search?: string | null;
+  recruitingStatus?: ClubProfileRecruitingStatus | null;
+  commitmentLevel?: ClubProfileCommitmentLevel | null;
+  openTo?: ClubProfileOpenTo | null;
+  openToAllMajors?: boolean | null;
+  noDues?: boolean | null;
+  sortBy?: "relevant" | "updated" | "alphabetical" | "recruiting";
+}
+
+/** Club + profile fields needed for browse cards (list-optimized) */
+export interface BrowseClubWithProfile {
+  id: string;
+  name: string;
+  slug: string | null;
+  description: string | null;
+  logo_url: string | null;
+  is_active: boolean;
+  tagline: string | null;
+  thumbnail_url: string | null;
+  recruiting_status: ClubProfileRecruitingStatus | null;
+  commitment_level: ClubProfileCommitmentLevel | null;
+  club_size_range: ClubProfileSizeRange | null;
+  open_to: ClubProfileOpenTo | null;
+  dues_amount_cents: number | null;
+  open_to_all_majors: boolean | null;
+  profile_updated_at: string | null;
+  links: { type: string; url: string }[];
+}
+
 /** Profile enrichment types (match DB enums) */
 export type ClubProfileDuesFrequency =
   | "one_time"
@@ -145,6 +177,154 @@ export async function fetchClubsWithFilters(
 }
 
 /**
+ * Fetch clubs for browse page with profile data (cards).
+ * Uses RPC for base list, then joins club_profiles (published) and club_profile_links.
+ * Applies profile-based filters and sort client-side.
+ */
+export async function fetchClubsForBrowse(
+  filters: ClubsBrowseFilters,
+  limit: number = 100,
+  offset: number = 0
+): Promise<BrowseClubWithProfile[]> {
+  const baseClubs = await fetchClubsWithFilters(
+    filters.majorId ?? null,
+    filters.search ?? null,
+    200,
+    0
+  );
+  if (baseClubs.length === 0) return [];
+
+  const clubIds = baseClubs.map((c) => c.id);
+  const supabase = createClient();
+
+  const [profilesRes, linksRes] = await Promise.all([
+    supabase
+      .from("club_profiles")
+      .select(
+        "club_id, tagline, thumbnail_url, recruiting_status, commitment_level, club_size_range, open_to, dues_amount_cents, open_to_all_majors, updated_at"
+      )
+      .in("club_id", clubIds)
+      .eq("published", true),
+    supabase
+      .from("club_profile_links")
+      .select("club_id, link_type, url")
+      .in("club_id", clubIds)
+      .order("sort_order", { ascending: true }),
+  ]);
+
+  const profilesByClub = new Map<
+    string,
+    {
+      tagline: string | null;
+      thumbnail_url: string | null;
+      recruiting_status: ClubProfileRecruitingStatus | null;
+      commitment_level: ClubProfileCommitmentLevel | null;
+      club_size_range: ClubProfileSizeRange | null;
+      open_to: ClubProfileOpenTo | null;
+      dues_amount_cents: number | null;
+      open_to_all_majors: boolean | null;
+      updated_at: string;
+    }
+  >();
+  (profilesRes.data || []).forEach((row: Record<string, unknown>) => {
+    const clubId = row.club_id as string;
+    profilesByClub.set(clubId, {
+      tagline: (row.tagline as string) ?? null,
+      thumbnail_url: (row.thumbnail_url as string) ?? null,
+      recruiting_status: (row.recruiting_status as ClubProfileRecruitingStatus) ?? null,
+      commitment_level: (row.commitment_level as ClubProfileCommitmentLevel) ?? null,
+      club_size_range: (row.club_size_range as ClubProfileSizeRange) ?? null,
+      open_to: (row.open_to as ClubProfileOpenTo) ?? null,
+      dues_amount_cents: (row.dues_amount_cents as number) ?? null,
+      open_to_all_majors: (row.open_to_all_majors as boolean) ?? null,
+      updated_at: (row.updated_at as string) ?? "",
+    });
+  });
+
+  const linksByClub = new Map<string, { type: string; url: string }[]>();
+  (linksRes.data || []).forEach((row: Record<string, unknown>) => {
+    const clubId = row.club_id as string;
+    const list = linksByClub.get(clubId) ?? [];
+    list.push({ type: row.link_type as string, url: row.url as string });
+    linksByClub.set(clubId, list);
+  });
+
+  const emptyProfile = {
+    tagline: null as string | null,
+    thumbnail_url: null as string | null,
+    recruiting_status: null as ClubProfileRecruitingStatus | null,
+    commitment_level: null as ClubProfileCommitmentLevel | null,
+    club_size_range: null as ClubProfileSizeRange | null,
+    open_to: null as ClubProfileOpenTo | null,
+    dues_amount_cents: null as number | null,
+    open_to_all_majors: null as boolean | null,
+    updated_at: "",
+  };
+
+  let merged: BrowseClubWithProfile[] = [];
+  for (const club of baseClubs) {
+    const profile = profilesByClub.get(club.id) ?? emptyProfile;
+    merged.push({
+      id: club.id,
+      name: club.name,
+      slug: club.slug,
+      description: club.description,
+      logo_url: club.logo_url,
+      is_active: club.is_active,
+      tagline: profile.tagline,
+      thumbnail_url: profile.thumbnail_url,
+      recruiting_status: profile.recruiting_status,
+      commitment_level: profile.commitment_level,
+      club_size_range: profile.club_size_range,
+      open_to: profile.open_to,
+      dues_amount_cents: profile.dues_amount_cents,
+      open_to_all_majors: profile.open_to_all_majors,
+      profile_updated_at: profile.updated_at || null,
+      links: linksByClub.get(club.id) ?? [],
+    });
+  }
+
+  if (filters.recruitingStatus) {
+    merged = merged.filter((c) => c.recruiting_status === filters.recruitingStatus);
+  }
+  if (filters.commitmentLevel) {
+    merged = merged.filter((c) => c.commitment_level === filters.commitmentLevel);
+  }
+  if (filters.openTo) {
+    merged = merged.filter((c) => c.open_to === filters.openTo);
+  }
+  if (filters.openToAllMajors === true) {
+    merged = merged.filter((c) => c.open_to_all_majors === true);
+  }
+  if (filters.noDues === true) {
+    merged = merged.filter(
+      (c) => c.dues_amount_cents == null || c.dues_amount_cents === 0
+    );
+  }
+
+  const sortBy = filters.sortBy ?? "relevant";
+  if (sortBy === "alphabetical") {
+    merged.sort((a, b) => a.name.localeCompare(b.name));
+  } else if (sortBy === "updated") {
+    merged.sort((a, b) => {
+      const ta = a.profile_updated_at ?? "";
+      const tb = b.profile_updated_at ?? "";
+      return tb.localeCompare(ta);
+    });
+  } else if (sortBy === "recruiting") {
+    merged.sort((a, b) => {
+      const order = { open: 0, by_invite: 1, closed: 2 };
+      const ai = order[a.recruiting_status ?? "closed"] ?? 2;
+      const bi = order[b.recruiting_status ?? "closed"] ?? 2;
+      return ai - bi;
+    });
+  }
+  // "relevant" = keep current order (already from RPC)
+
+  return merged.slice(offset, offset + limit);
+}
+
+/**
  * Fetch a single active club by slug (for public club profile page).
  * Returns null if not found or inactive.
  */
@@ -221,6 +401,44 @@ export async function fetchClubWithProfile(
     media: (mediaRes.data || []) as ClubProfileMedia[],
     officers: (officersRes.data || []) as ClubOfficerPublicProfile[],
   };
+}
+
+/**
+ * Fetch next 3-5 upcoming published events for a club (public).
+ * Used on club profile page for "Upcoming events" section.
+ */
+export interface ClubUpcomingEvent {
+  id: string;
+  title: string;
+  starts_at: string;
+  ends_at: string | null;
+  location_name: string | null;
+  location_type: "on_campus" | "off_campus" | "online" | "hybrid";
+  online_url: string | null;
+}
+
+export async function fetchUpcomingClubEvents(
+  clubId: string,
+  limit: number = 5
+): Promise<ClubUpcomingEvent[]> {
+  const supabase = createClient();
+  const now = new Date().toISOString();
+
+  const { data, error } = await supabase
+    .from("events")
+    .select("id, title, starts_at, ends_at, location_name, location_type, online_url")
+    .eq("club_id", clubId)
+    .eq("status", "published")
+    .eq("visibility", "public")
+    .gte("starts_at", now)
+    .order("starts_at", { ascending: true })
+    .limit(limit);
+
+  if (error) {
+    console.error("Error fetching upcoming club events:", error);
+    return [];
+  }
+  return (data || []) as ClubUpcomingEvent[];
 }
 
 /**

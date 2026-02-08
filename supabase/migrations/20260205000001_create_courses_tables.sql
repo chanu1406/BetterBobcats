@@ -56,32 +56,38 @@ ALTER TABLE public.courses ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.course_sections ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.professor_sections ENABLE ROW LEVEL SECURITY;
 
--- Public read access policies
-CREATE POLICY "Allow public read access on courses" 
-    ON public.courses FOR SELECT 
+-- Public read access policies (drop first so migration is idempotent)
+DROP POLICY IF EXISTS "Allow public read access on courses" ON public.courses;
+CREATE POLICY "Allow public read access on courses"
+    ON public.courses FOR SELECT
     USING (true);
 
-CREATE POLICY "Allow public read access on course_sections" 
-    ON public.course_sections FOR SELECT 
+DROP POLICY IF EXISTS "Allow public read access on course_sections" ON public.course_sections;
+CREATE POLICY "Allow public read access on course_sections"
+    ON public.course_sections FOR SELECT
     USING (true);
 
-CREATE POLICY "Allow public read access on professor_sections" 
-    ON public.professor_sections FOR SELECT 
+DROP POLICY IF EXISTS "Allow public read access on professor_sections" ON public.professor_sections;
+CREATE POLICY "Allow public read access on professor_sections"
+    ON public.professor_sections FOR SELECT
     USING (true);
 
 -- Allow service role full access for data import
+DROP POLICY IF EXISTS "Allow service role full access on courses" ON public.courses;
 CREATE POLICY "Allow service role full access on courses"
     ON public.courses FOR ALL
     TO service_role
     USING (true)
     WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Allow service role full access on course_sections" ON public.course_sections;
 CREATE POLICY "Allow service role full access on course_sections"
     ON public.course_sections FOR ALL
     TO service_role
     USING (true)
     WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Allow service role full access on professor_sections" ON public.professor_sections;
 CREATE POLICY "Allow service role full access on professor_sections"
     ON public.professor_sections FOR ALL
     TO service_role

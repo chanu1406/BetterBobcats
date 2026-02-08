@@ -1,9 +1,14 @@
 /**
- * Client-side helpers for fetching event requests
+ * Client-side helpers for fetching event requests (v2 + comments)
  */
 
 import { createClient } from "@/lib/supabase/browser";
-import type { EventRequest, EventRequestWithDetails } from "@/types/event-request";
+import type {
+  EventRequest,
+  EventRequestWithDetails,
+  EventRequestComment,
+  CreateEventRequestV2Params,
+} from "@/types/event-request";
 
 const supabase = createClient();
 
@@ -79,20 +84,48 @@ function sortByVotesAndCreatedAt(requests: EventRequest[]): EventRequest[] {
   });
 }
 
+/** Statuses visible on the public feed */
+const VISIBLE_STATUSES = [
+  "open",
+  "planned",
+  "scheduled",
+  "fulfilled",
+  "not_planned",
+  "closed",
+] as const;
+
 /**
- * Fetch all open/fulfilled event requests (for public board)
- * OPTIMIZED: Server-side ordering by vote_count, then created_at
+ * Fetch event requests (for public feed). Supports filtering by status; default includes all visible statuses.
+ * Sort is applied client-side (trending, top, new, recently active).
  */
-export async function fetchEventRequests(): Promise<EventRequest[]> {
+export async function fetchEventRequests(filters?: {
+  status?: string[];
+  type?: string[];
+  major_ids?: string[];
+  q?: string;
+}): Promise<EventRequest[]> {
   try {
-    const { data, error } = await supabase
+    let query = supabase
       .from("event_requests_with_counts")
       .select("*")
       .is("deleted_at", null)
-      .in("status", ["open", "fulfilled"])
-      // Note: PostgREST doesn't support ordering by computed fields directly
-      // We'll still need client-side sort, but fetch is optimized
+      .in("status", filters?.status?.length ? filters.status : [...VISIBLE_STATUSES])
       .order("created_at", { ascending: false });
+
+    if (filters?.type?.length) {
+      query = query.in("request_type", filters.type);
+    }
+    if (filters?.major_ids?.length) {
+      query = query.or(
+        `is_all_majors.eq.true,major_id.in.(${filters.major_ids.join(",")})`
+      );
+    }
+    if (filters?.q?.trim()) {
+      const q = filters.q.trim().toLowerCase();
+      query = query.or(`title.ilike.%${q}%,description.ilike.%${q}%`);
+    }
+
+    const { data, error } = await query;
 
     if (error) {
       console.error("Error fetching event requests:", error);
@@ -100,17 +133,22 @@ export async function fetchEventRequests(): Promise<EventRequest[]> {
         console.warn(
           "event_requests_with_counts view does not exist. Falling back to base tables."
         );
-        const { data: fallbackData, error: fallbackError } = await supabase
+        let fallbackQuery = supabase
           .from("event_requests")
           .select("*")
           .is("deleted_at", null)
-          .in("status", ["open", "fulfilled"])
+          .in("status", filters?.status?.length ? filters.status : [...VISIBLE_STATUSES])
           .order("created_at", { ascending: false });
-
-        if (fallbackError) {
-          throw fallbackError;
+        if (filters?.type?.length) {
+          fallbackQuery = fallbackQuery.in("request_type", filters.type);
         }
-
+        if (filters?.major_ids?.length) {
+          fallbackQuery = fallbackQuery.or(
+            `is_all_majors.eq.true,major_id.in.(${filters.major_ids.join(",")})`
+          );
+        }
+        const { data: fallbackData, error: fallbackError } = await fallbackQuery;
+        if (fallbackError) throw fallbackError;
         const hydrated = await attachVoteCountsAndTags(
           (fallbackData || []) as EventRequest[]
         );
@@ -119,9 +157,7 @@ export async function fetchEventRequests(): Promise<EventRequest[]> {
       throw error;
     }
 
-    // Sort by vote_count then created_at (client-side since vote_count is computed)
-    // This is still faster than before since we're only sorting, not fetching multiple times
-    return sortByVotesAndCreatedAt(data || []);
+    return (data || []) as EventRequest[];
   } catch (err) {
     console.error("Error fetching event requests:", err);
     throw err;
@@ -145,10 +181,11 @@ export async function fetchEventRequestDetails(
       return null;
     }
 
-    // Parse the JSONB response
     return {
       id: data.id,
-      description: data.description,
+      title: data.title ?? "",
+      subtitle: data.subtitle ?? null,
+      description: data.description ?? "",
       major_id: data.major_id,
       is_all_majors: data.is_all_majors,
       status: data.status,
@@ -158,11 +195,19 @@ export async function fetchEventRequestDetails(
       deleted_at: data.deleted_at,
       deleted_by: data.deleted_by,
       delete_reason: data.delete_reason,
-      vote_count: data.vote_count,
-      major_name: data.major_name,
-      fulfilled_event: data.fulfilled_event,
-      user_has_voted: data.user_has_voted,
-      tags: data.tags || [],
+      request_type: data.request_type ?? "other",
+      time_pref_days: data.time_pref_days ?? null,
+      time_pref_windows: data.time_pref_windows ?? null,
+      location_pref: data.location_pref ?? "either",
+      suggested_club_id: data.suggested_club_id ?? null,
+      merged_into_id: data.merged_into_id ?? null,
+      last_activity_at: data.last_activity_at ?? null,
+      vote_count: data.vote_count ?? 0,
+      comment_count: data.comment_count ?? 0,
+      major_name: data.major_name ?? null,
+      fulfilled_event: data.fulfilled_event ?? null,
+      user_has_voted: data.user_has_voted ?? false,
+      tags: Array.isArray(data.tags) ? data.tags : [],
     } as EventRequestWithDetails;
   } catch (err) {
     console.error("Error fetching event request details:", err);
@@ -171,7 +216,7 @@ export async function fetchEventRequestDetails(
 }
 
 /**
- * Create an event request
+ * Create an event request (legacy; use createEventRequestV2 for new fields)
  */
 export async function createEventRequest(params: {
   description: string;
@@ -196,6 +241,104 @@ export async function createEventRequest(params: {
   } catch (err) {
     console.error("Error creating event request:", err);
     throw err;
+  }
+}
+
+/**
+ * Create an event request (v2: title, type, time/location prefs, etc.)
+ */
+export async function createEventRequestV2(
+  params: CreateEventRequestV2Params
+): Promise<string> {
+  try {
+    const { data, error } = await supabase.rpc("create_event_request_v2", {
+      p_title: params.title.trim(),
+      p_description: params.description ?? "",
+      p_subtitle: params.subtitle ?? null,
+      p_request_type: params.request_type ?? "other",
+      p_major_id: params.major_id,
+      p_is_all_majors: params.is_all_majors,
+      p_tags: params.tags ?? [],
+      p_time_pref_days: params.time_pref_days ?? null,
+      p_time_pref_windows: params.time_pref_windows ?? null,
+      p_location_pref: params.location_pref ?? "either",
+      p_suggested_club_id: params.suggested_club_id ?? null,
+    });
+
+    if (error) {
+      console.error("Error creating event request (v2):", error);
+      throw error;
+    }
+
+    return data as string;
+  } catch (err) {
+    console.error("Error creating event request (v2):", err);
+    throw err;
+  }
+}
+
+/**
+ * Update request status (admin / club officer). Optionally link event when setting scheduled/fulfilled.
+ */
+export async function updateRequestStatus(
+  requestId: string,
+  status: string,
+  fulfilledEventId?: string | null
+): Promise<void> {
+  try {
+    const { error } = await supabase.rpc("update_request_status", {
+      p_request_id: requestId,
+      p_status: status,
+      p_fulfilled_event_id: fulfilledEventId ?? null,
+    });
+    if (error) throw error;
+  } catch (err) {
+    console.error("Error updating request status:", err);
+    throw err;
+  }
+}
+
+/**
+ * Merge source request into canonical (platform admin only). Transfers votes and marks source closed.
+ */
+export async function mergeRequests(
+  sourceRequestId: string,
+  canonicalRequestId: string
+): Promise<void> {
+  try {
+    const { error } = await supabase.rpc("merge_requests", {
+      p_source_request_id: sourceRequestId,
+      p_canonical_request_id: canonicalRequestId,
+    });
+    if (error) throw error;
+  } catch (err) {
+    console.error("Error merging requests:", err);
+    throw err;
+  }
+}
+
+/**
+ * Search requests by title/description (for duplicate detection)
+ */
+export async function searchEventRequests(query: string): Promise<EventRequest[]> {
+  if (!query || query.trim().length < 2) return [];
+  try {
+    const { data, error } = await supabase
+      .from("event_requests_with_counts")
+      .select("*")
+      .is("deleted_at", null)
+      .or(`title.ilike.%${query.trim()}%,description.ilike.%${query.trim()}%`)
+      .limit(10)
+      .order("vote_count", { ascending: false });
+
+    if (error) {
+      console.warn("Error searching event requests:", error);
+      return [];
+    }
+    return (data || []) as EventRequest[];
+  } catch (err) {
+    console.warn("Error searching event requests:", err);
+    return [];
   }
 }
 
@@ -418,5 +561,89 @@ export async function fetchEventRequest(
   } catch (err) {
     console.error("Error fetching event request:", err);
     return null;
+  }
+}
+
+/**
+ * Fetch request IDs the current user has voted for (for feed vote state)
+ */
+export async function fetchMyVoteRequestIds(
+  requestIds: string[]
+): Promise<Set<string>> {
+  if (requestIds.length === 0) return new Set();
+  try {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return new Set();
+    const { data, error } = await supabase
+      .from("event_request_votes")
+      .select("request_id")
+      .eq("user_id", user.id)
+      .in("request_id", requestIds);
+    if (error) return new Set();
+    return new Set((data ?? []).map((r: { request_id: string }) => r.request_id));
+  } catch {
+    return new Set();
+  }
+}
+
+/**
+ * Fetch comments for a request (non-deleted only)
+ */
+export async function fetchEventRequestComments(
+  requestId: string
+): Promise<EventRequestComment[]> {
+  try {
+    const { data, error } = await supabase
+      .from("event_request_comments")
+      .select("id, request_id, user_id, body, created_at, updated_at, deleted_at")
+      .eq("request_id", requestId)
+      .is("deleted_at", null)
+      .order("created_at", { ascending: true });
+
+    if (error) {
+      console.error("Error fetching comments:", error);
+      return [];
+    }
+    return (data || []) as EventRequestComment[];
+  } catch (err) {
+    console.error("Error fetching comments:", err);
+    return [];
+  }
+}
+
+/**
+ * Create a comment on a request
+ */
+export async function createEventRequestComment(
+  requestId: string,
+  body: string
+): Promise<string> {
+  try {
+    const { data, error } = await supabase.rpc("create_event_request_comment", {
+      p_request_id: requestId,
+      p_body: body.trim(),
+    });
+    if (error) throw error;
+    return data as string;
+  } catch (err) {
+    console.error("Error creating comment:", err);
+    throw err;
+  }
+}
+
+/**
+ * Soft-delete a comment (creator or platform admin)
+ */
+export async function deleteEventRequestComment(commentId: string): Promise<void> {
+  try {
+    const { error } = await supabase.rpc("delete_event_request_comment", {
+      p_comment_id: commentId,
+    });
+    if (error) throw error;
+  } catch (err) {
+    console.error("Error deleting comment:", err);
+    throw err;
   }
 }

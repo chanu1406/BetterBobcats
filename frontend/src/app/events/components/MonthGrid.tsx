@@ -72,7 +72,7 @@ export function MonthGrid({ currentDate, events, onDayClick, onEventClick, onEve
         {weekdayHeaders.map((day) => (
           <div
             key={day}
-            className="bg-muted/50 p-2 text-center text-sm font-medium text-muted-foreground"
+            className="bg-muted/50 p-3 text-center text-base font-medium text-muted-foreground"
           >
             {day}
           </div>
@@ -97,26 +97,26 @@ export function MonthGrid({ currentDate, events, onDayClick, onEventClick, onEve
               <div
                 key={`${weekIdx}-${dayIdx}`}
                 className={cn(
-                  "min-h-[120px] bg-background border border-border p-1 hover:bg-accent/50 transition-colors",
+                  "min-h-[160px] lg:min-h-[200px] bg-background border border-border p-2 hover:bg-accent/50 transition-colors",
                   !isCurrentMonth && "opacity-40"
                 )}
               >
                 <Button
                   variant="ghost"
                   className={cn(
-                    "w-full h-full flex-col items-start p-1 font-normal hover:bg-transparent",
+                    "w-full h-full flex-col items-start p-2 font-normal hover:bg-transparent",
                     isToday && "bg-accent",
                     isSelected && "bg-primary text-primary-foreground"
                   )}
                   onClick={() => onDayClick(day)}
                 >
                   <div className={cn(
-                    "text-sm font-medium mb-1",
+                    "text-base font-medium mb-1.5",
                     isToday && "font-bold"
                   )}>
                     {format(day, "d")}
                   </div>
-                  <div className="flex-1 w-full overflow-hidden space-y-0.5">
+                  <div className="flex-1 w-full overflow-hidden space-y-1">
                     {dayEvents.slice(0, 3).map((event, idx) => (
                       <div
                         key={event.id}
@@ -125,12 +125,12 @@ export function MonthGrid({ currentDate, events, onDayClick, onEventClick, onEve
                           onEventClick(event);
                         }}
                         className={cn(
-                          "text-[10px] px-1 py-0.5 rounded truncate cursor-pointer hover:opacity-80 text-white text-left",
+                          "text-xs px-1.5 py-1 rounded truncate cursor-pointer hover:opacity-80 text-white text-left",
                           getClubColor(event.club_id, idx)
                         )}
                         title={event.title}
                       >
-                        <div className="flex items-center gap-0.5">
+                        <div className="flex items-center gap-1">
                           {getLocationIcon(event.location_type)}
                           <span className="truncate">{event.title}</span>
                         </div>
@@ -138,7 +138,7 @@ export function MonthGrid({ currentDate, events, onDayClick, onEventClick, onEve
                     ))}
                     {dayEvents.length > 3 && (
                       <div
-                        className="text-[10px] px-1 py-0.5 text-muted-foreground cursor-pointer hover:text-foreground"
+                        className="text-xs px-1.5 py-1 text-muted-foreground cursor-pointer hover:text-foreground"
                         onClick={(e) => {
                           e.stopPropagation();
                           onDayClick(day);
