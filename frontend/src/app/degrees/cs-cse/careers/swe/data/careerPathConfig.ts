@@ -7,7 +7,7 @@ import { CareerPathConfig } from "@/types/careerPath";
 import { tier1Courses, tier2Courses, tier3Courses } from "./tierCourses";
 
 export const sweCareerPathConfig: CareerPathConfig = {
-  rootLabel: "SWE",
+  rootLabel: "Software Engineering",
   categories: [
     { id: "tier-1", label: "TIER 1: MUST-TAKE for SWE", emoji: "🟢" },
     { id: "tier-2", label: "TIER 2: STRONG SWE BOOSTERS", emoji: "🟡" },
