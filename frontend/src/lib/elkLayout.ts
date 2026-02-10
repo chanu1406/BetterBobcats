@@ -4,7 +4,8 @@
  * Provides clean, hierarchical layouts with minimal edge crossings
  */
 
-import ELK, { ElkNode } from 'elkjs/lib/elk.bundled.js';
+import ELK from 'elkjs/lib/elk.bundled.js';
+import type { ElkNode } from 'elkjs';
 import { Node, Edge } from 'reactflow';
 
 const elk = new ELK();
