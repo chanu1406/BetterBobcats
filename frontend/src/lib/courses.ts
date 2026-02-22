@@ -1,7 +1,61 @@
 import { createClient } from "@/lib/supabase/browser";
 
+// UC Merced subject code to full name mapping
+export const SUBJECT_NAMES: Record<string, string> = {
+    "AE": "Aerospace Engineering",
+    "ANTH": "Anthropology",
+    "BCME": "Biochemical & Biomolecular Eng",
+    "BIOE": "Bioengineering",
+    "BIO": "Biological Sciences",
+    "CHEM": "Chemistry",
+    "CCST": "Chicano/Chicana Studies",
+    "CEE": "Civil and Environmental Engr",
+    "COGS": "Cognitive Science",
+    "COMM": "Communication and Media",
+    "CRS": "Community Research and Service",
+    "CSE": "Computer Science & Engineering",
+    "CRES": "Critical Race & Ethnic Studies",
+    "DSA": "Data Science & Analytics",
+    "DSC": "Data Science & Computing",
+    "ECON": "Economics",
+    "EDUC": "Education",
+    "EECS": "Elect. Engr. & Comp. Sci.",
+    "EE": "Electrical Engineering",
+    "ENGR": "Engineering",
+    "ENG": "English",
+    "EH": "Environmental Humanities",
+    "ES": "Environmental Systems (GR)",
+    "ESS": "Environmental Systems Science",
+    "FRE": "French",
+    "GASP": "Global Arts Studies Program",
+    "HS": "Heritage Studies",
+    "HIST": "History",
+    "IH": "Interdisciplinary Humanities",
+    "JPN": "Japanese",
+    "MGMT": "Management",
+    "MBSE": "Materials & BioMat Sci & Engr",
+    "MSE": "Materials Science & Engr",
+    "MATH": "Mathematics",
+    "ME": "Mechanical Engineering",
+    "MIST": "Mgmt of Innov, Sust, and Tech",
+    "NSED": "Natural Sciences Education",
+    "PHIL": "Philosophy",
+    "PHYS": "Physics",
+    "POLI": "Political Science",
+    "PSY": "Psychology",
+    "PH": "Public Health",
+    "QSB": "Quantitative & Systems Biology",
+    "ROTC": "Reserve Officers' Training Corps",
+    "SOC": "Sociology",
+    "SPAN": "Spanish",
+    "SPRK": "Spark",
+    "USTU": "Undergraduate Studies",
+    "WRI": "Writing",
+};
+
 export interface CourseSubject {
     subject_code: string;
+    subject_name: string;
     course_count: number;
 }
 
@@ -16,6 +70,7 @@ export interface CourseWithProfessor {
     professor_first_name: string | null;
     professor_last_name: string | null;
     professor_rating: number | null;
+    professor_photo_url: string | null;
     section_id: string | null;
     meeting_days: string | null;
     start_time: string | null;
@@ -87,7 +142,11 @@ export async function fetchSubjects(): Promise<CourseSubject[]> {
 
     // Convert to array and sort
     return Object.entries(subjectCounts)
-        .map(([subject_code, course_count]) => ({ subject_code, course_count }))
+        .map(([subject_code, course_count]) => ({
+            subject_code,
+            subject_name: SUBJECT_NAMES[subject_code] || subject_code,
+            course_count,
+        }))
         .sort((a, b) => a.subject_code.localeCompare(b.subject_code));
 }
 
@@ -166,6 +225,7 @@ export async function fetchCourses(options?: {
             professor_first_name: row.professor_first_name,
             professor_last_name: row.professor_last_name,
             professor_rating: row.professor_rating,
+            professor_photo_url: row.professor_photo_url || null,
             section_id: row.section_id,
             meeting_days: row.meeting_days,
             start_time: row.start_time,
@@ -341,4 +401,55 @@ export interface CourseSummary {
     title: string;
     subject_code: string;
     credits: number | null;
+}
+
+// Professor info for department carousel
+export interface DepartmentProfessor {
+    id: string;
+    first_name: string;
+    last_name: string;
+    avg_rating: number | null;
+    num_ratings: number;
+    photo_url: string | null;
+}
+
+/**
+ * Fetch professors teaching courses in a department
+ */
+export async function fetchDepartmentProfessors(
+    subjectCode: string
+): Promise<DepartmentProfessor[]> {
+    const supabase = createClient();
+
+    const { data, error } = await supabase
+        .from("courses_with_professors")
+        .select(
+            "professor_id, professor_first_name, professor_last_name, professor_rating, professor_num_ratings, professor_photo_url"
+        )
+        .eq("subject_code", subjectCode.toUpperCase())
+        .not("professor_id", "is", null);
+
+    if (error || !data) {
+        console.error("Error fetching department professors:", error);
+        return [];
+    }
+
+    // Deduplicate professors and collect unique
+    const profMap = new Map<string, DepartmentProfessor>();
+    for (const row of data) {
+        if (!row.professor_id || profMap.has(row.professor_id)) continue;
+        profMap.set(row.professor_id, {
+            id: row.professor_id,
+            first_name: row.professor_first_name || "",
+            last_name: row.professor_last_name || "",
+            avg_rating: row.professor_rating,
+            num_ratings: row.professor_num_ratings || 0,
+            photo_url: row.professor_photo_url || null,
+        });
+    }
+
+    // Sort by rating (highest first)
+    return Array.from(profMap.values()).sort(
+        (a, b) => (b.avg_rating || 0) - (a.avg_rating || 0)
+    );
 }

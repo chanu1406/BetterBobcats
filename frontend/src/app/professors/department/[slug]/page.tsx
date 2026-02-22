@@ -51,10 +51,10 @@ function ProfessorCard({ professor }: { professor: Professor }) {
     return (
         <Link
             href={`/professors/${professor.id}`}
-            className="flex gap-4 bg-white hover:bg-blue-50 border border-gray-200 hover:border-blue-400 rounded-lg p-4 transition-all duration-200 shadow-sm hover:shadow-md group"
+            className="flex gap-4 bg-white dark:bg-slate-900 hover:bg-blue-50 border border-gray-200 dark:border-slate-800 hover:border-blue-400 rounded-lg p-4 transition-all duration-200 shadow-sm hover:shadow-md group"
         >
             {/* Avatar placeholder */}
-            <div className="flex-shrink-0 w-20 h-20 bg-gray-100 rounded-lg overflow-hidden border border-gray-200">
+            <div className="flex-shrink-0 w-20 h-20 bg-gray-100 dark:bg-slate-800 rounded-lg overflow-hidden border border-gray-200 dark:border-slate-800">
                 <div className="w-full h-full flex items-center justify-center text-gray-400">
                     <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
@@ -112,7 +112,7 @@ export default function DepartmentProfessorsPage() {
     const professors = professorsData?.professors || [];
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-gray-50 dark:bg-slate-950">
             <div className="max-w-7xl mx-auto px-4 py-8">
                 {/* Breadcrumb */}
                 <div className="mb-6">
@@ -122,7 +122,7 @@ export default function DepartmentProfessorsPage() {
                 </div>
 
                 {/* Header */}
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100 mb-2">
                     {department?.name || slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}
                 </h1>
                 <p className="text-gray-600 mb-8">

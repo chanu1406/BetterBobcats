@@ -56,7 +56,7 @@ export default function Hero() {
       <div className="relative z-10 mx-auto w-full max-w-4xl text-center">
         <h1 className="mb-6 text-4xl font-semibold leading-tight tracking-tight text-foreground sm:text-5xl md:mb-8 md:text-6xl lg:text-7xl">
           <span className="text-foreground">BetterBobcats</span>{" "}
-          <span className="text-muted-foreground">-</span>{" "}
+          <span className="text-foreground">-</span>{" "}
           <span className="text-foreground">Your Academic Hub for</span>{" "}
           <span className="bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent">
             UC Merced

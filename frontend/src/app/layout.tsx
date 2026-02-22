@@ -4,6 +4,7 @@ import "./globals.css";
 import { ToastProvider } from "@/components/ui/toast";
 import { ReactQueryProvider } from "@/lib/react-query";
 import ConditionalNavigation from "./components/ConditionalNavigation";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,11 +19,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <ReactQueryProvider>
-          <ConditionalNavigation />
-          <ToastProvider>{children}</ToastProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <ConditionalNavigation />
+            <ToastProvider>{children}</ToastProvider>
+          </ThemeProvider>
         </ReactQueryProvider>
       </body>
     </html>

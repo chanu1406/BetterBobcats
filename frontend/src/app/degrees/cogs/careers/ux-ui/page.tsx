@@ -50,7 +50,7 @@ export default function UXUICareerPathPage() {
         <div className="flex gap-3 mb-6">
           <button
             onClick={handleResetClick}
-            className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-md transition-colors text-sm font-medium"
+            className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 dark:text-slate-200 rounded-md transition-colors text-sm font-medium"
           >
             Reset Graph
           </button>
@@ -106,9 +106,9 @@ export default function UXUICareerPathPage() {
           <div>
             <h2 className="text-2xl font-bold mb-4">Career Outcomes</h2>
             <div className="grid md:grid-cols-2 gap-6">
-              <div className="p-6 bg-slate-50 border border-slate-200 rounded-lg">
+              <div className="p-6 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg">
                 <h3 className="text-lg font-bold mb-2">Target Roles</h3>
-                <ul className="space-y-2 text-slate-700">
+                <ul className="space-y-2 text-slate-700 dark:text-slate-300">
                   <li>• UX Designer</li>
                   <li>• UI Designer</li>
                   <li>• UX Researcher</li>
@@ -118,9 +118,9 @@ export default function UXUICareerPathPage() {
                   <li>• Design Engineer / Product Engineer</li>
                 </ul>
               </div>
-              <div className="p-6 bg-slate-50 border border-slate-200 rounded-lg">
+              <div className="p-6 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg">
                 <h3 className="text-lg font-bold mb-2">Key Skills Developed</h3>
-                <ul className="space-y-2 text-slate-700">
+                <ul className="space-y-2 text-slate-700 dark:text-slate-300">
                   <li>• User research & testing</li>
                   <li>• Interface design & prototyping</li>
                   <li>• Cognitive psychology applications</li>

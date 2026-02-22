@@ -159,7 +159,7 @@ function ResetPasswordContent() {
 
   if (isVerifying) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50 dark:bg-slate-950">
         <Card className="w-full max-w-md shadow-lg">
           <CardContent className="p-6">
             <div className="text-center text-muted-foreground">Verifying reset link...</div>
@@ -171,7 +171,7 @@ function ResetPasswordContent() {
 
   if (!hasSession && error) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50 dark:bg-slate-950">
         <Card className="w-full max-w-md shadow-lg">
           <CardHeader>
             <CardTitle className="text-2xl font-bold text-[#1a73e8]">
@@ -200,7 +200,7 @@ function ResetPasswordContent() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50 dark:bg-slate-950">
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader className="space-y-1 pb-4">
           <div className="space-y-1">
@@ -284,7 +284,7 @@ function ResetPasswordContent() {
 export default function ResetPasswordPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50 dark:bg-slate-950">
         <Card className="w-full max-w-md shadow-lg">
           <CardContent className="p-6">
             <div className="text-center text-muted-foreground">Loading...</div>

@@ -134,7 +134,7 @@ export default function SubmitJobPage() {
         <div className="max-w-2xl mx-auto">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-slate-900 mb-3">
+            <h1 className="text-4xl font-bold text-slate-900 dark:text-slate-100 mb-3">
               Submit an Opportunity
             </h1>
             <p className="text-lg text-slate-600">
@@ -164,10 +164,10 @@ export default function SubmitJobPage() {
           )}
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-8">
+          <form onSubmit={handleSubmit} className="bg-white dark:bg-slate-900 rounded-lg shadow-md p-8">
             {/* Company/Organization */}
             <div className="mb-6">
-              <label htmlFor="company" className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="company" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                 Company/Organization <span className="text-red-500">*</span>
               </label>
               <input
@@ -188,7 +188,7 @@ export default function SubmitJobPage() {
 
             {/* Role Title */}
             <div className="mb-6">
-              <label htmlFor="role" className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="role" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                 Role Title <span className="text-red-500">*</span>
               </label>
               <input
@@ -209,7 +209,7 @@ export default function SubmitJobPage() {
 
             {/* Location */}
             <div className="mb-6">
-              <label htmlFor="location" className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="location" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                 Location <span className="text-red-500">*</span>
               </label>
               <input
@@ -230,7 +230,7 @@ export default function SubmitJobPage() {
 
             {/* Application Link */}
             <div className="mb-6">
-              <label htmlFor="applicationLink" className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="applicationLink" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                 Application Link <span className="text-red-500">*</span>
               </label>
               <input
@@ -251,7 +251,7 @@ export default function SubmitJobPage() {
 
             {/* Degree Category */}
             <div className="mb-6">
-              <label htmlFor="degreeCategory" className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="degreeCategory" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                 Relevant Degree/Major
               </label>
               <select
@@ -277,7 +277,7 @@ export default function SubmitJobPage() {
 
             {/* Tags */}
             <div className="mb-6">
-              <label htmlFor="tags" className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="tags" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                 Tags (Optional)
               </label>
               <div className="flex gap-2 mb-2">
@@ -298,7 +298,7 @@ export default function SubmitJobPage() {
                 <button
                   type="button"
                   onClick={handleAddTag}
-                  className="px-4 py-2.5 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors font-medium"
+                  className="px-4 py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-200 transition-colors font-medium"
                 >
                   Add
                 </button>

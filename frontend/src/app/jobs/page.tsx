@@ -40,7 +40,7 @@ export default function JobSearchPage() {
     try {
       setLoading(true);
       setError(null);
-      
+
       // Define data sources
       const sources = [
         {
@@ -74,14 +74,14 @@ export default function JobSearchPage() {
       });
 
       const results = await Promise.all(fetchPromises);
-      
+
       // Merge all jobs into a single array
       const allJobs = results.flat();
-      
+
       setJobs(allJobs);
       setLastUpdated(new Date());
       setError(null);
-      
+
       console.log(`✅ Fetched ${allJobs.length} jobs from ${sources.length} source(s)`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
@@ -98,7 +98,7 @@ export default function JobSearchPage() {
   // Parser for SimplifyJobs HTML table format
   function parseSimplifyJobsTable(markdown: string): Job[] {
     const jobs: Job[] = [];
-    
+
     // The GitHub README uses HTML tables, so we need to parse <tr> rows
     // Match all table rows within <tbody>
     const tbodyMatch = markdown.match(/<tbody>([\s\S]*?)<\/tbody>/i);
@@ -106,21 +106,21 @@ export default function JobSearchPage() {
       console.warn("⚠️ Could not find <tbody> in markdown");
       return jobs;
     }
-    
+
     const tbody = tbodyMatch[1];
     const rowMatches = tbody.matchAll(/<tr>([\s\S]*?)<\/tr>/gi);
-    
+
     for (const rowMatch of rowMatches) {
       const row = rowMatch[1];
-      
+
       // Extract table cell contents
       const cells: string[] = [];
       const cellMatches = row.matchAll(/<td[^>]*>([\s\S]*?)<\/td>/gi);
-      
+
       for (const cellMatch of cellMatches) {
         cells.push(cellMatch[1].trim());
       }
-      
+
       if (cells.length >= 4) {
         // Cell 0: Company (contains nested <strong><a>)
         let company = cells[0];
@@ -130,30 +130,30 @@ export default function JobSearchPage() {
           company = companyLinkMatch[1];
         }
         company = company.trim();
-        
+
         // Cell 1: Role (plain text)
         let role = cells[1].trim();
         // Remove any HTML tags just in case
         role = role.replace(/<[^>]*>/g, "");
-        
+
         // Cell 2: Location (plain text)
         let location = cells[2].trim();
         location = location.replace(/<[^>]*>/g, "");
-        
+
         // Cell 3: Application link - extract URL from various formats
         let link = "";
         const linkCell = cells[3];
-        
+
         // Check if the job is marked as closed (🔒 emoji or "closed" text)
         const isClosed = linkCell.includes("🔒") || linkCell.toLowerCase().includes("closed");
-        
+
         if (!isClosed) {
           // Strategy 1: Try to extract from HTML <a href="...">
           const htmlHrefMatch = linkCell.match(/<a\s+href=["']([^"']+)["']/i);
           if (htmlHrefMatch) {
             link = htmlHrefMatch[1];
           }
-          
+
           // Strategy 2: Try Markdown link format [text](url)
           if (!link) {
             const mdLinkMatch = linkCell.match(/\[.+?\]\(([^)]+)\)/);
@@ -161,7 +161,7 @@ export default function JobSearchPage() {
               link = mdLinkMatch[1];
             }
           }
-          
+
           // Strategy 3: Try to find any https:// URL in the cell
           if (!link) {
             const urlMatch = linkCell.match(/https?:\/\/[^\s<>"']+/i);
@@ -169,7 +169,7 @@ export default function JobSearchPage() {
               link = urlMatch[0];
             }
           }
-          
+
           // Clean up the extracted URL
           if (link) {
             // Decode HTML entities
@@ -177,18 +177,18 @@ export default function JobSearchPage() {
             link = link.replace(/&lt;/g, "<");
             link = link.replace(/&gt;/g, ">");
             link = link.replace(/&quot;/g, '"');
-            
+
             // Remove any trailing punctuation or HTML remnants
             link = link.replace(/[<>'"]+$/g, "");
             link = link.trim();
-            
+
             // Validate that it's a proper URL
             if (!link.startsWith("http://") && !link.startsWith("https://")) {
               link = ""; // Invalid URL, clear it
             }
           }
         }
-        
+
         // Debug: Log jobs without links
         if (company && role && location && !link) {
           console.log(`⚠️ No link found for: ${company} - ${role}`, {
@@ -196,7 +196,7 @@ export default function JobSearchPage() {
             linkCellPreview: linkCell.substring(0, 100)
           });
         }
-        
+
         // Debug: Log first 5 jobs to see extraction working
         if (jobs.length < 5) {
           console.log(`🔍 Job #${jobs.length + 1}:`, {
@@ -206,7 +206,7 @@ export default function JobSearchPage() {
             linkPreview: link ? link.substring(0, 60) : "NO LINK"
           });
         }
-        
+
         // Only add jobs with valid data (link is now optional but validated)
         if (company && role && location) {
           jobs.push({
@@ -218,7 +218,7 @@ export default function JobSearchPage() {
         }
       }
     }
-    
+
     console.log(`✅ Successfully parsed ${jobs.length} jobs from GitHub`);
     if (jobs.length > 0) {
       console.log("Sample job:", jobs[0]);
@@ -233,17 +233,17 @@ export default function JobSearchPage() {
   // Parser for Research Internship list format (markdown lists, not tables)
   function parseResearchList(markdown: string): Job[] {
     const jobs: Job[] = [];
-    
+
     // Research repo uses format: ### N. [Program Name](link), Organization
     // Extract numbered list items with links
     const listItemRegex = /###\s*\d+\.\s*\[([^\]]+)\]\(([^)]+)\)[,\s]*(.+)?/g;
-    
+
     let match;
     while ((match = listItemRegex.exec(markdown)) !== null) {
       const programName = match[1].trim();
       const link = match[2].trim();
       const organization = match[3] ? match[3].trim() : "";
-      
+
       // Extract location from the text (look for country names or "USA", "Canada", etc.)
       let location = "International";
       if (organization.toLowerCase().includes("usa") || organization.toLowerCase().includes("united states")) {
@@ -261,13 +261,13 @@ export default function JobSearchPage() {
       } else if (organization.toLowerCase().includes("france")) {
         location = "France";
       }
-      
+
       // Determine company/organization name
       let company = organization || programName.split(" ")[0];
       if (company.includes(",")) {
         company = company.split(",")[0].trim();
       }
-      
+
       // Only add if we have valid data
       if (programName && link) {
         jobs.push({
@@ -278,7 +278,7 @@ export default function JobSearchPage() {
         });
       }
     }
-    
+
     console.log(`🔬 Research: Parsed ${jobs.length} research opportunities`);
     return jobs;
   }
@@ -312,10 +312,10 @@ export default function JobSearchPage() {
       if (filters.degree !== "All") {
         const roleLower = job.role.toLowerCase();
         const companyLower = job.company.toLowerCase();
-        
+
         if (filters.degree === "CS") {
           // SOFTWARE/CS roles - exclude hardware
-          const isSoftware = 
+          const isSoftware =
             roleLower.includes("software") ||
             roleLower.includes("developer") ||
             roleLower.includes("programmer") ||
@@ -330,9 +330,9 @@ export default function JobSearchPage() {
             roleLower.includes("ai engineer") ||
             roleLower.includes("cloud") ||
             roleLower.includes("devops");
-          
+
           // Exclude hardware/EE terms
-          const isHardware = 
+          const isHardware =
             roleLower.includes("hardware") ||
             roleLower.includes("electrical") ||
             roleLower.includes("circuit") ||
@@ -340,13 +340,13 @@ export default function JobSearchPage() {
             roleLower.includes("fpga") ||
             roleLower.includes("vlsi") ||
             roleLower.includes("semiconductor");
-          
+
           matchesDegree = isSoftware && !isHardware;
-          
+
         } else if (filters.degree === "Bio") {
           // BIOLOGY/BIOMEDICAL - must have bio-specific keywords
           // Exclude generic "research" or "software" roles
-          const isBio = 
+          const isBio =
             roleLower.includes("biolog") ||
             roleLower.includes("biomedical") ||
             roleLower.includes("biotech") ||
@@ -364,17 +364,17 @@ export default function JobSearchPage() {
             companyLower.includes("bio") ||
             companyLower.includes("pharma") ||
             companyLower.includes("medical");
-          
+
           // Exclude software/tech roles
-          const isSoftware = 
+          const isSoftware =
             roleLower.includes("software") ||
             roleLower.includes("developer") ||
             roleLower.includes("programmer") ||
             roleLower.includes("web") ||
             roleLower.includes("full stack");
-          
+
           matchesDegree = isBio && !isSoftware;
-            
+
         } else if (filters.degree === "EE") {
           // HARDWARE/EE roles - exclude pure software
           const isHardware =
@@ -390,18 +390,18 @@ export default function JobSearchPage() {
             roleLower.includes("vlsi") ||
             roleLower.includes("asic") ||
             roleLower.includes("pcb");
-          
+
           // Exclude pure software terms (but allow firmware/embedded which can be EE)
-          const isPureSoftware = 
+          const isPureSoftware =
             (roleLower.includes("software") || roleLower.includes("developer")) &&
             !roleLower.includes("embedded") &&
             !roleLower.includes("firmware");
-          
+
           matchesDegree = isHardware && !isPureSoftware;
-          
+
         } else if (filters.degree === "ME") {
           // MECHANICAL ENGINEERING - must have ME-specific terms
-          const isME = 
+          const isME =
             roleLower.includes("mechanical") ||
             roleLower.includes("manufacturing") ||
             roleLower.includes("robotics") ||
@@ -415,15 +415,15 @@ export default function JobSearchPage() {
             roleLower.includes("mechatronics") ||
             companyLower.includes("automotive") ||
             companyLower.includes("aerospace");
-          
+
           // Exclude software/EE roles
-          const isSoftwareOrEE = 
+          const isSoftwareOrEE =
             roleLower.includes("software developer") ||
             roleLower.includes("web developer") ||
             roleLower.includes("full stack") ||
             roleLower.includes("electrical") ||
             roleLower.includes("circuit");
-          
+
           matchesDegree = isME && !isSoftwareOrEE;
         }
       }
@@ -437,7 +437,7 @@ export default function JobSearchPage() {
   // Helper function to generate tags for jobs
   function getTags(job: Job): string[] {
     const tags: string[] = [];
-    
+
     const jobTitle = job.role;
     const location = job.location;
 
@@ -503,49 +503,49 @@ export default function JobSearchPage() {
   function getTagColor(tag: string): string {
     const tagColors: { [key: string]: string } = {
       // Source tags
-      "Tech": "bg-blue-50 text-blue-700 border border-blue-200 font-semibold",
-      "Research": "bg-green-50 text-green-700 border border-green-200 font-semibold",
-      "Business": "bg-orange-50 text-orange-700 border border-orange-200 font-semibold",
-      
+      "Tech": "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 font-semibold",
+      "Research": "bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-800 font-semibold",
+      "Business": "bg-orange-50 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 border border-orange-200 dark:border-orange-800 font-semibold",
+
       // Job type tags
-      "Internship": "bg-blue-50 text-blue-600 border border-blue-100",
-      "Remote": "bg-emerald-50 text-emerald-600 border border-emerald-100",
-      "California": "bg-purple-50 text-purple-600 border border-purple-100",
-      "Out-of-State": "bg-amber-50 text-amber-600 border border-amber-100",
-      "Software": "bg-indigo-50 text-indigo-600 border border-indigo-100",
-      "Data": "bg-cyan-50 text-cyan-600 border border-cyan-100",
-      "AI/ML": "bg-rose-50 text-rose-600 border border-rose-100",
-      "Frontend": "bg-teal-50 text-teal-600 border border-teal-100",
-      "Backend": "bg-violet-50 text-violet-600 border border-violet-100",
-      "Full Stack": "bg-green-50 text-green-600 border border-green-100",
+      "Internship": "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-900",
+      "Remote": "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900",
+      "California": "bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 border border-purple-100 dark:border-purple-900",
+      "Out-of-State": "bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 border border-amber-100 dark:border-amber-900",
+      "Software": "bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-900",
+      "Data": "bg-cyan-50 dark:bg-cyan-900/20 text-cyan-600 dark:text-cyan-400 border border-cyan-100 dark:border-cyan-900",
+      "AI/ML": "bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400 border border-rose-100 dark:border-rose-900",
+      "Frontend": "bg-teal-50 dark:bg-teal-900/20 text-teal-600 dark:text-teal-400 border border-teal-100 dark:border-teal-900",
+      "Backend": "bg-violet-50 dark:bg-violet-900/20 text-violet-600 dark:text-violet-400 border border-violet-100 dark:border-violet-900",
+      "Full Stack": "bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border border-green-100 dark:border-green-900",
     };
-    return tagColors[tag] || "bg-slate-50 text-slate-600 border border-slate-100";
+    return tagColors[tag] || "bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-100 dark:border-slate-700";
   }
 
   // Format last updated time
   function formatLastUpdated(date: Date | null): string {
     if (!date) return "Never";
-    
+
     const now = new Date();
     const diffMs = now.getTime() - date.getTime();
     const diffMins = Math.floor(diffMs / 60000);
-    
+
     if (diffMins < 1) return "Just now";
     if (diffMins < 60) return `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
-    
+
     const diffHours = Math.floor(diffMins / 60);
     if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
-    
+
     const diffDays = Math.floor(diffHours / 24);
     return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <main className="min-h-screen bg-background text-foreground">
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-start justify-between mb-2">
-            <h1 className="text-4xl font-bold text-slate-900">
+            <h1 className="text-4xl font-bold mb-2">
               Summer 2026 Internships & Jobs
             </h1>
             <button
@@ -557,11 +557,11 @@ export default function JobSearchPage() {
             </button>
           </div>
           <div className="flex items-center gap-3 mb-8">
-            <p className="text-lg text-slate-600">
+            <p className="text-lg text-muted-foreground">
               Browse tech internship and job opportunities for Summer 2026
             </p>
             {lastUpdated && (
-              <span className="text-sm text-slate-500">
+              <span className="text-sm text-muted-foreground">
                 • Last updated: {formatLastUpdated(lastUpdated)}
               </span>
             )}
@@ -576,14 +576,14 @@ export default function JobSearchPage() {
               <div className="flex-1">
                 <h3 className="text-sm font-semibold text-blue-900 mb-1">Data Source</h3>
                 <p className="text-sm text-blue-800">
-                  Jobs are sourced from the <a href="https://github.com/SimplifyJobs/Summer2025-Internships" target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-900">SimplifyJobs GitHub repository</a>, 
-                  which primarily focuses on <strong>tech roles</strong> (Software Engineering, Data Science, AI/ML, Hardware Engineering). 
+                  Jobs are sourced from the <a href="https://github.com/SimplifyJobs/Summer2025-Internships" target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-900">SimplifyJobs GitHub repository</a>,
+                  which primarily focuses on <strong>tech roles</strong> (Software Engineering, Data Science, AI/ML, Hardware Engineering).
                   Non-tech majors may find limited results, but we recommend using the search bar or checking back regularly as new opportunities are added daily.
                 </p>
               </div>
             </div>
             <div className="mt-3 pt-3 border-t border-blue-200">
-              <a 
+              <a
                 href="/submit-job"
                 className="inline-flex items-center gap-2 text-sm font-medium text-blue-700 hover:text-blue-900"
               >
@@ -594,14 +594,14 @@ export default function JobSearchPage() {
           </div>
 
           {/* Filter Controls */}
-          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h2 className="text-lg font-semibold text-slate-900 mb-4">
+          <div className="bg-card text-card-foreground rounded-lg border border-border p-6 mb-6">
+            <h2 className="text-lg font-semibold mb-4">
               Filter Jobs
             </h2>
-            
+
             {/* Search Bar */}
             <div className="mb-4">
-              <label htmlFor="search" className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="search" className="block text-sm font-medium mb-2">
                 Search
               </label>
               <input
@@ -610,7 +610,7 @@ export default function JobSearchPage() {
                 placeholder="Search by company, role, or location..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+                className="w-full px-4 py-2 bg-background border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-colors"
               />
             </div>
 
@@ -628,7 +628,7 @@ export default function JobSearchPage() {
                     }
                     className="h-4 w-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500"
                   />
-                  <label htmlFor="california" className="ml-2 text-sm text-slate-700">
+                  <label htmlFor="california" className="ml-2 text-sm text-slate-700 dark:text-slate-300">
                     California Only
                   </label>
                 </div>
@@ -642,7 +642,7 @@ export default function JobSearchPage() {
                     }
                     className="h-4 w-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500"
                   />
-                  <label htmlFor="remote" className="ml-2 text-sm text-slate-700">
+                  <label htmlFor="remote" className="ml-2 text-sm text-slate-700 dark:text-slate-300">
                     Remote Only
                   </label>
                 </div>
@@ -650,7 +650,7 @@ export default function JobSearchPage() {
 
               {/* Degree Dropdown */}
               <div>
-                <label htmlFor="degree" className="block text-sm font-medium text-slate-700 mb-2">
+                <label htmlFor="degree" className="block text-sm font-medium mb-2">
                   Filter by Degree
                 </label>
                 <select
@@ -659,7 +659,7 @@ export default function JobSearchPage() {
                   onChange={(e) =>
                     setFilters({ ...filters, degree: e.target.value })
                   }
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+                  className="w-full px-4 py-2 bg-background border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-colors"
                 >
                   <option value="All">All Degrees</option>
                   <option value="CS">Computer Science / Software</option>
@@ -667,7 +667,7 @@ export default function JobSearchPage() {
                   <option value="ME">Mechanical Engineering</option>
                   <option value="Bio">Biology / Biomedical</option>
                 </select>
-                <p className="mt-1 text-xs text-slate-500">
+                <p className="mt-1 text-xs text-muted-foreground">
                   Note: This data focuses primarily on tech roles
                 </p>
               </div>
@@ -683,7 +683,7 @@ export default function JobSearchPage() {
                       degree: "All",
                     });
                   }}
-                  className="w-full px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors font-medium text-sm"
+                  className="w-full px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/80 transition-colors font-medium text-sm"
                 >
                   Clear All Filters
                 </button>
@@ -706,13 +706,13 @@ export default function JobSearchPage() {
 
           {!loading && !error && jobs.length === 0 && (
             <div className="text-center py-12">
-              <p className="text-slate-600">No jobs found.</p>
+              <p className="text-muted-foreground">No jobs found.</p>
             </div>
           )}
 
           {!loading && !error && jobs.length > 0 && filteredJobs.length === 0 && (
-            <div className="text-center py-12 bg-white rounded-lg shadow-md">
-              <p className="text-slate-600">
+            <div className="text-center py-12 bg-card text-card-foreground rounded-lg border border-border shadow-sm">
+              <p className="text-muted-foreground">
                 No jobs match your filters. Try adjusting your search criteria.
               </p>
             </div>
@@ -720,52 +720,52 @@ export default function JobSearchPage() {
 
           {!loading && !error && filteredJobs.length > 0 && (
             <>
-              <div className="mb-4 text-sm text-slate-600">
-                Showing <span className="font-semibold text-slate-900">{filteredJobs.length}</span> of <span className="font-semibold text-slate-900">{jobs.length}</span> internship opportunities
+              <div className="mb-4 text-sm text-muted-foreground">
+                Showing <span className="font-semibold text-foreground">{filteredJobs.length}</span> of <span className="font-semibold text-foreground">{jobs.length}</span> internship opportunities
               </div>
-              
+
               {/* Modern Grid Layout */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredJobs.map((job, index) => {
                   const tags = getTags(job);
                   // Get first letter of company name for logo placeholder
                   const companyInitial = job.company.charAt(0).toUpperCase();
-                  
+
                   return (
-                    <div 
-                      key={index} 
-                      className="bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 p-6 flex flex-col"
+                    <div
+                      key={index}
+                      className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-lg transition-all duration-300 p-6 flex flex-col"
                     >
                       {/* Header with Logo and Apply Button */}
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex items-start gap-3 flex-1 min-w-0">
                           {/* Company Logo Placeholder */}
-                          <div className="h-12 w-12 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg flex items-center justify-center text-xl font-bold text-blue-600 flex-shrink-0">
+                          <div className="h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center text-xl font-bold text-primary flex-shrink-0">
                             {companyInitial}
                           </div>
-                          
+
                           {/* Company Name */}
                           <div className="flex-1 min-w-0">
-                            <h3 className="text-sm font-medium text-slate-500 truncate" title={job.company}>
+                            <h3 className="text-sm font-medium text-muted-foreground truncate" title={job.company}>
                               {job.company}
                             </h3>
                           </div>
                         </div>
-                        
+
                         {/* Apply Button - Top Right */}
                         {job.link && (
                           <a
                             href={job.link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="ml-2 p-2 border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors flex-shrink-0"
+                            className="ml-2 p-2 border-2 border-primary text-primary rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors flex-shrink-0"
                             title="Apply now"
                           >
-                            <svg 
-                              xmlns="http://www.w3.org/2000/svg" 
-                              className="h-5 w-5" 
-                              fill="none" 
-                              viewBox="0 0 24 24" 
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-5 w-5"
+                              fill="none"
+                              viewBox="0 0 24 24"
                               stroke="currentColor"
                             >
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -773,26 +773,26 @@ export default function JobSearchPage() {
                           </a>
                         )}
                       </div>
-                      
+
                       {/* Job Title - Hero with proper text wrapping */}
-                      <h2 className="text-lg font-bold text-slate-900 mb-3 break-words overflow-hidden" 
-                          style={{ 
-                            display: '-webkit-box', 
-                            WebkitLineClamp: 2, 
-                            WebkitBoxOrient: 'vertical',
-                            minHeight: '3.5rem'
-                          }}
-                          title={job.role}>
+                      <h2 className="text-lg font-bold text-foreground mb-3 break-words overflow-hidden"
+                        style={{
+                          display: '-webkit-box',
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: 'vertical',
+                          minHeight: '3.5rem'
+                        }}
+                        title={job.role}>
                         {job.role}
                       </h2>
-                      
+
                       {/* Location with Icon */}
-                      <div className="flex items-center gap-2 text-sm text-slate-600 mb-4 min-w-0">
-                        <svg 
-                          xmlns="http://www.w3.org/2000/svg" 
-                          className="h-4 w-4 text-slate-400 flex-shrink-0" 
-                          fill="none" 
-                          viewBox="0 0 24 24" 
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4 min-w-0">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4 text-muted-foreground flex-shrink-0"
+                          fill="none"
+                          viewBox="0 0 24 24"
                           stroke="currentColor"
                         >
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -800,7 +800,7 @@ export default function JobSearchPage() {
                         </svg>
                         <span className="truncate" title={job.location}>{job.location}</span>
                       </div>
-                      
+
                       {/* Tags - Bottom of Card */}
                       {tags.length > 0 && (
                         <div className="flex flex-wrap gap-2 mt-auto pt-4 border-t border-slate-100">
@@ -814,28 +814,28 @@ export default function JobSearchPage() {
                           ))}
                           {/* Source Badge */}
                           {job.source && (
-                            <span className="text-xs px-2.5 py-1 rounded-full font-medium bg-slate-100 text-slate-600">
+                            <span className="text-xs px-2.5 py-1 rounded-full font-medium bg-slate-100 dark:bg-slate-800 text-slate-600">
                               {job.source}
                             </span>
                           )}
                         </div>
                       )}
-                      
+
                       {/* If no tags but has source, show source alone */}
                       {tags.length === 0 && job.source && (
                         <div className="mt-auto pt-4 border-t border-slate-100">
-                          <span className="text-xs px-2.5 py-1 rounded-full font-medium bg-slate-100 text-slate-600">
+                          <span className="text-xs px-2.5 py-1 rounded-full font-medium bg-slate-100 dark:bg-slate-800 text-slate-600">
                             {job.source}
                           </span>
                         </div>
                       )}
-                      
+
                       {/* Full Width Apply Button (Alternative - if no link in corner) */}
                       {!job.link && (
                         <div className="mt-4 pt-4 border-t border-slate-100">
                           <button
                             disabled
-                            className="w-full py-2.5 px-4 text-sm font-medium text-slate-400 bg-slate-50 border border-slate-200 rounded-lg cursor-not-allowed"
+                            className="w-full py-2.5 px-4 text-sm font-medium text-slate-400 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg cursor-not-allowed"
                           >
                             Application Unavailable
                           </button>

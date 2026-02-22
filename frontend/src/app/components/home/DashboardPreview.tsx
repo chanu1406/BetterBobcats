@@ -106,7 +106,7 @@ function ShareButton({ label, href, icon }: ShareButtonProps) {
       rel="noreferrer"
       className="group flex flex-col items-center justify-center gap-2 rounded-xl border border-border/60 bg-background px-3 py-3 text-center text-xs font-medium text-foreground transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:bg-muted/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:translate-y-0 active:scale-[0.98]"
     >
-      <span className="flex h-12 w-12 items-center justify-center rounded-xl border border-border/60 bg-white shadow-sm text-foreground/80 transition-colors group-hover:border-primary/40 group-hover:bg-primary/5 group-hover:text-primary">
+      <span className="flex h-12 w-12 items-center justify-center rounded-xl border border-border/60 bg-white dark:bg-slate-900 shadow-sm text-foreground/80 transition-colors group-hover:border-primary/40 group-hover:bg-primary/5 group-hover:text-primary">
         {icon}
       </span>
       <span>{label}</span>
