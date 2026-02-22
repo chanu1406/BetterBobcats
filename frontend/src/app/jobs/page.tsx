@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { createClient } from "@/lib/supabase/browser";
 
 /**
  * Job Search Board Page
@@ -10,11 +11,15 @@ import { useState, useEffect } from "react";
  */
 
 interface Job {
+  id: string | number;
   company: string;
   role: string;
   location: string;
-  link: string;
-  source?: string; // Track which repository this came from
+  application_url: string;
+  source: string;
+  degree_category: string;
+  tags: string[];
+  scraped_at: string;
 }
 
 interface FilterState {
@@ -35,56 +40,40 @@ export default function JobSearchPage() {
     degree: "All",
   });
 
+  const supabase = createClient();
+
   // Fetch jobs function (extracted so we can call it from refresh button)
   async function fetchJobs() {
     try {
       setLoading(true);
       setError(null);
 
-      // Define data sources
-      const sources = [
-        {
-          name: "Tech",
-          url: "https://raw.githubusercontent.com/SimplifyJobs/Summer2026-Internships/dev/README.md",
-          parser: parseSimplifyJobsTable,
-        },
-        {
-          name: "Research",
-          url: "https://raw.githubusercontent.com/stallionz-arch/Internships/main/README.md",
-          parser: parseResearchList,
-        },
-      ];
+      // Fetch active and approved jobs from Supabase
+      const { data, error: fetchError } = await supabase
+        .from('jobs')
+        .select('*')
+        .eq('is_active', true)
+        .eq('is_approved', true) // Added safety check in case manual approvals are used
+        .order('scraped_at', { ascending: false });
 
-      // Fetch all sources in parallel
-      const fetchPromises = sources.map(async (source) => {
-        try {
-          const response = await fetch(source.url);
-          if (!response.ok) {
-            console.warn(`⚠️ Failed to fetch from ${source.name}`);
-            return [];
-          }
-          const markdown = await response.text();
-          const jobs = source.parser(markdown);
-          // Add source/category tag to each job
-          return jobs.map((job: Job) => ({ ...job, source: source.name }));
-        } catch (err) {
-          console.error(`❌ Error fetching ${source.name}:`, err);
-          return [];
-        }
-      });
+      if (fetchError) {
+        throw new Error(fetchError.message);
+      }
 
-      const results = await Promise.all(fetchPromises);
-
-      // Merge all jobs into a single array
-      const allJobs = results.flat();
-
+      const allJobs = (data as Job[]) || [];
       setJobs(allJobs);
-      setLastUpdated(new Date());
-      setError(null);
 
-      console.log(`✅ Fetched ${allJobs.length} jobs from ${sources.length} source(s)`);
+      // Find the most recent scraped_at time for the 'Last updated' label
+      if (allJobs.length > 0 && allJobs[0].scraped_at) {
+        setLastUpdated(new Date(allJobs[0].scraped_at));
+      } else {
+        setLastUpdated(new Date());
+      }
+
+      setError(null);
+      console.log(`✅ Fetched ${allJobs.length} jobs from Supabase`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+      setError(err instanceof Error ? err.message : "An error occurred fetching jobs");
       console.error("Error fetching jobs:", err);
     } finally {
       setLoading(false);
@@ -93,195 +82,7 @@ export default function JobSearchPage() {
 
   useEffect(() => {
     fetchJobs();
-  }, []);
-
-  // Parser for SimplifyJobs HTML table format
-  function parseSimplifyJobsTable(markdown: string): Job[] {
-    const jobs: Job[] = [];
-
-    // The GitHub README uses HTML tables, so we need to parse <tr> rows
-    // Match all table rows within <tbody>
-    const tbodyMatch = markdown.match(/<tbody>([\s\S]*?)<\/tbody>/i);
-    if (!tbodyMatch) {
-      console.warn("⚠️ Could not find <tbody> in markdown");
-      return jobs;
-    }
-
-    const tbody = tbodyMatch[1];
-    const rowMatches = tbody.matchAll(/<tr>([\s\S]*?)<\/tr>/gi);
-
-    for (const rowMatch of rowMatches) {
-      const row = rowMatch[1];
-
-      // Extract table cell contents
-      const cells: string[] = [];
-      const cellMatches = row.matchAll(/<td[^>]*>([\s\S]*?)<\/td>/gi);
-
-      for (const cellMatch of cellMatches) {
-        cells.push(cellMatch[1].trim());
-      }
-
-      if (cells.length >= 4) {
-        // Cell 0: Company (contains nested <strong><a>)
-        let company = cells[0];
-        company = company.replace(/<strong>|<\/strong>/gi, "");
-        const companyLinkMatch = company.match(/<a[^>]*>(.+?)<\/a>/i);
-        if (companyLinkMatch) {
-          company = companyLinkMatch[1];
-        }
-        company = company.trim();
-
-        // Cell 1: Role (plain text)
-        let role = cells[1].trim();
-        // Remove any HTML tags just in case
-        role = role.replace(/<[^>]*>/g, "");
-
-        // Cell 2: Location (plain text)
-        let location = cells[2].trim();
-        location = location.replace(/<[^>]*>/g, "");
-
-        // Cell 3: Application link - extract URL from various formats
-        let link = "";
-        const linkCell = cells[3];
-
-        // Check if the job is marked as closed (🔒 emoji or "closed" text)
-        const isClosed = linkCell.includes("🔒") || linkCell.toLowerCase().includes("closed");
-
-        if (!isClosed) {
-          // Strategy 1: Try to extract from HTML <a href="...">
-          const htmlHrefMatch = linkCell.match(/<a\s+href=["']([^"']+)["']/i);
-          if (htmlHrefMatch) {
-            link = htmlHrefMatch[1];
-          }
-
-          // Strategy 2: Try Markdown link format [text](url)
-          if (!link) {
-            const mdLinkMatch = linkCell.match(/\[.+?\]\(([^)]+)\)/);
-            if (mdLinkMatch) {
-              link = mdLinkMatch[1];
-            }
-          }
-
-          // Strategy 3: Try to find any https:// URL in the cell
-          if (!link) {
-            const urlMatch = linkCell.match(/https?:\/\/[^\s<>"']+/i);
-            if (urlMatch) {
-              link = urlMatch[0];
-            }
-          }
-
-          // Clean up the extracted URL
-          if (link) {
-            // Decode HTML entities
-            link = link.replace(/&amp;/g, "&");
-            link = link.replace(/&lt;/g, "<");
-            link = link.replace(/&gt;/g, ">");
-            link = link.replace(/&quot;/g, '"');
-
-            // Remove any trailing punctuation or HTML remnants
-            link = link.replace(/[<>'"]+$/g, "");
-            link = link.trim();
-
-            // Validate that it's a proper URL
-            if (!link.startsWith("http://") && !link.startsWith("https://")) {
-              link = ""; // Invalid URL, clear it
-            }
-          }
-        }
-
-        // Debug: Log jobs without links
-        if (company && role && location && !link) {
-          console.log(`⚠️ No link found for: ${company} - ${role}`, {
-            isClosed,
-            linkCellPreview: linkCell.substring(0, 100)
-          });
-        }
-
-        // Debug: Log first 5 jobs to see extraction working
-        if (jobs.length < 5) {
-          console.log(`🔍 Job #${jobs.length + 1}:`, {
-            company,
-            role,
-            hasLink: !!link,
-            linkPreview: link ? link.substring(0, 60) : "NO LINK"
-          });
-        }
-
-        // Only add jobs with valid data (link is now optional but validated)
-        if (company && role && location) {
-          jobs.push({
-            company,
-            role,
-            location,
-            link: link || "", // Include empty string if no valid link found
-          });
-        }
-      }
-    }
-
-    console.log(`✅ Successfully parsed ${jobs.length} jobs from GitHub`);
-    if (jobs.length > 0) {
-      console.log("Sample job:", jobs[0]);
-      // Log some stats about links
-      const jobsWithLinks = jobs.filter(j => j.link).length;
-      const jobsWithoutLinks = jobs.length - jobsWithLinks;
-      console.log(`📊 Links: ${jobsWithLinks} valid, ${jobsWithoutLinks} missing`);
-    }
-    return jobs;
-  }
-
-  // Parser for Research Internship list format (markdown lists, not tables)
-  function parseResearchList(markdown: string): Job[] {
-    const jobs: Job[] = [];
-
-    // Research repo uses format: ### N. [Program Name](link), Organization
-    // Extract numbered list items with links
-    const listItemRegex = /###\s*\d+\.\s*\[([^\]]+)\]\(([^)]+)\)[,\s]*(.+)?/g;
-
-    let match;
-    while ((match = listItemRegex.exec(markdown)) !== null) {
-      const programName = match[1].trim();
-      const link = match[2].trim();
-      const organization = match[3] ? match[3].trim() : "";
-
-      // Extract location from the text (look for country names or "USA", "Canada", etc.)
-      let location = "International";
-      if (organization.toLowerCase().includes("usa") || organization.toLowerCase().includes("united states")) {
-        location = "USA";
-      } else if (organization.toLowerCase().includes("canada")) {
-        location = "Canada";
-      } else if (organization.toLowerCase().includes("germany")) {
-        location = "Germany";
-      } else if (organization.toLowerCase().includes("switzerland")) {
-        location = "Switzerland";
-      } else if (organization.toLowerCase().includes("uk") || organization.toLowerCase().includes("united kingdom")) {
-        location = "UK";
-      } else if (organization.toLowerCase().includes("japan")) {
-        location = "Japan";
-      } else if (organization.toLowerCase().includes("france")) {
-        location = "France";
-      }
-
-      // Determine company/organization name
-      let company = organization || programName.split(" ")[0];
-      if (company.includes(",")) {
-        company = company.split(",")[0].trim();
-      }
-
-      // Only add if we have valid data
-      if (programName && link) {
-        jobs.push({
-          company: company,
-          role: programName,
-          location: location,
-          link: link,
-        });
-      }
-    }
-
-    console.log(`🔬 Research: Parsed ${jobs.length} research opportunities`);
-    return jobs;
-  }
+  }, []); // Run once on mount
 
   // Filter jobs based on search term and filters
   function filterJobs(jobsList: Job[]): Job[] {
@@ -307,124 +108,24 @@ export default function JobSearchPage() {
       const matchesRemote =
         !filters.isRemote || job.location.toLowerCase().includes("remote");
 
-      // Degree filter - STRICT matching to avoid misleading results
+      // Degree filter
       let matchesDegree = true;
       if (filters.degree !== "All") {
-        const roleLower = job.role.toLowerCase();
-        const companyLower = job.company.toLowerCase();
-
-        if (filters.degree === "CS") {
-          // SOFTWARE/CS roles - exclude hardware
-          const isSoftware =
-            roleLower.includes("software") ||
-            roleLower.includes("developer") ||
-            roleLower.includes("programmer") ||
-            roleLower.includes("web") ||
-            roleLower.includes("backend") ||
-            roleLower.includes("frontend") ||
-            roleLower.includes("full stack") ||
-            roleLower.includes("fullstack") ||
-            roleLower.includes("data scien") ||
-            roleLower.includes("machine learning") ||
-            roleLower.includes("ml engineer") ||
-            roleLower.includes("ai engineer") ||
-            roleLower.includes("cloud") ||
-            roleLower.includes("devops");
-
-          // Exclude hardware/EE terms
-          const isHardware =
-            roleLower.includes("hardware") ||
-            roleLower.includes("electrical") ||
-            roleLower.includes("circuit") ||
-            roleLower.includes("embedded") ||
-            roleLower.includes("fpga") ||
-            roleLower.includes("vlsi") ||
-            roleLower.includes("semiconductor");
-
-          matchesDegree = isSoftware && !isHardware;
-
-        } else if (filters.degree === "Bio") {
-          // BIOLOGY/BIOMEDICAL - must have bio-specific keywords
-          // Exclude generic "research" or "software" roles
-          const isBio =
-            roleLower.includes("biolog") ||
-            roleLower.includes("biomedical") ||
-            roleLower.includes("biotech") ||
-            roleLower.includes("bioinformatics") ||
-            roleLower.includes("lab tech") ||
-            roleLower.includes("lab assist") ||
-            roleLower.includes("clinical") ||
-            roleLower.includes("medical") ||
-            roleLower.includes("health") ||
-            roleLower.includes("pharma") ||
-            roleLower.includes("life science") ||
-            roleLower.includes("neuroscience") ||
-            roleLower.includes("genetics") ||
-            roleLower.includes("microbiology") ||
-            companyLower.includes("bio") ||
-            companyLower.includes("pharma") ||
-            companyLower.includes("medical");
-
-          // Exclude software/tech roles
-          const isSoftware =
-            roleLower.includes("software") ||
-            roleLower.includes("developer") ||
-            roleLower.includes("programmer") ||
-            roleLower.includes("web") ||
-            roleLower.includes("full stack");
-
-          matchesDegree = isBio && !isSoftware;
-
-        } else if (filters.degree === "EE") {
-          // HARDWARE/EE roles - exclude pure software
-          const isHardware =
-            roleLower.includes("hardware") ||
-            roleLower.includes("electrical") ||
-            roleLower.includes("circuit") ||
-            roleLower.includes("embedded") ||
-            roleLower.includes("electronics") ||
-            roleLower.includes("fpga") ||
-            roleLower.includes("signal") ||
-            roleLower.includes("power") ||
-            roleLower.includes("semiconductor") ||
-            roleLower.includes("vlsi") ||
-            roleLower.includes("asic") ||
-            roleLower.includes("pcb");
-
-          // Exclude pure software terms (but allow firmware/embedded which can be EE)
-          const isPureSoftware =
-            (roleLower.includes("software") || roleLower.includes("developer")) &&
-            !roleLower.includes("embedded") &&
-            !roleLower.includes("firmware");
-
-          matchesDegree = isHardware && !isPureSoftware;
-
-        } else if (filters.degree === "ME") {
-          // MECHANICAL ENGINEERING - must have ME-specific terms
-          const isME =
-            roleLower.includes("mechanical") ||
-            roleLower.includes("manufacturing") ||
-            roleLower.includes("robotics") ||
-            roleLower.includes("automotive") ||
-            roleLower.includes("aerospace") ||
-            roleLower.includes("thermal") ||
-            roleLower.includes("design engineer") ||
-            roleLower.includes("cad") ||
-            roleLower.includes("solidworks") ||
-            roleLower.includes("hvac") ||
-            roleLower.includes("mechatronics") ||
-            companyLower.includes("automotive") ||
-            companyLower.includes("aerospace");
-
-          // Exclude software/EE roles
-          const isSoftwareOrEE =
-            roleLower.includes("software developer") ||
-            roleLower.includes("web developer") ||
-            roleLower.includes("full stack") ||
-            roleLower.includes("electrical") ||
-            roleLower.includes("circuit");
-
-          matchesDegree = isME && !isSoftwareOrEE;
+        // Use the pre-calculated degree_category from the database if available
+        if (job.degree_category) {
+          matchesDegree = job.degree_category === filters.degree;
+        } else {
+          // Fallback to legacy strict text matching if missing
+          const roleLower = job.role.toLowerCase();
+          if (filters.degree === "CS") {
+            matchesDegree = (roleLower.includes("software") || roleLower.includes("developer")) && !roleLower.includes("hardware");
+          } else if (filters.degree === "Bio") {
+            matchesDegree = roleLower.includes("bio") && !roleLower.includes("software");
+          } else if (filters.degree === "EE") {
+            matchesDegree = roleLower.includes("electrical") || roleLower.includes("hardware");
+          } else if (filters.degree === "ME") {
+            matchesDegree = roleLower.includes("mechanical") || roleLower.includes("manufacturing");
+          }
         }
       }
 
@@ -434,77 +135,12 @@ export default function JobSearchPage() {
 
   const filteredJobs = filterJobs(jobs);
 
-  // Helper function to generate tags for jobs
-  function getTags(job: Job): string[] {
-    const tags: string[] = [];
-
-    const jobTitle = job.role;
-    const location = job.location;
-
-    // Add source tag first
-    if (job.source) {
-      tags.push(job.source);
-    }
-
-    // Check if it's an internship
-    if (jobTitle.toLowerCase().includes("intern")) {
-      tags.push("Internship");
-    }
-
-    // Check if location is Remote
-    const isRemote = location.toLowerCase().includes("remote");
-    if (isRemote) {
-      tags.push("Remote");
-    }
-
-    // Check if location is California
-    const isCalifornia =
-      location.includes("CA") ||
-      location.toLowerCase().includes("california") ||
-      location.toLowerCase().includes("san francisco") ||
-      location.toLowerCase().includes("los angeles") ||
-      location.toLowerCase().includes("san diego") ||
-      location.toLowerCase().includes("san jose");
-
-    if (isCalifornia) {
-      tags.push("California");
-    }
-
-    // If neither Remote nor California, tag as Out-of-State
-    if (!isRemote && !isCalifornia) {
-      tags.push("Out-of-State");
-    }
-
-    // Check for specific job types
-    const titleLower = jobTitle.toLowerCase();
-    if (titleLower.includes("software") || titleLower.includes("swe")) {
-      tags.push("Software");
-    }
-    if (titleLower.includes("data")) {
-      tags.push("Data");
-    }
-    if (titleLower.includes("machine learning") || titleLower.includes("ml") || titleLower.includes("ai")) {
-      tags.push("AI/ML");
-    }
-    if (titleLower.includes("frontend") || titleLower.includes("front-end")) {
-      tags.push("Frontend");
-    }
-    if (titleLower.includes("backend") || titleLower.includes("back-end")) {
-      tags.push("Backend");
-    }
-    if (titleLower.includes("full stack") || titleLower.includes("fullstack")) {
-      tags.push("Full Stack");
-    }
-
-    return tags;
-  }
-
   // Helper function to get tag color based on tag type (soft pastels)
   function getTagColor(tag: string): string {
     const tagColors: { [key: string]: string } = {
       // Source tags
-      "Tech": "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 font-semibold",
-      "Research": "bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-800 font-semibold",
+      "scraped_tech": "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 font-semibold",
+      "scraped_research": "bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-800 font-semibold",
       "Business": "bg-orange-50 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 border border-orange-200 dark:border-orange-800 font-semibold",
 
       // Job type tags
@@ -520,6 +156,13 @@ export default function JobSearchPage() {
       "Full Stack": "bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border border-green-100 dark:border-green-900",
     };
     return tagColors[tag] || "bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-100 dark:border-slate-700";
+  }
+
+  // Format label for source display
+  function formatSourceName(source: string): string {
+    if (source === 'scraped_tech') return 'Tech';
+    if (source === 'scraped_research') return 'Research';
+    return source;
   }
 
   // Format last updated time
@@ -558,7 +201,7 @@ export default function JobSearchPage() {
           </div>
           <div className="flex items-center gap-3 mb-8">
             <p className="text-lg text-muted-foreground">
-              Browse tech internship and job opportunities for Summer 2026
+              Browse internship and job opportunities for Summer 2026
             </p>
             {lastUpdated && (
               <span className="text-sm text-muted-foreground">
@@ -576,9 +219,9 @@ export default function JobSearchPage() {
               <div className="flex-1">
                 <h3 className="text-sm font-semibold text-blue-900 mb-1">Data Source</h3>
                 <p className="text-sm text-blue-800">
-                  Jobs are sourced from the <a href="https://github.com/SimplifyJobs/Summer2025-Internships" target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-900">SimplifyJobs GitHub repository</a>,
-                  which primarily focuses on <strong>tech roles</strong> (Software Engineering, Data Science, AI/ML, Hardware Engineering).
-                  Non-tech majors may find limited results, but we recommend using the search bar or checking back regularly as new opportunities are added daily.
+                  Jobs are automatically updated hourly from curated repositories like the <a href="https://github.com/SimplifyJobs/Summer2025-Internships" target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-900">SimplifyJobs GitHub repository</a>,
+                  which primarily focuses on <strong>tech roles</strong> (Software Engineering, Data Science, Hardware Engineering).
+                  Non-tech majors may find limited results, but we recommend using the search bar or checking back regularly.
                 </p>
               </div>
             </div>
@@ -706,7 +349,7 @@ export default function JobSearchPage() {
 
           {!loading && !error && jobs.length === 0 && (
             <div className="text-center py-12">
-              <p className="text-muted-foreground">No jobs found.</p>
+              <p className="text-muted-foreground">No jobs found in the database.</p>
             </div>
           )}
 
@@ -726,14 +369,13 @@ export default function JobSearchPage() {
 
               {/* Modern Grid Layout */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredJobs.map((job, index) => {
-                  const tags = getTags(job);
-                  // Get first letter of company name for logo placeholder
-                  const companyInitial = job.company.charAt(0).toUpperCase();
+                {filteredJobs.map((job) => {
+                  const jobTags = job.tags || [];
+                  const companyInitial = job.company ? job.company.charAt(0).toUpperCase() : '?';
 
                   return (
                     <div
-                      key={index}
+                      key={job.id}
                       className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-lg transition-all duration-300 p-6 flex flex-col"
                     >
                       {/* Header with Logo and Apply Button */}
@@ -753,9 +395,9 @@ export default function JobSearchPage() {
                         </div>
 
                         {/* Apply Button - Top Right */}
-                        {job.link && (
+                        {job.application_url && (
                           <a
-                            href={job.link}
+                            href={job.application_url}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="ml-2 p-2 border-2 border-primary text-primary rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors flex-shrink-0"
@@ -802,9 +444,9 @@ export default function JobSearchPage() {
                       </div>
 
                       {/* Tags - Bottom of Card */}
-                      {tags.length > 0 && (
-                        <div className="flex flex-wrap gap-2 mt-auto pt-4 border-t border-slate-100">
-                          {tags.map((tag, tagIndex) => (
+                      {jobTags.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mt-auto pt-4 border-t border-slate-100 dark:border-slate-800">
+                          {jobTags.map((tag, tagIndex) => (
                             <span
                               key={tagIndex}
                               className={`text-xs px-2.5 py-1 rounded-full font-medium ${getTagColor(tag)}`}
@@ -814,25 +456,25 @@ export default function JobSearchPage() {
                           ))}
                           {/* Source Badge */}
                           {job.source && (
-                            <span className="text-xs px-2.5 py-1 rounded-full font-medium bg-slate-100 dark:bg-slate-800 text-slate-600">
-                              {job.source}
+                            <span className="text-xs px-2.5 py-1 rounded-full font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+                              {formatSourceName(job.source)}
                             </span>
                           )}
                         </div>
                       )}
 
                       {/* If no tags but has source, show source alone */}
-                      {tags.length === 0 && job.source && (
-                        <div className="mt-auto pt-4 border-t border-slate-100">
-                          <span className="text-xs px-2.5 py-1 rounded-full font-medium bg-slate-100 dark:bg-slate-800 text-slate-600">
-                            {job.source}
+                      {jobTags.length === 0 && job.source && (
+                        <div className="mt-auto pt-4 border-t border-slate-100 dark:border-slate-800">
+                          <span className="text-xs px-2.5 py-1 rounded-full font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+                            {formatSourceName(job.source)}
                           </span>
                         </div>
                       )}
 
                       {/* Full Width Apply Button (Alternative - if no link in corner) */}
-                      {!job.link && (
-                        <div className="mt-4 pt-4 border-t border-slate-100">
+                      {!job.application_url && (
+                        <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
                           <button
                             disabled
                             className="w-full py-2.5 px-4 text-sm font-medium text-slate-400 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg cursor-not-allowed"
