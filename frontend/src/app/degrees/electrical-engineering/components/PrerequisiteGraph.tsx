@@ -21,6 +21,7 @@ import ReactFlow, {
 import "reactflow/dist/style.css";
 import { Course } from "@/types/course";
 import { electricalEngineeringCourses } from "../data/courses";
+import { useTheme } from "next-themes";
 
 // Custom circular node component for EE root
 function RootNode({ data }: { data: { label: string } }) {
@@ -67,10 +68,10 @@ function CourseNode({ data }: { data: { course: Course } }) {
   
   // Year-based color mapping
   const yearColors: Record<number, { bg: string; border: string }> = {
-    1: { bg: "bg-blue-100", border: "border-blue-300" },
-    2: { bg: "bg-green-100", border: "border-green-300" },
-    3: { bg: "bg-amber-100", border: "border-amber-300" },
-    4: { bg: "bg-purple-100", border: "border-purple-300" },
+    1: { bg: "bg-blue-100 dark:bg-blue-900/30", border: "border-blue-300 dark:border-blue-700" },
+    2: { bg: "bg-green-100 dark:bg-green-900/30", border: "border-green-300 dark:border-green-700" },
+    3: { bg: "bg-amber-100 dark:bg-amber-900/30", border: "border-amber-300 dark:border-amber-700" },
+    4: { bg: "bg-purple-100 dark:bg-purple-900/30", border: "border-purple-300 dark:border-purple-700" },
   };
 
   const colors = yearColors[course.year] || yearColors[1];
@@ -328,6 +329,8 @@ export default function PrerequisiteGraph({
   onResetReady, 
   onFullResetReady 
 }: PrerequisiteGraphProps) {
+  const { theme } = useTheme();
+
   const courses = electricalEngineeringCourses;
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
   const [useFormattedLayoutInternal, setUseFormattedLayoutInternal] = useState(false);
@@ -592,7 +595,7 @@ export default function PrerequisiteGraph({
             fitViewOptions={{ padding: 0.1, maxZoom: 1.5 }}
             attributionPosition="bottom-left"
           >
-            <Background variant={"lines" as any} color="#e2e8f0" gap={16} />
+            <Background variant={"lines" as any} color={theme === 'dark' ? '#334155' : '#e2e8f0'} gap={16} />
             <Controls />
           </ReactFlow>
         </ReactFlowProvider>

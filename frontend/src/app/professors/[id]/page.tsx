@@ -55,7 +55,7 @@ function StatBadge({ label, value, color = "gray" }: { label: string; value: str
         green: "bg-green-50 text-green-700 border-green-200",
         red: "bg-red-50 text-red-700 border-red-200",
         blue: "bg-blue-50 text-blue-700 border-blue-200",
-        gray: "bg-gray-50 text-gray-700 border-gray-200",
+        gray: "bg-gray-50 dark:bg-slate-950 text-gray-700 dark:text-slate-300 border-gray-200 dark:border-slate-800",
     }[color];
 
     return (
@@ -76,8 +76,8 @@ function CoursesTaughtSection({ professorId }: { professorId: string }) {
 
     if (isLoading) {
         return (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">Courses Taught</h2>
+            <div className="bg-white dark:bg-slate-900 rounded-lg shadow-sm border border-gray-200 dark:border-slate-800 p-6 mb-6">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100 mb-4">Courses Taught</h2>
                 <div className="text-center py-4">
                     <div className="inline-block animate-spin rounded-full h-6 w-6 border-2 border-blue-500 border-t-transparent"></div>
                 </div>
@@ -90,8 +90,8 @@ function CoursesTaughtSection({ professorId }: { professorId: string }) {
     }
 
     return (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">
+        <div className="bg-white dark:bg-slate-900 rounded-lg shadow-sm border border-gray-200 dark:border-slate-800 p-6 mb-6">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100 mb-4">
                 Courses Taught ({courses.length})
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -99,7 +99,7 @@ function CoursesTaughtSection({ professorId }: { professorId: string }) {
                     <Link
                         key={course.id}
                         href={`/courses/${course.subject_code.toLowerCase()}/${course.id}`}
-                        className="flex items-center justify-between p-3 bg-gray-50 hover:bg-blue-50 rounded-lg border border-gray-200 hover:border-blue-400 transition-all group"
+                        className="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-950 hover:bg-blue-50 rounded-lg border border-gray-200 dark:border-slate-800 hover:border-blue-400 transition-all group"
                     >
                         <div>
                             <p className="font-medium text-blue-600 group-hover:text-blue-700">
@@ -110,7 +110,7 @@ function CoursesTaughtSection({ professorId }: { professorId: string }) {
                             </p>
                         </div>
                         {course.credits && (
-                            <span className="text-xs text-gray-500 bg-white px-2 py-1 rounded">
+                            <span className="text-xs text-gray-500 bg-white dark:bg-slate-900 px-2 py-1 rounded">
                                 {course.credits} cr
                             </span>
                         )}
@@ -133,7 +133,7 @@ export default function ProfessorDetailPage() {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+            <div className="min-h-screen bg-gray-50 dark:bg-slate-950 flex items-center justify-center">
                 <div className="text-center">
                     <div className="inline-block animate-spin rounded-full h-10 w-10 border-4 border-blue-500 border-t-transparent"></div>
                     <p className="mt-4 text-gray-600">Loading professor...</p>
@@ -144,7 +144,7 @@ export default function ProfessorDetailPage() {
 
     if (error || !professor) {
         return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+            <div className="min-h-screen bg-gray-50 dark:bg-slate-950 flex items-center justify-center">
                 <div className="text-center">
                     <h1 className="text-2xl font-bold text-red-600 mb-4">Professor Not Found</h1>
                     <Link href="/professors" className="text-blue-600 hover:text-blue-700">
@@ -159,7 +159,7 @@ export default function ProfessorDetailPage() {
     const deptSlug = professor.department_name?.toLowerCase().replace(/\s+/g, "-") || "";
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-gray-50 dark:bg-slate-950">
             <div className="max-w-5xl mx-auto px-4 py-8">
                 {/* Breadcrumb */}
                 <nav className="flex items-center gap-2 text-sm mb-8">
@@ -175,10 +175,10 @@ export default function ProfessorDetailPage() {
                 </nav>
 
                 {/* Professor Header */}
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+                <div className="bg-white dark:bg-slate-900 rounded-lg shadow-sm border border-gray-200 dark:border-slate-800 p-6 mb-6">
                     <div className="flex flex-col md:flex-row gap-6">
                         {/* Photo */}
-                        <div className="flex-shrink-0 w-32 h-32 bg-gray-100 rounded-lg overflow-hidden border border-gray-200">
+                        <div className="flex-shrink-0 w-32 h-32 bg-gray-100 dark:bg-slate-800 rounded-lg overflow-hidden border border-gray-200 dark:border-slate-800">
                             <div className="w-full h-full flex items-center justify-center text-gray-400">
                                 <svg className="w-20 h-20" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
@@ -188,7 +188,7 @@ export default function ProfessorDetailPage() {
 
                         {/* Info */}
                         <div className="flex-1">
-                            <h1 className="text-3xl font-bold text-gray-900 mb-1">
+                            <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100 mb-1">
                                 {professor.first_name} {professor.last_name}
                             </h1>
                             <p className="text-gray-600 mb-3">{professor.department_name}</p>
@@ -231,10 +231,10 @@ export default function ProfessorDetailPage() {
                 <CoursesTaughtSection professorId={professorId} />
 
                 {/* Reviews Section */}
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <h2 className="text-xl font-bold text-gray-900 mb-4">Reviews</h2>
+                <div className="bg-white dark:bg-slate-900 rounded-lg shadow-sm border border-gray-200 dark:border-slate-800 p-6">
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100 mb-4">Reviews</h2>
                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
-                        <p className="text-gray-700 mb-4">
+                        <p className="text-gray-700 dark:text-slate-300 mb-4">
                             Individual reviews are available on RateMyProfessors. Click below to view detailed student feedback, course-specific ratings, and more.
                         </p>
                         <a

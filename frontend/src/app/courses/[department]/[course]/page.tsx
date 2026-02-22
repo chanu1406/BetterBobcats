@@ -10,7 +10,7 @@ function ProfessorCard({ professor }: { professor: CourseProfessor }) {
     return (
         <Link
             href={`/professors/${professor.id}`}
-            className="flex items-center space-x-3 bg-white hover:bg-blue-50 border border-gray-200 hover:border-blue-400 rounded-lg p-4 transition-all duration-200 group"
+            className="flex items-center space-x-3 bg-white dark:bg-slate-900 hover:bg-blue-50 border border-gray-200 dark:border-slate-800 hover:border-blue-400 rounded-lg p-4 transition-all duration-200 group"
         >
             {/* Avatar placeholder */}
             <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
@@ -19,7 +19,7 @@ function ProfessorCard({ professor }: { professor: CourseProfessor }) {
                 </span>
             </div>
             <div className="flex-1 min-w-0">
-                <p className="text-gray-900 font-medium group-hover:text-blue-600 transition-colors">
+                <p className="text-gray-900 dark:text-slate-100 font-medium group-hover:text-blue-600 transition-colors">
                     {professor.first_name} {professor.last_name}
                 </p>
                 <div className="flex items-center space-x-2 text-sm text-gray-500">
@@ -73,7 +73,7 @@ export default function CourseDetailPage() {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+            <div className="min-h-screen bg-gray-50 dark:bg-slate-950 flex items-center justify-center">
                 <div className="text-center">
                     <div className="inline-block animate-spin rounded-full h-10 w-10 border-4 border-blue-500 border-t-transparent"></div>
                     <p className="mt-4 text-gray-600">Loading course...</p>
@@ -84,7 +84,7 @@ export default function CourseDetailPage() {
 
     if (isError || !course) {
         return (
-            <div className="min-h-screen bg-gray-50">
+            <div className="min-h-screen bg-gray-50 dark:bg-slate-950">
                 <div className="max-w-4xl mx-auto px-4 py-8">
                     <div className="bg-red-50 border-l-4 border-red-500 p-4">
                         <p className="text-red-700">
@@ -108,7 +108,7 @@ export default function CourseDetailPage() {
     const terms = [...new Set(course.sections.map((s) => s.term))].sort().reverse();
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-gray-50 dark:bg-slate-950">
             <div className="max-w-4xl mx-auto px-4 py-8">
                 {/* Breadcrumb */}
                 <nav className="text-sm mb-6">
@@ -131,21 +131,21 @@ export default function CourseDetailPage() {
                             </Link>
                         </li>
                         <li>/</li>
-                        <li className="text-gray-900 font-medium">{course.course_code}</li>
+                        <li className="text-gray-900 dark:text-slate-100 font-medium">{course.course_code}</li>
                     </ol>
                 </nav>
 
                 {/* Header */}
-                <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200 mb-6">
+                <div className="bg-white dark:bg-slate-900 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-slate-800 mb-6">
                     <div className="flex items-start justify-between">
                         <div>
-                            <h1 className="text-2xl font-bold text-gray-900">
+                            <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-100">
                                 {course.course_code}
                             </h1>
-                            <p className="text-lg text-gray-700 mt-1">{course.title}</p>
+                            <p className="text-lg text-gray-700 dark:text-slate-300 mt-1">{course.title}</p>
                         </div>
                         {course.credits && (
-                            <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-lg text-sm font-medium">
+                            <span className="bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 px-3 py-1 rounded-lg text-sm font-medium">
                                 {course.credits} credits
                             </span>
                         )}
@@ -158,7 +158,7 @@ export default function CourseDetailPage() {
                 {/* Professors */}
                 {course.professors.length > 0 && (
                     <div className="mb-8">
-                        <h2 className="text-lg font-semibold text-gray-800 mb-4">
+                        <h2 className="text-lg font-semibold text-gray-800 dark:text-slate-200 mb-4">
                             Instructors
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -172,7 +172,7 @@ export default function CourseDetailPage() {
                 {/* Sections by Term */}
                 {terms.length > 0 && (
                     <div>
-                        <h2 className="text-lg font-semibold text-gray-800 mb-4">
+                        <h2 className="text-lg font-semibold text-gray-800 dark:text-slate-200 mb-4">
                             Sections
                         </h2>
                         {terms.map((term) => {
@@ -182,9 +182,9 @@ export default function CourseDetailPage() {
                                     <div className="flex items-center mb-3">
                                         <TermBadge term={term} />
                                     </div>
-                                    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                                    <div className="bg-white dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-800 overflow-hidden">
                                         <table className="min-w-full divide-y divide-gray-200">
-                                            <thead className="bg-gray-50">
+                                            <thead className="bg-gray-50 dark:bg-slate-950">
                                                 <tr>
                                                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                                                         Section
@@ -203,10 +203,10 @@ export default function CourseDetailPage() {
                                                     </th>
                                                 </tr>
                                             </thead>
-                                            <tbody className="bg-white divide-y divide-gray-200">
+                                            <tbody className="bg-white dark:bg-slate-900 divide-y divide-gray-200">
                                                 {termSections.map((section) => (
                                                     <tr key={section.id}>
-                                                        <td className="px-4 py-3 text-sm text-gray-900">
+                                                        <td className="px-4 py-3 text-sm text-gray-900 dark:text-slate-100">
                                                             {section.section_number || "-"}
                                                         </td>
                                                         <td className="px-4 py-3 text-sm text-gray-600">
@@ -238,7 +238,7 @@ export default function CourseDetailPage() {
 
                 {/* Empty sections state */}
                 {course.sections.length === 0 && (
-                    <div className="text-center py-10 bg-white rounded-lg border border-gray-200">
+                    <div className="text-center py-10 bg-white dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-800">
                         <p className="text-gray-600">
                             No sections available for this course yet.
                         </p>

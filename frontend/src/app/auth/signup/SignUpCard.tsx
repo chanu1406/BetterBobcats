@@ -239,12 +239,12 @@ export function SignUpCard({ next, error, prefilledEmail }: SignUpCardProps) {
             <span className="w-full border-t" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-white px-2 text-muted-foreground">Or continue with</span>
+            <span className="bg-white dark:bg-slate-900 px-2 text-muted-foreground">Or continue with</span>
           </div>
         </div>
         <Button 
           variant="outline" 
-          className="w-full h-10 border-gray-300 hover:bg-gray-50" 
+          className="w-full h-10 border-gray-300 hover:bg-gray-50 dark:bg-slate-950" 
           onClick={handleGoogleSignUp}
           disabled={isPending}
         >

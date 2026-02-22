@@ -35,7 +35,7 @@ export default async function SignUpPage({
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50 dark:bg-slate-950">
       <SignUpCard next={next} error={error} prefilledEmail={email} />
     </div>
   );

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 /**
  * Navigation Component
@@ -71,6 +72,7 @@ export default function Navigation() {
             >
               Dashboard
             </Link>
+            <ThemeToggle />
           </div>
         </div>
       </div>

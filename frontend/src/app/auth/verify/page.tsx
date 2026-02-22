@@ -52,7 +52,7 @@ function VerifyContent() {
   }, [router, type]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50 dark:bg-slate-950">
       <div className="text-center text-muted-foreground">Verifying your email...</div>
     </div>
   );
@@ -61,7 +61,7 @@ function VerifyContent() {
 export default function VerifyPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50 dark:bg-slate-950">
         <div className="text-center text-muted-foreground">Loading...</div>
       </div>
     }>

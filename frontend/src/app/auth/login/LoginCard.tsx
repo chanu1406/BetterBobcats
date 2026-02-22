@@ -230,7 +230,7 @@ export function LoginCard({ next, error, isAdminRoute, message, prefilledEmail }
         </Button>
         <Button 
           variant="outline" 
-          className="w-full h-10 border-gray-300 hover:bg-gray-50" 
+          className="w-full h-10 border-gray-300 hover:bg-gray-50 dark:bg-slate-950" 
           onClick={handleGoogleLogin}
         >
           <svg

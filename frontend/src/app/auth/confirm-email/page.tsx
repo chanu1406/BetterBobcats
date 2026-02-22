@@ -67,7 +67,7 @@ function ConfirmEmailContent() {
 
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50 dark:bg-slate-950">
         <Card className="w-full max-w-md shadow-lg">
           <CardHeader className="space-y-1 pb-4">
             <div className="space-y-1">
@@ -99,7 +99,7 @@ function ConfirmEmailContent() {
 
   if (error === "invalid_token") {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50 dark:bg-slate-950">
         <Card className="w-full max-w-md shadow-lg">
           <CardHeader className="space-y-1 pb-4">
             <div className="space-y-1">
@@ -165,7 +165,7 @@ function ConfirmEmailContent() {
 
   // Default view - allow resending confirmation email
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50 dark:bg-slate-950">
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader className="space-y-1 pb-4">
           <div className="space-y-1">
@@ -229,7 +229,7 @@ function ConfirmEmailContent() {
 export default function ConfirmEmailPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50 dark:bg-slate-950">
         <Card className="w-full max-w-md shadow-lg">
           <CardContent className="p-6">
             <div className="text-center text-muted-foreground">Loading...</div>

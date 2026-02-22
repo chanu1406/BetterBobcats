@@ -22,6 +22,7 @@ import ReactFlow, {
 import "reactflow/dist/style.css";
 import { TierCourse, CareerPathConfig } from "@/types/careerPath";
 import { publicAdministrationNonprofitProgramCoordinatorCareerPathConfig } from "../data/careerPathConfig";
+import { useTheme } from "next-themes";
 
 interface CareerPathGraphProps {
   onResetReady?: (resetFn: () => void) => void;
@@ -72,10 +73,10 @@ function TierNode({ data }: { data: { label: string; emoji?: string; isExpanded?
 function CourseNode({ data }: { data: { course: TierCourse } }) {
   const { course } = data;
   return (
-    <div className="min-w-[180px] max-w-[200px] rounded-lg border-2 border-slate-300 bg-white shadow-sm hover:shadow-md transition-shadow px-3 py-2 relative cursor-pointer">
+    <div className="min-w-[180px] max-w-[200px] rounded-lg border-2 border-slate-300 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md transition-shadow px-3 py-2 relative cursor-pointer">
       <Handle type="target" position={Position.Top} />
       <div className="flex flex-col gap-1">
-        <div className="font-bold text-sm text-slate-800">{course.code}</div>
+        <div className="font-bold text-sm text-slate-800 dark:text-slate-200">{course.code}</div>
         <div className="text-xs text-slate-600 line-clamp-2">{course.name}</div>
       </div>
     </div>
@@ -90,6 +91,8 @@ const nodeTypes = {
 };
 
 export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerPathGraphProps) {
+  const { theme } = useTheme();
+
   const careerPathConfig = publicAdministrationNonprofitProgramCoordinatorCareerPathConfig;
   const [expandedTiers, setExpandedTiers] = useState<Set<string>>(new Set());
   const [nodePositions, setNodePositions] = useState<Record<string, { x: number; y: number }>>({});
@@ -497,7 +500,7 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
             fitViewOptions={{ padding: 0.1, maxZoom: 1.5 }}
             attributionPosition="bottom-left"
           >
-            <Background variant={"lines" as any} color="#e2e8f0" gap={16} />
+            <Background variant={"lines" as any} color={theme === 'dark' ? '#334155' : '#e2e8f0'} gap={16} />
             <Controls />
           </ReactFlow>
         </ReactFlowProvider>
@@ -510,16 +513,16 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
           onClick={handleCloseCourseCard}
         >
           <div
-            className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto"
+            className="bg-white dark:bg-slate-900 rounded-xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="p-6">
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <h3 className="text-2xl font-bold text-slate-900">
+                  <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
                     {selectedCourse.code || selectedCourse.fullName}
                   </h3>
-                  <p className="text-lg text-slate-700 mt-1">
+                  <p className="text-lg text-slate-700 dark:text-slate-300 mt-1">
                     {selectedCourse.name || selectedCourse.fullName}
                   </p>
                 </div>
@@ -544,27 +547,27 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
 
               <div className="space-y-4">
                 <div>
-                  <h4 className="font-semibold text-slate-900 mb-2">
+                  <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">
                     Description
                   </h4>
-                  <p className="text-slate-700">{selectedCourse.description}</p>
+                  <p className="text-slate-700 dark:text-slate-300">{selectedCourse.description}</p>
                 </div>
 
                 {selectedCourse.expandedInfo?.credits && (
                   <div>
-                    <h4 className="font-semibold text-slate-900 mb-2">
+                    <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">
                       Credits
                     </h4>
-                    <p className="text-slate-700">{selectedCourse.expandedInfo.credits} units</p>
+                    <p className="text-slate-700 dark:text-slate-300">{selectedCourse.expandedInfo.credits} units</p>
                   </div>
                 )}
 
                 {selectedCourse.expandedInfo?.prerequisites && (
                   <div>
-                    <h4 className="font-semibold text-slate-900 mb-2">
+                    <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">
                       Prerequisites
                     </h4>
-                    <p className="text-slate-700">
+                    <p className="text-slate-700 dark:text-slate-300">
                       {selectedCourse.expandedInfo.prerequisites}
                     </p>
                   </div>
@@ -572,10 +575,10 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
 
                 {selectedCourse.expandedInfo?.careerRelevance && (
                   <div>
-                    <h4 className="font-semibold text-slate-900 mb-2">
+                    <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">
                       Career Relevance
                     </h4>
-                    <p className="text-slate-700">
+                    <p className="text-slate-700 dark:text-slate-300">
                       {selectedCourse.expandedInfo.careerRelevance}
                     </p>
                   </div>
@@ -583,10 +586,10 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
 
                 {selectedCourse.expandedInfo?.realWorldApplications && (
                   <div>
-                    <h4 className="font-semibold text-slate-900 mb-2">
+                    <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">
                       Real-World Applications
                     </h4>
-                    <ul className="list-disc list-inside space-y-1 text-slate-700">
+                    <ul className="list-disc list-inside space-y-1 text-slate-700 dark:text-slate-300">
                       {selectedCourse.expandedInfo.realWorldApplications.map(
                         (application, index) => (
                           <li key={index}>{application}</li>
@@ -598,10 +601,10 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
 
                 {selectedCourse.expandedInfo?.learningOutcomes && (
                   <div>
-                    <h4 className="font-semibold text-slate-900 mb-2">
+                    <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">
                       Learning Outcomes
                     </h4>
-                    <ul className="list-disc list-inside space-y-1 text-slate-700">
+                    <ul className="list-disc list-inside space-y-1 text-slate-700 dark:text-slate-300">
                       {selectedCourse.expandedInfo.learningOutcomes.map(
                         (outcome, index) => (
                           <li key={index}>{outcome}</li>
@@ -613,7 +616,7 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
 
                 {selectedCourse.expandedInfo?.topics && (
                   <div>
-                    <h4 className="font-semibold text-slate-900 mb-2">
+                    <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">
                       Key Topics
                     </h4>
                     <div className="flex flex-wrap gap-2">
@@ -631,13 +634,13 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
 
                 {selectedCourse.expandedInfo?.resources && (
                   <div>
-                    <h4 className="font-semibold text-slate-900 mb-2">
+                    <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">
                       Resources
                     </h4>
                     <div className="space-y-3">
                       {selectedCourse.expandedInfo.resources.videos && selectedCourse.expandedInfo.resources.videos.length > 0 && (
                         <div>
-                          <h5 className="font-medium text-slate-800 mb-1">📹 Videos</h5>
+                          <h5 className="font-medium text-slate-800 dark:text-slate-200 mb-1">📹 Videos</h5>
                           <ul className="space-y-1">
                             {selectedCourse.expandedInfo.resources.videos.map((video, index) => (
                               <li key={index}>
@@ -656,7 +659,7 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
                       )}
                       {selectedCourse.expandedInfo.resources.websites && selectedCourse.expandedInfo.resources.websites.length > 0 && (
                         <div>
-                          <h5 className="font-medium text-slate-800 mb-1">🌐 Websites</h5>
+                          <h5 className="font-medium text-slate-800 dark:text-slate-200 mb-1">🌐 Websites</h5>
                           <ul className="space-y-1">
                             {selectedCourse.expandedInfo.resources.websites.map((website, index) => (
                               <li key={index}>
@@ -675,12 +678,12 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
                       )}
                       {selectedCourse.expandedInfo.resources.tools && selectedCourse.expandedInfo.resources.tools.length > 0 && (
                         <div>
-                          <h5 className="font-medium text-slate-800 mb-1">🛠️ Tools</h5>
+                          <h5 className="font-medium text-slate-800 dark:text-slate-200 mb-1">🛠️ Tools</h5>
                           <div className="flex flex-wrap gap-2">
                             {selectedCourse.expandedInfo.resources.tools.map((tool, index) => (
                               <span
                                 key={index}
-                                className="px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-sm"
+                                className="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full text-sm"
                               >
                                 {tool}
                               </span>
@@ -694,10 +697,10 @@ export default function CareerPathGraph({ onResetReady, onFormatReady }: CareerP
 
                 {selectedCourse.expandedInfo?.additionalNotes && (
                   <div>
-                    <h4 className="font-semibold text-slate-900 mb-2">
+                    <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">
                       Additional Information
                     </h4>
-                    <p className="text-slate-700">
+                    <p className="text-slate-700 dark:text-slate-300">
                       {selectedCourse.expandedInfo.additionalNotes}
                     </p>
                   </div>

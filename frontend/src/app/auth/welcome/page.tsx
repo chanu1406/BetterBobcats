@@ -48,7 +48,7 @@ function WelcomeContent() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50 dark:bg-slate-950">
       <Dialog open={open} onOpenChange={(isOpen) => {
         if (!isOpen) {
           handleContinue();
@@ -120,7 +120,7 @@ function WelcomeContent() {
 export default function WelcomePage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50 dark:bg-slate-950">
         <div className="text-center text-muted-foreground">Loading...</div>
       </div>
     }>
