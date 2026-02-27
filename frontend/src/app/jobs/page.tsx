@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { createClient } from "@/lib/supabase/browser";
 
 /**
  * Job Search Board Page
@@ -11,15 +10,12 @@ import { createClient } from "@/lib/supabase/browser";
  */
 
 interface Job {
-  id: string | number;
   company: string;
   role: string;
   location: string;
-  application_url: string;
-  source: string;
-  degree_category: string;
-  tags: string[];
-  scraped_at: string;
+  link: string;
+  source?: string; // Track which repository this came from
+  suggestedDegree?: string[]; // AI-mapped degree categories
 }
 
 interface FilterState {
@@ -40,40 +36,210 @@ export default function JobSearchPage() {
     degree: "All",
   });
 
-  const supabase = createClient();
+  // Anti-Slop Filter - Block sketchy domains and spam agencies
+  function isValidJob(company: string, link: string): boolean {
+    const lowerCompany = company.toLowerCase();
+    
+    // Block known spam/agency companies
+    const blockedCompanies = [
+      'patterned learning',
+      'crossover',
+      'staffing agency',
+      'recruiting agency',
+      'talent agency'
+    ];
+    
+    if (blockedCompanies.some(blocked => lowerCompany.includes(blocked))) {
+      console.warn(`🚫 Blocked spam company: ${company}`);
+      return false;
+    }
+    
+    // Canonical is only allowed if from verified job board
+    if (lowerCompany.includes('canonical') && !link.includes('greenhouse') && !link.includes('lever')) {
+      console.warn(`🚫 Blocked unverified Canonical listing: ${company}`);
+      return false;
+    }
+    
+    // Check for verified job board domains
+    const verifiedDomains = [
+      'greenhouse.io',
+      'lever.co',
+      'workday.com',
+      'myworkdayjobs.com',
+      'taleo.net',
+      '.gov',
+      '.edu',
+      'jobs.lever.co',
+      'apply.workable.com',
+      'recruiterflow.com',
+      'bamboohr.com',
+      'ashbyhq.com',
+      'jobs.ashbyhq.com',
+      'simplify.jobs'
+    ];
+    
+    const hasVerifiedDomain = verifiedDomains.some(domain => link.includes(domain));
+    
+    // Also allow company's own domain (e.g., apple.com/jobs, meta.com/careers)
+    const companyDomain = lowerCompany.replace(/\s+/g, '').replace(/[^a-z]/g, '');
+    const linkDomain = link.toLowerCase();
+    const isCompanyDomain = linkDomain.includes(companyDomain) || linkDomain.includes('/careers') || linkDomain.includes('/jobs');
+    
+    if (!hasVerifiedDomain && !isCompanyDomain) {
+      console.warn(`🚫 Blocked sketchy domain: ${link} for ${company}`);
+      return false;
+    }
+    
+    return true;
+  }
+
+  // ...existing mapJobToDegree function...
+  function mapJobToDegree(company: string, role: string): string[] {
+    const degrees: string[] = [];
+    const lowerRole = role.toLowerCase();
+    const lowerCompany = company.toLowerCase();
+    
+    // Cognitive Science keywords
+    const cogSciKeywords = [
+      'ux', 'user experience', 'product design', 'human factors', 
+      'psychology', 'researcher', 'hci', 'user research', 'behavioral',
+      'cognitive', 'usability', 'human-computer interaction'
+    ];
+    
+    // Political Science keywords
+    const polSciKeywords = [
+      'legal', 'policy', 'analyst', 'operations', 'government',
+      'public affairs', 'communications', 'research associate',
+      'political', 'legislative', 'advocacy', 'public policy',
+      'campaign', 'diplomacy', 'international relations'
+    ];
+    
+    // Computer Science keywords
+    const csKeywords = [
+      'software', 'developer', 'engineer', 'programmer', 'web', 
+      'backend', 'frontend', 'full stack', 'data scien', 'machine learning',
+      'ai', 'cloud', 'devops'
+    ];
+    
+    // Check for Cognitive Science
+    if (cogSciKeywords.some(keyword => lowerRole.includes(keyword) || lowerCompany.includes(keyword))) {
+      degrees.push('CogSci');
+    }
+    
+    // Check for Political Science
+    if (polSciKeywords.some(keyword => lowerRole.includes(keyword) || lowerCompany.includes(keyword))) {
+      degrees.push('PolSci');
+    }
+    
+    // Check for Computer Science
+    if (csKeywords.some(keyword => lowerRole.includes(keyword))) {
+      degrees.push('CS');
+    }
+    
+    // Biology keywords
+    if (lowerRole.includes('bio') || lowerRole.includes('medical') || lowerRole.includes('lab')) {
+      degrees.push('Bio');
+    }
+    
+    // Hardware/EE keywords
+    if (lowerRole.includes('hardware') || lowerRole.includes('electrical') || lowerRole.includes('circuit')) {
+      degrees.push('EE');
+    }
+    
+    // Mechanical Engineering keywords
+    if (lowerRole.includes('mechanical') || lowerRole.includes('manufacturing') || lowerRole.includes('automotive')) {
+      degrees.push('ME');
+    }
+    
+    return degrees;
+  }
 
   // Fetch jobs function (extracted so we can call it from refresh button)
   async function fetchJobs() {
     try {
       setLoading(true);
       setError(null);
+      
+      // Define data sources with specific degree mappings
+      const sources = [
+        {
+          name: "Tech",
+          url: "https://raw.githubusercontent.com/SimplifyJobs/Summer2026-Internships/dev/README.md",
+          parser: parseSimplifyJobsTable,
+          degreeTag: null, // Will use smart mapping
+        },
+        {
+          name: "Research",
+          url: "https://raw.githubusercontent.com/stallionz-arch/Internships/main/README.md",
+          parser: parseResearchList,
+          degreeTag: "Bio", // Tag as Biology/Research
+        },
+        {
+          name: "Public Sector",
+          url: "https://raw.githubusercontent.com/jobright-ai/2026-Public-Sector-Internship/main/README.md",
+          parser: parseSimplifyJobsTable,
+          degreeTag: "PolSci", // Tag as Political Science
+        },
+        {
+          name: "HR/People",
+          url: "https://raw.githubusercontent.com/jobright-ai/2026-HR-Internship/main/README.md",
+          parser: parseSimplifyJobsTable,
+          degreeTag: "CogSci", // Tag as Cognitive Science
+        },
+        {
+          name: "Consulting",
+          url: "https://raw.githubusercontent.com/jobright-ai/2026-Consultant-Internship/main/README.md",
+          parser: parseSimplifyJobsTable,
+          degreeTag: "Business", // Tag as Business
+        },
+      ];
 
-      // Fetch active and approved jobs from Supabase
-      const { data, error: fetchError } = await supabase
-        .from('jobs')
-        .select('*')
-        .eq('is_active', true)
-        .eq('is_approved', true) // Added safety check in case manual approvals are used
-        .order('scraped_at', { ascending: false });
+      // Fetch all sources in parallel
+      const fetchPromises = sources.map(async (source) => {
+        try {
+          const response = await fetch(source.url);
+          if (!response.ok) {
+            console.warn(`⚠️ Failed to fetch from ${source.name}`);
+            return [];
+          }
+          const markdown = await response.text();
+          const jobs = source.parser(markdown);
+          
+          // Apply anti-slop filter and add metadata
+          return jobs
+            .filter((job: Job) => isValidJob(job.company, job.link))
+            .map((job: Job) => {
+              const mappedDegrees = mapJobToDegree(job.company, job.role);
+              
+              // Add source-specific degree tag if provided
+              if (source.degreeTag && !mappedDegrees.includes(source.degreeTag)) {
+                mappedDegrees.push(source.degreeTag);
+              }
+              
+              return {
+                ...job, 
+                source: source.name,
+                suggestedDegree: mappedDegrees
+              };
+            });
+        } catch (err) {
+          console.error(`❌ Error fetching ${source.name}:`, err);
+          return [];
+        }
+      });
 
-      if (fetchError) {
-        throw new Error(fetchError.message);
-      }
-
-      const allJobs = (data as Job[]) || [];
+      const results = await Promise.all(fetchPromises);
+      
+      // Merge all jobs into a single array
+      const allJobs = results.flat();
+      
       setJobs(allJobs);
-
-      // Find the most recent scraped_at time for the 'Last updated' label
-      if (allJobs.length > 0 && allJobs[0].scraped_at) {
-        setLastUpdated(new Date(allJobs[0].scraped_at));
-      } else {
-        setLastUpdated(new Date());
-      }
-
+      setLastUpdated(new Date());
       setError(null);
-      console.log(`✅ Fetched ${allJobs.length} jobs from Supabase`);
+      
+      console.log(`✅ Fetched ${allJobs.length} jobs from ${sources.length} source(s)`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred fetching jobs");
+      setError(err instanceof Error ? err.message : "An error occurred");
       console.error("Error fetching jobs:", err);
     } finally {
       setLoading(false);
@@ -82,7 +248,203 @@ export default function JobSearchPage() {
 
   useEffect(() => {
     fetchJobs();
-  }, []); // Run once on mount
+  }, []);
+
+  // Parser for SimplifyJobs HTML table format
+  function parseSimplifyJobsTable(markdown: string): Job[] {
+    const jobs: Job[] = [];
+    
+    // The GitHub README uses HTML tables, so we need to parse <tr> rows
+    // Match all table rows within <tbody>
+    const tbodyMatch = markdown.match(/<tbody>([\s\S]*?)<\/tbody>/i);
+    if (!tbodyMatch) {
+      console.warn("⚠️ Could not find <tbody> in markdown");
+      return jobs;
+    }
+    
+    const tbody = tbodyMatch[1];
+    const rowMatches = tbody.matchAll(/<tr>([\s\S]*?)<\/tr>/gi);
+    
+    for (const rowMatch of rowMatches) {
+      const row = rowMatch[1];
+      
+      // Extract table cell contents
+      const cells: string[] = [];
+      const cellMatches = row.matchAll(/<td[^>]*>([\s\S]*?)<\/td>/gi);
+      
+      for (const cellMatch of cellMatches) {
+        cells.push(cellMatch[1].trim());
+      }
+      
+      if (cells.length >= 4) {
+        // Cell 0: Company (contains nested <strong><a>)
+        let company = cells[0];
+        company = company.replace(/<strong>|<\/strong>/gi, "");
+        const companyLinkMatch = company.match(/<a[^>]*>(.+?)<\/a>/i);
+        if (companyLinkMatch) {
+          company = companyLinkMatch[1];
+        }
+        company = company.trim();
+        
+        // Cell 1: Role (plain text)
+        let role = cells[1].trim();
+        // Remove any HTML tags just in case
+        role = role.replace(/<[^>]*>/g, "");
+        
+        // Cell 2: Location (plain text)
+        let location = cells[2].trim();
+        location = location.replace(/<[^>]*>/g, "");
+        
+        // Cell 3: Application link - extract URL from various formats
+        let link = "";
+        const linkCell = cells[3];
+        
+        // Check if the job is marked as closed (🔒 emoji or "closed" text)
+        const isClosed = linkCell.includes("🔒") || linkCell.toLowerCase().includes("closed");
+        
+        if (!isClosed) {
+          // Strategy 1: Try to extract from HTML <a href="...">
+          const htmlHrefMatch = linkCell.match(/<a\s+href=["']([^"']+)["']/i);
+          if (htmlHrefMatch) {
+            link = htmlHrefMatch[1];
+          }
+          
+          // Strategy 2: Try Markdown link format [text](url)
+          if (!link) {
+            const mdLinkMatch = linkCell.match(/\[.+?\]\(([^)]+)\)/);
+            if (mdLinkMatch) {
+              link = mdLinkMatch[1];
+            }
+          }
+          
+          // Strategy 3: Try to find any https:// URL in the cell
+          if (!link) {
+            const urlMatch = linkCell.match(/https?:\/\/[^\s<>"']+/i);
+            if (urlMatch) {
+              link = urlMatch[0];
+            }
+          }
+          
+          // Clean up the extracted URL
+          if (link) {
+            // Decode HTML entities
+            link = link.replace(/&amp;/g, "&");
+            link = link.replace(/&lt;/g, "<");
+            link = link.replace(/&gt;/g, ">");
+            link = link.replace(/&quot;/g, '"');
+            
+            // Remove any trailing punctuation or HTML remnants
+            link = link.replace(/[<>'"]+$/g, "");
+            link = link.trim();
+            
+            // STRICT SECURITY: Only allow HTTPS URLs
+            // Reject HTTP, relative paths (#, /path), or broken markdown
+            if (!link.startsWith("https://")) {
+              console.warn(`❌ Rejected insecure/invalid link: "${link}" for ${company}`);
+              link = ""; // Clear insecure or invalid link
+            }
+            
+            // Additional validation: check for common broken patterns
+            if (link === "https://" || link.includes("undefined") || link.length < 12) {
+              console.warn(`❌ Rejected malformed link: "${link}" for ${company}`);
+              link = "";
+            }
+          }
+        }
+        
+        // Debug: Log jobs without links
+        if (company && role && location && !link) {
+          console.log(`⚠️ No link found for: ${company} - ${role}`, {
+            isClosed,
+            linkCellPreview: linkCell.substring(0, 100)
+          });
+        }
+        
+        // Debug: Log first 5 jobs to see extraction working
+        if (jobs.length < 5) {
+          console.log(`🔍 Job #${jobs.length + 1}:`, {
+            company,
+            role,
+            hasLink: !!link,
+            linkPreview: link ? link.substring(0, 60) : "NO LINK"
+          });
+        }
+        
+        // Only add jobs with valid data (link is now optional but validated)
+        if (company && role && location) {
+          jobs.push({
+            company,
+            role,
+            location,
+            link: link || "", // Include empty string if no valid link found
+          });
+        }
+      }
+    }
+    
+    console.log(`✅ Successfully parsed ${jobs.length} jobs from GitHub`);
+    if (jobs.length > 0) {
+      console.log("Sample job:", jobs[0]);
+      // Log some stats about links
+      const jobsWithLinks = jobs.filter(j => j.link).length;
+      const jobsWithoutLinks = jobs.length - jobsWithLinks;
+      console.log(`📊 Links: ${jobsWithLinks} valid, ${jobsWithoutLinks} missing`);
+    }
+    return jobs;
+  }
+
+  // Parser for Research Internship list format (markdown lists, not tables)
+  function parseResearchList(markdown: string): Job[] {
+    const jobs: Job[] = [];
+    
+    // Research repo uses format: ### N. [Program Name](link), Organization
+    // Extract numbered list items with links
+    const listItemRegex = /###\s*\d+\.\s*\[([^\]]+)\]\(([^)]+)\)[,\s]*(.+)?/g;
+    
+    let match;
+    while ((match = listItemRegex.exec(markdown)) !== null) {
+      const programName = match[1].trim();
+      const link = match[2].trim();
+      const organization = match[3] ? match[3].trim() : "";
+      
+      // Extract location from the text (look for country names or "USA", "Canada", etc.)
+      let location = "International";
+      if (organization.toLowerCase().includes("usa") || organization.toLowerCase().includes("united states")) {
+        location = "USA";
+      } else if (organization.toLowerCase().includes("canada")) {
+        location = "Canada";
+      } else if (organization.toLowerCase().includes("germany")) {
+        location = "Germany";
+      } else if (organization.toLowerCase().includes("switzerland")) {
+        location = "Switzerland";
+      } else if (organization.toLowerCase().includes("uk") || organization.toLowerCase().includes("united kingdom")) {
+        location = "UK";
+      } else if (organization.toLowerCase().includes("japan")) {
+        location = "Japan";
+      } else if (organization.toLowerCase().includes("france")) {
+        location = "France";
+      }
+      
+      // Determine company/organization name
+      let company = organization || programName.split(" ")[0];
+      if (company.includes(",")) {
+        company = company.split(",")[0].trim();
+      }
+      
+      // Only add if we have valid data
+      if (programName && link) {
+        jobs.push({
+          company: company,
+          role: programName,
+          location: location,
+          link: link,
+        });
+      }
+    }
+    
+    console.log(`🔬 Research: Parsed ${jobs.length} research opportunities`);
+    return jobs;
+  }
 
   // Filter jobs based on search term and filters
   function filterJobs(jobsList: Job[]): Job[] {
@@ -108,23 +470,171 @@ export default function JobSearchPage() {
       const matchesRemote =
         !filters.isRemote || job.location.toLowerCase().includes("remote");
 
-      // Degree filter
+      // Degree filter - Use smart mapping first, then fallback to keyword matching
       let matchesDegree = true;
       if (filters.degree !== "All") {
-        // Use the pre-calculated degree_category from the database if available
-        if (job.degree_category) {
-          matchesDegree = job.degree_category === filters.degree;
+        // First check if the job has a suggested degree from smart mapping
+        if (job.suggestedDegree && job.suggestedDegree.includes(filters.degree)) {
+          matchesDegree = true;
         } else {
-          // Fallback to legacy strict text matching if missing
+          // Fallback to keyword-based filtering
           const roleLower = job.role.toLowerCase();
-          if (filters.degree === "CS") {
-            matchesDegree = (roleLower.includes("software") || roleLower.includes("developer")) && !roleLower.includes("hardware");
-          } else if (filters.degree === "Bio") {
-            matchesDegree = roleLower.includes("bio") && !roleLower.includes("software");
-          } else if (filters.degree === "EE") {
-            matchesDegree = roleLower.includes("electrical") || roleLower.includes("hardware");
-          } else if (filters.degree === "ME") {
-            matchesDegree = roleLower.includes("mechanical") || roleLower.includes("manufacturing");
+          const companyLower = job.company.toLowerCase();
+        
+        if (filters.degree === "CS") {
+          // SOFTWARE/CS roles - exclude hardware
+          const isSoftware = 
+            roleLower.includes("software") ||
+            roleLower.includes("developer") ||
+            roleLower.includes("programmer") ||
+            roleLower.includes("web") ||
+            roleLower.includes("backend") ||
+            roleLower.includes("frontend") ||
+            roleLower.includes("full stack") ||
+            roleLower.includes("fullstack") ||
+            roleLower.includes("data scien") ||
+            roleLower.includes("machine learning") ||
+            roleLower.includes("ml engineer") ||
+            roleLower.includes("ai engineer") ||
+            roleLower.includes("cloud") ||
+            roleLower.includes("devops");
+          
+          // Exclude hardware/EE terms
+          const isHardware = 
+            roleLower.includes("hardware") ||
+            roleLower.includes("electrical") ||
+            roleLower.includes("circuit") ||
+            roleLower.includes("embedded") ||
+            roleLower.includes("fpga") ||
+            roleLower.includes("vlsi") ||
+            roleLower.includes("semiconductor");
+          
+          matchesDegree = isSoftware && !isHardware;
+          
+        } else if (filters.degree === "Bio") {
+          // BIOLOGY/BIOMEDICAL - must have bio-specific keywords
+          // Exclude generic "research" or "software" roles
+          const isBio = 
+            roleLower.includes("biolog") ||
+            roleLower.includes("biomedical") ||
+            roleLower.includes("biotech") ||
+            roleLower.includes("bioinformatics") ||
+            roleLower.includes("lab tech") ||
+            roleLower.includes("lab assist") ||
+            roleLower.includes("clinical") ||
+            roleLower.includes("medical") ||
+            roleLower.includes("health") ||
+            roleLower.includes("pharma") ||
+            roleLower.includes("life science") ||
+            roleLower.includes("neuroscience") ||
+            roleLower.includes("genetics") ||
+            roleLower.includes("microbiology") ||
+            companyLower.includes("bio") ||
+            companyLower.includes("pharma") ||
+            companyLower.includes("medical");
+          
+          // Exclude software/tech roles
+          const isSoftware = 
+            roleLower.includes("software") ||
+            roleLower.includes("developer") ||
+            roleLower.includes("programmer") ||
+            roleLower.includes("web") ||
+            roleLower.includes("full stack");
+          
+          matchesDegree = isBio && !isSoftware;
+            
+        } else if (filters.degree === "EE") {
+          // HARDWARE/EE roles - exclude pure software
+          const isHardware =
+            roleLower.includes("hardware") ||
+            roleLower.includes("electrical") ||
+            roleLower.includes("circuit") ||
+            roleLower.includes("embedded") ||
+            roleLower.includes("electronics") ||
+            roleLower.includes("fpga") ||
+            roleLower.includes("signal") ||
+            roleLower.includes("power") ||
+            roleLower.includes("semiconductor") ||
+            roleLower.includes("vlsi") ||
+            roleLower.includes("asic") ||
+            roleLower.includes("pcb");
+          
+          // Exclude pure software terms (but allow firmware/embedded which can be EE)
+          const isPureSoftware = 
+            (roleLower.includes("software") || roleLower.includes("developer")) &&
+            !roleLower.includes("embedded") &&
+            !roleLower.includes("firmware");
+          
+          matchesDegree = isHardware && !isPureSoftware;
+          
+        } else if (filters.degree === "ME") {
+          // MECHANICAL ENGINEERING - must have ME-specific terms
+          const isME = 
+            roleLower.includes("mechanical") ||
+            roleLower.includes("manufacturing") ||
+            roleLower.includes("robotics") ||
+            roleLower.includes("automotive") ||
+            roleLower.includes("aerospace") ||
+            roleLower.includes("thermal") ||
+            roleLower.includes("design engineer") ||
+            roleLower.includes("cad") ||
+            roleLower.includes("solidworks") ||
+            roleLower.includes("hvac") ||
+            roleLower.includes("mechatronics") ||
+            companyLower.includes("automotive") ||
+            companyLower.includes("aerospace");
+          
+          // Exclude software/EE roles
+          const isSoftwareOrEE = 
+            roleLower.includes("software developer") ||
+            roleLower.includes("web developer") ||
+            roleLower.includes("full stack") ||
+            roleLower.includes("electrical") ||
+            roleLower.includes("circuit");
+          
+          matchesDegree = isME && !isSoftwareOrEE;
+          
+        } else if (filters.degree === "CogSci") {
+          // COGNITIVE SCIENCE - interdisciplinary (psychology, neuroscience, AI, UX)
+          const isCogSci = 
+            roleLower.includes("cognitive") ||
+            roleLower.includes("ux research") ||
+            roleLower.includes("user research") ||
+            roleLower.includes("human factors") ||
+            roleLower.includes("psychology") ||
+            roleLower.includes("neuroscience") ||
+            roleLower.includes("behavioral") ||
+            roleLower.includes("human-computer interaction") ||
+            roleLower.includes("hci") ||
+            roleLower.includes("user experience research") ||
+            roleLower.includes("ai research") ||
+            roleLower.includes("machine learning research") ||
+            companyLower.includes("psychology") ||
+            companyLower.includes("cognitive");
+          
+          matchesDegree = isCogSci;
+          
+        } else if (filters.degree === "PolSci") {
+          // POLITICAL SCIENCE - policy, government, public affairs, research
+          const isPolSci = 
+            roleLower.includes("policy") ||
+            roleLower.includes("political") ||
+            roleLower.includes("government") ||
+            roleLower.includes("public affairs") ||
+            roleLower.includes("legislative") ||
+            roleLower.includes("campaign") ||
+            roleLower.includes("advocacy") ||
+            roleLower.includes("public policy") ||
+            roleLower.includes("diplomacy") ||
+            roleLower.includes("international relations") ||
+            roleLower.includes("government relations") ||
+            roleLower.includes("policy analyst") ||
+            roleLower.includes("policy research") ||
+            companyLower.includes("government") ||
+            companyLower.includes("policy") ||
+            companyLower.includes("political");
+          
+          matchesDegree = isPolSci;
           }
         }
       }
@@ -135,60 +645,118 @@ export default function JobSearchPage() {
 
   const filteredJobs = filterJobs(jobs);
 
+  // Helper function to generate tags for jobs
+  function getTags(job: Job): string[] {
+    const tags: string[] = [];
+    
+    const jobTitle = job.role;
+    const location = job.location;
+
+    // Add source tag first
+    if (job.source) {
+      tags.push(job.source);
+    }
+
+    // Check if it's an internship
+    if (jobTitle.toLowerCase().includes("intern")) {
+      tags.push("Internship");
+    }
+
+    // Check if location is Remote
+    const isRemote = location.toLowerCase().includes("remote");
+    if (isRemote) {
+      tags.push("Remote");
+    }
+
+    // Check if location is California
+    const isCalifornia =
+      location.includes("CA") ||
+      location.toLowerCase().includes("california") ||
+      location.toLowerCase().includes("san francisco") ||
+      location.toLowerCase().includes("los angeles") ||
+      location.toLowerCase().includes("san diego") ||
+      location.toLowerCase().includes("san jose");
+
+    if (isCalifornia) {
+      tags.push("California");
+    }
+
+    // If neither Remote nor California, tag as Out-of-State
+    if (!isRemote && !isCalifornia) {
+      tags.push("Out-of-State");
+    }
+
+    // Check for specific job types
+    const titleLower = jobTitle.toLowerCase();
+    if (titleLower.includes("software") || titleLower.includes("swe")) {
+      tags.push("Software");
+    }
+    if (titleLower.includes("data")) {
+      tags.push("Data");
+    }
+    if (titleLower.includes("machine learning") || titleLower.includes("ml") || titleLower.includes("ai")) {
+      tags.push("AI/ML");
+    }
+    if (titleLower.includes("frontend") || titleLower.includes("front-end")) {
+      tags.push("Frontend");
+    }
+    if (titleLower.includes("backend") || titleLower.includes("back-end")) {
+      tags.push("Backend");
+    }
+    if (titleLower.includes("full stack") || titleLower.includes("fullstack")) {
+      tags.push("Full Stack");
+    }
+
+    return tags;
+  }
+
   // Helper function to get tag color based on tag type (soft pastels)
   function getTagColor(tag: string): string {
     const tagColors: { [key: string]: string } = {
       // Source tags
-      "scraped_tech": "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 font-semibold",
-      "scraped_research": "bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-800 font-semibold",
-      "Business": "bg-orange-50 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 border border-orange-200 dark:border-orange-800 font-semibold",
-
+      "Tech": "bg-blue-50 text-blue-700 border border-blue-200 font-semibold",
+      "Research": "bg-green-50 text-green-700 border border-green-200 font-semibold",
+      "Business": "bg-orange-50 text-orange-700 border border-orange-200 font-semibold",
+      
       // Job type tags
-      "Internship": "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-900",
-      "Remote": "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900",
-      "California": "bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 border border-purple-100 dark:border-purple-900",
-      "Out-of-State": "bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 border border-amber-100 dark:border-amber-900",
-      "Software": "bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-900",
-      "Data": "bg-cyan-50 dark:bg-cyan-900/20 text-cyan-600 dark:text-cyan-400 border border-cyan-100 dark:border-cyan-900",
-      "AI/ML": "bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400 border border-rose-100 dark:border-rose-900",
-      "Frontend": "bg-teal-50 dark:bg-teal-900/20 text-teal-600 dark:text-teal-400 border border-teal-100 dark:border-teal-900",
-      "Backend": "bg-violet-50 dark:bg-violet-900/20 text-violet-600 dark:text-violet-400 border border-violet-100 dark:border-violet-900",
-      "Full Stack": "bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border border-green-100 dark:border-green-900",
+      "Internship": "bg-blue-50 text-blue-600 border border-blue-100",
+      "Remote": "bg-emerald-50 text-emerald-600 border border-emerald-100",
+      "California": "bg-purple-50 text-purple-600 border border-purple-100",
+      "Out-of-State": "bg-amber-50 text-amber-600 border border-amber-100",
+      "Software": "bg-indigo-50 text-indigo-600 border border-indigo-100",
+      "Data": "bg-cyan-50 text-cyan-600 border border-cyan-100",
+      "AI/ML": "bg-rose-50 text-rose-600 border border-rose-100",
+      "Frontend": "bg-teal-50 text-teal-600 border border-teal-100",
+      "Backend": "bg-violet-50 text-violet-600 border border-violet-100",
+      "Full Stack": "bg-green-50 text-green-600 border border-green-100",
     };
-    return tagColors[tag] || "bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-100 dark:border-slate-700";
-  }
-
-  // Format label for source display
-  function formatSourceName(source: string): string {
-    if (source === 'scraped_tech') return 'Tech';
-    if (source === 'scraped_research') return 'Research';
-    return source;
+    return tagColors[tag] || "bg-slate-50 text-slate-600 border border-slate-100";
   }
 
   // Format last updated time
   function formatLastUpdated(date: Date | null): string {
     if (!date) return "Never";
-
+    
     const now = new Date();
     const diffMs = now.getTime() - date.getTime();
     const diffMins = Math.floor(diffMs / 60000);
-
+    
     if (diffMins < 1) return "Just now";
     if (diffMins < 60) return `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
-
+    
     const diffHours = Math.floor(diffMins / 60);
     if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
-
+    
     const diffDays = Math.floor(diffHours / 24);
     return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
   }
 
   return (
-    <main className="min-h-screen bg-background text-foreground">
+    <main className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-start justify-between mb-2">
-            <h1 className="text-4xl font-bold mb-2">
+            <h1 className="text-4xl font-bold text-slate-900">
               Summer 2026 Internships & Jobs
             </h1>
             <button
@@ -200,11 +768,11 @@ export default function JobSearchPage() {
             </button>
           </div>
           <div className="flex items-center gap-3 mb-8">
-            <p className="text-lg text-muted-foreground">
-              Browse internship and job opportunities for Summer 2026
+            <p className="text-lg text-slate-600">
+              Browse tech internship and job opportunities for Summer 2026
             </p>
             {lastUpdated && (
-              <span className="text-sm text-muted-foreground">
+              <span className="text-sm text-slate-500">
                 • Last updated: {formatLastUpdated(lastUpdated)}
               </span>
             )}
@@ -219,14 +787,14 @@ export default function JobSearchPage() {
               <div className="flex-1">
                 <h3 className="text-sm font-semibold text-blue-900 mb-1">Data Source</h3>
                 <p className="text-sm text-blue-800">
-                  Jobs are automatically updated hourly from curated repositories like the <a href="https://github.com/SimplifyJobs/Summer2025-Internships" target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-900">SimplifyJobs GitHub repository</a>,
-                  which primarily focuses on <strong>tech roles</strong> (Software Engineering, Data Science, Hardware Engineering).
-                  Non-tech majors may find limited results, but we recommend using the search bar or checking back regularly.
+                  Jobs are sourced from the <a href="https://github.com/SimplifyJobs/Summer2025-Internships" target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-900">SimplifyJobs GitHub repository</a>, 
+                  which primarily focuses on <strong>tech roles</strong> (Software Engineering, Data Science, AI/ML, Hardware Engineering). 
+                  Non-tech majors may find limited results, but we recommend using the search bar or checking back regularly as new opportunities are added daily.
                 </p>
               </div>
             </div>
             <div className="mt-3 pt-3 border-t border-blue-200">
-              <a
+              <a 
                 href="/submit-job"
                 className="inline-flex items-center gap-2 text-sm font-medium text-blue-700 hover:text-blue-900"
               >
@@ -237,14 +805,14 @@ export default function JobSearchPage() {
           </div>
 
           {/* Filter Controls */}
-          <div className="bg-card text-card-foreground rounded-lg border border-border p-6 mb-6">
-            <h2 className="text-lg font-semibold mb-4">
+          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 className="text-lg font-semibold text-slate-900 mb-4">
               Filter Jobs
             </h2>
-
+            
             {/* Search Bar */}
             <div className="mb-4">
-              <label htmlFor="search" className="block text-sm font-medium mb-2">
+              <label htmlFor="search" className="block text-sm font-medium text-slate-700 mb-2">
                 Search
               </label>
               <input
@@ -253,7 +821,7 @@ export default function JobSearchPage() {
                 placeholder="Search by company, role, or location..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-2 bg-background border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-colors"
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
               />
             </div>
 
@@ -271,7 +839,7 @@ export default function JobSearchPage() {
                     }
                     className="h-4 w-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500"
                   />
-                  <label htmlFor="california" className="ml-2 text-sm text-slate-700 dark:text-slate-300">
+                  <label htmlFor="california" className="ml-2 text-sm text-slate-700">
                     California Only
                   </label>
                 </div>
@@ -285,7 +853,7 @@ export default function JobSearchPage() {
                     }
                     className="h-4 w-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500"
                   />
-                  <label htmlFor="remote" className="ml-2 text-sm text-slate-700 dark:text-slate-300">
+                  <label htmlFor="remote" className="ml-2 text-sm text-slate-700">
                     Remote Only
                   </label>
                 </div>
@@ -293,7 +861,7 @@ export default function JobSearchPage() {
 
               {/* Degree Dropdown */}
               <div>
-                <label htmlFor="degree" className="block text-sm font-medium mb-2">
+                <label htmlFor="degree" className="block text-sm font-medium text-slate-700 mb-2">
                   Filter by Degree
                 </label>
                 <select
@@ -302,15 +870,17 @@ export default function JobSearchPage() {
                   onChange={(e) =>
                     setFilters({ ...filters, degree: e.target.value })
                   }
-                  className="w-full px-4 py-2 bg-background border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-colors"
+                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
                 >
                   <option value="All">All Degrees</option>
                   <option value="CS">Computer Science / Software</option>
                   <option value="EE">Electrical Engineering</option>
                   <option value="ME">Mechanical Engineering</option>
                   <option value="Bio">Biology / Biomedical</option>
+                  <option value="CogSci">Cognitive Science</option>
+                  <option value="PolSci">Political Science</option>
                 </select>
-                <p className="mt-1 text-xs text-muted-foreground">
+                <p className="mt-1 text-xs text-slate-500">
                   Note: This data focuses primarily on tech roles
                 </p>
               </div>
@@ -326,7 +896,7 @@ export default function JobSearchPage() {
                       degree: "All",
                     });
                   }}
-                  className="w-full px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/80 transition-colors font-medium text-sm"
+                  className="w-full px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors font-medium text-sm"
                 >
                   Clear All Filters
                 </button>
@@ -349,13 +919,13 @@ export default function JobSearchPage() {
 
           {!loading && !error && jobs.length === 0 && (
             <div className="text-center py-12">
-              <p className="text-muted-foreground">No jobs found in the database.</p>
+              <p className="text-slate-600">No jobs found.</p>
             </div>
           )}
 
           {!loading && !error && jobs.length > 0 && filteredJobs.length === 0 && (
-            <div className="text-center py-12 bg-card text-card-foreground rounded-lg border border-border shadow-sm">
-              <p className="text-muted-foreground">
+            <div className="text-center py-12 bg-white rounded-lg shadow-md">
+              <p className="text-slate-600">
                 No jobs match your filters. Try adjusting your search criteria.
               </p>
             </div>
@@ -363,51 +933,52 @@ export default function JobSearchPage() {
 
           {!loading && !error && filteredJobs.length > 0 && (
             <>
-              <div className="mb-4 text-sm text-muted-foreground">
-                Showing <span className="font-semibold text-foreground">{filteredJobs.length}</span> of <span className="font-semibold text-foreground">{jobs.length}</span> internship opportunities
+              <div className="mb-4 text-sm text-slate-600">
+                Showing <span className="font-semibold text-slate-900">{filteredJobs.length}</span> of <span className="font-semibold text-slate-900">{jobs.length}</span> internship opportunities
               </div>
-
+              
               {/* Modern Grid Layout */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredJobs.map((job) => {
-                  const jobTags = job.tags || [];
-                  const companyInitial = job.company ? job.company.charAt(0).toUpperCase() : '?';
-
+                {filteredJobs.map((job, index) => {
+                  const tags = getTags(job);
+                  // Get first letter of company name for logo placeholder
+                  const companyInitial = job.company.charAt(0).toUpperCase();
+                  
                   return (
-                    <div
-                      key={job.id}
-                      className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-lg transition-all duration-300 p-6 flex flex-col"
+                    <div 
+                      key={index} 
+                      className="bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 p-6 flex flex-col"
                     >
                       {/* Header with Logo and Apply Button */}
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex items-start gap-3 flex-1 min-w-0">
                           {/* Company Logo Placeholder */}
-                          <div className="h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center text-xl font-bold text-primary flex-shrink-0">
+                          <div className="h-12 w-12 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg flex items-center justify-center text-xl font-bold text-blue-600 flex-shrink-0">
                             {companyInitial}
                           </div>
-
+                          
                           {/* Company Name */}
                           <div className="flex-1 min-w-0">
-                            <h3 className="text-sm font-medium text-muted-foreground truncate" title={job.company}>
+                            <h3 className="text-sm font-medium text-slate-500 truncate" title={job.company}>
                               {job.company}
                             </h3>
                           </div>
                         </div>
-
+                        
                         {/* Apply Button - Top Right */}
-                        {job.application_url && (
+                        {job.link && (
                           <a
-                            href={job.application_url}
+                            href={job.link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="ml-2 p-2 border-2 border-primary text-primary rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors flex-shrink-0"
+                            className="ml-2 p-2 border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors flex-shrink-0"
                             title="Apply now"
                           >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-5 w-5"
-                              fill="none"
-                              viewBox="0 0 24 24"
+                            <svg 
+                              xmlns="http://www.w3.org/2000/svg" 
+                              className="h-5 w-5" 
+                              fill="none" 
+                              viewBox="0 0 24 24" 
                               stroke="currentColor"
                             >
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -415,26 +986,26 @@ export default function JobSearchPage() {
                           </a>
                         )}
                       </div>
-
+                      
                       {/* Job Title - Hero with proper text wrapping */}
-                      <h2 className="text-lg font-bold text-foreground mb-3 break-words overflow-hidden"
-                        style={{
-                          display: '-webkit-box',
-                          WebkitLineClamp: 2,
-                          WebkitBoxOrient: 'vertical',
-                          minHeight: '3.5rem'
-                        }}
-                        title={job.role}>
+                      <h2 className="text-lg font-bold text-slate-900 mb-3 break-words overflow-hidden" 
+                          style={{ 
+                            display: '-webkit-box', 
+                            WebkitLineClamp: 2, 
+                            WebkitBoxOrient: 'vertical',
+                            minHeight: '3.5rem'
+                          }}
+                          title={job.role}>
                         {job.role}
                       </h2>
-
+                      
                       {/* Location with Icon */}
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4 min-w-0">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4 text-muted-foreground flex-shrink-0"
-                          fill="none"
-                          viewBox="0 0 24 24"
+                      <div className="flex items-center gap-2 text-sm text-slate-600 mb-4 min-w-0">
+                        <svg 
+                          xmlns="http://www.w3.org/2000/svg" 
+                          className="h-4 w-4 text-slate-400 flex-shrink-0" 
+                          fill="none" 
+                          viewBox="0 0 24 24" 
                           stroke="currentColor"
                         >
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -442,11 +1013,11 @@ export default function JobSearchPage() {
                         </svg>
                         <span className="truncate" title={job.location}>{job.location}</span>
                       </div>
-
+                      
                       {/* Tags - Bottom of Card */}
-                      {jobTags.length > 0 && (
-                        <div className="flex flex-wrap gap-2 mt-auto pt-4 border-t border-slate-100 dark:border-slate-800">
-                          {jobTags.map((tag, tagIndex) => (
+                      {tags.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mt-auto pt-4 border-t border-slate-100">
+                          {tags.map((tag, tagIndex) => (
                             <span
                               key={tagIndex}
                               className={`text-xs px-2.5 py-1 rounded-full font-medium ${getTagColor(tag)}`}
@@ -456,28 +1027,28 @@ export default function JobSearchPage() {
                           ))}
                           {/* Source Badge */}
                           {job.source && (
-                            <span className="text-xs px-2.5 py-1 rounded-full font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
-                              {formatSourceName(job.source)}
+                            <span className="text-xs px-2.5 py-1 rounded-full font-medium bg-slate-100 text-slate-600">
+                              {job.source}
                             </span>
                           )}
                         </div>
                       )}
-
+                      
                       {/* If no tags but has source, show source alone */}
-                      {jobTags.length === 0 && job.source && (
-                        <div className="mt-auto pt-4 border-t border-slate-100 dark:border-slate-800">
-                          <span className="text-xs px-2.5 py-1 rounded-full font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
-                            {formatSourceName(job.source)}
+                      {tags.length === 0 && job.source && (
+                        <div className="mt-auto pt-4 border-t border-slate-100">
+                          <span className="text-xs px-2.5 py-1 rounded-full font-medium bg-slate-100 text-slate-600">
+                            {job.source}
                           </span>
                         </div>
                       )}
-
+                      
                       {/* Full Width Apply Button (Alternative - if no link in corner) */}
-                      {!job.application_url && (
-                        <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                      {!job.link && (
+                        <div className="mt-4 pt-4 border-t border-slate-100">
                           <button
                             disabled
-                            className="w-full py-2.5 px-4 text-sm font-medium text-slate-400 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg cursor-not-allowed"
+                            className="w-full py-2.5 px-4 text-sm font-medium text-slate-400 bg-slate-50 border border-slate-200 rounded-lg cursor-not-allowed"
                           >
                             Application Unavailable
                           </button>
