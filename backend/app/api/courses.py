@@ -1,6 +1,14 @@
 """
-Courses API Router
-Endpoints for fetching course catalog data and professor-course links
+[DEPRECATED 2026-03-26] Courses API Router
+
+This router is NO LONGER REGISTERED in main.py.
+The frontend (frontend/src/lib/courses.ts) goes direct to Supabase via the
+search_courses() RPC and get_subject_course_counts() RPC.
+
+This file is kept for reference. Do not re-register without first auditing
+whether the frontend still uses these endpoints (it does not).
+
+Keyboard: To delete this file, ensure no consumers exist, then remove.
 """
 import os
 from typing import Optional
