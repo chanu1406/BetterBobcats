@@ -2,6 +2,11 @@
 
 import { ChevronRight } from "lucide-react";
 import { useState } from "react";
+import {
+  DEGREE_ORDER,
+  careerPathMatches,
+  getCareerPathsForDegree,
+} from "../career-paths.config";
 
 /**
  * DegreesSidebar Component
@@ -26,73 +31,15 @@ export default function DegreesSidebar({
   onSelectionMade,
 }: DegreesSidebarProps) {
   const [expandedDegrees, setExpandedDegrees] = useState<Set<string>>(new Set());
-  
-  const degrees = [
-    "CS/CSE",
-    "COGS",
-    "Electrical Engineering",
-    "Political Science",
-    "Mechanical Engineering",
-  ];
-
-  const careerPaths: Record<string, { id: string; name: string }[]> = {
-    "CS/CSE": [
-      { id: "resumes", name: "Resumes" },
-      { id: "alumni", name: "Alumni" },
-      { id: "swe", name: "SWE (Generalist)" },
-      { id: "cybersecurity", name: "Cybersecurity" },
-      { id: "ml-ai", name: "Machine Learning / AI" },
-      { id: "data-science", name: "Data Science / Data Analytics" },
-      { id: "systems", name: "Systems / Infrastructure Engineering Pathway" },
-      { id: "embedded", name: "Embedded Systems Engineering Pathway" },
-    ],
-    "COGS": [
-      { id: "resumes", name: "Resumes" },
-      { id: "alumni", name: "Alumni" },
-      { id: "ux-ui", name: "UX/UI Design & Research (Generalist)" },
-      { id: "data-analyst", name: "Data Analyst (Generalist)" },
-      { id: "market-research", name: "Market Research Analyst (Generalist)" },
-      { id: "human-resources", name: "Human Resources Specialist (Generalist)" },
-    ],
-    "Electrical Engineering": [
-      { id: "resumes", name: "Resumes" },
-      { id: "alumni", name: "Alumni" },
-      { id: "power-systems", name: "Power Systems & Energy" },
-      { id: "embedded-systems", name: "Embedded Systems & Robotics" },
-      { id: "ev-automotive", name: "Electric Vehicle & Automotive Systems" },
-      { id: "signals-rf", name: "Signals, Communications & RF" },
-      { id: "controls-automation", name: "Controls & Automation" },
-      { id: "hardware-ic-design", name: "Hardware / IC Design" },
-    ],
-    "Political Science": [
-      { id: "resumes", name: "Resumes" },
-      { id: "alumni", name: "Alumni" },
-      { id: "policy-research-analyst", name: "Policy / Research Analyst" },
-      { id: "legislative-aide-government-staff", name: "Legislative Aide / Government Staff" },
-      { id: "public-administration-nonprofit", name: "Public Administration / Nonprofit Program Coordinator" },
-      { id: "campaign-staff-field-organizer", name: "Campaign Staff / Field Organizer / Campaign Management" },
-      { id: "advocacy-lobbying-government-relations", name: "Advocacy / Lobbying / Government Relations" },
-      { id: "law-pre-law", name: "Law / Pre-Law" },
-    ],
-    "Mechanical Engineering": [
-      { id: "resumes", name: "Resumes" },
-      { id: "alumni", name: "Alumni" },
-      { id: "mechanical-design", name: "Mechanical Design Engineer" },
-      { id: "aerospace-defense", name: "Aerospace / Defense Engineer" },
-      { id: "energy-sustainability", name: "Energy Systems / Power / Sustainability Engineer" },
-      { id: "robotics-automation", name: "Robotics / Automation / Mechatronics Engineer" },
-      { id: "manufacturing-industrial", name: "Manufacturing / Industrial Engineer" },
-      { id: "automotive-ev", name: "Automotive / EV / Autonomous Engineer" },
-    ],
-  };
+  const degrees = DEGREE_ORDER;
 
   // Separate non-career items from career paths
   const getNonCareerItems = (degree: string) => {
-    return careerPaths[degree]?.filter(item => item.id === "resumes" || item.id === "alumni") || [];
+    return getCareerPathsForDegree(degree).filter((item) => item.section === "resource");
   };
 
   const getCareerPathItems = (degree: string) => {
-    return careerPaths[degree]?.filter(item => item.id !== "resumes" && item.id !== "alumni") || [];
+    return getCareerPathsForDegree(degree).filter((item) => item.section === "career");
   };
 
   const toggleDegree = (degree: string) => {
@@ -112,7 +59,7 @@ export default function DegreesSidebar({
   };
 
   const isExpanded = (degree: string) => expandedDegrees.has(degree);
-  const hasCareerPaths = (degree: string) => careerPaths[degree] && careerPaths[degree].length > 0;
+  const hasCareerPaths = (degree: string) => getCareerPathsForDegree(degree).length > 0;
 
   return (
     <aside className="flex-shrink-0 w-72 border-r-2 border-border bg-muted/40 sticky top-[64px] h-[calc(100vh-64px)] overflow-y-auto z-10">
@@ -151,13 +98,13 @@ export default function DegreesSidebar({
                   <div className="ml-4 mt-1 space-y-1 border-l-2 border-primary/20 pl-2">
                     {/* Non-Career Items (Resumes, Alumni) */}
                     {getNonCareerItems(degree).map((item) => {
-                      const isItemSelected = selectedCareerPath === item.id;
+                      const isItemSelected = careerPathMatches(item, selectedCareerPath);
                       return (
                         <button
                           key={item.id}
                           onClick={(e) => {
                             e.stopPropagation();
-                            onCareerPathSelect(item.id);
+                            onCareerPathSelect(item.sidebarId || item.id);
                             onSelectionMade?.();
                           }}
                           className={`w-full text-left px-4 py-2.5 transition-colors border border-border/50 rounded-md font-sans font-medium tracking-tight text-sm ${
@@ -180,14 +127,14 @@ export default function DegreesSidebar({
                     
                     {/* Career Paths */}
                     {getCareerPathItems(degree).map((careerPath) => {
-                      const isCareerSelected = selectedCareerPath === careerPath.id;
+                      const isCareerSelected = careerPathMatches(careerPath, selectedCareerPath);
                       return (
                         <button
                           key={careerPath.id}
                           onClick={(e) => {
                             e.stopPropagation();
                             onDegreeSelect(degree);
-                            onCareerPathSelect(careerPath.id);
+                            onCareerPathSelect(careerPath.sidebarId || careerPath.id);
                             onSelectionMade?.();
                           }}
                           className={`w-full text-left px-4 py-2.5 transition-colors border border-border/50 rounded-md font-sans font-medium tracking-tight text-sm ${
@@ -212,4 +159,3 @@ export default function DegreesSidebar({
     </aside>
   );
 }
-

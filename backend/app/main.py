@@ -2,12 +2,31 @@
 BetterBobcats Backend API
 FastAPI application providing REST API endpoints for clubs, majors, and platform data
 """
+import os
+
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import sentry_sdk
+from sentry_sdk.integrations.fastapi import FastApiIntegration
 
 # Load environment variables from .env file
 load_dotenv()
+
+
+def _get_traces_sample_rate() -> float:
+    try:
+        return float(os.getenv("SENTRY_TRACES_SAMPLE_RATE", "0.0"))
+    except ValueError:
+        return 0.0
+
+
+sentry_sdk.init(
+    dsn=os.getenv("SENTRY_DSN"),
+    integrations=[FastApiIntegration()],
+    traces_sample_rate=_get_traces_sample_rate(),
+    environment=os.getenv("SENTRY_ENVIRONMENT", os.getenv("ENVIRONMENT", "development")),
+)
 
 app = FastAPI(
     title="BetterBobcats API",

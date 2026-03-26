@@ -17,6 +17,7 @@ import MEPrerequisiteGraph from "../mechanical-engineering/components/Prerequisi
 import MEGraphLegend from "../mechanical-engineering/components/GraphLegend";
 import PoliticalSciencePrerequisiteGraph from "../political-science/components/PrerequisiteGraph";
 import PoliticalScienceGraphLegend from "../political-science/components/GraphLegend";
+import { getCareerPathConfig } from "../career-paths.config";
 
 function CareerPathGraphLoading() {
   return (
@@ -755,52 +756,9 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
 
   // Show career path content if selected
   if (selectedCareerPath) {
-    const careerPathNames: Record<string, string> = {
-      swe: "SWE (Generalist)",
-      cybersecurity: "Cybersecurity",
-      "ml-ai": "Machine Learning / AI",
-      "data-science": "Data Science / Data Analytics",
-      systems: "Systems / Infrastructure Engineering Pathway",
-      embedded: "Embedded Systems Engineering",
-      "ux-ui": "UX/UI Design & Research (Generalist)",
-      "data-analyst": "Data Analyst (Generalist)",
-      "market-research": "Market Research Analyst (Generalist)",
-      "human-resources": "Human Resources Specialist (Generalist)",
-      "policy-research-analyst": "Policy / Research Analyst",
-      "legislative-aide-government-staff": "Legislative Aide / Government Staff",
-      "public-administration-nonprofit-program-coordinator": "Public Administration / Nonprofit Program Coordinator",
-      "mechanical-design": "Mechanical Design Engineer",
-      "aerospace-defense": "Aerospace / Defense Engineer",
-      "energy-sustainability": "Energy Systems / Power / Sustainability Engineer",
-      "robotics-automation": "Robotics / Automation / Mechatronics Engineer",
-      "manufacturing-industrial": "Manufacturing / Industrial Engineer",
-      "automotive-ev": "Automotive / EV / Autonomous Engineer",
-      resumes: "Resumes",
-      alumni: "Alumni",
-    };
-
-    // Get description for SWE (Generalist)
-    const careerDescriptions: Record<string, string> = {
-      swe: "Software Engineers (Generalists) build and maintain software systems across multiple areas of the stack. This role emphasizes strong fundamentals in programming, data structures, and system design, along with hands-on experience building real applications. It's a flexible path suited for students who want broad technical exposure and strong career mobility across industries.",
-      cybersecurity: "Cybersecurity professionals protect systems, networks, and data from threats and attacks. This career path focuses on understanding security principles, cryptography, network defense, system vulnerabilities, and secure coding practices. Roles include Security Engineer, SOC Analyst, Penetration Tester, and Security Architect.",
-      "ml-ai": "Machine Learning and AI professionals design systems that learn from data to make predictions, automate decisions, and solve complex problems. This career path focuses on understanding algorithms, statistical modeling, data processing, neural networks, and optimization techniques. It also emphasizes ethical AI, model evaluation, and deploying intelligent systems at scale. Roles include Machine Learning Engineer, Data Scientist, AI Researcher, and Applied AI Engineer.",
-      "data-science": "Data Scientists and Data Analysts transform raw data into actionable insights that drive business decisions. This career path combines programming (Python/R), statistics, mathematics, and domain expertise to clean, analyze, visualize, and model data. Core skills include SQL, statistical inference, machine learning, and data storytelling. Roles include Data Scientist, Data Analyst, Business Intelligence Engineer, and Analytics Engineer.",
-      systems: "Systems and Infrastructure Engineering professionals design, build, and maintain the core software systems that power modern computing environments. This career path focuses on understanding how software operates at scale, including operating systems, computer networks, distributed systems, and cloud infrastructure. It emphasizes performance, reliability, scalability, and fault tolerance, as well as low-level system behavior and resource management. Students also gain exposure to security, concurrency, and system design principles used in real-world production environments. Roles include Systems Engineer, Infrastructure Engineer, Backend Engineer, Site Reliability Engineer (SRE), and Platform Engineer.",
-      embedded: "Embedded Systems Engineering professionals design, build, and program computing systems that are integrated into larger mechanical or electronic systems. This career path focuses on understanding how software interacts with hardware, including microcontrollers, sensors, actuators, and real-time systems. It emphasizes low-level programming, hardware-software co-design, real-time constraints, and resource optimization. Students gain exposure to firmware development, IoT systems, robotics, and cyber-physical systems. Roles include Embedded Systems Engineer, Firmware Engineer, IoT Engineer, Robotics Engineer, and Hardware-Software Integration Engineer.",
-      "ux-ui": "UX/UI Design & Research professionals create user-centered products and experiences that combine cognitive science, design thinking, and technical skills. This career path focuses on understanding human behavior, conducting user research, designing intuitive interfaces, and collaborating with engineering teams. Students learn user research methods, prototyping, interaction design, visual design, and usability testing. It emphasizes both the psychological principles behind good design and the practical skills needed to create and validate designs. Roles include UX Designer, UI Designer, UX Researcher, Product Designer, Interaction Designer, and Design Engineer.",
-      "data-analyst": "Data Analysts transform raw data into actionable insights that drive business decisions. This career path combines statistics, programming (Python/R/SQL), and domain expertise to collect, clean, analyze, visualize, and model data. Students learn statistical inference, hypothesis testing, database systems, data visualization, and experimental design. The path emphasizes both technical analytical skills and business communication—translating complex findings into clear recommendations. Roles include Data Analyst, Business Intelligence Analyst, Analytics Engineer, Marketing Analyst, Product Analyst, and Junior Data Scientist.",
-      "market-research": "Market Research Analysts bridge consumer psychology, economic theory, and data analytics to understand market dynamics and inform business strategy. This career path integrates behavioral economics, statistical modeling, and business analytics to predict consumer behavior, analyze competitive landscapes, and forecast market trends. Students learn consumer decision-making, marketing strategy, econometrics, and data visualization. The path emphasizes both quantitative analytical skills and strategic thinking—translating market data into actionable business recommendations. Roles include Market Research Analyst, Consumer Insights Analyst, Business Analyst, Strategic Consultant, Product Marketing Analyst, and Competitive Intelligence Analyst.",
-      "human-resources": "Human Resources Specialists manage the employee lifecycle and shape organizational culture by combining psychology, sociology, economics, and data analytics. This career path integrates industrial-organizational psychology, labor economics, and people analytics to optimize talent acquisition, development, retention, and organizational effectiveness. Students learn workplace behavior, compensation strategy, DEI principles, leadership development, and HR technology. The path emphasizes both interpersonal skills and data-driven decision-making—translating employee insights into strategic HR initiatives. Roles include HR Generalist, Talent Acquisition Specialist, Compensation Analyst, HR Business Partner, People Analytics Specialist, and Organizational Development Consultant.",
-      "policy-research-analyst": "Policy / Research Analysts conduct research, analyze data, and provide evidence-based recommendations to inform public policy decisions. This career path combines political science, statistics, economics, and research methods to evaluate policy effectiveness, assess program outcomes, and support evidence-based policymaking. Students learn quantitative analysis, research design, statistical modeling, and policy evaluation techniques. The path emphasizes both analytical rigor and clear communication—translating complex research findings into actionable policy recommendations. Roles include Policy Analyst, Research Analyst, Program Evaluator, Policy Researcher, and Data Analyst in government, think tanks, and nonprofit organizations.",
-      "legislative-aide-government-staff": "Legislative Aides and Government Staff support elected officials and government agencies by managing constituent services, drafting legislation, conducting research, and coordinating policy implementation. This career path combines political science, public administration, and communication skills to navigate government processes, understand legislative procedures, and serve as a bridge between constituents and policymakers. Students learn about American political institutions, legislative processes, public policy analysis, and government operations. The path emphasizes both practical skills in government operations and strong communication abilities—translating complex policy issues into clear, actionable information. Roles include Legislative Aide, Congressional Staffer, Policy Assistant, Constituent Services Representative, and Government Program Coordinator.",
-      "public-administration-nonprofit-program-coordinator": "Public Administration and Nonprofit Program Coordinators manage programs, coordinate services, and oversee operations in government agencies and nonprofit organizations. This career path combines management principles, public policy analysis, and organizational leadership to design, implement, and evaluate programs that serve communities. Students learn about organizational behavior, program management, grant writing, budgeting, and stakeholder engagement. The path emphasizes both strategic planning and operational execution—translating policy goals into effective programs that deliver measurable outcomes. Roles include Program Coordinator, Nonprofit Manager, Public Administrator, Grant Writer, Community Program Manager, and Service Coordinator.",
-      "mechanical-design": "Mechanical Design Engineers create, analyze, and optimize mechanical systems and products. This career path focuses on CAD, FEA, materials selection, and design for manufacturability. Essential for roles in product design, automotive engineering, consumer products, and industrial equipment. Students learn structural analysis, thermal systems, manufacturing processes, and design optimization. The path emphasizes both creative problem-solving and technical rigor—translating design requirements into functional, manufacturable products.",
-      "aerospace-defense": "Aerospace / Defense Engineers design and develop aircraft, spacecraft, missiles, and defense systems. This career path focuses on aerodynamics, propulsion, flight dynamics, structures, and control systems. Essential for roles in aerospace companies, defense contractors, and government agencies. Students learn advanced fluid mechanics, structural analysis, propulsion systems, and flight control. The path emphasizes both fundamental aerospace principles and advanced computational tools—translating complex physics into safe, high-performance flight vehicles and defense systems. Roles include Aerospace Engineer, Flight Systems Engineer, Propulsion Engineer, Structures Engineer, and Defense Systems Engineer.",
-      "energy-sustainability": "Energy Systems / Power / Sustainability Engineers design and optimize energy conversion, storage, and distribution systems for a sustainable future. This career path focuses on thermodynamics, heat transfer, renewable energy, power electronics, and energy storage. Essential for roles in renewable energy companies, utilities, electric vehicle manufacturers, and sustainable technology firms. Students learn energy conversion principles, thermal system design, electrical machines, battery technologies, and grid integration. The path emphasizes both fundamental energy principles and emerging clean technologies—translating physics and engineering into efficient, sustainable energy solutions. Roles include Energy Engineer, Power Systems Engineer, Sustainability Engineer, Battery Engineer, and Renewable Energy Specialist.",
-      "robotics-automation": "Robotics / Automation / Mechatronics Engineers design, build, and program intelligent machines and automated systems that integrate mechanical, electrical, and software engineering. This career path focuses on control systems, sensors and actuators, embedded systems, machine dynamics, and system integration. Essential for roles in robotics companies, industrial automation, autonomous vehicles, and advanced manufacturing. Students learn mechatronics design, control theory, microcontroller programming, robot kinematics, and sensor fusion. The path emphasizes both hardware-software integration and real-time systems—translating control algorithms into physical robotic systems and automation equipment. Roles include Robotics Engineer, Automation Engineer, Mechatronics Engineer, Controls Engineer, and Embedded Systems Engineer.",
-      "manufacturing-industrial": "Manufacturing / Industrial Engineers optimize production processes, improve quality, and increase efficiency in manufacturing operations. This career path focuses on manufacturing processes, statistical quality control, economic analysis, process optimization, and production systems. Essential for roles in manufacturing companies, supply chain management, operations consulting, and industrial automation. Students learn manufacturing methods, quality assurance techniques, data analysis, cost optimization, and lean/Six Sigma methodologies. The path emphasizes both technical manufacturing knowledge and business acumen—translating engineering principles into efficient, cost-effective production systems. Roles include Manufacturing Engineer, Industrial Engineer, Process Engineer, Quality Engineer, Production Engineer, and Operations Analyst.",
-      "automotive-ev": "Automotive / EV / Autonomous Engineers design and develop next-generation vehicles including electric vehicles, autonomous systems, and advanced automotive technologies. This career path focuses on vehicle dynamics, electric powertrains, power electronics, control systems, and autonomous driving technologies. Essential for roles at automotive OEMs, EV startups like Tesla/Rivian/Lucid, autonomous vehicle companies like Waymo/Cruise, and automotive suppliers. Students learn multi-body dynamics, electric motors and drives, battery systems, aerodynamics, mechatronics, and autonomous vehicle systems. The path emphasizes both mechanical and electrical engineering—translating cutting-edge technology into safe, efficient, and intelligent vehicles. Roles include Automotive Engineer, EV Powertrain Engineer, Autonomous Vehicle Engineer, Battery Systems Engineer, Vehicle Dynamics Engineer, and ADAS Engineer.",
-    };
+    const careerPathConfig = getCareerPathConfig(selectedDegree, selectedCareerPath);
+    const careerPathTitle = careerPathConfig?.name || selectedCareerPath;
+    const careerPathDescription = careerPathConfig?.description;
 
     // Handle special sections (Resumes, Alumni)
     if (selectedCareerPath === "resumes") {
@@ -854,14 +812,14 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
           <div className="max-w-7xl mx-auto">
             <div className="mb-10 text-center">
               <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
-                {careerPathNames[selectedCareerPath]} - {selectedDegree}
+                {careerPathTitle} - {selectedDegree}
               </h2>
               <p className="text-black mb-5">
                 Career pathway information and recommended courses
               </p>
-              {careerDescriptions[selectedCareerPath] && (
+              {careerPathDescription && (
                 <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
-                  {careerDescriptions[selectedCareerPath]}
+                  {careerPathDescription}
                 </p>
               )}
             </div>
@@ -918,14 +876,14 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
           <div className="max-w-7xl mx-auto">
             <div className="mb-10 text-center">
               <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
-                {careerPathNames[selectedCareerPath]} - {selectedDegree}
+                {careerPathTitle} - {selectedDegree}
               </h2>
               <p className="text-black mb-5">
                 Career pathway information and recommended courses
               </p>
-              {careerDescriptions[selectedCareerPath] && (
+              {careerPathDescription && (
                 <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
-                  {careerDescriptions[selectedCareerPath]}
+                  {careerPathDescription}
                 </p>
               )}
             </div>
@@ -982,14 +940,14 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
           <div className="max-w-7xl mx-auto">
             <div className="mb-10 text-center">
               <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
-                {careerPathNames[selectedCareerPath]} - {selectedDegree}
+                {careerPathTitle} - {selectedDegree}
               </h2>
               <p className="text-black mb-5">
                 Career pathway information and recommended courses
               </p>
-              {careerDescriptions[selectedCareerPath] && (
+              {careerPathDescription && (
                 <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
-                  {careerDescriptions[selectedCareerPath]}
+                  {careerPathDescription}
                 </p>
               )}
             </div>
@@ -1046,14 +1004,14 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
           <div className="max-w-7xl mx-auto">
             <div className="mb-10 text-center">
               <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
-                {careerPathNames[selectedCareerPath]} - {selectedDegree}
+                {careerPathTitle} - {selectedDegree}
               </h2>
               <p className="text-black mb-5">
                 Career pathway information and recommended courses
               </p>
-              {careerDescriptions[selectedCareerPath] && (
+              {careerPathDescription && (
                 <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
-                  {careerDescriptions[selectedCareerPath]}
+                  {careerPathDescription}
                 </p>
               )}
             </div>
@@ -1110,14 +1068,14 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
           <div className="max-w-7xl mx-auto">
             <div className="mb-10 text-center">
               <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
-                {careerPathNames[selectedCareerPath]} - {selectedDegree}
+                {careerPathTitle} - {selectedDegree}
               </h2>
               <p className="text-black mb-5">
                 Career pathway information and recommended courses
               </p>
-              {careerDescriptions[selectedCareerPath] && (
+              {careerPathDescription && (
                 <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
-                  {careerDescriptions[selectedCareerPath]}
+                  {careerPathDescription}
                 </p>
               )}
             </div>
@@ -1174,14 +1132,14 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
           <div className="max-w-7xl mx-auto">
             <div className="mb-10 text-center">
               <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
-                {careerPathNames[selectedCareerPath]} - {selectedDegree}
+                {careerPathTitle} - {selectedDegree}
               </h2>
               <p className="text-black mb-5">
                 Career pathway information and recommended courses
               </p>
-              {careerDescriptions[selectedCareerPath] && (
+              {careerPathDescription && (
                 <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
-                  {careerDescriptions[selectedCareerPath]}
+                  {careerPathDescription}
                 </p>
               )}
             </div>
@@ -1238,14 +1196,14 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
           <div className="max-w-7xl mx-auto">
             <div className="mb-10 text-center">
               <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
-                {careerPathNames[selectedCareerPath]} - {selectedDegree}
+                {careerPathTitle} - {selectedDegree}
               </h2>
               <p className="text-black mb-5">
                 Career pathway information and recommended courses
               </p>
-              {careerDescriptions[selectedCareerPath] && (
+              {careerPathDescription && (
                 <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
-                  {careerDescriptions[selectedCareerPath]}
+                  {careerPathDescription}
                 </p>
               )}
             </div>
@@ -1301,14 +1259,14 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
           <div className="max-w-7xl mx-auto">
             <div className="mb-10 text-center">
               <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
-                {careerPathNames[selectedCareerPath]} - {selectedDegree}
+                {careerPathTitle} - {selectedDegree}
               </h2>
               <p className="text-black mb-5">
                 Career pathway information and recommended courses
               </p>
-              {careerDescriptions[selectedCareerPath] && (
+              {careerPathDescription && (
                 <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
-                  {careerDescriptions[selectedCareerPath]}
+                  {careerPathDescription}
                 </p>
               )}
             </div>
@@ -1364,14 +1322,14 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
           <div className="max-w-7xl mx-auto">
             <div className="mb-10 text-center">
               <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
-                {careerPathNames[selectedCareerPath]} - {selectedDegree}
+                {careerPathTitle} - {selectedDegree}
               </h2>
               <p className="text-black mb-5">
                 Career pathway information and recommended courses
               </p>
-              {careerDescriptions[selectedCareerPath] && (
+              {careerPathDescription && (
                 <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
-                  {careerDescriptions[selectedCareerPath]}
+                  {careerPathDescription}
                 </p>
               )}
             </div>
@@ -1427,14 +1385,14 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
           <div className="max-w-7xl mx-auto">
             <div className="mb-10 text-center">
               <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
-                {careerPathNames[selectedCareerPath]} - {selectedDegree}
+                {careerPathTitle} - {selectedDegree}
               </h2>
               <p className="text-black mb-5">
                 Career pathway information and recommended courses
               </p>
-              {careerDescriptions[selectedCareerPath] && (
+              {careerPathDescription && (
                 <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
-                  {careerDescriptions[selectedCareerPath]}
+                  {careerPathDescription}
                 </p>
               )}
             </div>
@@ -2206,14 +2164,14 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
           <div className="max-w-7xl mx-auto">
             <div className="mb-10 text-center">
               <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
-                {careerPathNames[selectedCareerPath]} - {selectedDegree}
+                {careerPathTitle} - {selectedDegree}
               </h2>
               <p className="text-black mb-5">
                 Career pathway information and recommended courses
               </p>
-              {careerDescriptions[selectedCareerPath] && (
+              {careerPathDescription && (
                 <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
-                  {careerDescriptions[selectedCareerPath]}
+                  {careerPathDescription}
                 </p>
               )}
             </div>
@@ -2264,14 +2222,14 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
           <div className="max-w-7xl mx-auto">
             <div className="mb-10 text-center">
               <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
-                {careerPathNames[selectedCareerPath]} - {selectedDegree}
+                {careerPathTitle} - {selectedDegree}
               </h2>
               <p className="text-black mb-5">
                 Career pathway information and recommended courses
               </p>
-              {careerDescriptions[selectedCareerPath] && (
+              {careerPathDescription && (
                 <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
-                  {careerDescriptions[selectedCareerPath]}
+                  {careerPathDescription}
                 </p>
               )}
             </div>
@@ -2322,14 +2280,14 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
           <div className="max-w-7xl mx-auto">
             <div className="mb-10 text-center">
               <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
-                {careerPathNames["public-administration-nonprofit-program-coordinator"] || careerPathNames[selectedCareerPath]} - {selectedDegree}
+                {careerPathTitle} - {selectedDegree}
               </h2>
               <p className="text-black mb-5">
                 Career pathway information and recommended courses
               </p>
-              {(careerDescriptions["public-administration-nonprofit-program-coordinator"] || careerDescriptions[selectedCareerPath]) && (
+              {careerPathDescription && (
                 <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
-                  {careerDescriptions["public-administration-nonprofit-program-coordinator"] || careerDescriptions[selectedCareerPath]}
+                  {careerPathDescription}
                 </p>
               )}
             </div>
@@ -2380,14 +2338,14 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
           <div className="max-w-7xl mx-auto">
             <div className="mb-10 text-center">
               <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
-                {careerPathNames["campaign-staff-field-organizer-campaign-management"] || careerPathNames[selectedCareerPath]} - {selectedDegree}
+                {careerPathTitle} - {selectedDegree}
               </h2>
               <p className="text-black mb-5">
                 Career pathway information and recommended courses
               </p>
-              {(careerDescriptions["campaign-staff-field-organizer-campaign-management"] || careerDescriptions[selectedCareerPath]) && (
+              {careerPathDescription && (
                 <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
-                  {careerDescriptions["campaign-staff-field-organizer-campaign-management"] || careerDescriptions[selectedCareerPath]}
+                  {careerPathDescription}
                 </p>
               )}
             </div>
@@ -2438,14 +2396,14 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
           <div className="max-w-7xl mx-auto">
             <div className="mb-10 text-center">
               <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
-                {careerPathNames[selectedCareerPath]} - {selectedDegree}
+                {careerPathTitle} - {selectedDegree}
               </h2>
               <p className="text-black mb-5">
                 Career pathway information and recommended courses
               </p>
-              {careerDescriptions[selectedCareerPath] && (
+              {careerPathDescription && (
                 <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
-                  {careerDescriptions[selectedCareerPath]}
+                  {careerPathDescription}
                 </p>
               )}
             </div>
@@ -2496,14 +2454,14 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
           <div className="max-w-7xl mx-auto">
             <div className="mb-10 text-center">
               <h2 className="text-3xl md:text-4xl font-sans font-semibold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent tracking-tight mb-3">
-                {careerPathNames[selectedCareerPath]} - {selectedDegree}
+                {careerPathTitle} - {selectedDegree}
               </h2>
               <p className="text-black mb-5">
                 Career pathway information and recommended courses
               </p>
-              {careerDescriptions[selectedCareerPath] && (
+              {careerPathDescription && (
                 <p className="text-base text-black max-w-3xl mx-auto mb-8 leading-relaxed">
-                  {careerDescriptions[selectedCareerPath]}
+                  {careerPathDescription}
                 </p>
               )}
             </div>
@@ -2918,4 +2876,3 @@ export default function DegreesContent({ selectedDegree, selectedCareerPath }: D
     </div>
   );
 }
-

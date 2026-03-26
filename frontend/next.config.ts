@@ -1,8 +1,13 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from "next";
+import { withSentryConfig } from "@sentry/nextjs";
+
+const nextConfig: NextConfig = {
   experimental: {
     webpackMemoryOptimizations: true,
   },
 };
 
-export default nextConfig;
+export default withSentryConfig(nextConfig, {
+  silent: true,
+  disableLogger: true,
+});

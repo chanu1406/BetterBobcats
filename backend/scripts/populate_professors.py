@@ -105,6 +105,53 @@ def slugify(text: str) -> str:
     return text.lower().replace(" ", "-").replace("&", "and").replace("/", "-")
 
 
+def create_data_import_run(supabase: Client, source: str) -> str | None:
+    """Create a data_imports row marking a scraper run as running."""
+    try:
+        result = (
+            supabase
+            .table("data_imports")
+            .insert({"source": source, "status": "running"})
+            .execute()
+        )
+        if result.data:
+            return result.data[0]["id"]
+    except Exception as e:
+        # Non-fatal: scraping should still continue even if observability write fails.
+        print(f"Warning: failed to create data_imports row: {e}")
+    return None
+
+
+def finalize_data_import_run(
+    supabase: Client,
+    import_id: str | None,
+    *,
+    status: str,
+    record_count: int | None = None,
+    error_message: str | None = None,
+) -> None:
+    """Update a data_imports row at the end of a scraper run."""
+    if not import_id:
+        return
+
+    payload: dict[str, object] = {"status": status}
+    if record_count is not None:
+        payload["record_count"] = record_count
+    if error_message:
+        payload["error"] = error_message[:4000]
+
+    try:
+        (
+            supabase
+            .table("data_imports")
+            .update(payload)
+            .eq("id", import_id)
+            .execute()
+        )
+    except Exception as e:
+        print(f"Warning: failed to update data_imports row {import_id}: {e}")
+
+
 def populate_database():
     """Fetch professors from RMP and populate Supabase database."""
     supabase_url = os.getenv("SUPABASE_URL") or os.getenv("NEXT_PUBLIC_SUPABASE_URL")
@@ -117,56 +164,76 @@ def populate_database():
     
     supabase: Client = create_client(supabase_url, supabase_key)
     
+    import_id = create_data_import_run(supabase, "professors")
+
     # Track departments for batch insert
     departments_map: dict[str, str] = {}  # name -> id
     professors_to_insert = []
-    
-    print("Fetching professors from RateMyProfessors...")
-    for professor in fetch_all_professors():
-        dept_name = professor.get("department") or "Unknown"
-        
-        # Create department if needed
-        if dept_name not in departments_map:
-            dept_slug = slugify(dept_name)
-            
-            # Upsert department
-            result = supabase.table("departments").upsert(
-                {"name": dept_name, "slug": dept_slug},
-                on_conflict="name"
+
+    try:
+        print("Fetching professors from RateMyProfessors...")
+        for professor in fetch_all_professors():
+            dept_name = professor.get("department") or "Unknown"
+
+            # Create department if needed
+            if dept_name not in departments_map:
+                dept_slug = slugify(dept_name)
+
+                # Upsert department
+                result = supabase.table("departments").upsert(
+                    {"name": dept_name, "slug": dept_slug},
+                    on_conflict="name"
+                ).execute()
+
+                if result.data:
+                    departments_map[dept_name] = result.data[0]["id"]
+                    print(f"  Created/updated department: {dept_name}")
+
+            # Prepare professor data
+            prof_data = {
+                "rmp_id": str(professor.get("legacyId")),
+                "rmp_graphql_id": professor.get("id"),
+                "first_name": (professor.get("firstName") or "").strip(),
+                "last_name": (professor.get("lastName") or "").strip(),
+                "department_id": departments_map.get(dept_name),
+                "department_name": dept_name,
+                "avg_rating": professor.get("avgRating"),
+                "avg_difficulty": professor.get("avgDifficulty"),
+                "num_ratings": professor.get("numRatings") or 0,
+                "would_take_again_percent": professor.get("wouldTakeAgainPercent"),
+            }
+            professors_to_insert.append(prof_data)
+
+        print(f"\nInserting {len(professors_to_insert)} professors...")
+
+        # Batch upsert professors (in chunks of 100)
+        chunk_size = 100
+        for i in range(0, len(professors_to_insert), chunk_size):
+            chunk = professors_to_insert[i:i + chunk_size]
+            supabase.table("professors").upsert(
+                chunk,
+                on_conflict="rmp_id"
             ).execute()
-            
-            if result.data:
-                departments_map[dept_name] = result.data[0]["id"]
-                print(f"  Created/updated department: {dept_name}")
-        
-        # Prepare professor data
-        prof_data = {
-            "rmp_id": str(professor.get("legacyId")),
-            "rmp_graphql_id": professor.get("id"),
-            "first_name": (professor.get("firstName") or "").strip(),
-            "last_name": (professor.get("lastName") or "").strip(),
-            "department_id": departments_map.get(dept_name),
-            "department_name": dept_name,
-            "avg_rating": professor.get("avgRating"),
-            "avg_difficulty": professor.get("avgDifficulty"),
-            "num_ratings": professor.get("numRatings") or 0,
-            "would_take_again_percent": professor.get("wouldTakeAgainPercent"),
-        }
-        professors_to_insert.append(prof_data)
-    
-    print(f"\nInserting {len(professors_to_insert)} professors...")
-    
-    # Batch upsert professors (in chunks of 100)
-    chunk_size = 100
-    for i in range(0, len(professors_to_insert), chunk_size):
-        chunk = professors_to_insert[i:i + chunk_size]
-        result = supabase.table("professors").upsert(
-            chunk,
-            on_conflict="rmp_id"
-        ).execute()
-        print(f"  Inserted batch {i // chunk_size + 1}")
-    
-    print(f"\nDone! Inserted {len(professors_to_insert)} professors across {len(departments_map)} departments.")
+            print(f"  Inserted batch {i // chunk_size + 1}")
+
+        finalize_data_import_run(
+            supabase,
+            import_id,
+            status="success",
+            record_count=len(professors_to_insert),
+        )
+
+        print(f"\nDone! Inserted {len(professors_to_insert)} professors across {len(departments_map)} departments.")
+    except Exception as e:
+        finalize_data_import_run(
+            supabase,
+            import_id,
+            status="failed",
+            record_count=len(professors_to_insert),
+            error_message=str(e),
+        )
+        print(f"Fatal error during professor import: {e}")
+        raise
 
 
 if __name__ == "__main__":

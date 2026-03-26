@@ -99,6 +99,53 @@ def find_professor_match(
     return best_match
 
 
+def create_data_import_run(supabase: Client, source: str) -> str | None:
+    """Create a data_imports row marking a scraper run as running."""
+    try:
+        result = (
+            supabase
+            .table("data_imports")
+            .insert({"source": source, "status": "running"})
+            .execute()
+        )
+        if result.data:
+            return result.data[0]["id"]
+    except Exception as e:
+        # Non-fatal: scraping should still continue even if observability write fails.
+        print(f"Warning: failed to create data_imports row: {e}")
+    return None
+
+
+def finalize_data_import_run(
+    supabase: Client,
+    import_id: str | None,
+    *,
+    status: str,
+    record_count: int | None = None,
+    error_message: str | None = None,
+) -> None:
+    """Update a data_imports row at the end of a scraper run."""
+    if not import_id:
+        return
+
+    payload: dict[str, object] = {"status": status}
+    if record_count is not None:
+        payload["record_count"] = record_count
+    if error_message:
+        payload["error"] = error_message[:4000]
+
+    try:
+        (
+            supabase
+            .table("data_imports")
+            .update(payload)
+            .eq("id", import_id)
+            .execute()
+        )
+    except Exception as e:
+        print(f"Warning: failed to update data_imports row {import_id}: {e}")
+
+
 def fetch_and_populate_courses(term: str = None, subjects: list[str] = None):
     """
     Main function to fetch courses and populate database.
@@ -117,209 +164,228 @@ def fetch_and_populate_courses(term: str = None, subjects: list[str] = None):
     
     supabase: Client = create_client(supabase_url, supabase_key)
     
-    # Get term if not specified
-    if not term:
-        terms = get_terms()
-        if not terms:
-            print("Error: Could not fetch terms")
-            return
-        term = terms[0]["code"]
-        print(f"Using term: {terms[0]['description']} ({term})")
-    
-    # Get subjects if not specified
-    if not subjects:
-        subject_data = get_subjects(term)
-        subjects = [s["code"] for s in subject_data]
-        print(f"Found {len(subjects)} subjects")
-    
-    # Load professors for matching
-    print("Loading professors for matching...")
-    professors_result = supabase.table("professors").select("id, first_name, last_name").execute()
-    professors_cache = {
-        normalize_name(f"{p['first_name']} {p['last_name']}"): p["id"]
-        for p in professors_result.data
-    }
-    print(f"Loaded {len(professors_cache)} professors")
-    
-    # Load departments for linking
-    departments_result = supabase.table("departments").select("id, name, slug").execute()
-    departments_map = {d["slug"].upper().replace("-", " "): d["id"] for d in departments_result.data}
-    # Also map by name
-    for d in departments_result.data:
-        departments_map[d["name"].upper()] = d["id"]
-    
-    # Stats
+    import_id = create_data_import_run(supabase, "courses")
     courses_added = 0
     sections_added = 0
     professor_links = 0
-    
-    # Process each subject
-    for subject_code in subjects:
-        print(f"\nProcessing {subject_code}...")
-        
-        # Create fresh session for each subject to avoid stale data
-        session = requests.Session()
-        session.post(f"{API_BASE}/classSearch/resetDataForm")
-        session.get(f"{API_BASE}/term/search?mode=search")
-        session.post(f"{API_BASE}/term/search", data={"term": term})
-        
-        try:
-            results = search_courses(session, term, subject_code)
-            courses = results.get("data", [])
-            
-            if not courses:
-                print(f"  No courses found for {subject_code}")
-                continue
-            
-            print(f"  Found {len(courses)} course sections")
-            
-            for course_data in courses:
-                try:
-                    # Extract course info
-                    course_code = f"{course_data.get('subject', '')} {course_data.get('courseNumber', '')}".strip()
-                    if not course_code or course_code == " ":
-                        continue
-                    
-                    title = course_data.get("courseTitle", "")
-                    crn = str(course_data.get("courseReferenceNumber", ""))
-                    section_num = course_data.get("sequenceNumber", "")
-                    credits = course_data.get("creditHours")
-                    
-                    # Get actual subject code from course data (not the search parameter)
-                    actual_subject = course_data.get("subject", subject_code)
-                    
-                    # Find department
-                    dept_id = departments_map.get(actual_subject.upper())
-                    
-                    # Upsert course (base course, not section)
-                    course_record = {
-                        "course_code": course_code,
-                        "course_number": course_data.get("courseNumber", ""),
-                        "title": title,
-                        "subject_code": actual_subject,
-                        "department_id": dept_id,
-                        "credits": int(credits) if credits else None,
-                    }
-                    
-                    course_result = supabase.table("courses").upsert(
-                        course_record, 
-                        on_conflict="course_code"
-                    ).execute()
-                    
-                    if course_result.data:
-                        course_id = course_result.data[0]["id"]
-                        courses_added += 1
-                    else:
-                        continue
-                    
-                    # Extract meeting time info
-                    meeting_times = course_data.get("meetingsFaculty", [])
-                    meeting_days = ""
-                    start_time = ""
-                    end_time = ""
-                    building = ""
-                    room = ""
-                    
-                    if meeting_times:
-                        mt = meeting_times[0].get("meetingTime", {})
-                        # Build days string
-                        days = []
-                        if mt.get("monday"): days.append("M")
-                        if mt.get("tuesday"): days.append("T")
-                        if mt.get("wednesday"): days.append("W")
-                        if mt.get("thursday"): days.append("R")
-                        if mt.get("friday"): days.append("F")
-                        if mt.get("saturday"): days.append("S")
-                        if mt.get("sunday"): days.append("U")
-                        meeting_days = "".join(days)
-                        
-                        start_time = mt.get("beginTime", "")
-                        end_time = mt.get("endTime", "")
-                        building = mt.get("building", "")
-                        room = mt.get("room", "")
-                    
-                    # Insert section
-                    section_record = {
-                        "course_id": course_id,
-                        "crn": crn,
-                        "term": term,
-                        "section_number": section_num,
-                        "meeting_days": meeting_days,
-                        "start_time": start_time,
-                        "end_time": end_time,
-                        "building": building,
-                        "room": room,
-                    }
-                    
-                    section_result = supabase.table("course_sections").upsert(
-                        section_record,
-                        on_conflict="crn,term"
-                    ).execute()
-                    
-                    if section_result.data:
-                        section_id = section_result.data[0]["id"]
-                        sections_added += 1
-                    else:
-                        continue
-                    
-                    # Process faculty (instructors)
-                    faculty_list = course_data.get("faculty", [])
-                    for faculty in faculty_list:
-                        display_name = faculty.get("displayName", "")
-                        if not display_name or display_name == "Staff":
-                            continue
-                        
-                        # Parse name - typically "Last, First" or "Last, First Middle"
-                        name_parts = display_name.split(",")
-                        if len(name_parts) >= 2:
-                            last_name = name_parts[0].strip()
-                            first_name = name_parts[1].strip().split()[0] if name_parts[1].strip() else ""
-                        else:
-                            # Try splitting by space
-                            parts = display_name.split()
-                            first_name = parts[0] if parts else ""
-                            last_name = parts[-1] if len(parts) > 1 else ""
-                        
-                        # Find matching professor
-                        professor_id = find_professor_match(first_name, last_name, professors_cache)
-                        
-                        if professor_id:
-                            is_primary = faculty.get("primaryIndicator", False)
-                            
-                            # Insert professor-section link
-                            link_record = {
-                                "professor_id": professor_id,
-                                "section_id": section_id,
-                                "is_primary": is_primary,
-                            }
-                            
-                            try:
-                                supabase.table("professor_sections").upsert(
-                                    link_record,
-                                    on_conflict="professor_id,section_id"
-                                ).execute()
-                                professor_links += 1
-                            except Exception as e:
-                                # Link may already exist
-                                pass
-                    
-                except Exception as e:
-                    print(f"  Error processing course: {e}")
+
+    try:
+        # Get term if not specified
+        if not term:
+            terms = get_terms()
+            if not terms:
+                raise RuntimeError("Could not fetch terms")
+            term = terms[0]["code"]
+            print(f"Using term: {terms[0]['description']} ({term})")
+
+        # Get subjects if not specified
+        if not subjects:
+            subject_data = get_subjects(term)
+            subjects = [s["code"] for s in subject_data]
+            print(f"Found {len(subjects)} subjects")
+
+        # Load professors for matching
+        print("Loading professors for matching...")
+        professors_result = supabase.table("professors").select("id, first_name, last_name").execute()
+        professors_cache = {
+            normalize_name(f"{p['first_name']} {p['last_name']}"): p["id"]
+            for p in professors_result.data
+        }
+        print(f"Loaded {len(professors_cache)} professors")
+
+        # Load departments for linking
+        departments_result = supabase.table("departments").select("id, name, slug").execute()
+        departments_map = {d["slug"].upper().replace("-", " "): d["id"] for d in departments_result.data}
+        # Also map by name
+        for d in departments_result.data:
+            departments_map[d["name"].upper()] = d["id"]
+
+        # Process each subject
+        for subject_code in subjects:
+            print(f"\nProcessing {subject_code}...")
+
+            # Create fresh session for each subject to avoid stale data
+            session = requests.Session()
+            session.post(f"{API_BASE}/classSearch/resetDataForm")
+            session.get(f"{API_BASE}/term/search?mode=search")
+            session.post(f"{API_BASE}/term/search", data={"term": term})
+
+            try:
+                results = search_courses(session, term, subject_code)
+                courses = results.get("data", [])
+
+                if not courses:
+                    print(f"  No courses found for {subject_code}")
                     continue
-            
-            # Rate limiting
-            time.sleep(0.3)
-            
-        except Exception as e:
-            print(f"  Error fetching {subject_code}: {e}")
-            continue
-    
-    print(f"\n{'='*50}")
-    print(f"Scraping complete!")
-    print(f"  Courses: {courses_added}")
-    print(f"  Sections: {sections_added}")
-    print(f"  Professor links: {professor_links}")
-    print(f"{'='*50}")
+
+                print(f"  Found {len(courses)} course sections")
+
+                for course_data in courses:
+                    try:
+                        # Extract course info
+                        course_code = f"{course_data.get('subject', '')} {course_data.get('courseNumber', '')}".strip()
+                        if not course_code or course_code == " ":
+                            continue
+
+                        title = course_data.get("courseTitle", "")
+                        crn = str(course_data.get("courseReferenceNumber", ""))
+                        section_num = course_data.get("sequenceNumber", "")
+                        credits = course_data.get("creditHours")
+
+                        # Get actual subject code from course data (not the search parameter)
+                        actual_subject = course_data.get("subject", subject_code)
+
+                        # Find department
+                        dept_id = departments_map.get(actual_subject.upper())
+
+                        # Upsert course (base course, not section)
+                        course_record = {
+                            "course_code": course_code,
+                            "course_number": course_data.get("courseNumber", ""),
+                            "title": title,
+                            "subject_code": actual_subject,
+                            "department_id": dept_id,
+                            "credits": int(credits) if credits else None,
+                        }
+
+                        course_result = supabase.table("courses").upsert(
+                            course_record,
+                            on_conflict="course_code"
+                        ).execute()
+
+                        if course_result.data:
+                            course_id = course_result.data[0]["id"]
+                            courses_added += 1
+                        else:
+                            continue
+
+                        # Extract meeting time info
+                        meeting_times = course_data.get("meetingsFaculty", [])
+                        meeting_days = ""
+                        start_time = ""
+                        end_time = ""
+                        building = ""
+                        room = ""
+
+                        if meeting_times:
+                            mt = meeting_times[0].get("meetingTime", {})
+                            # Build days string
+                            days = []
+                            if mt.get("monday"): days.append("M")
+                            if mt.get("tuesday"): days.append("T")
+                            if mt.get("wednesday"): days.append("W")
+                            if mt.get("thursday"): days.append("R")
+                            if mt.get("friday"): days.append("F")
+                            if mt.get("saturday"): days.append("S")
+                            if mt.get("sunday"): days.append("U")
+                            meeting_days = "".join(days)
+
+                            start_time = mt.get("beginTime", "")
+                            end_time = mt.get("endTime", "")
+                            building = mt.get("building", "")
+                            room = mt.get("room", "")
+
+                        # Insert section
+                        section_record = {
+                            "course_id": course_id,
+                            "crn": crn,
+                            "term": term,
+                            "section_number": section_num,
+                            "meeting_days": meeting_days,
+                            "start_time": start_time,
+                            "end_time": end_time,
+                            "building": building,
+                            "room": room,
+                        }
+
+                        section_result = supabase.table("course_sections").upsert(
+                            section_record,
+                            on_conflict="crn,term"
+                        ).execute()
+
+                        if section_result.data:
+                            section_id = section_result.data[0]["id"]
+                            sections_added += 1
+                        else:
+                            continue
+
+                        # Process faculty (instructors)
+                        faculty_list = course_data.get("faculty", [])
+                        for faculty in faculty_list:
+                            display_name = faculty.get("displayName", "")
+                            if not display_name or display_name == "Staff":
+                                continue
+
+                            # Parse name - typically "Last, First" or "Last, First Middle"
+                            name_parts = display_name.split(",")
+                            if len(name_parts) >= 2:
+                                last_name = name_parts[0].strip()
+                                first_name = name_parts[1].strip().split()[0] if name_parts[1].strip() else ""
+                            else:
+                                # Try splitting by space
+                                parts = display_name.split()
+                                first_name = parts[0] if parts else ""
+                                last_name = parts[-1] if len(parts) > 1 else ""
+
+                            # Find matching professor
+                            professor_id = find_professor_match(first_name, last_name, professors_cache)
+
+                            if professor_id:
+                                is_primary = faculty.get("primaryIndicator", False)
+
+                                # Insert professor-section link
+                                link_record = {
+                                    "professor_id": professor_id,
+                                    "section_id": section_id,
+                                    "is_primary": is_primary,
+                                }
+
+                                try:
+                                    supabase.table("professor_sections").upsert(
+                                        link_record,
+                                        on_conflict="professor_id,section_id"
+                                    ).execute()
+                                    professor_links += 1
+                                except Exception:
+                                    # Link may already exist
+                                    pass
+
+                    except Exception as e:
+                        print(f"  Error processing course: {e}")
+                        continue
+
+                # Rate limiting
+                time.sleep(0.3)
+
+            except Exception as e:
+                print(f"  Error fetching {subject_code}: {e}")
+                continue
+
+        total_records = courses_added + sections_added + professor_links
+        finalize_data_import_run(
+            supabase,
+            import_id,
+            status="success",
+            record_count=total_records,
+        )
+
+        print(f"\n{'='*50}")
+        print("Scraping complete!")
+        print(f"  Courses: {courses_added}")
+        print(f"  Sections: {sections_added}")
+        print(f"  Professor links: {professor_links}")
+        print(f"  Total records processed: {total_records}")
+        print(f"{'='*50}")
+    except Exception as e:
+        finalize_data_import_run(
+            supabase,
+            import_id,
+            status="failed",
+            record_count=courses_added + sections_added + professor_links,
+            error_message=str(e),
+        )
+        print(f"Fatal error during course scrape: {e}")
+        raise
 
 
 if __name__ == "__main__":
