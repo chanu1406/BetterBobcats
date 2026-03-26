@@ -5,7 +5,8 @@
 import { createClient } from "@/lib/supabase/browser";
 import type { CalendarEvent } from "@/types/event";
 
-const supabase = createClient();
+
+
 
 /**
  * Fetch public events for a date range (for global calendar)
@@ -16,6 +17,7 @@ export async function fetchPublicEvents(
   endDate: Date
 ): Promise<CalendarEvent[]> {
   try {
+    const supabase = createClient();
     // Query events directly - RLS will filter to only published public events
     const { data: eventsData, error: eventsError } = await supabase
       .from("events")
@@ -115,6 +117,7 @@ export async function fetchEvents(
   endDate: Date
 ): Promise<CalendarEvent[]> {
   try {
+    const supabase = createClient();
     const { data: eventsData, error: eventsError } = await supabase
       .from("events")
       .select(`

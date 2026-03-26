@@ -1,6 +1,11 @@
 """
-Professors API Router
-Endpoints for fetching professor and department data
+[DEPRECATED 2026-03-26] Professors API Router
+
+This router is NO LONGER REGISTERED in main.py.
+The frontend (frontend/src/lib/professors.ts) goes direct to Supabase.
+
+This file is kept for reference. Do not re-register without first auditing
+whether the frontend still uses these endpoints (it does not).
 """
 import os
 from typing import Optional

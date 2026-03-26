@@ -2,12 +2,31 @@
 BetterBobcats Backend API
 FastAPI application providing REST API endpoints for clubs, majors, and platform data
 """
+import os
+
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import sentry_sdk
+from sentry_sdk.integrations.fastapi import FastApiIntegration
 
 # Load environment variables from .env file
 load_dotenv()
+
+
+def _get_traces_sample_rate() -> float:
+    try:
+        return float(os.getenv("SENTRY_TRACES_SAMPLE_RATE", "0.0"))
+    except ValueError:
+        return 0.0
+
+
+sentry_sdk.init(
+    dsn=os.getenv("SENTRY_DSN"),
+    integrations=[FastApiIntegration()],
+    traces_sample_rate=_get_traces_sample_rate(),
+    environment=os.getenv("SENTRY_ENVIRONMENT", os.getenv("ENVIRONMENT", "development")),
+)
 
 app = FastAPI(
     title="BetterBobcats API",
@@ -43,11 +62,11 @@ async def health():
 
 
 # API Routers
-from app.api import clubs, majors, professors, courses
+# NOTE: courses and professors routers removed (2026-03-26).
+# The frontend lib (lib/courses.ts, lib/professors.ts) goes direct to Supabase
+# and has never called these FastAPI endpoints. The endpoint files are kept for
+# reference but not registered.
+from app.api import clubs, majors
 
-# Admin router removed - admin auth now handled via Supabase Auth in Next.js
-# app.include_router(admin.router, prefix="/api/admin", tags=["admin"])
 app.include_router(clubs.router, prefix="/api/clubs", tags=["clubs"])
 app.include_router(majors.router, prefix="/api/majors", tags=["majors"])
-app.include_router(professors.router, prefix="/api/professors", tags=["professors"])
-app.include_router(courses.router, prefix="/api/courses", tags=["courses"])

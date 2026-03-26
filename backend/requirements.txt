@@ -19,3 +19,6 @@ ruff==0.8.0
 
 # File uploads
 python-multipart==0.0.9
+
+# Observability
+sentry-sdk[fastapi]>=2.0.0

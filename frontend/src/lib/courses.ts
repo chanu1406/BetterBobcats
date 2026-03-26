@@ -117,41 +117,31 @@ export interface CoursesResponse {
 }
 
 /**
- * Fetch all subjects with course counts
+ * Fetch all subjects with course counts.
+ * Uses the get_subject_course_counts() RPC (server-side aggregation)
+ * instead of loading all courses client-side.
  */
 export async function fetchSubjects(): Promise<CourseSubject[]> {
     const supabase = createClient();
 
-    // Get all courses and count by subject
-    const { data, error } = await supabase
-        .from("courses")
-        .select("subject_code")
-        .limit(10000);
+    const { data, error } = await supabase.rpc("get_subject_course_counts");
 
     if (error) {
         console.error("Error fetching subjects:", error);
         throw new Error(`Failed to fetch subjects: ${error.message}`);
     }
 
-    // Count courses per subject
-    const subjectCounts: Record<string, number> = {};
-    for (const row of data || []) {
-        const code = row.subject_code;
-        subjectCounts[code] = (subjectCounts[code] || 0) + 1;
-    }
-
-    // Convert to array and sort
-    return Object.entries(subjectCounts)
-        .map(([subject_code, course_count]) => ({
-            subject_code,
-            subject_name: SUBJECT_NAMES[subject_code] || subject_code,
-            course_count,
-        }))
-        .sort((a, b) => a.subject_code.localeCompare(b.subject_code));
+    return (data || []).map((row: { subject_code: string; course_count: number }) => ({
+        subject_code: row.subject_code,
+        subject_name: SUBJECT_NAMES[row.subject_code] || row.subject_code,
+        course_count: Number(row.course_count),
+    }));
 }
 
 /**
- * Fetch courses with optional filtering
+ * Fetch courses with optional filtering.
+ * Uses the search_courses() RPC which handles server-side deduplication
+ * and returns an accurate total_count for pagination.
  */
 export async function fetchCourses(options?: {
     subject?: string | null;
@@ -163,79 +153,67 @@ export async function fetchCourses(options?: {
     const supabase = createClient();
 
     const {
-        subject,
-        search,
-        term,
+        subject = null,
+        search = null,
+        term = null,
         page = 1,
-        pageSize = 100,
+        pageSize = 50,
     } = options || {};
 
-    // Use the view for easier querying
-    let query = supabase
-        .from("courses_with_professors")
-        .select("*", { count: "exact" });
-
-    // Filter by subject
-    if (subject) {
-        query = query.eq("subject_code", subject.toUpperCase());
-    }
-
-    // Filter by term
-    if (term) {
-        query = query.eq("term", term);
-    }
-
-    // Search by course code or title
-    if (search) {
-        query = query.or(`course_code.ilike.%${search}%,title.ilike.%${search}%`);
-    }
-
-    // Order by course code
-    query = query.order("course_code");
-
-    // Pagination
-    const from = (page - 1) * pageSize;
-    const to = from + pageSize - 1;
-    query = query.range(from, to);
-
-    const { data, error, count } = await query;
+    const { data, error } = await supabase.rpc("search_courses", {
+        p_subject:   subject,
+        p_search:    search || null,
+        p_term:      term,
+        p_page:      page,
+        p_page_size: pageSize,
+    });
 
     if (error) {
         console.error("Error fetching courses:", error);
         throw new Error(`Failed to fetch courses: ${error.message}`);
     }
 
-    // Deduplicate courses (may have multiple sections)
-    const seenCourses = new Set<string>();
-    const courses: CourseWithProfessor[] = [];
+    const result = data as {
+        courses: Array<{
+            id: string;
+            course_code: string;
+            course_number: string;
+            title: string;
+            subject_code: string;
+            credits: number | null;
+            section_id: string | null;
+            meeting_days: string | null;
+            start_time: string | null;
+            end_time: string | null;
+            professor_id: string | null;
+            professor_first_name: string | null;
+            professor_last_name: string | null;
+            professor_rating: number | null;
+        }>;
+        total_count: number;
+    };
 
-    for (const row of data || []) {
-        const courseId = row.course_id;
-        if (seenCourses.has(courseId)) continue;
-        seenCourses.add(courseId);
-
-        courses.push({
-            id: courseId,
-            course_code: row.course_code,
-            course_number: row.course_code?.split(" ")[1] || "",
-            title: row.title,
-            subject_code: row.subject_code,
-            credits: row.credits,
-            professor_id: row.professor_id,
-            professor_first_name: row.professor_first_name,
-            professor_last_name: row.professor_last_name,
-            professor_rating: row.professor_rating,
-            professor_photo_url: row.professor_photo_url || null,
-            section_id: row.section_id,
-            meeting_days: row.meeting_days,
-            start_time: row.start_time,
-            end_time: row.end_time,
-        });
-    }
+    const courses: CourseWithProfessor[] = (result?.courses || []).map((row) => ({
+        id: row.id,
+        course_code: row.course_code,
+        course_number: row.course_code?.split(" ")[1] || "",
+        title: row.title,
+        subject_code: row.subject_code,
+        credits: row.credits,
+        professor_id: row.professor_id,
+        professor_first_name: row.professor_first_name,
+        professor_last_name: row.professor_last_name,
+        professor_rating: row.professor_rating,
+        professor_photo_url: null, // not returned by RPC; available via professor detail page
+        section_id: row.section_id,
+        meeting_days: row.meeting_days,
+        start_time: row.start_time,
+        end_time: row.end_time,
+    }));
 
     return {
         courses,
-        totalCount: count || courses.length,
+        totalCount: result?.total_count ?? courses.length,
     };
 }
 
@@ -264,7 +242,11 @@ export async function fetchCourse(id: string): Promise<CourseDetail | null> {
         .eq("course_id", id)
         .order("term", { ascending: false });
 
-    const sections: CourseSection[] = (sectionsData || []).map((s) => ({
+    const sections: CourseSection[] = (sectionsData || []).map((s: {
+        id: string; crn: string; term: string; section_number: string | null;
+        meeting_days: string | null; start_time: string | null; end_time: string | null;
+        building: string | null; room: string | null;
+    }) => ({
         id: s.id,
         crn: s.crn,
         term: s.term,
@@ -359,7 +341,7 @@ export async function fetchCoursesByProfessor(professorId: string): Promise<Cour
         return [];
     }
 
-    const sectionIds = sectionData.map((s) => s.section_id);
+    const sectionIds = sectionData.map((s: { section_id: string }) => s.section_id);
 
     // Get course IDs from sections
     const { data: courseData, error: courseError } = await supabase
@@ -371,7 +353,7 @@ export async function fetchCoursesByProfessor(professorId: string): Promise<Cour
         return [];
     }
 
-    const courseIds = [...new Set(courseData.map((c) => c.course_id))];
+    const courseIds = [...new Set(courseData.map((c: { course_id: string }) => c.course_id))];
 
     // Get course details
     const { data: courses, error: coursesError } = await supabase
@@ -384,7 +366,10 @@ export async function fetchCoursesByProfessor(professorId: string): Promise<Cour
         return [];
     }
 
-    return courses.map((c) => ({
+    return courses.map((c: {
+        id: string; course_code: string; course_number: string; title: string;
+        subject_code: string; credits: number | null;
+    }) => ({
         id: c.id,
         course_code: c.course_code,
         course_number: c.course_number,

@@ -1,13 +1,12 @@
 import { createClient } from "@/lib/supabase/browser";
 import type { MembershipWithClub } from "@/types/membership";
 
-const supabase = createClient();
-
 /**
  * Fetch user dashboard data (memberships with club details)
  * Uses resource embedding for optimal performance
  */
 export async function fetchUserDashboardData(): Promise<MembershipWithClub[]> {
+  const supabase = createClient();
   const {
     data: { user },
     error: authError,
@@ -101,6 +100,7 @@ export interface ClubDashboardData {
 export async function fetchClubDashboardData(
   clubSlug: string
 ): Promise<ClubDashboardData | null> {
+  const supabase = createClient();
   const {
     data: { user },
     error: authError,
@@ -163,6 +163,7 @@ export async function fetchClubEvents(
   }>;
   total: number;
 }> {
+  const supabase = createClient();
   let query = supabase
     .from("events")
     .select(
