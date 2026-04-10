@@ -399,6 +399,57 @@ export interface DepartmentProfessor {
 }
 
 /**
+ * Fetch prerequisite course codes for a batch of course UUIDs.
+ * Returns a Map from course_id → sorted list of prerequisite course_codes.
+ * Makes two queries total (edges + prereq names) regardless of how many courses
+ * are passed in, so it's safe to call for a full department listing.
+ */
+export async function fetchDepartmentPrereqs(
+    courseIds: string[]
+): Promise<Map<string, string[]>> {
+    if (!courseIds.length) return new Map();
+    const supabase = createClient();
+
+    // Step 1: get all (course_id, prereq_course_id) edges for this set of courses
+    const { data: edges, error: edgesError } = await supabase
+        .from("course_prerequisites")
+        .select("course_id, prereq_course_id")
+        .in("course_id", courseIds);
+
+    if (edgesError || !edges?.length) return new Map();
+
+    // Step 2: resolve prereq UUIDs → course_codes in one query
+    const prereqIds = [...new Set(edges.map((e: { prereq_course_id: string }) => e.prereq_course_id))];
+    const { data: prereqCourses, error: coursesError } = await supabase
+        .from("courses")
+        .select("id, course_code")
+        .in("id", prereqIds);
+
+    if (coursesError || !prereqCourses) return new Map();
+
+    const codeById = new Map<string, string>(
+        (prereqCourses as { id: string; course_code: string }[]).map((c) => [c.id, c.course_code])
+    );
+
+    // Step 3: build course_id → [prereq_code, ...] map
+    const result = new Map<string, string[]>();
+    for (const edge of edges as { course_id: string; prereq_course_id: string }[]) {
+        const code = codeById.get(edge.prereq_course_id);
+        if (!code) continue;
+        const list = result.get(edge.course_id) ?? [];
+        list.push(code);
+        result.set(edge.course_id, list);
+    }
+
+    // Sort each list alphabetically for stable display
+    for (const [key, list] of result) {
+        result.set(key, list.sort());
+    }
+
+    return result;
+}
+
+/**
  * Fetch professors teaching courses in a department
  */
 export async function fetchDepartmentProfessors(
