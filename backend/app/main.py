@@ -66,7 +66,8 @@ async def health():
 # The frontend lib (lib/courses.ts, lib/professors.ts) goes direct to Supabase
 # and has never called these FastAPI endpoints. The endpoint files are kept for
 # reference but not registered.
-from app.api import clubs, majors
+from app.api import clubs, majors, prerequisites
 
 app.include_router(clubs.router, prefix="/api/clubs", tags=["clubs"])
 app.include_router(majors.router, prefix="/api/majors", tags=["majors"])
+app.include_router(prerequisites.router, prefix="/api/prerequisites", tags=["prerequisites"])

@@ -6,11 +6,13 @@ import { useParams } from "next/navigation";
 import {
     fetchCourses,
     fetchDepartmentProfessors,
+    fetchDepartmentPrereqs,
     formatTime,
     SUBJECT_NAMES,
     type CourseWithProfessor,
     type DepartmentProfessor,
 } from "@/lib/courses";
+import { PrerequisiteBadge } from "@/components/courses/PrerequisiteBadge";
 
 // Rating badge with color coding
 function RatingBadge({ rating }: { rating: number | null }) {
@@ -150,7 +152,7 @@ function DayIndicators({ days }: { days: string }) {
 }
 
 // Enhanced course card matching UCSB Plat style
-function CourseCard({ course }: { course: CourseWithProfessor }) {
+function CourseCard({ course, prereqCodes }: { course: CourseWithProfessor; prereqCodes: string[] }) {
     const professorName =
         course.professor_first_name && course.professor_last_name
             ? `${course.professor_first_name} ${course.professor_last_name}`
@@ -215,6 +217,9 @@ function CourseCard({ course }: { course: CourseWithProfessor }) {
                     )}
                 </div>
             )}
+
+            {/* Prerequisite badges */}
+            <PrerequisiteBadge prereqCodes={prereqCodes} />
         </Link>
     );
 }
@@ -236,6 +241,16 @@ export default function DepartmentCoursesPage() {
         queryFn: () => fetchDepartmentProfessors(department),
         enabled: !!department,
         staleTime: 10 * 60 * 1000,
+    });
+
+    // Fetch prereq codes for every course on this page in a single batch query.
+    // Keyed by course UUID so CourseCard can look up its own prereqs in O(1).
+    const courseIds = (data?.courses ?? []).map((c) => c.id);
+    const { data: prereqMap = new Map<string, string[]>() } = useQuery({
+        queryKey: ["departmentPrereqs", department, courseIds],
+        queryFn: () => fetchDepartmentPrereqs(courseIds),
+        enabled: courseIds.length > 0,
+        staleTime: 30 * 60 * 1000,
     });
 
     // Group courses by course number (e.g., 100-level, 200-level)
@@ -330,7 +345,11 @@ export default function DepartmentCoursesPage() {
                                 </h2>
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                     {groupedCourses[level].map((course) => (
-                                        <CourseCard key={course.id} course={course} />
+                                        <CourseCard
+                                            key={course.id}
+                                            course={course}
+                                            prereqCodes={prereqMap.get(course.id) ?? []}
+                                        />
                                     ))}
                                 </div>
                             </div>
